@@ -15,10 +15,9 @@ on:
   push:
     branches: [main]
 
-# What deploy-pages needs, and nothing else. No contents: write anywhere here:
-# this workflow publishes a site, it never commits to the repository.
-# contents: write is for the `live` branch below, and for nothing else. The
-# workflow never commits to main.
+# What deploy-pages needs, plus contents: write for the `live` branch below.
+# That branch is the only thing this workflow writes to the repository: it
+# never commits to main.
 permissions:
   contents: write
   pages: write
@@ -108,8 +107,7 @@ jobs:
           git add live.json live_en.json
           git commit -qm "live snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push -f origin live
-          echo "pushed $(du -b live.json live_en.json | tr '
-' ' ')"
+          wc -c live.json live_en.json
 
       - uses: actions/configure-pages@v5
 

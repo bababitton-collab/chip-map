@@ -33,14 +33,29 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
    the labels stay put while the map scrolls past. The bands themselves are
    painted on the canvas and do NOT stick -- they are part of the map. */
 .layerbar{position:sticky;top:0;height:0;z-index:3;pointer-events:none}
-.layerbar .lbl{position:absolute;top:0;padding:14px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;line-height:1.35}
-/* Both halves at --ink2. --ink3 was the intent for the L-number and it cannot
-   reach 7:1 on any dark ground -- see the contrast test. Weight separates them
-   instead of luminance. */
-.layerbar .lbl b{font-weight:400;color:var(--ink2);margin-inline-end:7px}
-.layerbar .lbl i{font-style:normal;font-weight:500;color:var(--ink2)}
+.l9bar{position:absolute;inset:0;z-index:2;pointer-events:none}
+.lchip{position:absolute;display:inline-block;background:#141922;border:1px solid #3a3320;border-radius:5px;padding:5px 11px;
+  font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 0 0 1px rgba(242,182,50,.08),0 6px 16px rgba(0,0,0,.45),0 0 18px rgba(242,182,50,.10)}
+/* #9ba6b4, not the mock's #9aa4b2: that one computes to 6.99:1 on the chip and
+   the rule beside it asks for 7. One step lighter, the same colour to look at,
+   and the difference between a test that passes and one that nearly does. */
+.lchip .n{color:#9ba6b4;font-weight:400}
+.lchip .s{color:#7d8797;margin:0 6px}
+.lchip .t{color:#f3e2b4;font-weight:500;text-shadow:0 0 6px rgba(242,182,50,.55),0 0 14px rgba(242,182,50,.25)}
 .layerbar .rule{position:absolute;top:46px;inset-inline:0;height:1px;background:var(--rule)}
-@media (max-width:900px){.layerbar .lbl{white-space:normal;max-width:11ch;padding:10px}.layerbar .rule{top:56px}}
+/* At 390 the seven columns are 35px apart, and no chip fits in 35px. The map
+   strip scrolls sideways instead, at a width where the columns are wide enough
+   to name -- which is also the only way the map itself is legible there. The
+   header rides with it rather than sticking: inside a scroll container a
+   sticky top:0 sticks to the container, not to the page. */
+@media (max-width:900px){
+  .mapwrap{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+  canvas{min-width:900px}
+  .layerbar{position:absolute}
+  .lchip{font-size:.62rem;padding:4px 8px;letter-spacing:.1em;white-space:normal;max-width:112px;text-align:center;line-height:1.35}
+  .layerbar .rule{top:44px}
+}
 .hint{position:absolute;bottom:10px;inset-inline-start:16px;font-size:.78rem;color:var(--ink3);pointer-events:none}
 .legend .row{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:2px 0}
 .legend .row b{font-weight:600;color:var(--ink2);min-width:22ch}
@@ -305,6 +320,7 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 <div class="stage" id="stage">
   <div class="mapwrap">
     <div class="layerbar" id="layerbar"></div>
+    <div class="l9bar" id="l9bar"></div>
     <canvas id="map"></canvas>
     <div class="tip" id="tip"></div>
   </div>
@@ -359,7 +375,7 @@ const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
 let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, sats=[], satT=0, t0=performance.now();
-let bands=[];
+let bands=[], l9y=0;
 const pct=v=>v==null?'—':((v>0?'+':'')+(v*100).toFixed(1)+'%');
 const cls=v=>v==null?'':(v<0?'neg':'pos');
 
@@ -387,12 +403,16 @@ function layout(){
   const g9=(groups['L9']||[]); const xs=[xOf['L7'],xOf['L6']];
   g9.forEach((nd,i)=>{ nd.x=xOf['L7']+ (i/(g9.length-1||1))*(xOf['L6']-xOf['L7']); nd.y=H-34; });
   nodes.forEach(n=>{ n.r = n.cap? Math.max(7, Math.min(24, 6+18*Math.sqrt(n.cap/5516))) : 7; });
-  // One full-height band per layer column, alternating two tones, painted
-  // behind every line and node. No borders: the tone change is the boundary.
-  bands = cols.map((L,i)=>({L:L, x0:xOf[L]-colW/2, x1:xOf[L]+colW/2,
-                            tone: i%2 ? '#0e121a' : tok('--bg')}));
+  // The column geometry, kept for the header chips alone. Nothing is painted
+  // behind the map: the ground stays one colour the whole way across.
+  bands = cols.map(L=>({L:L, x0:xOf[L]-colW/2, x1:xOf[L]+colW/2, cx:xOf[L]}));
   bands.sort((a,b)=>a.x0-b.x0);
   bands[0].x0 = 0; bands[bands.length-1].x1 = W;
+  // Where the L9 row sits, and how wide its labels are: the chips have to
+  // avoid them, and a canvas label has no box anything else can measure.
+  l9y = H-34;
+  ctx.font='600 14px "Assistant", sans-serif';
+  nodes.forEach(n=>{ n.lw = ctx.measureText(n.short||n.name.split(' ')[0]).width; });
 }
 function resize(){
   DPR=Math.min(2,devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
@@ -400,20 +420,37 @@ function resize(){
   layerBar();
 }
 
-// The header row: one label per band, at the band's inline start. Written as
-// DOM rather than painted on the canvas so that it can be sticky -- a canvas
-// label scrolls away with the pixels it is drawn on.
-function layerBar(){
-  const bar=document.getElementById('layerbar'); if(!bar) return;
-  const rtl=getComputedStyle(document.documentElement).direction==='rtl';
+// The header row: one chip per column, centred over it, and one more for L9
+// beside its own row. Written as DOM rather than painted on the canvas so the
+// header can be sticky -- a canvas label scrolls away with the pixels it is
+// drawn on -- and so that a test can measure the boxes.
+function chip(L, name){
   const cut=v=>String(v==null?'':v).replace(/[&<>"]/g,
     c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  bar.innerHTML = bands.map(b=>{
-    const start = rtl ? (W-b.x1) : b.x0;
-    return `<div class="lbl" style="inset-inline-start:${Math.max(0,start).toFixed(1)}px">`
-      + `<b>${cut(b.L)}</b><i>${cut(LAYER_HE[b.L]||'')}</i></div>`;
-  }).join('') + '<div class="rule"></div>';
+  return `<span class="n">${cut(L)}</span><span class="s">·</span>`
+    + `<span class="t">${cut(name)}</span>`;
 }
+function layerBar(){
+  const bar=document.getElementById('layerbar');
+  const l9=document.getElementById('l9bar');
+  if(!bar||!l9) return;
+  bar.innerHTML = bands.map(b=>
+    `<span class="lchip" data-l="${b.L}" style="left:${b.cx.toFixed(1)}px;`
+    + `top:6px;transform:translateX(-50%)">${chip(b.L, LAYER_HE[b.L]||'')}</span>`
+  ).join('') + '<div class="rule"></div>';
+  // L9 is a row along the bottom, not a column. Its chip goes at the row's
+  // left edge, on the row's own centre line -- never in the header.
+  l9.innerHTML = `<span class="lchip" data-l="L9" style="left:14px;`
+    + `top:${l9y.toFixed(1)}px;transform:translateY(-50%)">`
+    + `${chip('L9', LAYER_HE.L9||'')}</span>`;
+}
+
+// The node labels are painted, so they have no box the DOM can measure. Their
+// rectangles are published for the check that no chip lands on one.
+window.__labelBoxes = () => nodes.map(n=>({
+  id:n.id, x:n.x-(n.lw||0)/2, y:n.y+n.r+16-11, w:n.lw||0, h:14,
+}));
+
 function edgePath(e){ const a=byId[e.from], b=byId[e.to]; const mx=(a.x+b.x)/2; return {a,b,c1:{x:mx,y:a.y},c2:{x:mx,y:b.y}}; }
 function bez(p,t){ const {a,b,c1,c2}=p; const u=1-t; return {x:u*u*u*a.x+3*u*u*t*c1.x+3*u*t*t*c2.x+t*t*t*b.x, y:u*u*u*a.y+3*u*u*t*c1.y+3*u*t*t*c2.y+t*t*t*b.y}; }
 function seedParticles(){
@@ -491,12 +528,9 @@ function draw(now){
   const _fs=performance.now();
   const T=now-t0;
   ctx.clearRect(0,0,W,H);
-  // The column bands, first, behind everything.
-  bands.forEach(b=>{ ctx.fillStyle=b.tone; ctx.fillRect(b.x0,0,b.x1-b.x0,H); });
-  // The column labels are DOM now -- see layerBar() -- so that they can stay
-  // put when the page scrolls. L9 is not a column and keeps its canvas label.
-  ctx.font='13px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign='center';
-  ctx.fillText('L9 · '+LAYER_HE.L9, (byId.gev.x+byId.ceg.x)/2, H-52);
+  // Every layer label is DOM now -- see layerBar() -- so the header can stay
+  // put when the page scrolls, and so L9's chip can sit beside its own row
+  // instead of on top of the two nodes nearest the middle of it.
   // edges
   const focus = selected||hover;
   edges.forEach((e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); const on=(e===hoverEdge);

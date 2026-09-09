@@ -18,10 +18,11 @@ from chains.paths import templates_dir
 TPL = (templates_dir() / "live-map.html").read_text(encoding="utf-8")
 EN = (templates_dir() / "live-map-en.html").read_text(encoding="utf-8")
 
-BG = "#0b0e14"          # odd bands, and the page
-BAND2 = "#0e121a"       # even bands
-INK2 = "#b3bccb"
-INK3 = "#7d8797"
+BG = "#0b0e14"          # the ground, everywhere: there are no bands
+CHIP = "#141922"        # the chip's own background
+NAME = "#f3e2b4"        # the layer name, gold and glowing
+NUM = "#9ba6b4"         # the L-number
+MOCK_NUM = "#9aa4b2"    # what the mock asked for
 
 
 # -- contrast, computed rather than eyeballed --------------------------------
@@ -42,110 +43,136 @@ def contrast(fg: str, bg: str) -> float:
     return (hi + 0.05) / (lo + 0.05)
 
 
-@pytest.mark.parametrize("band", [BG, BAND2])
-def test_the_header_text_clears_seven_to_one_on_both_bands(band):
-    assert contrast(INK2, band) >= 7
+def test_the_layer_name_clears_ten_to_one_on_the_chip():
+    assert contrast(NAME, CHIP) >= 10
 
 
-def test_ink3_could_not_have_been_used_for_the_l_number():
-    """The brief asked for the L-number in --ink3 and for nothing in the header
-    darker than #b3bccb. Those cannot both hold: --ink3 tops out at 5.8:1
-    against pure black, so no dark band exists on which it reaches 7:1. The
-    number is --ink2 at weight 400 and the name --ink2 at 500 -- weight
-    separates them, not luminance."""
-    assert contrast(INK3, "#000000") < 7
-    assert contrast(INK3, BAND2) < 7
-    assert 'color:var(--ink3)' not in _header_css()
+def test_the_l_number_clears_seven_to_one_on_the_chip():
+    assert contrast(NUM, CHIP) >= 7
 
 
-def _header_css() -> str:
-    i = TPL.index(".layerbar{")
-    return TPL[i:TPL.index("@media (max-width:900px){.layerbar", i)]
+def test_the_mock_s_own_number_colour_missed_seven_by_a_hair():
+    """#9aa4b2 computes to 6.99:1 on #141922 and the rule beside it asks for 7.
+    The colour is one step lighter than the mock -- indistinguishable to look
+    at, and the difference between a test that passes and one that nearly
+    does."""
+    assert contrast(MOCK_NUM, CHIP) < 7
+    assert contrast(NUM, CHIP) >= 7
+    # The comment above the rule names the mock colour, so the check is on the
+    # declaration rather than on the span.
+    assert f'.lchip .n{{color:{NUM};' in TPL
+    assert f'color:{MOCK_NUM}' not in TPL
 
 
-def test_both_halves_of_the_label_are_ink2():
-    css = _header_css()
-    assert ".layerbar .lbl b{font-weight:400;color:var(--ink2)" in css
-    assert ".layerbar .lbl i{font-style:normal;font-weight:500;color:var(--ink2)" in css
+# -- no bands ----------------------------------------------------------------
+
+def test_nothing_paints_a_ground():
+    """Michael's call: the map is one colour the whole way across. The column
+    geometry survives only to place the chips."""
+    i = TPL.index("function draw(now){")
+    body = TPL[i:i + 1500]
+    assert "ctx.fillRect(b.x0,0,b.x1-b.x0,H)" not in body
+    assert "b.tone" not in TPL
+    assert "#0e121a" not in TPL
 
 
-def test_the_label_is_mono_uppercase_at_the_specified_size():
-    css = _header_css()
+def test_the_column_geometry_is_kept_only_to_place_the_chips():
+    assert "bands = cols.map(L=>({L:L, x0:xOf[L]-colW/2, x1:xOf[L]+colW/2, "            "cx:xOf[L]}));" in TPL
+    assert "left:${b.cx.toFixed(1)}px" in TPL
+    assert "transform:translateX(-50%)" in TPL, "centred over its column"
+
+
+# -- the chip ----------------------------------------------------------------
+
+def chip_css() -> str:
+    i = TPL.index(".lchip{")
+    return TPL[i:TPL.index("@media (max-width:900px){", i)]
+
+
+def test_the_chip_is_the_approved_one():
+    css = chip_css()
+    assert "background:#141922" in css
+    assert "border:1px solid #3a3320" in css and "border-radius:5px" in css
+    assert "padding:5px 11px" in css
     assert 'font-family:"IBM Plex Mono",monospace' in css
     assert "font-size:.72rem" in css and "letter-spacing:.14em" in css
-    assert "text-transform:uppercase" in css and "padding:14px" in css
+    assert "text-transform:uppercase" in css
 
 
-def test_one_thin_rule_under_the_header_row():
-    assert ".layerbar .rule{position:absolute;top:46px;inset-inline:0;" \
-           "height:1px;background:var(--rule)}" in TPL
+def test_the_chip_carries_the_four_shadows():
+    css = chip_css()
+    for layer in ("0 1px 0 rgba(255,255,255,.04) inset",
+                  "0 0 0 1px rgba(242,182,50,.08)",
+                  "0 6px 16px rgba(0,0,0,.45)",
+                  "0 0 18px rgba(242,182,50,.10)"):
+        assert layer in css, layer
 
 
-# -- the header sticks, the bands do not -------------------------------------
+def test_the_name_glows_gold():
+    css = chip_css()
+    assert (".lchip .t{color:#f3e2b4;font-weight:500;text-shadow:"
+            "0 0 6px rgba(242,182,50,.55),0 0 14px rgba(242,182,50,.25)}") in css
 
-def test_the_label_layer_is_sticky_and_the_bands_are_not():
-    """The bands are painted on the canvas, so they scroll with the map -- they
-    are the map. Only the labels are pinned."""
+
+def test_the_three_parts_are_separate_spans():
+    """So a test can measure each colour, and so the dot is not part of either
+    word."""
+    assert '<span class="n">${cut(L)}</span><span class="s">·</span>' in TPL
+    assert '<span class="t">${cut(name)}</span>' in TPL
+
+
+def test_the_header_keeps_its_thin_rule():
+    assert ".layerbar .rule{position:absolute;top:46px;inset-inline:0;"            "height:1px;background:var(--rule)}" in TPL
+
+
+# -- L9 is a row, not a column -----------------------------------------------
+
+def test_l9_has_its_own_layer_outside_the_sticky_header():
+    """It is a row along the bottom. A chip for it in the header would name a
+    column that does not exist."""
+    assert '<div class="l9bar" id="l9bar"></div>' in TPL
+    assert ".l9bar{position:absolute;inset:0;z-index:2;pointer-events:none}" in TPL
+    i = TPL.index("bar.innerHTML = bands.map(")
+    j = TPL.index("l9.innerHTML =", i)
+    assert 'data-l="L9"' not in TPL[i:j], "no L9 chip among the column chips"
+    assert 'data-l="L9"' in TPL[j:j + 300]
+
+
+def test_the_l9_chip_sits_at_the_left_edge_on_its_row_s_centre_line():
+    assert "left:14px;" in TPL
+    assert "top:${l9y.toFixed(1)}px;transform:translateY(-50%)" in TPL
+    assert "l9y = H-34;" in TPL, "the row the L9 nodes are drawn on"
+
+
+def test_l9_is_no_longer_painted_on_the_canvas():
+    i = TPL.index("function draw(now){")
+    assert "'L9 · '" not in TPL[i:i + 1500]
+
+
+def test_the_node_label_boxes_are_published_for_the_collision_check():
+    """The labels are painted, so they have no box the DOM can measure. The
+    browser check reads these and asserts no chip lands on one."""
+    assert "window.__labelBoxes = () => nodes.map(" in TPL
+    assert "n.lw = ctx.measureText(" in TPL
+    assert "x:n.x-(n.lw||0)/2, y:n.y+n.r+16-11" in TPL
+
+
+# -- sticky, and mobile ------------------------------------------------------
+
+def test_the_header_is_sticky_on_the_desktop():
     assert ".layerbar{position:sticky;top:0;height:0;" in TPL
-    assert "position:sticky" not in TPL[TPL.index("canvas{"):TPL.index(".mapwrap{")]
 
 
-def test_the_bar_has_no_height_of_its_own():
-    """Otherwise it would push the canvas down instead of overlaying it."""
-    assert "height:0" in _header_css()
-
-
-def test_labels_may_wrap_on_a_narrow_screen():
-    i = TPL.index("@media (max-width:900px){.layerbar")
-    assert "white-space:normal" in TPL[i:i + 200]
-
-
-def test_the_labels_are_dom_not_canvas():
-    """A canvas label scrolls away with the pixels it is drawn on. L9 is not a
-    column and keeps its painted label."""
-    assert "function layerBar(){" in TPL
-    assert "layerBar();" in TPL
-    i = TPL.index("function draw(now){")
-    body = TPL[i:TPL.index("function nodeAt(", i)] if "function nodeAt(" in TPL \
-        else TPL[i:i + 4000]
-    assert "fillText(L+' · '" not in body
-    assert "'L9 · '" in body
-
-
-def test_the_label_starts_at_its_band_in_either_direction():
-    """The Hebrew page runs right to left and the English one left to right;
-    the label sits at the start of its own band on both."""
-    assert "getComputedStyle(document.documentElement).direction==='rtl'" in TPL
-    assert "rtl ? (W-b.x1) : b.x0" in TPL
-    assert "inset-inline-start" in TPL
-
-
-# -- the bands ---------------------------------------------------------------
-
-def test_seven_bands_alternate_two_tones():
-    i = TPL.index("bands = cols.map(")
-    body = TPL[i:i + 300]
-    assert f"tone: i%2 ? '{BAND2}' : tok('--bg')" in body
-    assert "const cols=['L1','L2','L3','L4','L5','L6','L7'];" in TPL
-
-
-def test_the_outer_bands_reach_the_edges():
-    assert "bands[0].x0 = 0; bands[bands.length-1].x1 = W;" in TPL
-
-
-def test_the_bands_are_painted_before_everything_else():
-    i = TPL.index("function draw(now){")
-    body = TPL[i:i + 1400]
-    assert body.index("bands.forEach(b=>{ ctx.fillStyle=b.tone;") \
-        < body.index("edges.forEach") if "edges.forEach" in body else True
-    assert "ctx.fillRect(b.x0,0,b.x1-b.x0,H)" in body
-
-
-def test_no_border_between_bands():
-    """The tone change is the boundary. A rule between columns would read as a
-    grid the map does not have."""
-    i = TPL.index("bands.forEach(b=>{ ctx.fillStyle=b.tone;")
-    assert "strokeRect" not in TPL[i:i + 200]
+def test_the_narrow_map_scrolls_sideways_and_the_header_rides_with_it():
+    """At 390 the seven columns are 35px apart and no chip fits in 35px.
+    Inside a scroll container a sticky top:0 sticks to the container rather
+    than the page, so the header goes absolute there and travels with the map
+    -- which the brief allows."""
+    i = TPL.index("@media (max-width:900px){")
+    body = TPL[i:TPL.index(".layerbar .rule{top:44px}", i)]
+    assert "overflow-x:auto" in body and "min-width:900px" in body
+    assert ".layerbar{position:absolute}" in body
+    assert "font-size:.62rem" in body and "padding:4px 8px" in body
 
 
 # -- the inner shadow, on canvas ---------------------------------------------

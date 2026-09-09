@@ -163,11 +163,16 @@ const TRACK = __TRACK__;
 
   // ---- the constellation: ring 1 and ring 2 ------------------------------
   const VBW=420, VBH=230, CX=100, CY=115, R1X=230, R2X=345, R2R=8, GAP=18, R2MAX=8;
+  // Cut for the drawing, whole in the <title>: the same rule the map's
+  // cards use, and the reason the hover is worth having.
+  const REASON_MAX=12;
   const clip = (t,n) => { t=String(t||''); return t.length>n?t.slice(0,n)+'…':t; };
   function constellation(r){
     const lab = {};
     (r.members||[]).forEach(m=>{ lab[m.id]=m.label; });
     const nameOf = i => lab[i] || String(i).toUpperCase();
+    const why = {};
+    (r.ring1_edges||[]).forEach(e=>{ why[e.id]=e.label||''; });
     const wins=(r.win||[]).slice(0,3), loses=(r.lose||[]).slice(0,3);
     const all=[...wins.map(i=>({id:i,win:true})),...loses.map(i=>({id:i,win:false}))];
     const total=(r.win||[]).length+(r.lose||[]).length;
@@ -182,6 +187,10 @@ const TRACK = __TRACK__;
       g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
       g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${rr}" fill="#0b0e14" stroke="${col}" stroke-width="2"/>`;
       g+=`<text x="${R1X}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(t)}</text>`;
+      const full=why[o.id];
+      if(full){
+        g+=`<text x="${R1X+rr+6}" y="${(y+4).toFixed(1)}" font-family="Inter,sans-serif" font-size="11" fill="${MAP}">${esc(clip(full,REASON_MAX))}<title>${esc(full)}</title></text>`;
+      }
     });
     if(total>6) g+=`<text x="${R1X}" y="215" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="${MAP}">+${total-6} more</text>`;
 
@@ -193,8 +202,9 @@ const TRACK = __TRACK__;
     for(const e of (r.ring2_edges||[])){
       const p=at[e.to]; if(!p) continue;
       if(!(e.from in side)) continue;
-      if(!by[e.from]){ by[e.from]={id:e.from,parents:[],win:side[e.from]==='win'}; kids.push(by[e.from]); }
+      if(!by[e.from]){ by[e.from]={id:e.from,parents:[],labels:[],win:side[e.from]==='win'}; kids.push(by[e.from]); }
       by[e.from].parents.push(p);
+      by[e.from].labels.push(e.label||'');
     }
     const show=kids.slice(0,R2MAX), hidden=kids.length-show.length;
     const groups={};
@@ -214,7 +224,8 @@ const TRACK = __TRACK__;
         g2+=`<path d="M${R1X+p.r},${p.y.toFixed(1)} C${R1X+55},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${p.col}" stroke-width="1" opacity=".45"/>`;
       });
       g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${col}" stroke-width="${two?2:1.4}" opacity="${two?.95:.7}"/>`;
-      g2+=`<text x="${R2X+R2R+4}" y="${(y+3).toFixed(1)}" font-family="Inter,sans-serif" font-size="9" fill="${two?'#c7d0dc':'#9aa4b2'}" font-weight="${two?600:400}">${esc(clip(nameOf(k.id),9))}</text>`;
+      const tip=(k.labels||[]).filter(Boolean).join(' · ');
+      g2+=`<text x="${R2X+R2R+4}" y="${(y+3).toFixed(1)}" font-family="Inter,sans-serif" font-size="9" fill="${two?'#c7d0dc':'#9aa4b2'}" font-weight="${two?600:400}">${esc(clip(nameOf(k.id),9))}${tip?`<title>${esc(tip)}</title>`:''}</text>`;
     });
     if(hidden>0) g2+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="${MAP}">+${hidden}</text>`;
 

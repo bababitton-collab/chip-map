@@ -980,17 +980,18 @@ function lockedHTML(){
     const n=nodeById[id];
     return n ? String(n.short||n.ticker||n.id) : String(id).toUpperCase();
   }
+  // The WHOLE first clause. The drawing clips it to REASON_MAX and keeps this
+  // in a <title>; truncating here as well made that hover give back the cut
+  // text, which is the one thing a hover is for.
   function reasonOf(centreId, id){
     const n=nodeById[id];
     for(const e of (D.edges||[])){
       if((e.from===centreId&&e.to===id)||(e.from===id&&e.to===centreId)){
         const w=(e.what||'').split(';')[0].trim();
-        // ~68px of room at x=272 in a 340 box: eleven characters at 11px.
-        if(w) return w.length>11 ? w.slice(0,11)+'…' : w;
+        if(w) return w;
       }
     }
-    const ln=layerName(n);
-    return ln.length>11 ? ln.slice(0,11)+'…' : ln;
+    return layerName(n);
   }
   function bezMid(y){
     // t=0.5 on M100,115 C160,115 180,y 230,y

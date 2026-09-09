@@ -522,3 +522,82 @@ def test_the_page_never_shows_a_bare_dash_in_a_tile():
     body = template()
     assert "'0 / 0'" in body
     assert "no scored forecasts yet" in body
+
+
+# -- what the edge carries ----------------------------------------------------
+
+def test_the_reason_is_the_edge_between_the_company_and_the_station(book):
+    """The same rule the map's cards use: the first clause of the edge's own
+    words, in either direction."""
+    doc = dict(DOC, edges=[{"from": "up", "to": "acme", "type": "supplies",
+                            "what": "wafers and packaging; per the 10-K"}])
+    assert track.reason_for(doc, "acme", "up") == "wafers and packaging"
+    assert track.reason_for(doc, "up", "acme") == "wafers and packaging"
+
+
+def test_a_station_with_no_edge_falls_back_to_its_layer(book):
+    """Honest rather than blank, and what the map says in the same case."""
+    doc = {"nodes": [{"id": "up", "layer": "L4"}], "subnodes": [], "edges": [],
+           "labels": {"layers": {"L4": {"he": "מעצבות", "en": "chip designers"}}}}
+    assert track.reason_for(doc, "acme", "up") == "chip designers"
+
+
+def test_the_layer_name_is_the_english_one():
+    """The page is English-only; the map keeps both."""
+    doc = {"nodes": [{"id": "up", "layer": "L4"}], "subnodes": [], "edges": [],
+           "labels": {"layers": {"L4": {"he": "מעצבות", "en": "chip designers"}}}}
+    from chains import build_pages
+    assert build_pages.hebrew_runs(track.reason_for(doc, None, "up")) == []
+
+
+def test_a_station_the_map_has_never_heard_of_gets_no_reason():
+    """Nine basket ids are not map nodes. An invented sentence would be worse
+    than a blank line beside the circle."""
+    assert track.reason_for({"nodes": [], "subnodes": []}, "acme", "who") == ""
+
+
+def test_the_reason_is_the_whole_clause_not_the_drawn_one(book):
+    """The page clips it to twelve characters and keeps this in a <title>.
+    Truncating here as well is what made the map's own hover give back the cut
+    text for a while."""
+    long = "GPUs (Oracle as buyer): OCI Supercluster up to 131,072 Blackwell"
+    doc = dict(DOC, edges=[{"from": "up", "to": "acme", "type": "supplies",
+                            "what": long}])
+    assert track.reason_for(doc, "acme", "up") == long
+    assert len(track.reason_for(doc, "acme", "up")) > 12
+
+
+def test_a_reason_longer_than_the_cap_is_cut_not_dropped(book):
+    doc = dict(DOC, edges=[{"from": "up", "to": "acme", "type": "supplies",
+                            "what": "x" * 400}])
+    got = track.reason_for(doc, "acme", "up")
+    assert len(got) == track.MAX_REASON
+
+
+def test_the_record_carries_a_reason_for_every_drawn_ring_one_station(book):
+    """Three a side is what the constellation draws, so three a side is what
+    rides in the payload."""
+    r = one(book, [q("a", "2026-06-01", ["up", "flat", "s1", "s2"], ["down"])])
+    assert [e["id"] for e in r["ring1_edges"]] == ["up", "flat", "s1", "down"]
+    assert all(set(e) == {"id", "label"} for e in r["ring1_edges"])
+
+
+def test_the_reasons_do_not_ride_in_the_slim_copy(book):
+    """live.json has a hard ceiling and no use for them."""
+    thin = track.slim(built(book, [q("a", "2026-06-01", ["up"], ["down"])]))
+    assert "ring1_edges" not in thin["forecasts"][0]
+
+
+# -- the drawing keeps the cut and the whole ---------------------------------
+
+def test_the_page_clips_the_reason_at_twelve_and_titles_the_whole():
+    body = template()
+    assert "const REASON_MAX=12;" in body
+    assert "esc(clip(full,REASON_MAX))" in body
+    assert "<title>${esc(full)}</title>" in body
+
+
+def test_the_second_ring_keeps_its_own_words_on_hover():
+    body = template()
+    assert "by[e.from].labels.push(e.label||'');" in body
+    assert "(k.labels||[]).filter(Boolean).join(' · ')" in body

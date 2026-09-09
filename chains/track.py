@@ -53,6 +53,11 @@ from chains.answers import DEFAULT_ORDER, HORIZONS_R2, R2_SUFFIX, twin_id
 CHECKPOINTS = HORIZONS_R2
 STALE_AFTER = 3
 MAX_POINTS = 90
+
+# The reason rides into track.json once per ring-1 station on thirty-nine
+# cards. The first clause is the relationship; the rest is the evidence for it,
+# which the map keeps in ``source``.
+MAX_REASON = 90
 CLOSED_AFTER = 40
 
 GROUPS = ("win", "lose", "win2", "lose2")
@@ -181,6 +186,29 @@ def members_for(legs: dict, direction: int, doc: dict, book, symbol_of: dict,
     return out
 
 
+def reason_for(doc: dict, centre: str | None, nid: str) -> str:
+    """What the edge between the reporting company and a ring-1 station carries.
+
+    The same rule the map's cards use: the first clause of the edge's ``what``
+    in either direction, and the station's layer when the map records no edge
+    between the two -- which is honest rather than blank, and is what the map
+    says in that case too.
+
+    The WHOLE clause. The page clips it for the drawing and keeps this in a
+    <title>, so truncating here would make the hover give back the cut text.
+    """
+    if centre:
+        for e in doc.get("edges", []):
+            if ((e.get("from") == centre and e.get("to") == nid)
+                    or (e.get("from") == nid and e.get("to") == centre)):
+                w = (e.get("what") or "").split(";")[0].strip()
+                if w:
+                    return w[:MAX_REASON]
+    layer = _node(doc, nid).get("layer")
+    lab = ((doc.get("labels") or {}).get("layers") or {}).get(layer) or {}
+    return lab.get("en") or ""
+
+
 def _from_ledger(row: dict | None) -> dict:
     """The ledger's horizons, in this page's units and otherwise untouched."""
     if not row:
@@ -207,7 +235,7 @@ def state_of(f: dict | None, entry: dt.date | None, day_index: int | None,
 def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
            row2: dict | None, mark: dict | None, book, cal: list[dt.date],
            doc: dict, symbol_of: dict, node_symbols: list[str],
-           today: dt.date, ring2: dict) -> dict:
+           today: dt.date, ring2: dict, centre: str | None = None) -> dict:
     """One dated question, in whatever state it is in."""
     status = (mark or {}).get("status")
     direction = f["direction"] if f else 1
@@ -227,6 +255,10 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
         "win2": list(ring2.get("win2") or []),
         "lose2": list(ring2.get("lose2") or []),
         "ring2_edges": list(ring2.get("ring2_edges") or []),
+        # What each ring-1 station's edge carries, for the grey line beside it.
+        "ring1_edges": [{"id": i, "label": reason_for(doc, centre, i)}
+                        for i in (list(w.get("win") or [])[:3]
+                                  + list(w.get("lose") or [])[:3])],
     }
     out["has_r2"] = bool(out["win2"] or out["lose2"])
     # The question text is the product boundary: present only where the row is
@@ -389,7 +421,8 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
         out.append(record(w, f, twin, rows.get(f["id"]) if f else None,
                           rows.get(tid) if twin else None,
                           marks.get(w["id"]), book, cal, doc, symbol_of,
-                          node_symbols, today, r2))
+                          node_symbols, today, r2,
+                          by_ticker.get(str(w.get("tk") or "").upper())))
     out.sort(key=sort_key)
     return {"summary": summarise(out), "forecasts": out,
             "as_of": today.isoformat()}
@@ -466,6 +499,7 @@ def main() -> int:
 
 __all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
            "render", "main", "slim", "sort_key", "state_of", "members_for",
+           "reason_for", "MAX_REASON",
            "report_close", "CHECKPOINTS", "STALE_AFTER", "MAX_POINTS",
            "CLOSED_AFTER", "STATES", "UNDIRECTED", "R2_SUFFIX"]
 

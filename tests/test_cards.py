@@ -297,11 +297,14 @@ def test_a_node_supplying_two_of_the_first_ring_gets_a_line_to_each():
     """One circle, two lines. It ranked first because it is exposed to the
     answer twice, and one line would hide that."""
     body = cons_js()
+    # The path is inside the per-parent loop; the circle is outside it, so a
+    # child of two parents is one node with two connectors -- not two nodes.
     i = body.index("k.parents.forEach(p=>{")
-    assert body.index("<circle", i) > body.index("</path>", i) if "</path>" in body[i:] else True
-    assert "k.parents.forEach(p=>{" in body
-    # one circle per child, drawn once, outside the per-parent loop
-    assert body.count("<circle cx=\"${R2X}\"") == 1
+    j = body.index("});", i)
+    assert "<path" in body[i:j] and "<circle" not in body[i:j]
+    assert body.count('<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}"') == 1
+    # and its well, drawn once too
+    assert body.count('r="${R2R-2}" fill="url(#hilite)"') == 1
 
 
 def test_a_shared_node_is_drawn_more_firmly_than_a_single_one():

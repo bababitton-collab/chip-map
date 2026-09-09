@@ -28,6 +28,19 @@ a{color:inherit}
 .stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0px;min-height:720px}
 .stage.open{grid-template-columns:minmax(0,1fr) 460px}
 canvas{display:block;width:100%;height:720px;cursor:crosshair}
+.mapwrap{position:relative;min-width:0}
+/* Zero height so it overlays the canvas instead of pushing it down; sticky so
+   the labels stay put while the map scrolls past. The bands themselves are
+   painted on the canvas and do NOT stick -- they are part of the map. */
+.layerbar{position:sticky;top:0;height:0;z-index:3;pointer-events:none}
+.layerbar .lbl{position:absolute;top:0;padding:14px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;line-height:1.35}
+/* Both halves at --ink2. --ink3 was the intent for the L-number and it cannot
+   reach 7:1 on any dark ground -- see the contrast test. Weight separates them
+   instead of luminance. */
+.layerbar .lbl b{font-weight:400;color:var(--ink2);margin-inline-end:7px}
+.layerbar .lbl i{font-style:normal;font-weight:500;color:var(--ink2)}
+.layerbar .rule{position:absolute;top:46px;inset-inline:0;height:1px;background:var(--rule)}
+@media (max-width:900px){.layerbar .lbl{white-space:normal;max-width:11ch;padding:10px}.layerbar .rule{top:56px}}
 .hint{position:absolute;bottom:10px;inset-inline-start:16px;font-size:.78rem;color:var(--ink3);pointer-events:none}
 .legend .row{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:2px 0}
 .legend .row b{font-weight:600;color:var(--ink2);min-width:22ch}
@@ -269,13 +282,29 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="inset" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="b"/>
+    <feOffset dx="0" dy="2" in="b" result="o"/>
+    <feComposite in="SourceAlpha" in2="o" operator="arithmetic" k2="-1" k3="1" result="i"/>
+    <feFlood flood-color="#000" flood-opacity=".55"/>
+    <feComposite in2="i" operator="in"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode/></feMerge>
+  </filter>
+  <radialGradient id="hilite" cx="35%" cy="30%" r="70%">
+    <stop offset="0" stop-color="#ffffff" stop-opacity=".10"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </radialGradient>
+</defs></svg>
+
 <div class="top">
   <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div></div>
   <div class="asof" id="asof"></div>
 </div>
 <div class="next" id="next"><span class="lbl">NEXT CHECKPOINTS</span></div>
 <div class="stage" id="stage">
-  <div style="position:relative;min-width:0">
+  <div class="mapwrap">
+    <div class="layerbar" id="layerbar"></div>
     <canvas id="map"></canvas>
     <div class="tip" id="tip"></div>
   </div>
@@ -330,6 +359,7 @@ const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace t
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
 let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, sats=[], satT=0, t0=performance.now();
+let bands=[];
 const pct=v=>v==null?'—':((v>0?'+':'')+(v*100).toFixed(1)+'%');
 const cls=v=>v==null?'':(v<0?'neg':'pos');
 
@@ -357,9 +387,32 @@ function layout(){
   const g9=(groups['L9']||[]); const xs=[xOf['L7'],xOf['L6']];
   g9.forEach((nd,i)=>{ nd.x=xOf['L7']+ (i/(g9.length-1||1))*(xOf['L6']-xOf['L7']); nd.y=H-34; });
   nodes.forEach(n=>{ n.r = n.cap? Math.max(7, Math.min(24, 6+18*Math.sqrt(n.cap/5516))) : 7; });
+  // One full-height band per layer column, alternating two tones, painted
+  // behind every line and node. No borders: the tone change is the boundary.
+  bands = cols.map((L,i)=>({L:L, x0:xOf[L]-colW/2, x1:xOf[L]+colW/2,
+                            tone: i%2 ? '#0e121a' : tok('--bg')}));
+  bands.sort((a,b)=>a.x0-b.x0);
+  bands[0].x0 = 0; bands[bands.length-1].x1 = W;
 }
 function resize(){
   DPR=Math.min(2,devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
+  SPR={};                      // the sprites were baked at the old DPR
+  layerBar();
+}
+
+// The header row: one label per band, at the band's inline start. Written as
+// DOM rather than painted on the canvas so that it can be sticky -- a canvas
+// label scrolls away with the pixels it is drawn on.
+function layerBar(){
+  const bar=document.getElementById('layerbar'); if(!bar) return;
+  const rtl=getComputedStyle(document.documentElement).direction==='rtl';
+  const cut=v=>String(v==null?'':v).replace(/[&<>"]/g,
+    c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  bar.innerHTML = bands.map(b=>{
+    const start = rtl ? (W-b.x1) : b.x0;
+    return `<div class="lbl" style="inset-inline-start:${Math.max(0,start).toFixed(1)}px">`
+      + `<b>${cut(b.L)}</b><i>${cut(LAYER_HE[b.L]||'')}</i></div>`;
+  }).join('') + '<div class="rule"></div>';
 }
 function edgePath(e){ const a=byId[e.from], b=byId[e.to]; const mx=(a.x+b.x)/2; return {a,b,c1:{x:mx,y:a.y},c2:{x:mx,y:b.y}}; }
 function bez(p,t){ const {a,b,c1,c2}=p; const u=1-t; return {x:u*u*u*a.x+3*u*u*t*c1.x+3*u*t*t*c2.x+t*t*t*b.x, y:u*u*u*a.y+3*u*u*t*c1.y+3*u*t*t*c2.y+t*t*t*b.y}; }
@@ -373,12 +426,76 @@ function pulseOf(n){ // returns {col, period, kind}
   const p=ps.reduce((a,b)=>a+b,0)/ps.length; const mag=Math.min(1,Math.abs(p)/0.25);
   return {col:p>0?tok('--tight'):tok('--erode'), period:2200-1400*mag, kind:p>0?'t':'e', p};
 }
+// An inner shadow, on canvas: clip to the disc, then cast the shadow of a
+// ring whose hole IS the disc, so the blur falls inward instead of outward.
+// Then a soft highlight off the top-left, the same gradient the SVG filter's
+// companion uses on the cards.
+function insetInto(g, x, y, r){
+  g.save();
+  g.beginPath(); g.arc(x,y,r,0,7); g.clip();
+  g.beginPath();
+  g.rect(x-r-14, y-r-14, r*2+28, r*2+28);
+  // moveTo first: arc() does not begin a subpath, so without it canvas joins
+  // the rectangle's corner to the arc's start and fills the wedge between
+  // them -- a hard diagonal band straight across the station.
+  g.moveTo(x+r, y);
+  g.arc(x,y,r,0,Math.PI*2,true);
+  g.shadowColor='rgba(0,0,0,.55)';
+  g.shadowBlur=Math.max(2, Math.min(6, r*0.5));
+  g.shadowOffsetY=2;
+  g.fillStyle='#000'; g.fill();
+  g.restore();
+  g.save();
+  g.beginPath(); g.arc(x,y,r,0,7); g.clip();
+  const cx=x-r*0.30, cy=y-r*0.40;
+  const gr=g.createRadialGradient(cx,cy,0,cx,cy,r);
+  gr.addColorStop(0,'rgba(255,255,255,.10)');
+  gr.addColorStop(0.7,'rgba(255,255,255,0)');
+  gr.addColorStop(1,'rgba(255,255,255,0)');
+  g.fillStyle=gr; g.fillRect(x-r,y-r,r*2,r*2);
+  g.restore();
+}
+
+// Every station is redrawn 60 times a second. The shape depends on the radius
+// alone, so it is rasterised once per whole-pixel radius and stamped after
+// that -- about eighteen sprites for forty-nine stations.
+//
+// Measured, both ways, on the desktop run: stamping costs 0.50 ms a frame at
+// the median and 1.10 ms at the worst; calling the shadowBlur directly on
+// every node costs 0.60 ms and 1.50 ms. Both fit the 16 ms budget several
+// times over, so this is not load-bearing -- it is kept because it bounds the
+// worst frame, and because the cost of a blur is the one thing here that grows
+// with the number of stations rather than with the number of radii.
+//
+// SPR is cleared on resize: the sprites are baked at the current DPR.
+let SPR={};
+function inset(x, y, r){
+  const key=Math.round(r);
+  let sp=SPR[key];
+  if(!sp){
+    const pad=10, side=(key+pad)*2;
+    const c=document.createElement('canvas');
+    c.width=c.height=Math.ceil(side*DPR); c.style.width=c.style.height=side+'px';
+    const g=c.getContext('2d'); g.setTransform(DPR,0,0,DPR,0,0);
+    insetInto(g, side/2, side/2, key);
+    sp=SPR[key]={c:c, half:side/2, side:side};
+  }
+  ctx.drawImage(sp.c, x-sp.half, y-sp.half, sp.side, sp.side);
+}
+
 function draw(now){
+  // The map animates continuously, so its per-frame cost is a budget, not a
+  // one-off. Published so a check can read it rather than infer it from the
+  // rAF interval, which is vsync-locked at 16.7 ms whether the work took one
+  // millisecond or fifteen.
+  const _fs=performance.now();
   const T=now-t0;
   ctx.clearRect(0,0,W,H);
-  // column labels
-  ctx.font='13px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink3'); ctx.textAlign='center';
-  const seen={}; nodes.forEach(n=>{ const L=n.layer; if(seen[L]||L==='L9') return; seen[L]=1; ctx.fillText(L+' · '+(LAYER_HE[L]||''), n.x, 22); });
+  // The column bands, first, behind everything.
+  bands.forEach(b=>{ ctx.fillStyle=b.tone; ctx.fillRect(b.x0,0,b.x1-b.x0,H); });
+  // The column labels are DOM now -- see layerBar() -- so that they can stay
+  // put when the page scrolls. L9 is not a column and keeps its canvas label.
+  ctx.font='13px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign='center';
   ctx.fillText('L9 · '+LAYER_HE.L9, (byId.gev.x+byId.ceg.x)/2, H-52);
   // edges
   const focus = selected||hover;
@@ -396,7 +513,7 @@ function draw(now){
   // particles
   if(!REDUCED){ particles.forEach(q=>{ q.t+=q.v; if(q.t>1) q.t-=1; const e=edges[q.e]; const pt=bez(e._p,q.t); const rel=focus&&(e.from===focus.id||e.to===focus.id); ctx.beginPath(); ctx.arc(pt.x,pt.y,rel?2.4:1.6,0,7); ctx.fillStyle=LCOL[e._p.a.line]; ctx.globalAlpha=rel?1:.55; ctx.fill(); ctx.globalAlpha=1; }); }
   // satellites (opened sub-suppliers)
-  if(sats.length){ const k=Math.min(1,(now-satT)/450); sats.forEach(s=>{ const x=selected.x+(s.tx-selected.x)*k, y=selected.y+(s.ty-selected.y)*k; ctx.beginPath(); ctx.moveTo(selected.x,selected.y); ctx.lineTo(x,y); ctx.strokeStyle=s.sole?tok('--tight')+'88':'#ffffff33'; ctx.lineWidth=1; ctx.stroke(); ctx.beginPath(); ctx.arc(x,y,s.tier===1?4.5:3,0,7); ctx.fillStyle=s.sole?tok('--tight'):(s.tier===1?tok('--ink2'):tok('--ink3')); ctx.fill(); s.x=x; s.y=y; if(k>=1){ ctx.font='12px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign=s.tx>=selected.x?'left':'right'; ctx.fillText(s.label, x+(s.tx>=selected.x?8:-8), y+4); } }); }
+  if(sats.length){ const k=Math.min(1,(now-satT)/450); sats.forEach(s=>{ const x=selected.x+(s.tx-selected.x)*k, y=selected.y+(s.ty-selected.y)*k; ctx.beginPath(); ctx.moveTo(selected.x,selected.y); ctx.lineTo(x,y); ctx.strokeStyle=s.sole?tok('--tight')+'88':'#ffffff33'; ctx.lineWidth=1; ctx.stroke(); const sr=s.tier===1?4.5:3; ctx.beginPath(); ctx.arc(x,y,sr,0,7); ctx.fillStyle=s.sole?tok('--tight'):(s.tier===1?tok('--ink2'):tok('--ink3')); ctx.fill(); inset(x,y,sr); s.x=x; s.y=y; if(k>=1){ ctx.font='12px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign=s.tx>=selected.x?'left':'right'; ctx.fillText(s.label, x+(s.tx>=selected.x?8:-8), y+4); } }); }
   // nodes
   nodes.forEach(n=>{
     const pu=pulseOf(n);
@@ -406,6 +523,8 @@ function draw(now){
     ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill();
     ctx.globalAlpha=.55; ctx.lineWidth=1; ctx.strokeStyle=LCOL[n.line]; ctx.stroke(); ctx.restore();
     ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill();
+    inset(n.x,n.y,n.r);
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7);
     ctx.lineWidth=(n===selected||n===hover)?3:2;
     ctx.strokeStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink3'); ctx.stroke();
     // label
@@ -413,6 +532,7 @@ function draw(now){
     const lbl=n.short||n.name.split(' ')[0];
     ctx.fillText(lbl, n.x, n.y+n.r+16);
   });
+  window.__frameMs=performance.now()-_fs;
   requestAnimationFrame(draw);
 }
 let hoverEdge=null;
@@ -760,6 +880,8 @@ function lockedHTML(){
   function ringSVG(n){
     const col=ringColor(n), off=ringOffset(n), c=countdown(n);
     return `<div class="ring"><svg viewBox="0 0 118 118">
+      <circle cx="59" cy="59" r="47" fill="#141922" filter="url(#inset)"/>
+      <circle cx="59" cy="59" r="45" fill="url(#hilite)" pointer-events="none"/>
       <circle cx="59" cy="59" r="52" fill="none" stroke="#222a36" stroke-width="7"/>
       <circle cx="59" cy="59" r="52" fill="none" stroke="${col}" stroke-width="7"
         stroke-linecap="round" stroke-dasharray="${CIRC}" stroke-dashoffset="${off.toFixed(1)}"/>
@@ -772,6 +894,8 @@ function lockedHTML(){
     const col = mark===M.yes?'#3fd18b':(mark===M.no?'#ff5a3c':'#7d8797');
     const dash = auto?' stroke-dasharray="6 5"':'';
     return `<div class="ring"><svg viewBox="0 0 118 118">
+      <circle cx="59" cy="59" r="47" fill="#141922" filter="url(#inset)"/>
+      <circle cx="59" cy="59" r="45" fill="url(#hilite)" pointer-events="none"/>
       <circle cx="59" cy="59" r="52" fill="none" stroke="${col}" stroke-width="7" opacity=".85"${dash}/>
     </svg><div class="n"><small style="color:${col};font-size:.8rem">${esc(mark)}</small>${auto?`<small class="autotag">${T.auto}</small>`:''}</div></div>`;
   }
@@ -894,7 +1018,8 @@ function lockedHTML(){
       drawn.push({id:o.id, y:y, col:col, r:r});
       g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
       g+=`<circle cx="${m.x.toFixed(1)}" cy="${m.y.toFixed(1)}" r="2.2" fill="${col}"/>`;
-      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="2"/>`;
+      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="2" filter="url(#inset)"/>`;
+      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r-2}" fill="url(#hilite)" pointer-events="none"/>`;
       g+=`<text x="${R1X}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(lab)}</text>`;
       const full=reasonOf(centreId,o.id);
       if(full){
@@ -916,7 +1041,8 @@ function lockedHTML(){
         g2+=`<path d="M${R1X+p.r},${p.y.toFixed(1)} C${R1X+55},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${p.col}" stroke-width="1" opacity=".45"/>`;
       });
       const two = k.parents.length>1;
-      g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${col}" stroke-width="${two?2:1.4}" opacity="${two?.95:.7}"/>`;
+      g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${col}" stroke-width="${two?2:1.4}" opacity="${two?.95:.7}" filter="url(#inset)"/>`;
+      g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R-2}" fill="url(#hilite)" pointer-events="none"/>`;
       const lab=clip(labelBeside(k.id), 9);
       const tip=k.labels.filter(Boolean).join(' · ');
       g2+=`<text x="${R2X+R2R+4}" y="${(y+3).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="9" fill="${two?'#c7d0dc':'#9aa4b2'}" font-weight="${two?600:400}">${esc(lab)}${tip?`<title>${esc(tip)}</title>`:''}</text>`;
@@ -929,7 +1055,8 @@ function lockedHTML(){
     return `<div class="cons"><svg viewBox="0 0 ${VBW} ${VBH}">
       <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
       ${g2}${g}
-      <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2"/>
+      <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"/>
+      <circle cx="${CX}" cy="${CY}" r="20" fill="url(#hilite)" pointer-events="none"/>
       <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr}</text>
     </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span>${leg2}</div></div>`;
   }

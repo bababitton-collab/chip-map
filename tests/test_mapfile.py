@@ -109,3 +109,29 @@ def test_unparseable_prose_is_flagged_for_a_person_not_silently_dropped():
         "ticker": "PVA TePla = TPE (Xetra); Ferrotec = 6890.T",
     })
     assert e.ticker is None and "needs a person" in e.reason
+
+
+# -- sponsors ----------------------------------------------------------------
+
+def test_every_sponsor_is_a_station_on_the_map():
+    """A sponsor line says "this station is attacking that chokepoint". A
+    sponsor that is not on the map cannot be drawn or clicked."""
+    import json
+    from chains.paths import map_path
+    m = json.loads(map_path().read_text(encoding="utf-8"))
+    ids = {n["id"] for n in m["nodes"]}
+    bad = [(cp, r["name"], r["sponsor"])
+           for cp, rows in (m.get("challengers") or {}).items()
+           for r in rows if r.get("sponsor") and r["sponsor"] not in ids]
+    assert bad == []
+
+
+def test_a_sponsored_challenger_still_carries_its_source():
+    """The sponsor claim rests on the row's own signal_source; a sponsored row
+    with no source would be an assertion with nothing behind it."""
+    import json
+    from chains.paths import map_path
+    m = json.loads(map_path().read_text(encoding="utf-8"))
+    bad = [r["name"] for rows in (m.get("challengers") or {}).values()
+           for r in rows if r.get("sponsor") and not r.get("signal_source")]
+    assert bad == []

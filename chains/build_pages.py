@@ -166,8 +166,6 @@ TRANSLATIONS = [
  ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
  ("`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`", "`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`"),
  ("`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'היום':'בעוד '+e.days+' ימים'} · ${e.d}</i>`", "`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'today':'in '+e.days+' days'} · ${e.d}</i>`"),
- ("'<span style=\"color:var(--ink3)\">רחף על תחנה · לחץ לפתיחה · הנקודות הנעות הן הזרימה</span>'", "'<span style=\"color:var(--ink3)\">hover a station · click to open · moving dots are the flow</span>'"),
- ("`<span><i class=\"pl\"></i>מתהדק</span><span><i class=\"pe\"></i>נשחק</span><span><i class=\"pa\"></i>אין מאתגר סחיר</span>`", "`<span><i class=\"pl\"></i>tightening</span><span><i class=\"pe\"></i>eroding</span><span><i class=\"pa\"></i>no listed challenger</span>`"),
  ("const LHE = {logic:'לוגיקה',memory:'זיכרון',packaging:'אריזה',network:'רשת',power:'חשמל',cloud:'ענן'};", "const LHE = {logic:'logic',memory:'memory',packaging:'packaging',network:'network',power:'power',cloud:'cloud'};"),
  ("const LAYER_HE = {L1:'חומרי גלם',L2:'ציוד',L3:'תכנון',L4:'מעצבות',L5:'מפעל ואריזה',L6:'מערכות',L7:'ענן',L9:'חשמל'};", "const LAYER_HE = {L1:'materials',L2:'equipment',L3:'design',L4:'chip designers',L5:'fab & packaging',L6:'systems',L7:'cloud',L9:'power'};"),
  ("`13 שבועות <span dir=\"ltr\">${pct(px.r13w)}</span> · שנה <span dir=\"ltr\">${pct(px.r52w)}</span>`:'אין קו מחיר'", "`13 weeks <span dir=\"ltr\">${pct(px.r13w)}</span> · 1 year <span dir=\"ltr\">${pct(px.r52w)}</span>`:'no price line'"),
@@ -175,16 +173,10 @@ TRANSLATIONS = [
  ("const he={research:'מחקר',pilot:'פיילוט',qualified:'הסמכה',volume:'ייצור'}[st]||''", "const he={research:'research',pilot:'pilot',qualified:'qualified',volume:'volume'}[st]||''"),
  ("`<h3>מהדוחות (EDGAR)</h3>", "`<h3>From the filings (EDGAR)</h3>"),
  ('<button class="close" id="pclose">סגור</button>', '<button class="close" id="pclose">close</button>'),
- ("const sent = pu==null ? (c.n_chal_priced? 'למחזיק אין קו מחיר.':'אין מאתגר סחיר. הדופק כתום: אי אפשר למדוד את הלחץ בשוק.') : (pu>0? 'הנעילה מתהדקת: המחזיק עוקף את המאתגרים.' : 'הנעילה נשחקת: המאתגרים עוקפים את המחזיק.');",
-  "const sent = pu==null ? (c.n_chal_priced? 'The holder has no price line.':'No listed challenger. Amber pulse: the market pressure cannot be measured.') : (pu>0? 'The lock is tightening: the holder is outrunning its challengers.' : 'The lock is eroding: challengers are outrunning the holder.');"),
- ("`<h3>מי מספק למחזיק · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`", "`<h3>Who supplies the holder · ${t1.length} direct, ${t2.length} beneath them</h3>`"),
  ("'<span class=\"badge sole\">ספק יחיד</span>'", "'<span class=\"badge sole\">sole source</span>'"),
  ("'<span class=\"badge priv\">פרטית</span>'", "'<span class=\"badge priv\">private</span>'"),
  ("'<span style=\"color:var(--ink3)\">אומדן</span>'", "'<span style=\"color:var(--ink3)\">estimate</span>'"),
- ("`<h3>מי מנסה לפרוץ · ${c.sigs.length}</h3>`", "`<h3>Who is trying to break it · ${c.sigs.length}</h3>`"),
  ("`<div class=\"nextcp\">הבדיקה הבאה: <b>${nx.who}</b> · ${nx.d} · בעוד ${nx.days} ימים</div>`", "`<div class=\"nextcp\">Next checkpoint: <b>${nx.who}</b> · ${nx.d} · in ${nx.days} days</div>`"),
- ("`<h3>מקבל מ</h3>`", "`<h3>Receives from</h3>`"),
- ("`<h3>מספק ל</h3>`", "`<h3>Supplies to</h3>`"),
  ("`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה\"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`",
   "`<b>The pulse</b> is the market's vote over the last 13 weeks: the holder's return minus its listed challengers' return. Positive — the lock is tightening, red and fast. Negative — eroding, green and slow. Right now: ${nt} tightening, ${ne} eroding, ${na} with no listed challenger. Station size is market cap. Each company in its own currency; Japanese names via US depositary receipts. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone. Every number carries a source; \"estimate\" means none was found. Prices lag by up to a week.`"),
  # The private watch table. The public build replaces this whole section, but
@@ -237,6 +229,20 @@ TRANSLATIONS = [
   "  const T = {head:'Every question, before it is answered',\n    promise:'Every dated question, what to listen for, who leaks first, and the answer with its source — before and after each event.',\n    btn:'Get the weekly mail', soon:'coming soon',\n    disc:'Free and paid, no recommendations. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone.',\n    q:'questions', open:'open', next:'next answer in', days:'days', today:'today'};"),
  ("${(w.leaks||[]).length? (w.leaks||[]).length+' רמזים' : ''}",
   "${(w.leaks||[]).length? (w.leaks||[]).length+' hints' : ''}"),
+ # One visual language: plain words for holder/challenger, a two-row
+ # legend, and the peer panel's section titles.
+ ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',\n  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?'};",
+  "const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',\n  buys:'Buys from', sells:'Sells to', peers:'Others in this layer',\n  via:'Challenges through', against:'against', sells1:'sells', to:'to ',\n  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?'};"),
+ ('    `<span class="hint">רחף על תחנה או על קו · לחץ לפתיחה · החץ מצביע על הקונה</span>`\n    + `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`\n    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;',
+  '    `<span class="hint">hover a station or a line · click to open · the arrow points at the buyer</span>`\n    + `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`\n    + `<span><i class="pa"></i>cannot be measured</span></div>`;'),
+ ('    h+=`<h3>מי מספק למי ש${WORDS.holder} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;',
+  '    h+=`<h3>Who supplies the company that ${WORDS.holder} · ${t1.length} direct, ${t2.length} beneath them</h3>`;'),
+ ('    h+=`<h3>מי ${WORDS.challenger} · ${c.sigs.length}</h3>`;',
+  '    h+=`<h3>Who is ${WORDS.challenger} · ${c.sigs.length}</h3>`;'),
+ ("'למי ששולט אין קו מחיר.':'אין מי שמנסה להחליף אותו ונסחר. הטבעת כתומה: אי אפשר למדוד את הלחץ בשוק.'",
+  "'The company that controls it has no price line.':'Nobody listed is trying to replace them. Amber ring: the market pressure cannot be measured.'"),
+ ("'הנעילה מתהדקת: מי ששולט עוקף את מי שמנסה להחליף אותו.' : 'הנעילה נשחקת: מי שמנסה להחליף עוקף את מי ששולט.'",
+  "'The lock is tightening: the company in control is outrunning the ones trying to replace it.' : 'The lock is eroding: the ones trying to replace it are outrunning the company in control.'"),
 ]
 
 

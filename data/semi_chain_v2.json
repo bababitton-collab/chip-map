@@ -8112,7 +8112,8 @@
     "stage": "volume",
     "signal": "Named production tool of record for most-advanced DRAM at a leading memory maker (Jan-2025); next signal is a logic foundry naming Aether as PTOR",
     "signal_source": "https://investor.lamresearch.com/2025-01-29-Breakthrough-EUV-Dry-Photoresist-Technology-from-Lam-Research-Adopted-by-Leading-Memory-Manufacturer",
-    "as_of": "2025-01-29"
+    "as_of": "2025-01-29",
+    "sponsor": "lrcx"
    },
    {
     "name": "JSR/Inpria metal-oxide resist",
@@ -8174,7 +8175,8 @@
     "stage": "research",
     "signal": "A foundry qualification of an AMAT-made blank; semiconductorx estimates commercialization ~a decade away",
     "signal_source": "https://semiengineering.com/euv-mask-blank-biz-heats-up/",
-    "as_of": "2019-06-01"
+    "as_of": "2019-06-01",
+    "sponsor": "amat"
    },
    {
     "name": "Hoya Singapore third EUV blank plant (capacity, not competitor)",
@@ -8226,7 +8228,8 @@
     "stage": "qualified",
     "signal": "Taylor fab ramp production actually starting in 2027 with a disclosed 2nm yield or wafer-start number for Tesla AI5 (tape-out completed Jul-2026; equipment move-in began Apr-2026)",
     "signal_source": "https://www.trendforce.com/news/2026/07/13/news-samsung-reportedly-completes-tesla-ai5-tape-out-paving-the-way-for-2nm-ramp-at-taylor-fab/",
-    "as_of": "2026-07-13"
+    "as_of": "2026-07-13",
+    "sponsor": "samsung"
    },
    {
     "name": "Intel Foundry 18A / 18A-P / 14A",
@@ -8236,7 +8239,8 @@
     "stage": "qualified",
     "signal": "A named external customer's product shipping in volume on 18A-P (reported: Apple low-end Mac/iPad, Nvidia, AMD hedges); reported yield ~65% -> >85% in one quarter (Jul-2026)",
     "signal_source": "https://rcrtech.com/semiconductor-news/intel-foundry-18a-yields/ ; https://www.cnbc.com/2026/06/16/intel-begins-production-of-18a-p-inches-closer-to-possible-apple-deal.html",
-    "as_of": "2026-07-20"
+    "as_of": "2026-07-20",
+    "sponsor": "intc"
    },
    {
     "name": "Rapidus 2nm (IIM-1, Chitose, Hokkaido)",
@@ -8288,7 +8292,8 @@
     "stage": "research",
     "signal": "A licensee announcing a production line using Intel glass-core IP",
     "signal_source": "https://www.tomshardware.com/tech-industry/manufacturing/glass-substrate-roadmap-examined",
-    "as_of": "2026"
+    "as_of": "2026",
+    "sponsor": "intc"
    },
    {
     "name": "TSMC CoPoS (chip-on-panel-on-substrate) panel-level packaging, Chiayi",
@@ -8444,7 +8449,8 @@
     "stage": "volume",
     "signal": "Nvidia certified all three suppliers for Vera Rubin HBM4 (June 2026); SK hynix still ~two-thirds to ~70% of Nvidia HBM4 (Jan-2026). Signal to watch: Counterpoint quarterly HBM share moving from 32% (Q2-2026) toward Samsung's stated >30%-plus target and Nvidia allocation above one-third",
     "signal_source": "https://siliconanalysts.com/analysis/hbm-qualification-race-2022-2026",
-    "as_of": "2026-06-30"
+    "as_of": "2026-06-30",
+    "sponsor": "samsung"
    },
    {
     "name": "Micron Technology share gain",
@@ -8454,7 +8460,8 @@
     "stage": "volume",
     "signal": "HBM4 cumulative revenue >$1B by FQ3-2026; HBM4 to be ~50% of Micron HBM output by end-2026. Counterpoint Q2-2026 share 18% (SK hynix 50%, Samsung 32%)",
     "signal_source": "https://www.tradingkey.com/analysis/stocks/us-stocks/262151809-micron-mu-hbm-capacity-doubling-samsung-sk-hynix-hbm4-ai-memory-vera-rubin-tradingkey",
-    "as_of": "2026-08-01"
+    "as_of": "2026-08-01",
+    "sponsor": "mu"
    },
    {
     "name": "Custom HBM / Nvidia NVHBM (Nvidia-designed base die + PHY)",
@@ -8464,7 +8471,8 @@
     "stage": "qualified",
     "signal": "Announced 2026-08-26 as 'designed and validated with leading memory vendors'; first partner Amazon Annapurna (Trainium 4 follow-on). Signal: first NVHBM-based part in production and which DRAM maker supplies the core dies",
     "signal_source": "https://www.tomshardware.com/pc-components/dram/nvidia-custom-nvhbm-promises-30-percent-higher-bandwidth-15-percent-lower-power-than-commodity-hbm4e-custom-base-die-and-phy-will-be-available-to-nvlink-fusion-partners",
-    "as_of": "2026-08-26"
+    "as_of": "2026-08-26",
+    "sponsor": "nvda"
    },
    {
     "name": "Marvell / Broadcom custom HBM (cHBM) base dies",
@@ -8628,7 +8636,8 @@
     "stage": "volume",
     "signal": "Magnum 7H volume shipments ramping at major HBM makers (Aug-2025); Q2-2026 Semiconductor Test $1,122M, record memory revenue. Signal: Advantest memory-tester revenue share printed below ~60%",
     "signal_source": "https://investors.teradyne.com/news-events/press-releases/detail/445/teradyne-reports-second-quarter-2026-results",
-    "as_of": "2026-07-29"
+    "as_of": "2026-07-29",
+    "sponsor": "ter"
    },
    {
     "name": "Chroma ATE (SLT displacing ATE minutes at Nvidia)",
@@ -8812,7 +8821,8 @@
     "stage": "qualified",
     "signal": "Spectrum-X CPO switch shipping to select partners; production expansion H2-2026 (TrendForce). Signal to watch: NVIDIA disclosing CPO switch unit volumes or a hyperscaler naming CPO in production.",
     "signal_source": "https://www.trendforce.com/presscenter/news/20260727-13151.html",
-    "as_of": "2026-07-27"
+    "as_of": "2026-07-27",
+    "sponsor": "nvda"
    },
    {
     "name": "Broadcom Tomahawk-5 Bailly / Tomahawk-6 Davisson CPO",
@@ -8822,7 +8832,8 @@
     "stage": "volume",
     "signal": "TH6-Davisson moving from sampling to a named hyperscaler production deployment",
     "signal_source": "https://www.trendforce.com/presscenter/news/20260727-13151.html",
-    "as_of": "2026-07-27"
+    "as_of": "2026-07-27",
+    "sponsor": "avgo"
    },
    {
     "name": "Marvell / Celestial AI Photonic Fabric",
@@ -8904,7 +8915,8 @@
     "stage": "volume",
     "signal": "Quarterly reported GW shipped (3 GW in Q2-26) against 20 GW annualised target",
     "signal_source": "https://www.turbomachinerymag.com/view/ge-vernova-gas-turbine-backlog-hits-116-gw-as-power-orders-more-than-double",
-    "as_of": "2026-07-22"
+    "as_of": "2026-07-22",
+    "sponsor": "gev"
    },
    {
     "name": "Siemens Energy capacity ramp + US $1bn program",
@@ -8914,7 +8926,8 @@
     "stage": "volume",
     "signal": "Q3-26 shipped 6 GW vs booked 15 GW; signal = first Charlotte-built turbine shipment (power delivery target end-2028)",
     "signal_source": "https://www.turbomachinerymag.com/view/siemens-energy-invests-1b-to-upscale-u-s-grid-gas-turbine-manufacturing",
-    "as_of": "2026-02-03"
+    "as_of": "2026-02-03",
+    "sponsor": "siemensenergy"
    },
    {
     "name": "Mitsubishi Power (MHI) doubling",
@@ -8974,7 +8987,8 @@
     "stage": "volume",
     "signal": "Aero unit orders per quarter in GEV filings",
     "signal_source": "https://www.gevernova.com/news/press-releases/ge-vernova-crusoe-announce-major-29-unit-aeroderivative-gas-turbine-deliver-ai-data-centers",
-    "as_of": "2025-07-22"
+    "as_of": "2025-07-22",
+    "sponsor": "gev"
    },
    {
     "name": "Bloom Energy SOFC onsite power",
@@ -9014,7 +9028,8 @@
     "stage": "pilot",
     "signal": "First large power transformer produced in Charlotte (early-2027 per POWER; originally early-2026)",
     "signal_source": "https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/",
-    "as_of": "2026-05-01"
+    "as_of": "2026-05-01",
+    "sponsor": "siemensenergy"
    },
    {
     "name": "HD Hyundai Electric Montgomery AL plant 2",

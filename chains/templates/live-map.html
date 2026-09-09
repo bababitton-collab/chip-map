@@ -3,7 +3,7 @@
 <style>
 :root{
   --bg:#0d1117; --bg2:#131a22; --panel:#161e28; --ink:#e9e4d8; --ink2:#b3b9c2; --ink3:#7d8590; --rule:#232c37; --rule2:#31405000;
-  --logic:#6ba3e8; --memory:#ef7f66; --packaging:#e0b04a; --network:#5cba86; --power:#ad8ce0; --cloud:#cfc7b6;
+  --logic:#7d93b8; --memory:#c08878; --packaging:#b39a6a; --network:#7aa894; --power:#9b90bd; --cloud:#a9a396;
   --tight:#ff5a3c; --erode:#4fd18b; --amber:#e0b04a;
   color-scheme:dark;
 }
@@ -29,7 +29,10 @@ a{color:inherit}
 .stage.open{grid-template-columns:minmax(0,1fr) 460px}
 canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .hint{position:absolute;bottom:10px;inset-inline-start:16px;font-size:.78rem;color:var(--ink3);pointer-events:none}
-.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.92rem;color:var(--ink2);padding:8px 22px;border-top:1px solid var(--rule);background:var(--bg2)}
+.legend .row{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:2px 0}
+.legend .row b{font-weight:600;color:var(--ink2);min-width:22ch}
+.legend .hint{color:var(--ink3);display:block;margin-bottom:4px}
+.legend{display:block;gap:6px 18px;font-size:.92rem;color:var(--ink2);padding:8px 22px;border-top:1px solid var(--rule);background:var(--bg2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
 .legend .pl{width:10px;height:10px;border-radius:50%;border:2px solid var(--tight)}
@@ -267,6 +270,12 @@ let D = LIVE;
 const C = getComputedStyle(document.documentElement); const tok=n=>C.getPropertyValue(n).trim();
 const LCOL = {logic:tok('--logic'),memory:tok('--memory'),packaging:tok('--packaging'),network:tok('--network'),power:tok('--power'),cloud:tok('--cloud')};
 const LHE = {logic:'לוגיקה',memory:'זיכרון',packaging:'אריזה',network:'רשת',power:'חשמל',cloud:'ענן'};
+// Plain words. "Holder" and "challenger" are the field names in the data and
+// they stay there; nobody reading a map should have to learn them.
+const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',
+  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',
+  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',
+  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?'};
 const LAYER_HE = {L1:'חומרי גלם',L2:'ציוד',L3:'תכנון',L4:'מעצבות',L5:'מפעל ואריזה',L6:'מערכות',L7:'ענן',L9:'חשמל'};
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
@@ -322,7 +331,17 @@ function draw(now){
   ctx.fillText('L9 · '+LAYER_HE.L9, (byId.gev.x+byId.ceg.x)/2, H-52);
   // edges
   const focus = selected||hover;
-  edges.forEach((e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); ctx.beginPath(); ctx.moveTo(p.a.x,p.a.y); ctx.bezierCurveTo(p.c1.x,p.c1.y,p.c2.x,p.c2.y,p.b.x,p.b.y); ctx.strokeStyle=rel?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=rel?1.8:1; ctx.stroke(); e._p=p; });
+  edges.forEach((e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); const on=(e===hoverEdge);
+    ctx.beginPath(); ctx.moveTo(p.a.x,p.a.y); ctx.bezierCurveTo(p.c1.x,p.c1.y,p.c2.x,p.c2.y,p.b.x,p.b.y);
+    ctx.strokeStyle=(rel||on)?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=on?2.6:(rel?1.8:1); ctx.stroke(); e._p=p;
+    // An arrowhead at the CUSTOMER end. The line already showed that two
+    // stations are connected; it never showed which way the goods travel, and
+    // on a supply chain that is the whole point of the picture.
+    const t1=bez(p,0.965), t0=bez(p,0.90), ang=Math.atan2(t1.y-t0.y,t1.x-t0.x);
+    const hx=p.b.x-Math.cos(ang)*(p.b.r||8), hy=p.b.y-Math.sin(ang)*(p.b.r||8);
+    ctx.save(); ctx.translate(hx,hy); ctx.rotate(ang);
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-7,-3.2); ctx.lineTo(-7,3.2); ctx.closePath();
+    ctx.fillStyle=(rel||on)?LCOL[p.a.line]:'#ffffff33'; ctx.fill(); ctx.restore(); });
   // particles
   if(!REDUCED){ particles.forEach(q=>{ q.t+=q.v; if(q.t>1) q.t-=1; const e=edges[q.e]; const pt=bez(e._p,q.t); const rel=focus&&(e.from===focus.id||e.to===focus.id); ctx.beginPath(); ctx.arc(pt.x,pt.y,rel?2.4:1.6,0,7); ctx.fillStyle=LCOL[e._p.a.line]; ctx.globalAlpha=rel?1:.55; ctx.fill(); ctx.globalAlpha=1; }); }
   // satellites (opened sub-suppliers)
@@ -331,9 +350,13 @@ function draw(now){
   nodes.forEach(n=>{
     const pu=pulseOf(n);
     if(pu&&!REDUCED){ const ph=(T%pu.period)/pu.period; const rr=n.r+4+ph*16; ctx.beginPath(); ctx.arc(n.x,n.y,rr,0,7); ctx.strokeStyle=pu.col; ctx.globalAlpha=(1-ph)*.7; ctx.lineWidth=2; ctx.stroke(); ctx.globalAlpha=1; }
-    if(pu){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r+3,0,7); ctx.strokeStyle=pu.col; ctx.lineWidth=2; ctx.stroke(); }
-    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill(); ctx.lineWidth=(n===selected||n===hover)?3.5:2.2; ctx.strokeStyle=LCOL[n.line]; ctx.stroke();
-    if(n.r>10){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r*.45,0,7); ctx.fillStyle=LCOL[n.line]; ctx.globalAlpha=.6; ctx.fill(); ctx.globalAlpha=1; }
+    if(pu){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r+5,0,7); ctx.strokeStyle=pu.col; ctx.lineWidth=2.5; ctx.stroke(); }
+    ctx.save(); ctx.shadowColor=LCOL[n.line]; ctx.shadowBlur=n.r*0.9;
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill();
+    ctx.globalAlpha=.55; ctx.lineWidth=1; ctx.strokeStyle=LCOL[n.line]; ctx.stroke(); ctx.restore();
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill();
+    ctx.lineWidth=(n===selected||n===hover)?3:2;
+    ctx.strokeStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink3'); ctx.stroke();
     // label
     ctx.font=(n===selected||n===hover?'700 ':'600 ')+'14px "Assistant", sans-serif'; ctx.fillStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink2'); ctx.textAlign='center';
     const lbl=n.short||n.name.split(' ')[0];
@@ -341,9 +364,38 @@ function draw(now){
   });
   requestAnimationFrame(draw);
 }
+let hoverEdge=null;
+// Nearest edge to the cursor, by sampling the curve. Twenty samples is enough
+// for a 6px tolerance on curves this shallow, and it costs nothing next to the
+// draw loop that is already running every frame.
+function edgeAt(x,y){
+  let best=null,bd=7;
+  edges.forEach(e=>{ const p=e._p; if(!p) return;
+    for(let k=0;k<=20;k++){ const q=bez(p,k/20); const d=Math.hypot(q.x-x,q.y-y);
+      if(d<bd){ bd=d; best=e; } } });
+  return best;
+}
 function nodeAt(x,y){ let best=null,bd=1e9; nodes.forEach(n=>{ const d=Math.hypot(n.x-x,n.y-y); if(d<n.r+8&&d<bd){bd=d;best=n;} }); return best; }
-cv.addEventListener('mousemove',ev=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(ev.clientX-r.left, ev.clientY-r.top); hover=n; cv.style.cursor=n?'pointer':'crosshair'; if(n){ const px=n.px; tip.innerHTML=`<b>${n.name}${n.ticker?' · '+n.ticker:''}</b>${px?`13 שבועות <span dir="ltr">${pct(px.r13w)}</span> · שנה <span dir="ltr">${pct(px.r52w)}</span>`:'אין קו מחיר'}${n.cp?'<br>'+n.cp.map(c=>c.he).join(' · '):''}`; tip.style.display='block'; const lx=ev.clientX-r.left, ly=ev.clientY-r.top; tip.style.left=Math.min(lx+14, W-290)+'px'; tip.style.top=(ly+12)+'px'; } else tip.style.display='none'; });
-cv.addEventListener('mouseleave',()=>{hover=null;tip.style.display='none';});
+// One sentence, built from the data. e.what when the map records what moves;
+// otherwise the line's own name -- never a guess at the product.
+function edgeSentence(e){
+  const a=byId[e.from], b=byId[e.to];
+  // The product, not the commentary. e.what sometimes carries a clause and
+  // then a quote ("...substrates for AI GPUs; CEO: 'All of Nvidia's...'"), and
+  // a tooltip is not the place for the second half. Cut at the semicolon and
+  // cap the length -- shortening, never substituting.
+  let what=(e.what&&String(e.what).trim())||'';
+  what=what.split(';')[0].trim();
+  if(what.length>80) what=what.slice(0,80).trim()+'…';
+  if(!what) what=LHE[a.line]||a.line;
+  // Marked with a class so a reader's tooling -- and the tests -- can tell an
+  // edge tooltip from a station one without parsing the sentence.
+  return `<span class="edgetip"><b>${a.name}</b> ${WORDS.sells1} ${what} ${WORDS.to}<b>${b.name}</b></span>`;
+}
+cv.addEventListener('mousemove',ev=>{ const r=cv.getBoundingClientRect(); const mx=ev.clientX-r.left, my=ev.clientY-r.top; const n=nodeAt(mx,my); hover=n; hoverEdge=n?null:edgeAt(mx,my); cv.style.cursor=(n||hoverEdge)?'pointer':'crosshair';
+  if(!n&&hoverEdge){ tip.innerHTML=edgeSentence(hoverEdge); tip.style.display='block'; const px0=Math.min(mx+14,W-260); tip.style.left=px0+'px'; tip.style.top=(my+14)+'px'; return; }
+  if(n){ const px=n.px; tip.innerHTML=`<b>${n.name}${n.ticker?' · '+n.ticker:''}</b>${px?`13 שבועות <span dir="ltr">${pct(px.r13w)}</span> · שנה <span dir="ltr">${pct(px.r52w)}</span>`:'אין קו מחיר'}${n.cp?'<br>'+n.cp.map(c=>c.he).join(' · '):''}`; tip.style.display='block'; const lx=ev.clientX-r.left, ly=ev.clientY-r.top; tip.style.left=Math.min(lx+14, W-290)+'px'; tip.style.top=(ly+12)+'px'; } else tip.style.display='none'; });
+cv.addEventListener('mouseleave',()=>{hover=null;hoverEdge=null;tip.style.display='none';});
 cv.addEventListener('click',ev=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(ev.clientX-r.left, ev.clientY-r.top); if(n) open(n); else close(); });
 
 function spark(px){ if(!px||!px.spark||px.spark.length<2) return '<p class="role">אין קו מחיר.</p>'; const s=px.spark, W=340,H=52; const lo=Math.min(...s),hi=Math.max(...s); const y=v=>4+(1-(v-lo)/((hi-lo)||1))*(H-8); const d=s.map((v,i)=>(i?'L':'M')+(i/(s.length-1)*W).toFixed(1)+' '+y(v).toFixed(1)).join(''); const col=s[s.length-1]>=100?tok('--erode'):tok('--tight'); return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr"><path d="${d}" fill="none" stroke="${col}" stroke-width="1.8"/><line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="#ffffff22" stroke-dasharray="3 3"/></svg><div class="r"><span>1w <b class="${cls(px.r1w)}">${pct(px.r1w)}</b></span><span>4w <b class="${cls(px.r4w)}">${pct(px.r4w)}</b></span><span>13w <b class="${cls(px.r13w)}">${pct(px.r13w)}</b></span><span>52w <b class="${cls(px.r52w)}">${pct(px.r52w)}</b></span><span style="color:var(--ink3)">${px.cur} · ${px.last}</span></div></div>`; }
@@ -357,12 +409,12 @@ function open(n){
   sats=[];
   cps.forEach(c=>{
     const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');
-    const sent = pu==null ? (c.n_chal_priced? 'למחזיק אין קו מחיר.':'אין מאתגר סחיר. הדופק כתום: אי אפשר למדוד את הלחץ בשוק.') : (pu>0? 'הנעילה מתהדקת: המחזיק עוקף את המאתגרים.' : 'הנעילה נשחקת: המאתגרים עוקפים את המחזיק.');
+    const sent = pu==null ? (c.n_chal_priced? 'למי ששולט אין קו מחיר.':'אין מי שמנסה להחליף אותו ונסחר. הטבעת כתומה: אי אפשר למדוד את הלחץ בשוק.') : (pu>0? 'הנעילה מתהדקת: מי ששולט עוקף את מי שמנסה להחליף אותו.' : 'הנעילה נשחקת: מי שמנסה להחליף עוקף את מי ששולט.');
     h+=`<div class="cpbox"><span class="cpid">${c.id}</span><span class="cpn">${c.he}</span><p>${c.blurb}</p>
-      <div class="pulse ${kind}"><i></i><div>${sent}<small>13w: holder ${pct(c.hr13)} · challengers ${pct(c.cr13)}${c.n_chal_priced?' ('+c.n_chal_priced+' priced)':''}</small></div></div></div>`;
+      <div class="pulse ${kind}"><i></i><div>${sent}<small>13w: ${WORDS.holder} ${pct(c.hr13)} · ${WORDS.challenger} ${pct(c.cr13)}${c.n_chal_priced?' ('+c.n_chal_priced+' priced)':''}</small></div></div></div>`;
     // sub-suppliers
     const t1=c.subs.filter(s=>s.tier===1), t2=c.subs.filter(s=>s.tier===2);
-    h+=`<h3>מי מספק למחזיק · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;
+    h+=`<h3>מי מספק למי ש${WORDS.holder} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;
     const row=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">ספק יחיד</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">פרטית</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?(s.src?`<a href="${s.src}" target="_blank" rel="noopener">${s.share}</a>`:s.share):'<span style="color:var(--ink3)">אומדן</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}</div></div>`;
     t1.forEach(s=>{ h+=row(s); t2.filter(x=>x.to===s.id).forEach(x=>h+=row(x)); });
     t2.filter(x=>!t1.some(s=>s.id===x.to)).forEach(x=>h+=row(x));
@@ -372,7 +424,7 @@ function open(n){
     const tilt = n.y > H-170 ? -0.55 : (n.y < 170 ? 0.55 : 0);
     all.forEach((o,i)=>{ const tier=o.tier; const arr=tier===1?t1:t2; const idx=arr.indexOf(o.s); const cnt=arr.length; const spread=Math.min(Math.PI*0.9, 0.28*Math.max(cnt-1,1)); const ang=tilt+(-spread/2)+(cnt>1?idx/(cnt-1):0.5)*spread; const R=tier===1?100:165; let tx=n.x+dirX*Math.cos(ang)*R, ty=n.y+Math.sin(ang)*R; ty=Math.max(40,Math.min(H-60,ty)); sats.push({tx, ty, tier, sole:o.s.sole, label:o.s.name.split(' ').slice(0,2).join(' ').slice(0,16)}); });
     // challengers
-    h+=`<h3>מי מנסה לפרוץ · ${c.sigs.length}</h3>`;
+    h+=`<h3>מי ${WORDS.challenger} · ${c.sigs.length}</h3>`;
     const pxBy={}; c.chal.forEach(x=>{ if(x.px) pxBy[x.name]=x.px; });
     c.sigs.forEach(s=>{ const px=pxBy[s.name]; h+=`<div class="ch"><b>${s.name}${px&&px.r13w!=null?`<span class="badge r13">13w ${pct(px.r13w)}</span>`:''}</b>${stageBar(s.stage)}<div class="sig">${s.approach?s.approach+'<br>':''}<span style="color:var(--ink3)">signal:</span> ${s.src?`<a href="${s.src}" target="_blank" rel="noopener">${s.signal}</a>`:s.signal} <small>${s.as_of||''}</small></div></div>`; });
     // cal rows carry cps (a list) and who/d/days. They deliberately do NOT carry
@@ -384,9 +436,29 @@ function open(n){
     if(nx) h+=`<div class="nextcp">הבדיקה הבאה: <b>${nx.who}</b> · ${nx.d} · בעוד ${nx.days} ימים</div>`;
   });
   if(!cps.length){
+    // A station that holds no chokepoint used to get two bare lists and
+    // nothing else -- which is most of the cloud layer, and the biggest
+    // companies on the map. It now gets the three things that are actually
+    // known about it: who else sits in its column, what it buys and sells,
+    // and whether it is funding an attack on somebody else's chokepoint.
+    const peers=nodes.filter(x=>x.layer===n.layer&&x.id!==n.id);
+    if(peers.length) h+=`<h3>${WORDS.peers} · ${peers.length}</h3>`+peers.map(x=>
+      `<div class="sub"><div><b>${x.name}</b></div><div class="sh">${x.px&&x.px.r13w!=null?`<span class="badge r13">13w ${pct(x.px.r13w)}</span>`:''}</div><div class="w">${x.role||''}</div></div>`).join('');
     const ins=edges.filter(e=>e.to===n.id), outs=edges.filter(e=>e.from===n.id);
-    if(ins.length) h+=`<h3>מקבל מ</h3>`+ins.map(e=>`<div class="sub"><div><b>${byId[e.from].name}</b></div><div></div><div class="w">${e.what}</div></div>`).join('');
-    if(outs.length) h+=`<h3>מספק ל</h3>`+outs.map(e=>`<div class="sub"><div><b>${byId[e.to].name}</b></div><div></div><div class="w">${e.what}</div></div>`).join('');
+    const line=e=>{ const w=(e.what&&String(e.what).trim())||LHE[byId[e.from].line]||''; return w; };
+    if(ins.length) h+=`<h3>${WORDS.buys} · ${ins.length}</h3>`+ins.map(e=>`<div class="sub"><div><b>${byId[e.from].name}</b></div><div></div><div class="w">${line(e)}</div></div>`).join('');
+    if(outs.length) h+=`<h3>${WORDS.sells} · ${outs.length}</h3>`+outs.map(e=>`<div class="sub"><div><b>${byId[e.to].name}</b></div><div></div><div class="w">${line(e)}</div></div>`).join('');
+    // Challenges it sponsors. Only against a chokepoint it does NOT itself
+    // hold: a company listed among its own chokepoint's holders is not
+    // attacking it.
+    const mine=[];
+    (D.cps||[]).forEach(c=>(c.sigs||[]).forEach(g=>{
+      if(g.sponsor===n.id && !(c.holders||[]).some(x=>x.id===n.id))
+        mine.push({c,g}); }));
+    if(mine.length) h+=mine.map(({c,g})=>{
+      const who=(c.holders||[]).map(x=>x.name).join(', ');
+      return `<div class="nextcp">${WORDS.via}: <b>${g.name}</b> — ${WORDS.against} ${who} <small>(${c.id} · ${c.he})</small></div>`;
+    }).join('');
   }
   h+=fundTable(n.id);
   h+='</div>';
@@ -400,7 +472,15 @@ function header(){
   document.getElementById('asof').innerHTML=`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`;
   const nx=document.getElementById('next'); nx.querySelectorAll('.ev').forEach(e=>e.remove());
   D.cal.filter(e=>e.days>=-3).sort((a,b)=>a.days-b.days).slice(0,8).forEach(e=>{ const d=document.createElement('div'); d.className='ev'+(e.days<=30?' soon':''); d.innerHTML=`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'היום':'בעוד '+e.days+' ימים'} · ${e.d}</i>`; d.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===e.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h) open(h); }); nx.appendChild(d); });
-  document.getElementById('legend').innerHTML='<span style="color:var(--ink3)">רחף על תחנה · לחץ לפתיחה · הנקודות הנעות הן הזרימה</span>'+Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join('')+`<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span><span><i class="pa"></i>אין מאתגר סחיר</span>`;
+  // Two labelled rows, because the map now says two different things with
+  // colour and the old single strip made them look like one scale.
+  document.getElementById('legend').innerHTML=
+    `<span class="hint">רחף על תחנה או על קו · לחץ לפתיחה · החץ מצביע על הקונה</span>`
+    + `<div class="row"><b>${WORDS.legendLine}</b>`
+    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join('')
+    + `</div><div class="row"><b>${WORDS.legendRing}</b>`
+    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`
+    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;
   const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
   document.getElementById('foot').innerHTML=`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`;
 }

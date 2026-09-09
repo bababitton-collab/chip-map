@@ -353,6 +353,10 @@ def build(today: dt.date | None = None, lang: str = "he",
             "stage_he": L["stage"].get(ch.get("stage"), ""),
             "signal": (ch.get("signal") or "")[:170], "as_of": ch.get("as_of"),
             "src": ch.get("signal_source"),
+            # The map station funding this attack, where the map records one.
+            # It is what lets a company that holds no chokepoint still show
+            # what it is doing to somebody else's.
+            "sponsor": ch.get("sponsor"),
             "approach": (ch.get("approach") or "")[:120],
         } for ch in (m.get("challengers") or {}).get(cid, [])]
 

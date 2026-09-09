@@ -255,3 +255,74 @@ def test_the_ledger_survives_the_public_build_intact(tmp_path):
     page = out.read_text(encoding="utf-8")
     assert "// ---- the forecast ledger ----" in page
     assert 'id="ltiles"' in page
+
+
+# -- one visual language -----------------------------------------------------
+
+def test_the_english_template_uses_plain_words_not_field_names():
+    """"Holder" and "challenger" are the names of fields in the data. Nobody
+    reading a map should have to learn them."""
+    t = EN_TEMPLATE.read_text(encoding="utf-8")
+    assert "controls the chokepoint" in t
+    assert "trying to replace them" in t
+    assert "Buys from" in t and "Sells to" in t
+    assert "Others in this layer" in t
+
+
+def test_the_legend_asks_two_questions():
+    for tpl, first, second in (
+        (HE_TEMPLATE, "איזה קו?", "האם השוק לוחץ על צוואר הבקבוק?"),
+        (EN_TEMPLATE, "Which line?",
+         "Is the market pressing on the chokepoint?")):
+        t = tpl.read_text(encoding="utf-8")
+        assert first in t and second in t
+
+
+def test_the_ring_colours_are_not_reused_by_any_line():
+    """The ring means one thing -- market pressure -- and it can only mean one
+    thing if no line wears the same colour. --packaging used to BE --amber and
+    --network was within a few points of --erode, so the legend's two rows
+    were showing the same swatch for different ideas."""
+    import re
+    t = HE_TEMPLATE.read_text(encoding="utf-8")
+    hexes = dict(re.findall(r"--([a-z]+):(#[0-9a-fA-F]{6})", t))
+    rings = {hexes[k] for k in ("tight", "erode", "amber")}
+    lines = {hexes[k] for k in ("logic", "memory", "packaging", "network",
+                                "power", "cloud")}
+    assert not (rings & lines), f"a line reuses a ring colour: {rings & lines}"
+
+    def rgb(h):
+        return tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))
+
+    for lc in lines:
+        for rc in rings:
+            d = sum(abs(a - b) for a, b in zip(rgb(lc), rgb(rc)))
+            assert d > 60, f"{lc} is too close to the ring colour {rc} ({d})"
+
+
+def test_the_edge_tooltip_never_invents_a_product():
+    """It uses what the map records, or the line's own name. Nothing else."""
+    t = HE_TEMPLATE.read_text(encoding="utf-8")
+    i = t.index("function edgeSentence(")
+    body = t[i:t.index("\n}", i)]
+    assert "e.what" in body and "LHE[a.line]" in body
+
+
+def test_the_edge_tooltip_is_marked_so_it_can_be_told_from_a_station_one():
+    assert 'class="edgetip"' in HE_TEMPLATE.read_text(encoding="utf-8")
+
+
+def test_only_a_chokepoint_gets_a_ring():
+    """pulseOf returns null for a station that holds none, and the ring is
+    drawn from it. A station with no chokepoint has nothing to say about
+    market pressure and must not appear to."""
+    t = HE_TEMPLATE.read_text(encoding="utf-8")
+    i = t.index("function pulseOf(n){")
+    assert "if(!n.cp||!n.cp.length) return null;" in t[i:i + 300]
+
+
+def test_the_sponsor_line_excludes_a_company_that_holds_the_chokepoint():
+    """GE Vernova sponsors a challenge against CP11, which it also holds. It
+    is not attacking itself."""
+    t = HE_TEMPLATE.read_text(encoding="utf-8")
+    assert "!(c.holders||[]).some(x=>x.id===n.id)" in t

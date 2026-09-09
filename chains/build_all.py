@@ -61,6 +61,8 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
         ("fundamentals", ["chains/scripts/build_fundamentals.py"]),
         ("live", ["-m", "chains.live_snapshot"]),
         ("pages", ["-m", "chains.build_pages"]),
+        # The forward test reads live_en.json, so it follows the snapshot.
+        ("track", ["-m", "chains.track"]),
         ("brief", ["-m", "chains.brief", str(o / "live_en.json"),
                    str(watch_en_path()), ans,
                    str(o / f"brief-{today.isoformat()}.md")]),
@@ -81,7 +83,7 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
 
 def outputs(today: date) -> list[str]:
     return ["live.json", "live_en.json", "public-map.html",
-            "public-map-en.html",
+            "public-map-en.html", "track.json", "track.html",
             f"brief-{today.isoformat()}.md",
             f"brief-free-{today.isoformat()}.md",
             f"brief-he-{today.isoformat()}.md",

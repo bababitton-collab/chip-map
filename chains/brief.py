@@ -157,6 +157,43 @@ def render(live: dict, watch: list, statuses: dict) -> str:
         out.append("")
 
 
+    # -- the forward test ----------------------------------------------------
+    # The same records the tracking page draws, in five numbers and one line
+    # per open forecast. Read from live.json rather than recomputed: the letter
+    # and the page must not be able to disagree.
+    tr = live.get("track") or {}
+    ts, tf = tr.get("summary") or {}, tr.get("forecasts") or []
+    if ts.get("n_forecasts"):
+        out.append("## Forward test")
+        out.append("")
+        hit5, r2hit = ts.get("direct_hit_5"), ts.get("ring2_hit_5")
+        rate = lambda d: "—" if not d or d.get("value") is None             else f"{d['value']*100:.0f}%"
+        avg = lambda d: "—" if not d or d.get("value") is None             else f"{d['value']:+.2f}%"
+        cnt = lambda d: f" (n={d.get('n', 0)})" if d else " (n=0)"
+        out.append(
+            f"{ts['n_scored']} of {ts['n_forecasts']} scored"
+            f" · direct hit 5d {rate(hit5)}{cnt(hit5)}"
+            f" · direct avg spread 5d {avg(ts.get('direct_spread_5'))}"
+            f"{cnt(ts.get('direct_spread_5'))}"
+            f" · direct vs map 20d {avg(ts.get('direct_spread_20'))}"
+            f"{cnt(ts.get('direct_spread_20'))}"
+            f" · second ring hit 5d {rate(r2hit)}{cnt(r2hit)}.")
+        out.append("")
+        for r in tf:
+            if not r.get("entry_date"):
+                out.append(f"- {r['who']} · marked {r['marked_at'][:10]}"
+                           f" · entry at the next close")
+                continue
+            t = r.get("today") or {}
+            bit = ""
+            if r.get("has_r2") and t.get("win2_lose2") is not None:
+                bit = f" · second ring {t['win2_lose2']:+.2f}%"
+            out.append(
+                f"- {r['who']} · day {r['day_index']}"
+                f" · up − down {t.get('win_lose', 0):+.2f}%"
+                f" · up − map {t.get('win_ew', 0):+.2f}%{bit}")
+        out.append("")
+
     # forecast board: upcoming questions with at least one answered hint
     LEAN={'y':'leans yes','n':'leans no','m':'mixed','o':'no lean yet'}
     brd = [w for w in sorted(watch, key=lambda w: w['d']) if days(w['d']) >= 0 and lean(w)[1] > 0]

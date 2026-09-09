@@ -209,6 +209,9 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .answered summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:8px 0 14px}
 @media (max-width:900px){.card{grid-template-columns:1fr;gap:18px}.cons svg{width:100%;height:auto}.q{max-width:none}}
 .ledger{padding:18px 22px 6px;border-top:1px solid var(--rule)}
+.fwd{display:inline-block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);text-decoration:none;border:1px solid #3a3320;border-radius:5px;padding:4px 10px;background:var(--panel)}
+.fwd:hover{border-color:var(--amber)}
+.fwd.inline{float:inline-end;margin:0 0 8px}
 .ordlab{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:14px 0 8px}
 .ord{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--rule);border-radius:4px;color:var(--ink3)}
 .ord.o2{border-style:dashed}
@@ -315,6 +318,7 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 <div class="top">
   <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div></div>
   <div class="asof" id="asof"></div>
+  <a class="fwd" href="track/">מבחן קדימה →</a>
 </div>
 <div class="next" id="next"><span class="lbl">הבדיקות הקרובות</span></div>
 <div class="stage" id="stage">
@@ -335,6 +339,7 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 <div class="hints" id="hints"></div>
 </div>
 <div class="ledger" id="ledger">
+<a class="fwd inline" href="track/">מבחן קדימה →</a>
 <h2>יומן התחזיות</h2>
 <p class="lede">כל תשובה שסומנה הופכת לרישום: הסלים נקבעו מראש בקובץ שבגיט, לפני האירוע, והציון נמדד מהסגירה הראשונה שאחרי הסימון מול שאר המפה. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>
 <div id="ltiles"></div>

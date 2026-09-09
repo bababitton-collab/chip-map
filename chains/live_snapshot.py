@@ -83,7 +83,7 @@ import json
 from pathlib import Path
 
 from chains import answers as answers_mod
-from chains import forecast, mapfile, prices, questions, rings
+from chains import forecast, mapfile, prices, questions, rings, track
 from chains import paths
 from chains.paths import out_dir, signup_url, watch_en_path, watch_path
 
@@ -252,7 +252,7 @@ def price_block(symbol: str, today: dt.date, cache: dict):
 # ---------------------------------------------------------------- the snapshot
 def build(today: dt.date | None = None, lang: str = "he",
           answers: dict | None = None, ledger: dict | None = None,
-          text: dict | None = None) -> dict:
+          text: dict | None = None, forecasts: list | None = None) -> dict:
     """One snapshot, in one language.
 
     ``answers``, ``ledger`` and ``text`` are read/built here when not supplied,
@@ -417,8 +417,9 @@ def build(today: dt.date | None = None, lang: str = "he",
     cal = calendar_from(watch, today)
     if answers is None:
         answers = answers_mod.load(ids={r["id"] for r in watch})
-    if ledger is None:
+    if forecasts is None:
         _a, forecasts, _p = answers_mod.read(ids={r["id"] for r in watch})
+    if ledger is None:
         ledger = forecast.build(forecasts, m)
 
     return {
@@ -426,6 +427,10 @@ def build(today: dt.date | None = None, lang: str = "he",
         "nodes": nodes, "edges": edges, "flows": flows, "cps": cps,
         "fund": fund, "cal": cal, "watch": watch,
         "answers": answers, "ledger": ledger, "labels": labels,
+        # The same forecasts, day by day. The horizons inside it are the
+        # ledger's own objects, so the board and the tracking page cannot
+        # disagree about a checkpoint.
+        "track": track.build(forecasts, ledger, watch, m, answers),
         "domain": paths.domain(),
         "signup": signup_url(),
         "n_open": sum(1 for r in watch if r["open"]),
@@ -542,7 +547,8 @@ def main() -> int:
 
     first = None
     for lang in LANG:
-        live = build(lang=lang, answers=good, ledger=ledger, text=text)
+        live = build(lang=lang, answers=good, ledger=ledger, text=text,
+                     forecasts=forecasts)
         p, size, applied = write(live, out_dir() / LANG[lang]["file"])
         # Belt and braces. write() already refuses to produce an oversized
         # file; this says out loud, at the call site, what the invariant is.
@@ -555,6 +561,8 @@ def main() -> int:
               f"answers {len(live['answers'])}  calendar {len(live['cal'])}  "
               f"ledger {len(live['ledger']['rows'])} scored, "
               f"{live['ledger']['summary']['n_pending']} pending")
+        print(f"  track {len(live['track']['forecasts'])} forecasts, "
+              f"{live['track']['summary']['n_open']} awaiting entry")
         print(f"  questions open {live['n_open']} of {len(live['watch'])}"
               f"  signup {'set' if live['signup'] else 'coming soon'}")
         first = first or live

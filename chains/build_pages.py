@@ -115,6 +115,7 @@ PUB = {
 # Every pair MUST match. A reworded Hebrew string silently stops matching, and
 # a silent no-op here is a Hebrew sentence on the English page.
 TRANSLATIONS = [
+    ("מבחן קדימה →", "Forward test →"),
  ('html{direction:rtl}', 'html{direction:ltr}'),
  ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
  ("`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`", "`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`"),

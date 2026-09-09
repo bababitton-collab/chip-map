@@ -85,12 +85,20 @@ BRIEFS = [("brief-free-*.md", "brief.md"),
           ("brief-he-free-*.md", "brief-he.md")]
 
 # Only these. he.html, live.json and brief-he.md are Hebrew on purpose.
+# The forward test, at /<domain>/track/. The page is English-only and its data
+# file carries question text, so both go through the Hebrew gate and the
+# locked-text scan below.
+TRACK_FILES = [("track.html", "index.html"), ("track.json", "track.json")]
+
 GATED = ("index.html", "live_en.json")
 
 # Checked for locked question text rather than for Hebrew: these are the files
 # that could carry a sentence somebody is meant to pay for.
 PAYWALLED = ("index.html", "he.html", "live.json", "live_en.json",
-             "brief.md", "brief-he.md")
+             "brief.md", "brief-he.md",
+             # The forward test names the question behind every mark, so it is
+             # scanned on the same terms as the map and the letter.
+             "track/index.html", "track/track.json")
 
 # Every sentence a locked question owns, in both languages. All four parts
 # count: "what no sounds like" is as much the product as the question itself,
@@ -167,6 +175,18 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
         shutil.copyfile(src, site / dst_name)
         written.append(f"{dst_name}  (from {src.name})")
 
+    # The forward test lives at /<domain>/track/, so a reader can be sent to
+    # the evidence without being sent to the whole map.
+    track = site / "track"
+    track.mkdir(parents=True, exist_ok=True)
+    for src_name, dst_name in TRACK_FILES:
+        src = out_dir() / src_name
+        if not src.exists():
+            raise SystemExit(
+                f"{src} is missing. Run python -m chains.track first.")
+        shutil.copyfile(src, track / dst_name)
+        written.append(f"track/{dst_name}")
+
     (site_root() / ".nojekyll").write_text("", encoding="utf-8")
     written.append("../.nojekyll")
     (site_root() / "CNAME").write_text(CUSTOM_DOMAIN + "\n",
@@ -175,6 +195,15 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
     written.append("../CNAME")
     write_root_redirect()
     written.append("../index.html  (redirect)")
+
+    for name in ("track/index.html", "track/track.json"):
+        text = (site / name).read_text(encoding="utf-8")
+        runs = hebrew_runs(text)
+        if runs:
+            raise SystemExit(
+                f"site/{name}: {len(runs)} Hebrew string(s) in a file served "
+                f"to English readers. Not published.\n  "
+                + "\n  ".join(runs[:10]))
 
     for name in GATED:
         text = (site / name).read_text(encoding="utf-8")

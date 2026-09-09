@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forward test · Linchpin Signal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#7d8797; --rule:#222a36;
+  --tight:#ff5a3c; --erode:#3fd18b; --amber:#f2b632;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.6}
+.wrap{max-width:1320px;margin:0 auto;padding:34px 26px 70px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.1rem;line-height:1.2;margin:0 0 14px}
+.lede{color:var(--ink2);font-size:1.05rem;max-width:74ch;margin:0 0 26px}
+.back{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);text-decoration:none;border-bottom:1px solid var(--rule)}
+.back:hover{color:var(--ink2)}
+
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 30px}
+.tile{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px}
+.tile b{display:block;font-family:"IBM Plex Mono",monospace;font-size:1.5rem;font-weight:500;line-height:1.1}
+.tile span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-top:7px}
+.tile.pos b{color:var(--erode)} .tile.neg b{color:var(--tight)}
+
+.fc{display:grid;grid-template-columns:280px minmax(0,1fr) 430px;gap:0 26px;background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:24px 26px;margin-bottom:18px;align-items:start}
+.fc .who{font-family:"IBM Plex Mono",monospace;font-size:.95rem;color:var(--ink);font-weight:500}
+.fc .dt{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.06em;color:var(--ink3);margin-top:5px;line-height:1.6}
+.fc .q{font-family:"Source Serif 4",serif;font-size:1.05rem;line-height:1.4;color:var(--ink2);margin:12px 0 0}
+.pill{display:inline-block;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;border:1px solid}
+.pill.yes{color:var(--erode);border-color:var(--erode)}
+.pill.no{color:var(--tight);border-color:var(--tight)}
+.pill .how{color:var(--ink3);margin-left:7px}
+.day{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:14px}
+.big{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.big div b{display:block;font-family:"IBM Plex Mono",monospace;font-size:1.45rem;font-weight:500;line-height:1.1}
+.big div span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:5px}
+.small{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding-top:11px;border-top:1px solid var(--rule)}
+.small div b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.95rem;font-weight:500;line-height:1.1}
+.small div span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.57rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:4px}
+.pos{color:var(--erode)} .neg{color:var(--tight)} .flat{color:var(--ink2)}
+
+.chart svg{width:100%;height:auto;display:block}
+.cap{display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:9px;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.cap span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.cap i{width:16px;height:0;border-top:2px solid;display:inline-block}
+.pending{font-family:"Source Serif 4",serif;font-style:italic;font-size:1rem;color:var(--ink3)}
+
+.tw{overflow-x:auto}
+table.mem{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.7rem}
+table.mem th{text-align:right;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:0 0 7px;border-bottom:1px solid var(--rule)}
+table.mem th:first-child{text-align:left}
+table.mem td{padding:5px 0;border-bottom:1px solid rgba(34,42,54,.55);text-align:right;white-space:nowrap}
+table.mem td:first-child{text-align:left;color:var(--ink2)}
+table.mem tr.grp td{padding:13px 0 5px;border-bottom:1px solid var(--rule);color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;font-size:.62rem}
+.bar{display:inline-block;height:6px;border-radius:2px;vertical-align:middle;margin-left:7px}
+.stale{color:var(--amber);cursor:help}
+
+.none{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:26px;color:var(--ink2)}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);color:var(--ink3);font-size:.85rem;max-width:80ch}
+@media (max-width:900px){
+  .wrap{padding:22px 14px 50px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fc{grid-template-columns:minmax(0,1fr);gap:22px 0}
+  h2{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="../index.html">← the map</a>
+<div class="eyebrow" style="margin-top:22px">05 · Forward test</div>
+<h2>What we said would move — and what moved</h2>
+<p class="lede">Every "yes" or "no" on a question registers a forecast the day it is marked: a basket that should go up, a basket that should go down, both measured against the equal-weight map from the next session's close. Updated with each day's prices. Nothing is added after the fact.</p>
+
+<div id="tiles"></div>
+<div id="cards"></div>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const TRACK = __TRACK__;
+(function(){
+  const esc = v => String(v==null?'':v).replace(/[&<>"]/g, c=>(
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const F = TRACK.forecasts||[], S = TRACK.summary||{};
+  const COL = {win:'#3fd18b', lose:'#ff5a3c', ew:'#7d8797'};
+
+  // Percent in, percent out. track.py converts the ledger's fractions once,
+  // at the boundary, so nothing here multiplies anything by a hundred.
+  const p2 = v => v==null ? '—' : (v>0?'+':'') + v.toFixed(2) + '%';
+  const sgn = v => v==null ? 'flat' : (v>0?'pos':(v<0?'neg':'flat'));
+  const word = r => r.status==='no' ? 'no' : 'yes';
+
+  // ---- the five tiles ---------------------------------------------------
+  const tile = (v, label, cls) =>
+    `<div class="tile ${cls||''}"><b>${v}</b><span>${esc(label)}</span></div>`;
+  const withN = (s) => s && s.n ? ` (n=${s.n})` : ' (n=0)';
+  document.getElementById('tiles').innerHTML = `<div class="tiles">
+    ${tile(`${S.n_scored||0}/${S.n_forecasts||0}`, 'forecasts scored / all')}
+    ${tile(S.direct_hit_5 && S.direct_hit_5.value!=null
+        ? Math.round(S.direct_hit_5.value*100)+'%' : '—',
+        'direct hit rate 5d'+withN(S.direct_hit_5))}
+    ${tile(p2(S.direct_spread_5 && S.direct_spread_5.value),
+        'direct avg spread 5d'+withN(S.direct_spread_5),
+        sgn(S.direct_spread_5 && S.direct_spread_5.value))}
+    ${tile(p2(S.direct_spread_20 && S.direct_spread_20.value),
+        'direct vs map 20d'+withN(S.direct_spread_20),
+        sgn(S.direct_spread_20 && S.direct_spread_20.value))}
+    ${tile(S.ring2_hit_5 && S.ring2_hit_5.value!=null
+        ? Math.round(S.ring2_hit_5.value*100)+'%' : '—',
+        'second ring hit 5d'+withN(S.ring2_hit_5))}
+  </div>`;
+
+  // ---- the chart --------------------------------------------------------
+  const VW=560, VH=230, PADL=44, PADR=54, PADT=16, PADB=26;
+  function ticksFor(hi){
+    for(const t of [2,4,8,16,32]) if(hi<=t) return t;
+    return Math.ceil(hi/8)*8;
+  }
+  function chart(r){
+    const s = r.series;
+    if(!s) return `<div class="chart"><svg viewBox="0 0 ${VW} ${VH}">
+      <line x1="${PADL}" x2="${VW-PADR}" y1="${VH/2}" y2="${VH/2}" stroke="#222a36"/>
+      <circle cx="${PADL}" cy="${VH/2}" r="3.4" fill="#7d8797"/>
+      </svg></div><p class="pending">first print after the next close</p>`;
+    const lines = ['win','lose','ew','win2','lose2']
+      .map(k=>({k:k, v:s[k]})).filter(o=>o.v && o.v.length);
+    let hi = 0;
+    lines.forEach(o=>o.v.forEach(v=>{ if(v!=null) hi=Math.max(hi, Math.abs(v)); }));
+    const T = ticksFor(hi||1);
+    const n = s.dates.length;
+    // 40 sessions of room even on day 1, so the line does not stretch to fill
+    // the box and then shrink back as sessions arrive.
+    const span = Math.max(40, n-1);
+    const X = i => PADL + (i/span)*(VW-PADL-PADR);
+    const Y = v => PADT + (1-(v+T)/(2*T))*(VH-PADT-PADB);
+    let g = '';
+    for(const t of [T, T/2, 0, -T/2, -T]){
+      const y = Y(t);
+      g += `<line x1="${PADL}" x2="${VW-PADR}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${t===0?'#2b3542':'#1a212c'}"/>`;
+      g += `<text x="${PADL-7}" y="${(y+3).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#7d8797">${t>0?'+':''}${t}%</text>`;
+    }
+    for(const h of [5,10,20,40]){
+      if(h>span) continue;
+      const x = X(h);
+      g += `<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${PADT}" y2="${VH-PADB}" stroke="#1a212c" stroke-dasharray="2 4"/>`;
+      g += `<text x="${x.toFixed(1)}" y="${VH-PADB+13}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#7d8797">${h}d</text>`;
+    }
+    const xt = X(n-1);
+    g += `<line x1="${xt.toFixed(1)}" x2="${xt.toFixed(1)}" y1="${PADT}" y2="${VH-PADB}" stroke="#3a4658"/>`;
+    g += `<text x="${xt.toFixed(1)}" y="${PADT-4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#7d8797">today</text>`;
+
+    const style = {
+      win:  {c:COL.win,  w:2.2, o:1,   dash:''},
+      lose: {c:COL.lose, w:2,   o:1,   dash:''},
+      ew:   {c:COL.ew,   w:1.6, o:1,   dash:' stroke-dasharray="4 3"'},
+      win2: {c:COL.win,  w:1.4, o:.55, dash:''},
+      lose2:{c:COL.lose, w:1.4, o:.55, dash:''},
+    };
+    for(const o of lines){
+      const st = style[o.k];
+      let d='', started=false;
+      o.v.forEach((v,i)=>{ if(v==null) return;
+        d += (started?'L':'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1) + ' ';
+        started = true; });
+      if(!d) continue;
+      g += `<path d="${d.trim()}" fill="none" stroke="${st.c}" stroke-width="${st.w}" opacity="${st.o}"${st.dash} stroke-linejoin="round"/>`;
+      if(['win','lose','ew'].includes(o.k)){
+        const lastI = o.v.reduce((a,v,i)=>v==null?a:i, -1);
+        if(lastI>=0){
+          const x=X(lastI), y=Y(o.v[lastI]);
+          g += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${st.c}"/>`;
+          g += `<text x="${(x+6).toFixed(1)}" y="${(y+3).toFixed(1)}" font-family="IBM Plex Mono,monospace" font-size="9" fill="${st.c}">${p2(o.v[lastI])}</text>`;
+        }
+      }
+    }
+    const m = word(r);
+    return `<div class="chart"><svg viewBox="0 0 ${VW} ${VH}">${g}</svg></div>
+      <div class="cap">
+        <span><i style="border-color:${COL.win}"></i>up if ${m}</span>
+        <span><i style="border-color:${COL.lose}"></i>down if ${m}</span>
+        <span><i style="border-color:${COL.ew};border-top-style:dashed"></i>equal-weight map</span>
+        ${r.has_r2?`<span><i style="border-color:${COL.win};opacity:.55"></i>second ring</span>`:''}
+      </div>`;
+  }
+
+  // ---- the table --------------------------------------------------------
+  function table(r){
+    const m = word(r);
+    const heads = {win:`up if ${m}`, lose:`down if ${m}`,
+                   win2:`up if ${m} · second ring`,
+                   lose2:`down if ${m} · second ring`};
+    if(!r.members || !r.members.length){
+      return `<div class="tw"><table class="mem">
+        <tr><th>Station</th><th>Entry</th><th>Last</th><th>Today</th><th>Since entry</th></tr>
+        <tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table></div>`;
+    }
+    const worst = Math.max(1, ...r.members.map(x=>Math.abs(x.since||0)));
+    let rows = '';
+    for(const g of ['win','lose','win2','lose2']){
+      const ms = r.members.filter(x=>x.group===g);
+      if(!ms.length) continue;
+      rows += `<tr class="grp"><td colspan="5">${esc(heads[g])}</td></tr>`;
+      for(const x of ms){
+        const w = Math.round(Math.min(40, Math.abs(x.since||0)/worst*40));
+        const col = (x.since||0) >= 0 ? COL.win : COL.lose;
+        rows += `<tr><td>${esc(x.label)}${x.stale?` <span class="stale" title="last close ${x.stale} sessions old">·</span>`:''}</td>
+          <td>${x.entry==null?'—':x.entry}</td>
+          <td>${x.last==null?'—':x.last}</td>
+          <td class="${sgn(x.day)}">${p2(x.day)}</td>
+          <td class="${sgn(x.since)}">${p2(x.since)}<span class="bar" style="width:${w}px;background:${col}"></span></td></tr>`;
+      }
+    }
+    return `<div class="tw"><table class="mem">
+      <tr><th>Station</th><th>Entry</th><th>Last</th><th>Today</th><th>Since entry</th></tr>
+      ${rows}</table></div>`;
+  }
+
+  // ---- one card ---------------------------------------------------------
+  function card(r){
+    const t = r.today || {};
+    const when = r.entry_date
+      ? `marked ${String(r.marked_at).slice(0,10)} · entry close ${r.entry_date}`
+      : `marked ${String(r.marked_at).slice(0,10)} · entry at next close`;
+    const day = r.entry_date
+      ? `Day ${r.day_index} of 40` + (r.next_checkpoint
+          ? ` · next checkpoint ${r.next_checkpoint}d in ${r.sessions_to} session${r.sessions_to===1?'':'s'}`
+          : ' · every checkpoint scored')
+      : 'not entered yet';
+    const m = word(r);
+    return `<article class="fc" data-id="${esc(r.id)}">
+      <div>
+        <div class="who">${esc(r.who)}${r.tk?' · '+esc(r.tk):''}</div>
+        <div class="dt">${esc(when)}</div>
+        ${r.q?`<p class="q">${esc(r.q)}</p>`:''}
+        <span class="pill ${m}">${m}<span class="how">${r.auto?'auto':'manual'}</span></span>
+        <div class="day">${esc(day)}</div>
+        <div class="big">
+          <div><b class="${sgn(t.win_lose)}">${p2(t.win_lose)}</b><span>up − down today</span></div>
+          <div><b class="${sgn(t.win_ew)}">${p2(t.win_ew)}</b><span>up − map today</span></div>
+        </div>
+        ${r.has_r2?`<div class="small">
+          <div><b class="${sgn(t.win2_lose2)}">${p2(t.win2_lose2)}</b><span>ring 2 up − down</span></div>
+          <div><b class="${sgn(t.win2_ew)}">${p2(t.win2_ew)}</b><span>ring 2 up − map</span></div>
+        </div>`:''}
+      </div>
+      <div>${chart(r)}</div>
+      <div>${table(r)}</div>
+    </article>`;
+  }
+
+  document.getElementById('cards').innerHTML = F.length
+    ? F.map(card).join('')
+    : `<div class="none">The first forecast registers when the first dated question is answered.</div>`;
+
+  document.getElementById('foot').innerHTML =
+    'Entry is the close of the first session after a mark. Baskets are equal-weight,'
+    + ' held from entry; the map is the equal-weight average of every priced station,'
+    + ' rebalanced daily. A member with no close on a session carries its last one.'
+    + ' Direct and second-ring numbers are never pooled. Not a recommendation and not'
+    + ' investment advice.';
+})();
+</script>
+</body>
+</html>

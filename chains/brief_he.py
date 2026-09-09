@@ -63,6 +63,40 @@ def render(live: dict, watch: list, statuses: dict) -> str:
         c = erode[0]; out.append(f"**הכי נשחק — {c['he']}:** המחזיק {pct(c['hr13'])} מול המאתגרים {pct(c['cr13'])}. {c['blurb']}")
         out.append("")
 
+    # -- מבחן קדימה ----------------------------------------------------------
+    tr = live.get("track") or {}
+    ts, tf = tr.get("summary") or {}, tr.get("forecasts") or []
+    if ts.get("n_forecasts"):
+        out.append("## מבחן קדימה")
+        out.append("")
+        hit5, r2hit = ts.get("direct_hit_5"), ts.get("ring2_hit_5")
+        rate = lambda d: "—" if not d or d.get("value") is None else f"{d['value']*100:.0f}%"
+        avg = lambda d: "—" if not d or d.get("value") is None else f"{d['value']:+.2f}%"
+        cnt = lambda d: f" (n={d.get('n', 0)})" if d else " (n=0)"
+        out.append(
+            f"{ts['n_scored']} מתוך {ts['n_forecasts']}"
+            f" · פגיעה ישירה 5י {rate(hit5)}{cnt(hit5)}"
+            f" · עודף ממוצע 5י {avg(ts.get('direct_spread_5'))}"
+            f"{cnt(ts.get('direct_spread_5'))}"
+            f" · מול המפה 20י {avg(ts.get('direct_spread_20'))}"
+            f"{cnt(ts.get('direct_spread_20'))}"
+            f" · טבעת שנייה 5י {rate(r2hit)}{cnt(r2hit)}.")
+        out.append("")
+        for r in tf:
+            if not r.get("entry_date"):
+                out.append(f"- {r['who']} · נרשם {r['marked_at'][:10]}"
+                           f" · כניסה בנעילה הבאה")
+                continue
+            t = r.get("today") or {}
+            bit = ""
+            if r.get("has_r2") and t.get("win2_lose2") is not None:
+                bit = f" · טבעת שנייה {t['win2_lose2']:+.2f}%"
+            out.append(
+                f"- {r['who']} · יום {r['day_index']}"
+                f" · עולה − יורד {t.get('win_lose', 0):+.2f}%"
+                f" · מול המפה {t.get('win_ew', 0):+.2f}%{bit}")
+        out.append("")
+
     # --- forecast board: leaks (earlier questions that partly answer this one) ---
     byq = {w['id']: w for w in watch}
     def leak_line(w):

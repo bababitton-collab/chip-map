@@ -159,10 +159,18 @@ def test_the_user_agent_carries_no_url():
     assert "(" not in edgar.USER_AGENT
 
 
+def test_the_contact_is_a_real_address_not_a_placeholder():
+    """SEC refuses a request that does not identify its caller. A placeholder
+    here fails every EDGAR call in CI, which is why it is checked rather than
+    left to be noticed on a Saturday morning."""
+    assert "@" in edgar.CONTACT and not edgar.CONTACT.startswith("CONTACT-")
+
+
 @respx.mock
-def test_a_403_on_the_placeholder_contact_says_what_to_do():
-    """The failure a first run hits. The message has to name the fix, because
-    a 403 from a WAF says nothing about which header it objected to."""
+def test_a_403_on_a_placeholder_contact_says_what_to_do(monkeypatch):
+    """If the address is ever removed, the 403 has to explain itself: a WAF
+    rejection says nothing about which header it objected to."""
+    monkeypatch.setattr(edgar, "CONTACT", "CONTACT-EMAIL-HERE")
     respx.get(edgar.TICKERS_URL).mock(return_value=httpx.Response(403, text="<html>"))
     with httpx.Client(headers=edgar.HEADERS) as c:
         with pytest.raises(edgar.EdgarError) as e:

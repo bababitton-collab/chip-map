@@ -20,9 +20,9 @@ chains/fundamentals.py.
 NO KEY, BUT A NAME AND AN ADDRESS
 ---------------------------------
 SEC asks for a User-Agent that identifies who is calling and how to reach them,
-and it throttles or blocks anonymous traffic. CONTACT below is a placeholder to
-be filled in with a real address; the build still runs without it, but the
-polite thing and the reliable thing are the same thing here.
+and it does not merely throttle traffic that does not say -- it refuses it. The
+address below is real for that reason. The polite thing and the working thing
+are the same thing here.
 
 A PERIOD IS CLASSIFIED BY ITS LENGTH, NOT BY ITS LABEL
 -------------------------------------------------------
@@ -59,12 +59,13 @@ FACTS_URL = "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json"
 # in the header returns 403, and with "chip-map someone@example.com" returns
 # 200. So the repo name goes in bare, without a link.
 #
-# MICHAEL: replace CONTACT with a real address. Until it is a real address
-# every EDGAR request returns 403 and the fundamentals step fails the build,
-# which is deliberate -- a silent fallback here would publish a map with every
-# filing panel blank and no record of why.
+# A real address, not a placeholder: with a placeholder every request returns
+# 403 and the fundamentals step fails the build. That failure is deliberate --
+# a silent fallback would publish a map with every filing panel blank and no
+# record of why -- and PLACEHOLDER_HINT below still explains it if the address
+# is ever removed.
 REPO = "chip-map"
-CONTACT = "CONTACT-EMAIL-HERE"
+CONTACT = "bababitton@gmail.com"
 USER_AGENT = f"{REPO} {CONTACT}"
 HEADERS = {"User-Agent": USER_AGENT, "Accept-Encoding": "gzip, deflate"}
 

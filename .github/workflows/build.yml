@@ -7,6 +7,12 @@ on:
   schedule:
     - cron: "0 5 * * 6"
   workflow_dispatch:
+  # Also on push, so a change to the map, the questions or the page is served
+  # when it is merged rather than on the next Saturday. The concurrency group
+  # below means a push during a scheduled run queues behind it instead of
+  # racing it to the same deployment.
+  push:
+    branches: [main]
 
 # What deploy-pages needs, and nothing else. No contents: write anywhere here:
 # this workflow publishes a site, it never commits to the repository.

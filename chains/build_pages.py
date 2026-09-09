@@ -119,10 +119,12 @@ MEDIA_PUBLIC = (
 # The Hebrew footer sentence gains the full disclaimer on the public page. The
 # English one does not need this step: its translated form below already
 # carries the disclaimer, so there is nothing left to append.
-HE_FOOT_FROM = "זו מפה להבנת חשיפות, לא אות מסחר.`;"
+# Ends at the backtick, not at the semicolon: the brand line now follows
+# this sentence inside the same expression.
+HE_FOOT_FROM = "זו מפה להבנת חשיפות, לא אות מסחר.`"
 HE_FOOT_TO = ("זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה "
               "לאף אדם. כל מספר עם מקור; אומדן פירושו שלא נמצא מקור. מחירים "
-              "באיחור של עד שבוע.`;")
+              "באיחור של עד שבוע.`")
 
 PUB = {
     "he": {
@@ -159,10 +161,7 @@ PUB = {
 # Every pair MUST match. A reworded Hebrew string silently stops matching, and
 # a silent no-op here is a Hebrew sentence on the English page.
 TRANSLATIONS = [
- ('<title>מפת השבבים החיה</title>', '<title>The Living Chip Map</title>'),
  ('html{direction:rtl}', 'html{direction:ltr}'),
- ('<h1>מפת השבבים החיה</h1><div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div>',
-  '<h1>The Living Chip Map</h1><div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div>'),
  ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
  ("`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`", "`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`"),
  ("`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'היום':'בעוד '+e.days+' ימים'} · ${e.d}</i>`", "`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'today':'in '+e.days+' days'} · ${e.d}</i>`"),
@@ -243,6 +242,10 @@ TRANSLATIONS = [
  # rest of BT is still prose that has to be translated.
  ("const BT = {lanes:(D.labels||{}).lanes||{}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};",
   "const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};"),
+ # The map's one-line instruction. It used to travel with the <h1> that
+ # the brand header replaced; it is still here and still needs a pair.
+ ('<div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div>',
+  '<div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div>'),
 ]
 
 

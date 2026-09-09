@@ -326,3 +326,38 @@ def test_the_sponsor_line_excludes_a_company_that_holds_the_chokepoint():
     is not attacking itself."""
     t = HE_TEMPLATE.read_text(encoding="utf-8")
     assert "!(c.holders||[]).some(x=>x.id===n.id)" in t
+
+
+# -- the brand ---------------------------------------------------------------
+
+def test_the_brand_comes_from_the_data_not_the_template():
+    """A second map published under a different name should be a second JSON
+    file, not a second template."""
+    t = HE_TEMPLATE.read_text(encoding="utf-8")
+    assert 'id="brand"' in t and 'id="maptitle"' in t and 'id="story"' in t
+    assert "(D.labels||{}).brand" in t
+
+
+def test_the_static_title_is_the_brand_alone():
+    """It is the same in both languages, so it needs no translation pair, and
+    a crawler that never runs the script still sees the name. header() adds
+    the map's own title once the data is in."""
+    for tpl in (HE_TEMPLATE, EN_TEMPLATE):
+        assert "<title>Linchpin Signal</title>" in tpl.read_text(encoding="utf-8")
+
+
+def test_the_map_carries_the_brand_in_both_languages():
+    from chains.mapfile import load
+    b = (load().get("labels") or {}).get("brand") or {}
+    assert b.get("name")
+    for field in ("title", "story", "footer"):
+        assert b[field].get("he") and b[field].get("en"), field
+
+
+@needs_live
+def test_the_english_page_shows_the_brand_and_no_hebrew(tmp_path):
+    out = tmp_path / "public-map-en.html"
+    bp.build_public_en(live=LIVE_EN, out=out)
+    page = out.read_text(encoding="utf-8")
+    assert "Linchpin Signal" in page
+    assert bp.hebrew_runs(page) == []

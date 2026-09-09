@@ -1,4 +1,11 @@
-# chip-map
+# Linchpin Signal
+
+*A linchpin is the small pin that holds the wheel on the axle. Pull it and
+everything stops. We find those pins in the supply chain, and measure what
+happens to them — every day.*
+
+Served at **https://linchpinsignal.com** (the map itself at `/semi/`).
+
 
 A living map of the AI chip supply chain: 49 stations from raw materials to
 data centres, the 14 chokepoints where one or two companies hold something

@@ -9,6 +9,7 @@
     out/<domain>/brief-free-<date>.md    ->  site/<domain>/brief.md
     out/<domain>/brief-he-free-<date>.md ->  site/<domain>/brief-he.md
                                          site/index.html  (redirect)
+                                         site/CNAME
                                          site/.nojekyll
 
 EVERY DOMAIN GETS A DIRECTORY
@@ -38,6 +39,13 @@ out/ keeps brief-2026-09-12.md so last week's is still there to compare. The
 site serves /brief.md, one stable URL, because a reader who bookmarks a dated
 URL bookmarks a document that stops being updated. The date is inside the
 document.
+
+CNAME
+-----
+The custom domain. Pages reads it out of the published artifact, so it has to
+be written on every deploy: a build that forgot it would hand the site back to
+the github.io address and every link to the real domain would 404 until the
+next run. It is one line and no newline games -- Pages is strict about that.
 
 .nojekyll
 ---------
@@ -105,6 +113,9 @@ def latest(pattern: str) -> Path | None:
 
 DEFAULT_DOMAIN_FOR_ROOT = "semi"
 
+# The custom domain, served from the root of the site rather than per map.
+CUSTOM_DOMAIN = "linchpinsignal.com"
+
 
 def write_root_redirect(dom: str | None = None) -> Path:
     """site/index.html -> /<domain>/.
@@ -153,6 +164,10 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
 
     (site_root() / ".nojekyll").write_text("", encoding="utf-8")
     written.append("../.nojekyll")
+    (site_root() / "CNAME").write_text(CUSTOM_DOMAIN + "\n",
+                                       encoding="utf-8",
+                                       newline="\n")
+    written.append("../CNAME")
     write_root_redirect()
     written.append("../index.html  (redirect)")
 

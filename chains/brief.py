@@ -159,6 +159,10 @@ def render(live: dict, watch: list, statuses: dict) -> str:
 
     out.append("---")
     out.append(f"Prices through {live['last_price_date']}. Map version {live['map_version']}. Japanese names via US depositary receipts. Not investment advice and not a recommendation to anyone.")
+    brand = ((live.get("labels") or {}).get("brand") or {})
+    if brand.get("footer"):
+        out.append("")
+        out.append(brand["footer"])
     return '\n'.join(out)
 
 

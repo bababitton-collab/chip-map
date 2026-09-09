@@ -1,4 +1,4 @@
-<title>מפת השבבים החיה</title>
+<title>Linchpin Signal</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Suez+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 :root{
@@ -223,11 +223,15 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .hrow .hb .lean{font-weight:700}
 .hrow .hb .lean.y{color:var(--erode)}.hrow .hb .lean.n{color:var(--tight)}.hrow .hb .lean.m{color:var(--amber)}
 .hrow .hb small{display:block;color:var(--ink3);margin-top:2px}
+.top h1{margin:0 0 2px}
+.top .maptitle{font-family:"Suez One",serif;font-weight:400;font-size:1.15rem;color:var(--ink2);margin:0 0 6px}
+.top .story{color:var(--ink2);max-width:74ch;margin:0 0 8px;font-size:1rem}
+.foot .brandline{display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--rule);color:var(--ink3);font-size:.86rem}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
 <div class="top">
-  <div><h1>מפת השבבים החיה</h1><div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div></div>
+  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div></div>
   <div class="asof" id="asof"></div>
 </div>
 <div class="next" id="next"><span class="lbl">הבדיקות הקרובות</span></div>
@@ -474,6 +478,11 @@ function open(n){
 function close(){ selected=null; sats=[]; stage.classList.remove('open'); panel.innerHTML=''; }
 
 function header(){
+  const B = (D.labels||{}).brand||{};
+  document.getElementById('brand').textContent = B.name||'';
+  document.getElementById('maptitle').textContent = B.title||'';
+  document.getElementById('story').textContent = B.story||'';
+  if(B.name&&B.title) document.title = B.name+' \u2014 '+B.title;
   const stale = D.last_price_date;
   document.getElementById('asof').innerHTML=`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`;
   const nx=document.getElementById('next'); nx.querySelectorAll('.ev').forEach(e=>e.remove());
@@ -488,7 +497,8 @@ function header(){
     + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`
     + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;
   const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
-  document.getElementById('foot').innerHTML=`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`;
+  const BR = (D.labels||{}).brand||{};
+  document.getElementById('foot').innerHTML=`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`+`<span class="brandline">${BR.footer||''}</span>`;
 }
 function boot(){ build(); resize(); header(); requestAnimationFrame(draw); }
 addEventListener('resize',()=>{ resize(); });

@@ -138,6 +138,10 @@ def render(live: dict, watch: list, statuses: dict) -> str:
 
     out.append("---")
     out.append(f"מחירים עד {live['last_price_date']}. מפה גרסה {live['map_version']}. מניות יפניות דרך תעודות פיקדון בארה\"ב. לא ייעוץ השקעות ולא המלצה לאף אדם.")
+    brand = ((live.get("labels") or {}).get("brand") or {})
+    if brand.get("footer"):
+        out.append("")
+        out.append(brand["footer"])
     return '\n'.join(out)
 
 

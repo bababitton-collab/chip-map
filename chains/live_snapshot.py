@@ -121,7 +121,14 @@ def labels_for(m: dict, lang: str) -> dict:
     line of code changing.
     """
     lb = m.get("labels") or {}
+    br = lb.get("brand") or {}
     return {
+        # The brand travels with the labels because it is the same kind of
+        # thing: words the page shows, chosen per map rather than per engine.
+        "brand": {"name": br.get("name", ""),
+                  "title": (br.get("title") or {}).get(lang, ""),
+                  "story": (br.get("story") or {}).get(lang, ""),
+                  "footer": (br.get("footer") or {}).get(lang, "")},
         "layers": {k: v.get(lang, k) for k, v in (lb.get("layers") or {}).items()},
         "lines": {k: {"name": v.get(lang, k), "color": v.get("color")}
                   for k, v in (lb.get("lines") or {}).items()},

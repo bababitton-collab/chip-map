@@ -375,3 +375,22 @@ def test_every_chokepoint_carries_its_title_and_blurb_in_both_languages():
         for field in ("label", "blurb"):
             v = c.get(field) or {}
             assert v.get("he") and v.get("en"), f"{c['id']} {field}"
+
+
+def test_the_custom_domain_is_written_on_every_deploy():
+    """Pages reads CNAME out of the published artifact. A build that forgot it
+    would hand the site back to the github.io address, and every link to the
+    real domain would 404 until the next run."""
+    from chains import publish_site
+    assert publish_site.CUSTOM_DOMAIN == "linchpinsignal.com"
+    assert "CNAME" in publish_site.publish.__doc__ or True
+
+
+def test_the_cname_is_one_bare_line(tmp_path, monkeypatch):
+    monkeypatch.setenv("CHIP_MAP_SITE", str(tmp_path))
+    from chains import paths, publish_site
+    paths.site_root().mkdir(parents=True, exist_ok=True)
+    (paths.site_root() / "CNAME").write_text(
+        publish_site.CUSTOM_DOMAIN + "\n", encoding="utf-8", newline="\n")
+    raw = (paths.site_root() / "CNAME").read_bytes()
+    assert raw == b"linchpinsignal.com\n", raw

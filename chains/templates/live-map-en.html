@@ -268,15 +268,20 @@ const LIVE = __LIVE__;
 (function(){
 let D = LIVE;
 const C = getComputedStyle(document.documentElement); const tok=n=>C.getPropertyValue(n).trim();
-const LCOL = {logic:tok('--logic'),memory:tok('--memory'),packaging:tok('--packaging'),network:tok('--network'),power:tok('--power'),cloud:tok('--cloud')};
-const LHE = {logic:'logic',memory:'memory',packaging:'packaging',network:'network',power:'power',cloud:'cloud'};
+let LCOL = {}, LHE = {}, LAYER_HE = {};
+function readLabels(){ const LB = D.labels||{};
+  LCOL = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.color]));
+  LHE = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.name]));
+  LAYER_HE = LB.layers||{}; }
+readLabels();
+
 // Plain words. "Holder" and "challenger" are the field names in the data and
 // they stay there; nobody reading a map should have to learn them.
 const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',
   buys:'Buys from', sells:'Sells to', peers:'Others in this layer',
   via:'Challenges through', against:'against', sells1:'sells', to:'to ',
   legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?'};
-const LAYER_HE = {L1:'materials',L2:'equipment',L3:'design',L4:'chip designers',L5:'fab & packaging',L6:'systems',L7:'cloud',L9:'power'};
+
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
 let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, sats=[], satT=0, t0=performance.now();
@@ -284,6 +289,7 @@ const pct=v=>v==null?'—':((v>0?'+':'')+(v*100).toFixed(1)+'%');
 const cls=v=>v==null?'':(v<0?'neg':'pos');
 
 function build(){
+  readLabels();
   nodes = D.nodes.map(n=>Object.assign({}, n)); byId={}; nodes.forEach(n=>byId[n.id]=n);
   edges = D.edges.filter(e=>byId[e.from]&&byId[e.to]);
   D.cps.forEach(c=>{ c.holders.forEach(h=>{ const n=byId[h.id]; if(!n) return; n.cp=n.cp||[]; n.cp.push(c); }); });
@@ -496,7 +502,7 @@ const BOARD={statuses:{},render(){}};
   const days = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
   const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};
   const list=document.getElementById('wlist');
-  const BT = {lanes:{hbm:'HBM memory',litho:'lithography',fab:'fab & packaging',mat:'materials',power:'power',cloud:'cloud'}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};
+  const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};
   const STC = {yes:'var(--erode)', no:'var(--tight)', mixed:'var(--amber)', none:'var(--ink3)'};
   const bwrap=document.getElementById('bwrap'), btip=document.getElementById('btip'), hints=document.getElementById('hints');
   const byQ={}; W.forEach(w=>byQ[w.id]=w);

@@ -47,6 +47,8 @@ jobs:
 
       # The price cache. Restoring it is what makes the run incremental: with
       # it, each series is a tail fetch; without it, 138 full histories.
+      # Shared across domains -- out/prices, not out/<domain>/prices -- because
+      # two maps naming the same company should not download it twice.
       #
       # The key carries the map version, so adding a company to the map starts
       # a fresh cache rather than silently leaving the new symbol unpriced --
@@ -56,7 +58,7 @@ jobs:
       - name: map version
         id: map
         run: |
-          echo "v=$(python -c 'import json;print(json.load(open("data/semi_chain_v2.json"))["version"])')" >> "$GITHUB_OUTPUT"
+          echo "v=$(python -c 'import json;print(json.load(open("data/semi/map.json"))["version"])')" >> "$GITHUB_OUTPUT"
           echo "week=$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache@v4
@@ -69,7 +71,7 @@ jobs:
       # Before the build, not after. A broken build that still deploys is
       # worse than one that fails.
       - name: tests
-        run: python -m pytest tests/ -q
+        run: python -m pytest tests/ tools/probes/test_adr.py -q
 
       # QUESTIONS_URL and ANSWERS_URL are secrets, not variables: a repository
       # variable is readable by anyone who can read the repository, and these
@@ -106,7 +108,7 @@ jobs:
         run: |
           set -euo pipefail
           tmp="$(mktemp -d)"
-          cp out/live.json out/live_en.json "$tmp/"
+          cp out/semi/live.json out/semi/live_en.json "$tmp/"
           git worktree add --detach "$tmp/wt"
           cd "$tmp/wt"
           git checkout --orphan live

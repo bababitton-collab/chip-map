@@ -1,15 +1,15 @@
-"""The forecast board's two invariants, checked against the real watch list.
+"""The forecast board's invariants, checked against the curated watch list.
+
+These used to read a Python table. The table was the source of the JSON, and
+holding both meant the engine carried one domain's vocabulary -- lane names
+like "hbm" and "lithography" -- in its own source. The JSON is the source now,
+and the invariants are checked where they actually have to hold.
 
 A leak edge is a claim about CHRONOLOGY, not causation: this question is
 answered first, so by the time that one is asked its answer is already public.
 An edge pointing backwards through time would be drawn as an arrow on the board
-and read as something much stronger than it is. And a question with no lane
-would be drawn at whatever row the fallback picks, which looks deliberate and
-is not.
-
-Both tables are hand-written and the watch list moves underneath them, so this
-runs against the generated JSON rather than against the tables: an id that was
-retired, or a date that a company announced and moved, shows up here.
+and read as something much stronger than it is. A question with no lane would
+be drawn at whatever row the fallback picks, which looks deliberate and is not.
 """
 from __future__ import annotations
 
@@ -17,42 +17,29 @@ import json
 
 import pytest
 
-from chains import leaks
+from chains.mapfile import load as load_map
 from chains.paths import watch_en_path, watch_path
 
 WATCH = json.loads(watch_path().read_text(encoding="utf-8"))
 WATCH_EN = json.loads(watch_en_path().read_text(encoding="utf-8"))
 BY = {r["id"]: r for r in WATCH}
 IDS = set(BY)
+LANES = set((load_map().get("labels") or {}).get("lanes") or {})
 
 
-# -- the tables refer to questions that exist -------------------------------
+# -- every edge points at a question that exists ----------------------------
 
-def test_every_id_named_in_LEAKS_exists_in_the_watch_list():
-    """Both ends of every edge. A dangling id is a silently dropped edge."""
-    named = set(leaks.LEAKS) | {t for v in leaks.LEAKS.values() for t in v}
-    assert sorted(named - IDS) == []
-
-
-def test_every_id_named_in_LANE_exists_in_the_watch_list():
-    named = {i for v in leaks.LANE.values() for i in v}
-    assert sorted(named - IDS) == []
+@pytest.mark.parametrize("row", WATCH, ids=lambda r: r["id"])
+def test_every_leak_names_a_question_in_the_list(row):
+    assert [l for l in row["leaks"] if l not in IDS] == []
 
 
-def test_every_question_has_a_lane():
-    """Not "gets the fallback" -- has one, explicitly, in the table."""
-    assert sorted(IDS - set(leaks.LANE_OF)) == []
+def test_no_question_leaks_into_itself():
+    assert [r["id"] for r in WATCH if r["id"] in r["leaks"]] == []
 
 
-def test_no_question_is_in_two_lanes():
-    seen: dict[str, str] = {}
-    dupes = []
-    for lane, ids in leaks.LANE.items():
-        for i in ids:
-            if i in seen:
-                dupes.append((i, seen[i], lane))
-            seen[i] = lane
-    assert dupes == []
+def test_the_board_has_edges_at_all():
+    assert sum(len(r["leaks"]) for r in WATCH) > 0
 
 
 # -- the edges point backwards in time, never forwards ----------------------
@@ -65,42 +52,27 @@ def test_every_leak_is_dated_earlier_than_its_question(row):
         f"the board would draw an arrow running backwards through time")
 
 
-def test_no_question_leaks_into_itself():
-    self_links = [i for i, v in leaks.LEAKS.items() if i in v]
-    assert self_links == []
+# -- lanes ------------------------------------------------------------------
+
+def test_every_question_has_a_lane():
+    assert [r["id"] for r in WATCH if not r.get("lane")] == []
 
 
-def test_a_leak_that_stopped_being_earlier_is_dropped_not_reversed():
-    """The table is static; the dates are not. When a company announces and a
-    row moves past one of its own leakers, the edge disappears rather than
-    quietly pointing the wrong way."""
-    rows = [{"id": "early", "d": "2026-01-01", "who": "E"},
-            {"id": "late", "d": "2026-02-01", "who": "L"}]
-    table = dict(leaks.LEAKS)
-    try:
-        leaks.LEAKS.clear()
-        leaks.LEAKS["late"] = ["early"]
-        assert leaks.apply(rows, {})[1]["leaks"] == ["early"]
-        rows[0]["d"] = "2026-03-01"      # the leaker slips past its question
-        assert leaks.apply(rows, {})[1]["leaks"] == []
-    finally:
-        leaks.LEAKS.clear()
-        leaks.LEAKS.update(table)
+def test_every_lane_is_one_the_map_has_a_label_for():
+    """A lane the map cannot name is a row of the board with a blank heading."""
+    assert LANES, "the map declares no lanes"
+    assert sorted({r["lane"] for r in WATCH} - LANES) == []
 
 
-def test_an_edge_to_a_retired_question_is_dropped():
-    rows = [{"id": "late", "d": "2026-02-01", "who": "L"}]
-    table = dict(leaks.LEAKS)
-    try:
-        leaks.LEAKS.clear()
-        leaks.LEAKS["late"] = ["gone"]
-        assert leaks.apply(rows, {})[0]["leaks"] == []
-    finally:
-        leaks.LEAKS.clear()
-        leaks.LEAKS.update(table)
+def test_the_board_has_at_least_one_edge_in_every_populated_lane():
+    """A lane with questions but no edges is a column of unconnected dots --
+    usually a half-updated list."""
+    lanes = {r["lane"] for r in WATCH}
+    linked = {r["lane"] for r in WATCH if r["leaks"]}
+    assert sorted(lanes - linked) == []
 
 
-# -- what apply() wrote into the file ---------------------------------------
+# -- what every row carries -------------------------------------------------
 
 @pytest.mark.parametrize("field", ["leaks", "lane", "lbl"])
 def test_every_row_carries_the_board_fields(field):
@@ -111,14 +83,6 @@ def test_the_label_is_short_enough_for_a_circle():
     assert [r["id"] for r in WATCH if len(r["lbl"]) > 18] == []
 
 
-def test_the_board_has_at_least_one_edge_in_every_populated_lane():
-    """A lane with questions but no edges is a column of unconnected dots --
-    worth knowing about, because it usually means a table was half-updated."""
-    lanes = {r["lane"] for r in WATCH}
-    linked = {r["lane"] for r in WATCH if r["leaks"]}
-    assert sorted(lanes - linked) == []
-
-
 # -- the two languages stay in step -----------------------------------------
 
 def test_the_two_watch_lists_carry_the_same_questions_in_the_same_order():
@@ -126,7 +90,7 @@ def test_the_two_watch_lists_carry_the_same_questions_in_the_same_order():
 
 
 def test_the_two_watch_lists_agree_on_dates_and_edges():
-    """Only the prose may differ. A date that differs between languages would
+    """Only the prose may differ. A date that differed between languages would
     put the same question on two different days of the same board."""
     en = {r["id"]: r for r in WATCH_EN}
     bad = [r["id"] for r in WATCH

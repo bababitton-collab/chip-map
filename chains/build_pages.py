@@ -166,8 +166,6 @@ TRANSLATIONS = [
  ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
  ("`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`", "`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`"),
  ("`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'היום':'בעוד '+e.days+' ימים'} · ${e.d}</i>`", "`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'today':'in '+e.days+' days'} · ${e.d}</i>`"),
- ("const LHE = {logic:'לוגיקה',memory:'זיכרון',packaging:'אריזה',network:'רשת',power:'חשמל',cloud:'ענן'};", "const LHE = {logic:'logic',memory:'memory',packaging:'packaging',network:'network',power:'power',cloud:'cloud'};"),
- ("const LAYER_HE = {L1:'חומרי גלם',L2:'ציוד',L3:'תכנון',L4:'מעצבות',L5:'מפעל ואריזה',L6:'מערכות',L7:'ענן',L9:'חשמל'};", "const LAYER_HE = {L1:'materials',L2:'equipment',L3:'design',L4:'chip designers',L5:'fab & packaging',L6:'systems',L7:'cloud',L9:'power'};"),
  ("`13 שבועות <span dir=\"ltr\">${pct(px.r13w)}</span> · שנה <span dir=\"ltr\">${pct(px.r52w)}</span>`:'אין קו מחיר'", "`13 weeks <span dir=\"ltr\">${pct(px.r13w)}</span> · 1 year <span dir=\"ltr\">${pct(px.r52w)}</span>`:'no price line'"),
  ("return '<p class=\"role\">אין קו מחיר.</p>'", "return '<p class=\"role\">No price line.</p>'"),
  ("const he={research:'מחקר',pilot:'פיילוט',qualified:'הסמכה',volume:'ייצור'}[st]||''", "const he={research:'research',pilot:'pilot',qualified:'qualified',volume:'volume'}[st]||''"),
@@ -204,8 +202,6 @@ TRANSLATIONS = [
   '<p class="lede">The timeline of the questions. Each circle is a day an answer is published. The arrows show who leaks first: an early question that partly answers a later one. Hover a circle to see its chain of hints. When an answer lands, mark it in the table below — the board colors it and updates the lean of everything that depends on it. The lean is a count of hints already answered, not a forecast and not a recommendation.</p>'),
  ('<div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>מדליף → שאלה</span></div>',
   '<div class="bleg"><span><i class="f"></i>confirmed date</span><span><i></i>expected date</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>leaker → question</span></div>'),
- ("const BT = {lanes:{hbm:'זיכרון HBM',litho:'ליתוגרפיה',fab:'מפעל ואריזה',mat:'חומרים',power:'חשמל',cloud:'ענן'}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};",
-  "const BT = {lanes:{hbm:'HBM memory',litho:'lithography',fab:'fab & packaging',mat:'materials',power:'power',cloud:'cloud'}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};"),
  # The tag on a row a machine marked. An auto mark and a checked mark colour
  # the board identically, so the page labels the difference rather than hiding
  # it -- a reader who cannot tell them apart is reading a stronger claim than
@@ -243,6 +239,10 @@ TRANSLATIONS = [
   "'The company that controls it has no price line.':'Nobody listed is trying to replace them. Amber ring: the market pressure cannot be measured.'"),
  ("'הנעילה מתהדקת: מי ששולט עוקף את מי שמנסה להחליף אותו.' : 'הנעילה נשחקת: מי שמנסה להחליף עוקף את מי ששולט.'",
   "'The lock is tightening: the company in control is outrunning the ones trying to replace it.' : 'The lock is eroding: the ones trying to replace it are outrunning the company in control.'"),
+ # The board's own words. The lane NAMES come from the map now; the
+ # rest of BT is still prose that has to be translated.
+ ("const BT = {lanes:(D.labels||{}).lanes||{}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};",
+  "const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};"),
 ]
 
 

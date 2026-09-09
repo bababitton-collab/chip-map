@@ -149,7 +149,8 @@ def test_the_by_hand_command_fails_on_a_bad_row(tmp_path, monkeypatch, capsys):
     though it must not fail the scheduled build that only consumes it."""
     monkeypatch.setenv("CHIP_MAP_OUT", str(tmp_path))
     monkeypatch.delenv("ANSWERS_URL", raising=False)
-    (tmp_path / "answers.json").write_text(
+    (tmp_path / "semi").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "semi" / "answers.json").write_text(
         json.dumps({"mu_fq4": {"status": "probably"}}), encoding="utf-8")
     assert answers.main() == 1
     assert "DROPPED" in capsys.readouterr().err

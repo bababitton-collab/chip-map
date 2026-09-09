@@ -1,6 +1,6 @@
 """The whole build, in dependency order.
 
-    python -m chains.build_all [--skip-prices]
+    python -m chains.build_all [--domain semi] [--skip-prices]
 
     prices -> repair -> page -> fundamentals -> live -> pages
           -> brief, brief_free -> brief_he, brief_he_free
@@ -20,6 +20,13 @@ repair applied once is undone by the next refresh. Proved on 2026-09-08: after
 a fresh fetch the detector found the same 13 impossible prints again. Without
 this step the chart breaks every week for a reason that was already fixed.
 
+ONE DOMAIN PER RUN
+------------------
+``--domain`` selects which map under data/ is built, and every path the run
+touches is namespaced by it -- except the price store, which is shared, because
+two maps naming the same company should not download it twice. Building a
+second map is running this again with a different name.
+
 WHAT NEEDS THE TOKEN
 --------------------
 Only the first step. ``--skip-prices`` runs everything else against whatever is
@@ -29,6 +36,7 @@ a page change.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 import time
@@ -84,9 +92,17 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--skip-prices", action="store_true",
                     help="build from the price cache; needs no token")
+    ap.add_argument("--domain", default=None,
+                    help="which map under data/ to build (default: semi)")
     args = ap.parse_args()
+    if args.domain:
+        # Set for this process and every step it spawns: the steps are separate
+        # interpreters and each one asks chains.paths which domain it is in.
+        os.environ["CHIP_MAP_DOMAIN"] = args.domain
 
     today = date.today()
+    from chains.paths import domain
+    print(f"domain: {domain()}")
     started = time.monotonic()
     timings: list[tuple[str, float, int]] = []
 

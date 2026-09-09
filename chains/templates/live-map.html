@@ -268,15 +268,20 @@ const LIVE = __LIVE__;
 (function(){
 let D = LIVE;
 const C = getComputedStyle(document.documentElement); const tok=n=>C.getPropertyValue(n).trim();
-const LCOL = {logic:tok('--logic'),memory:tok('--memory'),packaging:tok('--packaging'),network:tok('--network'),power:tok('--power'),cloud:tok('--cloud')};
-const LHE = {logic:'לוגיקה',memory:'זיכרון',packaging:'אריזה',network:'רשת',power:'חשמל',cloud:'ענן'};
+let LCOL = {}, LHE = {}, LAYER_HE = {};
+function readLabels(){ const LB = D.labels||{};
+  LCOL = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.color]));
+  LHE = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.name]));
+  LAYER_HE = LB.layers||{}; }
+readLabels();
+
 // Plain words. "Holder" and "challenger" are the field names in the data and
 // they stay there; nobody reading a map should have to learn them.
 const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',
   buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',
   via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',
   legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?'};
-const LAYER_HE = {L1:'חומרי גלם',L2:'ציוד',L3:'תכנון',L4:'מעצבות',L5:'מפעל ואריזה',L6:'מערכות',L7:'ענן',L9:'חשמל'};
+
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
 let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, sats=[], satT=0, t0=performance.now();
@@ -284,6 +289,7 @@ const pct=v=>v==null?'—':((v>0?'+':'')+(v*100).toFixed(1)+'%');
 const cls=v=>v==null?'':(v<0?'neg':'pos');
 
 function build(){
+  readLabels();
   nodes = D.nodes.map(n=>Object.assign({}, n)); byId={}; nodes.forEach(n=>byId[n.id]=n);
   edges = D.edges.filter(e=>byId[e.from]&&byId[e.to]);
   D.cps.forEach(c=>{ c.holders.forEach(h=>{ const n=byId[h.id]; if(!n) return; n.cp=n.cp||[]; n.cp.push(c); }); });
@@ -496,7 +502,7 @@ const BOARD={statuses:{},render(){}};
   const days = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
   const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};
   const list=document.getElementById('wlist');
-  const BT = {lanes:{hbm:'זיכרון HBM',litho:'ליתוגרפיה',fab:'מפעל ואריזה',mat:'חומרים',power:'חשמל',cloud:'ענן'}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};
+  const BT = {lanes:(D.labels||{}).lanes||{}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};
   const STC = {yes:'var(--erode)', no:'var(--tight)', mixed:'var(--amber)', none:'var(--ink3)'};
   const bwrap=document.getElementById('bwrap'), btip=document.getElementById('btip'), hints=document.getElementById('hints');
   const byQ={}; W.forEach(w=>byQ[w.id]=w);

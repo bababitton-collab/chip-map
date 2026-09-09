@@ -88,7 +88,9 @@
    "notes": "Also cited as holding 20-30% of global photoresist and, with JSR, ~90% of EUV-machine photoresist (estimate, see chokepoint CP4).",
    "price_symbol": "SHECY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Shin-Etsu Chemical Co Ltd ADR; home listing 4063.T is not on EODHD"
+   "price_note": "US line for Shin-Etsu Chemical Co Ltd ADR; home listing 4063.T is not on EODHD",
+   "line": "memory",
+   "short": "Shin-Etsu"
   },
   {
    "id": "sumco",
@@ -116,7 +118,9 @@
    "notes": "Market cap not verified.",
    "price_symbol": "SUOPY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Sumco Corp ADR; home listing 3436.T is not on EODHD"
+   "price_note": "US line for Sumco Corp ADR; home listing 3436.T is not on EODHD",
+   "line": "memory",
+   "short": "SUMCO"
   },
   {
    "id": "globalwafers",
@@ -143,7 +147,9 @@
    ],
    "notes": null,
    "price_symbol": "6488.TWO",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "GlobalWafers"
   },
   {
    "id": "ajinomoto",
@@ -168,7 +174,9 @@
    "notes": "Raised ABF prices ~30% effective Q3 2026. Layer counts moving from 3+3 toward 13+13 for AI packages, multiplying film consumption per unit.",
    "price_symbol": "AJNMY.US",
    "price_symbol_kind": "adr",
-   "price_note": "Ajinomoto ADR. AJNMY has 1,930 bars over the window against AJINF's 220 -- same company, a usable line instead of a stale one."
+   "price_note": "Ajinomoto ADR. AJNMY has 1,930 bars over the window against AJINF's 220 -- same company, a usable line instead of a stale one.",
+   "line": "packaging",
+   "short": "Ajinomoto"
   },
   {
    "id": "ibiden",
@@ -201,7 +209,9 @@
    "notes": null,
    "price_symbol": "IBIDF.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD"
+   "price_note": "US line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD",
+   "line": "packaging",
+   "short": "Ibiden"
   },
   {
    "id": "unimicron",
@@ -230,7 +240,9 @@
    ],
    "notes": null,
    "price_symbol": "3037.TW",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Unimicron"
   },
   {
    "id": "entegris",
@@ -257,7 +269,9 @@
    ],
    "notes": "Holding in SOXX at 1.20% (2026-08-20). Segment share not verified.",
    "price_symbol": "ENTG.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "ENTG"
   },
   {
    "id": "tok",
@@ -286,7 +300,9 @@
    "notes": "JSR was taken private by Japan Investment Corp; no longer independently listed.",
    "price_symbol": "TOKCF.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Tokyo Ohka Kogyo Co. Ltd; home listing 4186.T is not on EODHD"
+   "price_note": "US line for Tokyo Ohka Kogyo Co. Ltd; home listing 4186.T is not on EODHD",
+   "line": "packaging",
+   "short": "TOK"
   },
   {
    "id": "hoya",
@@ -311,7 +327,9 @@
    "notes": null,
    "price_symbol": "HOCPY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Hoya Corp; home listing 7741.T is not on EODHD"
+   "price_note": "US line for Hoya Corp; home listing 7741.T is not on EODHD",
+   "line": "packaging",
+   "short": "HOYA"
   },
   {
    "id": "asml",
@@ -354,7 +372,9 @@
    ],
    "notes": "2025 net sales EUR32.7B, backlog EUR38.8B at YE2025 (ASML Q4 2025 release). 2026 guidance raised to EUR43-45B at Q2 2026; Q2 2026 sales EUR9.3B, GM 54.0%; Q3 2026 guide EUR11.0-12.0B. Standard EUV output ~50-60 systems/yr is the physical ceiling on world leading-edge capacity additions (estimate).",
    "price_symbol": "ASML.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "ASML"
   },
   {
    "id": "amat",
@@ -382,7 +402,9 @@
    ],
    "notes": "Segment-level share percentages could not be verified (paywalled).",
    "price_symbol": "AMAT.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "AMAT"
   },
   {
    "id": "lrcx",
@@ -408,7 +430,9 @@
    ],
    "notes": null,
    "price_symbol": "LRCX.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "LRCX"
   },
   {
    "id": "klac",
@@ -436,7 +460,9 @@
    ],
    "notes": null,
    "price_symbol": "KLAC.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "KLAC"
   },
   {
    "id": "tel",
@@ -463,7 +489,9 @@
    "notes": "The EUV track monopoly is a widely reported but not filing-disclosed fact — flagged as estimate.",
    "price_symbol": "TOELY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Tokyo Electron Ltd PK; home listing 8035.T is not on EODHD"
+   "price_note": "US line for Tokyo Electron Ltd PK; home listing 8035.T is not on EODHD",
+   "line": "logic",
+   "short": "TEL"
   },
   {
    "id": "advantest",
@@ -490,7 +518,9 @@
    "notes": "Advantest+Teradyne ~90%+ of ATE. SoC tester TAM est. $8.7-9.5B CY26 vs $6.9B CY25.",
    "price_symbol": "ATEYY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Advantest Corp DRC; home listing 6857.T is not on EODHD"
+   "price_note": "US line for Advantest Corp DRC; home listing 6857.T is not on EODHD",
+   "line": "memory",
+   "short": "Advantest"
   },
   {
    "id": "ter",
@@ -515,7 +545,9 @@
    ],
    "notes": null,
    "price_symbol": "TER.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "TER"
   },
   {
    "id": "snps",
@@ -542,7 +574,9 @@
    ],
    "notes": "Combined SNPS+CDNS+Siemens EDA revenue ~$16B in 2025 (SemiAnalysis via secondary source).",
    "price_symbol": "SNPS.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "SNPS"
   },
   {
    "id": "cdns",
@@ -567,7 +601,9 @@
    ],
    "notes": null,
    "price_symbol": "CDNS.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "CDNS"
   },
   {
    "id": "arm",
@@ -592,7 +628,9 @@
    ],
    "notes": "FY2026 revenue $4.92B: licensing $2.31B (+25%), royalty $2.61B (+21%). Majority-owned by SoftBank. Named DC customers: NVIDIA (Grace/Vera), AWS (Graviton), Google (Axion), Microsoft (Cobalt).",
    "price_symbol": "ARM.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "ARM"
   },
   {
    "id": "nvda",
@@ -639,7 +677,9 @@
    ],
    "notes": "FY2026 revenue $215.9B (+65%). Q2 FY2027 (qtr ended ~Jul-2026) revenue $96.2B (+106%), data center ~92.7% of revenue: hyperscale $48.7B + 'ACIE' $40.3B. GAAP GM 75.0%. Q3 FY2027 guide ~$108B ±2%. Inventory $32B ahead of Vera Rubin. DSO 60 days on extended terms to large investment-grade customers.",
    "price_symbol": "NVDA.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "NVDA"
   },
   {
    "id": "avgo",
@@ -687,7 +727,9 @@
    ],
    "notes": "Q3 FY2026 revenue $29.6B (+86%); AI semiconductor revenue $16.7B (+221% YoY, +54% QoQ), ~73% of which is XPU. Q4 FY2026 guide ~$34.8B total, ~$21.7B AI. Management guided ~$115B AI semi revenue FY2027 and 'line of sight' to ~$230B FY2028.",
    "price_symbol": "AVGO.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "AVGO"
   },
   {
    "id": "mrvl",
@@ -722,7 +764,9 @@
    ],
    "notes": "Reported to have won a Google custom-chip engagement in 2026, alongside AMD, reshuffling the TPU supply base.",
    "price_symbol": "MRVL.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "MRVL"
   },
   {
    "id": "amd",
@@ -752,7 +796,9 @@
    ],
    "notes": "Second-source merchant accelerator; MI400 class expected 2026. Segment share not verified.",
    "price_symbol": "AMD.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "AMD"
   },
   {
    "id": "intc",
@@ -794,7 +840,9 @@
    ],
    "notes": "18A HVM began Jan 2026 at Fab 52 Arizona; ~60% yield reported vs 70-80% profitable threshold. Foundry segment operating loss $2.51B in Q4 2025. US government is largest shareholder via CHIPS restructuring. Intel outsources a reported >90% of Nova Lake desktop CPUs to TSMC N2 — a credibility problem for IFS.",
    "price_symbol": "INTC.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "INTC"
   },
   {
    "id": "mu",
@@ -832,7 +880,9 @@
    ],
    "notes": "Q3 FY2026 revenue $41.5B (+346% YoY), GM 84.9%, net income $28.9B. Data center >$25B in the quarter = >$100B annualized run rate. FY2026 capex ~$27B. Q4 FY2026 guide $50.0B ±$1.0B. HBM sold out through 2027 per BofA.",
    "price_symbol": "MU.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "MU"
   },
   {
    "id": "skhynix",
@@ -870,7 +920,9 @@
    ],
    "notes": "Approved ~KRW54.3T (~$38.3B) capex through 2031 incl. Yongin Y2 and M17. Chairman has said supply could stay ~20% below demand through 2030.",
    "price_symbol": "000660.KO",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "SK hynix"
   },
   {
    "id": "samsung",
@@ -908,7 +960,9 @@
    ],
    "notes": "Samsung reached $1B HBM revenue within four months of starting HBM4 mass production (Feb 2026).",
    "price_symbol": "005930.KO",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Samsung"
   },
   {
    "id": "alab",
@@ -943,7 +997,9 @@
    ],
    "notes": "FY2025 revenue $852.5M (+115%). Extreme single-customer concentration plus single-foundry dependence.",
    "price_symbol": "ALAB.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "ALAB"
   },
   {
    "id": "crdo",
@@ -987,7 +1043,9 @@
    ],
    "notes": "FY2026 revenue $1.3B, up from $436.8M in FY2025. 10-K explicitly flags single-foundry dependence as a risk. SOXX weight 2.10% (2026-08-20).",
    "price_symbol": "CRDO.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "CRDO"
   },
   {
    "id": "mpwr",
@@ -1016,7 +1074,9 @@
    ],
    "notes": "Named in NVIDIA's 800 VDC silicon partner list alongside ADI, Infineon, Innoscience, Navitas, onsemi, Renesas, ROHM, STMicro, TI.",
    "price_symbol": "MPWR.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "MPWR"
   },
   {
    "id": "tsmc",
@@ -1065,7 +1125,9 @@
    ],
    "notes": "Q2 2026 revenue $40.2B, GM 67.7%. 2026 capex raised to $60-64B, 70-80% to advanced process. FY2026 USD revenue growth guided 'slightly above 40%'. HPC 66% of Q2 revenue. <=7nm = 77% of wafer revenue (2nm 3%, 3nm 30%, 5nm 33%). Management: CoWoS capacity 'so tight that now it's limiting customers' growth.'",
    "price_symbol": "TSM.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "TSMC"
   },
   {
    "id": "ase",
@@ -1096,7 +1158,9 @@
    ],
    "notes": "Share data is 2024 — most recent verified OSAT ranking I could source. Also part of the 50-60k wpm of non-TSMC CoWoS-class capacity in 2026.",
    "price_symbol": "ASX.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "ASE"
   },
   {
    "id": "amkr",
@@ -1141,7 +1205,9 @@
    ],
    "notes": "2025 net sales $6.708B; Advanced Products $5.556B (82.8%). Building Peoria, AZ facility to package TSMC Arizona output.",
    "price_symbol": "AMKR.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "AMKR"
   },
   {
    "id": "smci",
@@ -1181,7 +1247,9 @@
    ],
    "notes": "FY2026 (ended Jun-2026) revenue $39.1B vs $22.0B FY2025; FY2026 GM only 10.8%. FY2027 guide $65-72B. Classic thin-margin pass-through of NVIDIA content.",
    "price_symbol": "SMCI.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "SMCI"
   },
   {
    "id": "foxconn",
@@ -1220,7 +1288,9 @@
    ],
    "notes": "Industry AI rack shipments forecast 70,000-80,000 units in 2026 vs ~29,000 in 2025 (Morgan Stanley est.).",
    "price_symbol": "2317.TW",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "Foxconn"
   },
   {
    "id": "anet",
@@ -1255,7 +1325,9 @@
    ],
    "notes": "Displaced into #2 by NVIDIA in datacenter Ethernet by revenue in Q1 2026.",
    "price_symbol": "ANET.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "ANET"
   },
   {
    "id": "cohr",
@@ -1283,7 +1355,9 @@
    ],
    "notes": "Largest non-Chinese transceiver vendor; primary beneficiary of any US restriction on Chinese modules.",
    "price_symbol": "COHR.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "COHR"
   },
   {
    "id": "fn",
@@ -1335,7 +1409,9 @@
    ],
    "notes": "FY2026 revenue $4.64B (+35.7%). Data center 47.9% of revenue. Four customers = 57.4% of revenue.",
    "price_symbol": "FN.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "FN"
   },
   {
    "id": "vrt",
@@ -1366,7 +1442,9 @@
    ],
    "notes": "Formal collaboration partner on NVIDIA's 800 VDC architecture for MW-scale racks from 2027.",
    "price_symbol": "VRT.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "VRT"
   },
   {
    "id": "msft",
@@ -1400,7 +1478,9 @@
    ],
    "notes": "CY2026 capex guided ~$175B incl. finance leases; Q2 2026 capex $41B; commercial RPO cited at $678B.",
    "price_symbol": "MSFT.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "cloud",
+   "short": "MSFT"
   },
   {
    "id": "googl",
@@ -1432,7 +1512,9 @@
    ],
    "notes": "2026 capex guided $195-205B; Q2 2026 capex $44.9B.",
    "price_symbol": "GOOGL.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "cloud",
+   "short": "GOOGL"
   },
   {
    "id": "amzn",
@@ -1464,7 +1546,9 @@
    ],
    "notes": "2026 capex guided ~$220B; Q2 2026 capex $54.2B; AWS backlog cited at $496B.",
    "price_symbol": "AMZN.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "cloud",
+   "short": "AMZN"
   },
   {
    "id": "meta",
@@ -1491,7 +1575,9 @@
    "competitors": [],
    "notes": "2026 capex guided $135-145B; Q2 2026 capex $31.08B incl. finance-lease principal.",
    "price_symbol": "META.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "cloud",
+   "short": "META"
   },
   {
    "id": "orcl",
@@ -1529,7 +1615,9 @@
    ],
    "notes": "RPO figures widely reported but not verified in this research pass — flagged.",
    "price_symbol": "ORCL.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "cloud",
+   "short": "ORCL"
   },
   {
    "id": "crwv",
@@ -1568,7 +1656,9 @@
    ],
    "notes": "Q2 2026 revenue $2.575B (+112%). RPO ~$104B at 2026-06-30, plus $25B added early Q3. Raised >$10B unsecured debt/converts plus a $3.1B delayed-draw term loan backed by HPC infrastructure. Its customers are simultaneously its competitors.",
    "price_symbol": "CRWV.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "cloud",
+   "short": "CRWV"
   },
   {
    "id": "gev",
@@ -1596,7 +1686,9 @@
    ],
    "notes": "Heavy-duty turbine lead time ~3 years. Pricing up 10-20 points $/kW vs Q4 2025. Targeting 20 GW annualized output by Q3 2026, 24 GW by 2028. Large HV transformer quotes reported at 60+ months, some reaching 2031.",
    "price_symbol": "GEV.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "GEV"
   },
   {
    "id": "siemensenergy",
@@ -1623,7 +1715,9 @@
    ],
    "notes": "Large HV transformer lead times reported at 48-60 months, backlog through 2030.",
    "price_symbol": "ENR.XETRA",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Siemens En."
   },
   {
    "id": "etn",
@@ -1651,7 +1745,9 @@
    ],
    "notes": null,
    "price_symbol": "ETN.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "ETN"
   },
   {
    "id": "ceg",
@@ -1677,7 +1773,9 @@
    ],
    "notes": null,
    "price_symbol": "CEG.US",
-   "price_symbol_kind": "primary"
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "CEG"
   }
  ],
  "edges": [
@@ -2423,7 +2521,15 @@
    ],
    "substitute": "None. Canon nanoimprint and multi-patterned DUV are not substitutes at N3/N2 economics. China's SMEE is generations behind and EUV is export-banned to China since 2019.",
    "substitution_time": "10+ years",
-   "source": "https://semiconductorx.com/spotlight-asml.html ; https://siliconanalysts.com/tools/supply-chain"
+   "source": "https://semiconductorx.com/spotlight-asml.html ; https://siliconanalysts.com/tools/supply-chain",
+   "label": {
+    "he": "מכונת האור",
+    "en": "The light machine"
+   },
+   "blurb": {
+    "he": "ASML היחידה בעולם שבונה מכונות EUV. כ-65 מכונות בשנה, וזו תקרה פיזית על כמה שבבים מתקדמים העולם יכול לייצר.",
+    "en": "ASML is the only company on earth that builds EUV machines. About 65 a year, and that is a physical ceiling on how many advanced chips the world can make."
+   }
   },
   {
    "id": "CP2",
@@ -2439,7 +2545,15 @@
    ],
    "substitute": "None; 25+ years of co-development. A Zeiss Oberkochen outage stops EUV production worldwide.",
    "substitution_time": "10+ years",
-   "source": "https://semiconductorx.com/spotlight-asml.html ; https://siliconanalysts.com/tools/supply-chain"
+   "source": "https://semiconductorx.com/spotlight-asml.html ; https://siliconanalysts.com/tools/supply-chain",
+   "label": {
+    "he": "העדשות והלייזרים",
+    "en": "Lenses and lasers"
+   },
+   "blurb": {
+    "he": "Zeiss לאופטיקה, TRUMPF ללייזר. שתיהן פרטיות, בגרמניה. אין תחליף ואי אפשר להשקיע בהן.",
+    "en": "Zeiss for the optics, TRUMPF for the laser. Both private, both German. No substitute, and no way to invest in them."
+   }
   },
   {
    "id": "CP3",
@@ -2464,7 +2578,15 @@
    ],
    "substitute": "Samsung SF2 (Taylor, TX — Tesla AI5 taped out) and Intel 18A (Fab 52, Arizona, HVM Jan 2026 at ~60% yield). Both are real but sub-scale and unproven for large AI dies.",
    "substitution_time": "3-5 years for meaningful volume; 5-10 years for parity",
-   "source": "https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share ; https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027 ; https://semiconductorx.com/spotlight-intel-foundry.html"
+   "source": "https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share ; https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027 ; https://semiconductorx.com/spotlight-intel-foundry.html",
+   "label": {
+    "he": "המפעל המתקדם",
+    "en": "The advanced fab"
+   },
+   "blurb": {
+    "he": "TSMC מייצרת כ-90% מהשבבים מתחת ל-7 ננומטר, כולם בטייוואן. אינטל וסמסונג הן ביטוח, לא תחליף.",
+    "en": "TSMC makes roughly 90% of chips below 7nm, all of it in Taiwan. Intel and Samsung are insurance, not replacements."
+   }
   },
   {
    "id": "CP4",
@@ -2487,7 +2609,15 @@
    ],
    "substitute": "OSAT CoWoS-equivalents (ASE FOCoS, Amkor, SPIL), Samsung I-Cube, Intel Foveros/EMIB; panel-level packaging (CoPoS) pilot line completed June 2026 but 2028-29 ramp.",
    "substitution_time": "2-4 years",
-   "source": "https://www.trendforce.com/news/2026/06/15/news-tsmc-cowos-supply-demand-gap-reportedly-seen-narrowing-from-20-to-10-by-end-2026-as-capacity-expands/ ; https://siliconanalysts.com/tools/supply-chain"
+   "source": "https://www.trendforce.com/news/2026/06/15/news-tsmc-cowos-supply-demand-gap-reportedly-seen-narrowing-from-20-to-10-by-end-2026-as-capacity-expands/ ; https://siliconanalysts.com/tools/supply-chain",
+   "label": {
+    "he": "האריזה המתקדמת",
+    "en": "Advanced packaging"
+   },
+   "blurb": {
+    "he": "CoWoS: כ-70% אצל TSMC. הפער בין ביקוש להיצע הצטמצם מ-20% ל-10%.",
+    "en": "CoWoS: about 70% at TSMC. The gap between demand and supply has narrowed from 20% to 10%."
+   }
   },
   {
    "id": "CP5",
@@ -2509,7 +2639,15 @@
    ],
    "substitute": "None. CXMT (China) is not qualified for HBM3E/HBM4 in Western AI systems. New fabs (SK hynix Yongin Y2) do not reach volume before 2029.",
    "substitution_time": "5-7 years",
-   "source": "https://counterpointresearch.com/en/insights/global-dram-and-hbm-market-share ; https://invezz.com/news/2026/08/07/what-samsung-sk-hynix-and-microns-capex-mean-for-the-future-of-the-memory-trade/"
+   "source": "https://counterpointresearch.com/en/insights/global-dram-and-hbm-market-share ; https://invezz.com/news/2026/08/07/what-samsung-sk-hynix-and-microns-capex-mean-for-the-future-of-the-memory-trade/",
+   "label": {
+    "he": "הזיכרון המהיר",
+    "en": "High-bandwidth memory"
+   },
+   "blurb": {
+    "he": "HBM: שלוש יצרניות בלבד, כמעט חצי מעלות המעבד, מכור מראש עד 2027.",
+    "en": "HBM: three makers only, nearly half the cost of an AI accelerator, sold out through 2027."
+   }
   },
   {
    "id": "CP6",
@@ -2526,7 +2664,15 @@
    ],
    "substitute": "GlobalWafers (Texas/Missouri), Siltronic, SK Siltron can add capacity but qualification of prime 300mm wafers at leading edge is slow.",
    "substitution_time": "3-5 years",
-   "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market"
+   "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market",
+   "label": {
+    "he": "פרוסות הסיליקון",
+    "en": "Silicon wafers"
+   },
+   "blurb": {
+    "he": "Shin-Etsu ו-SUMCO מעל מחצית מפרוסות הסיליקון בעולם. יפן מספקת יותר מחצי מהמצעים.",
+    "en": "Shin-Etsu and SUMCO hold more than half of the world's silicon wafers. Japan supplies more than half of all substrates."
+   }
   },
   {
    "id": "CP7",
@@ -2545,7 +2691,15 @@
    ],
    "substitute": "Sumitomo Chemical and Fujifilm are entering EUV resist; DuPont/Merck exist in DUV. Qualification of a new resist at a leading-edge node takes years. A single bad photoresist batch cost TSMC ~$550M in 2019.",
    "substitution_time": "5-10 years",
-   "source": "https://www.fountyltech.com/news/japanese-companies-monopolize-the-euv-photoresist-supply-market/ ; https://siliconanalysts.com/tools/supply-chain"
+   "source": "https://www.fountyltech.com/news/japanese-companies-monopolize-the-euv-photoresist-supply-market/ ; https://siliconanalysts.com/tools/supply-chain",
+   "label": {
+    "he": "הרזיסט והכימיקלים",
+    "en": "Resist and chemicals"
+   },
+   "blurb": {
+    "he": "מעל 90% מרזיסט ה-EUV אצל שלוש חברות יפניות. מנה פגומה אחת עלתה ל-TSMC כ-550 מיליון דולר ב-2019.",
+    "en": "Over 90% of EUV photoresist sits with three Japanese companies. One bad batch cost TSMC about $550M in 2019."
+   }
   },
   {
    "id": "CP8",
@@ -2564,7 +2718,15 @@
    ],
    "substitute": "No qualified drop-in substitute. Sekisui and Taiwanese entrants have not displaced it.",
    "substitution_time": "5-10 years",
-   "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE ; https://siliconanalysts.com/tools/supply-chain"
+   "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE ; https://siliconanalysts.com/tools/supply-chain",
+   "label": {
+    "he": "הדבק של Ajinomoto",
+    "en": "Ajinomoto's film"
+   },
+   "blurb": {
+    "he": "Ajinomoto, חברת מזון, מעל 95% מסרט ה-ABF שבכל אריזת שבב. מפעל שני רק ב-2032.",
+    "en": "Ajinomoto, a food company, makes over 95% of the ABF film inside every AI chip package. A second plant only in 2032."
+   }
   },
   {
    "id": "CP9",
@@ -2582,7 +2744,15 @@
    ],
    "substitute": "None qualified at volume.",
    "substitution_time": "10+ years",
-   "source": "https://siliconanalysts.com/tools/supply-chain"
+   "source": "https://siliconanalysts.com/tools/supply-chain",
+   "label": {
+    "he": "מסכות ה-EUV",
+    "en": "EUV mask blanks"
+   },
+   "blurb": {
+    "he": "AGC ו-HOYA כ-93% ממסכות ה-EUV. אין תחליף מוסמך בכמויות.",
+    "en": "AGC and HOYA hold about 93% of EUV mask blanks. No qualified substitute at volume."
+   }
   },
   {
    "id": "CP10",
@@ -2603,7 +2773,15 @@
    ],
    "substitute": "Coherent, Lumentum, Fabrinet and co-packaged optics could absorb some volume, but not at ~60% of world supply on short notice. A proposed FCC ban on Chinese transceivers is the live policy risk.",
    "substitution_time": "2-4 years",
-   "source": "https://counterpointresearch.com/en/insights/fcc-china-ban-ai-component"
+   "source": "https://counterpointresearch.com/en/insights/fcc-china-ban-ai-component",
+   "label": {
+    "he": "הלייזרים והסיבים",
+    "en": "Lasers and fiber"
+   },
+   "blurb": {
+    "he": "ספקים סיניים כ-60% מהטרנסיברים. ההגבלה של ה-FCC מהדקת את הצוואר במקום לשחרר אותו.",
+    "en": "Chinese vendors hold about 60% of transceivers. The FCC restriction tightens the bottleneck instead of loosening it."
+   }
   },
   {
    "id": "CP11",
@@ -2626,7 +2804,15 @@
    ],
    "substitute": "Tier-2 European makers (Efacec, Pauwels, TMC) at 20-32 months, Hyundai Heavy 18-24 months, TBEA 12-18 months with compliance risk; behind-the-meter gas/fuel cells; nuclear PPAs and SMRs (post-2029).",
    "substitution_time": "2-5 years",
-   "source": "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/ ; https://www.gridreadiness.com/blog/power-transformer-lead-times-ai-data-center-2026.html ; https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/"
+   "source": "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/ ; https://www.gridreadiness.com/blog/power-transformer-lead-times-ai-data-center-2026.html ; https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/",
+   "label": {
+    "he": "טורבינות ושנאים",
+    "en": "Turbines and transformers"
+   },
+   "blurb": {
+    "he": "GE Vernova ו-Siemens Energy: תור טורבינות עד 2030, שנאים 4-5 שנים. עובדי ליפוף הם המגבלה האמיתית.",
+    "en": "GE Vernova and Siemens Energy: turbine slots booked to 2030, transformers 4-5 years out. Coil-winding labor is the real constraint."
+   }
   },
   {
    "id": "CP12",
@@ -2641,7 +2827,15 @@
    ],
    "substitute": "MTM Critical Metals (Texas, early 2026), South32/Alcoa Australia (~40 t/yr), Stade Germany (2027, ~40 t/yr), Metlen Greece (2027, ~50 t/yr); Japan recycles ~40% domestically.",
    "substitution_time": "2-4 years for partial coverage",
-   "source": "https://www.csis.org/analysis/beyond-rare-earths-chinas-growing-threat-gallium-supply-chains"
+   "source": "https://www.csis.org/analysis/beyond-rare-earths-chinas-growing-threat-gallium-supply-chains",
+   "label": {
+    "he": "המתכות הקריטיות",
+    "en": "Critical minerals"
+   },
+   "blurb": {
+    "he": "סין 98% מהגליום, 77% מהגרמניום. ההשעיה של איסור הייצוא פוקעת ב-27 בנובמבר 2026.",
+    "en": "China holds 98% of gallium and 77% of germanium. The export-ban suspension expires on November 27, 2026."
+   }
   },
   {
    "id": "CP13",
@@ -2661,7 +2855,15 @@
    ],
    "substitute": "Cohu, Chroma at the low end only.",
    "substitution_time": "3-5 years",
-   "source": "https://www.datagravity.dev/p/the-chip-testing-bottleneck"
+   "source": "https://www.datagravity.dev/p/the-chip-testing-bottleneck",
+   "label": {
+    "he": "בדיקת השבבים",
+    "en": "Chip testing"
+   },
+   "blurb": {
+    "he": "Advantest 66% מבודקי ה-SoC. בדיקת HBM4 לוקחת פי שניים מ-HBM2E.",
+    "en": "Advantest holds 66% of SoC testers. Testing HBM4 takes twice as long as HBM2E."
+   }
   },
   {
    "id": "CP14",
@@ -2677,7 +2879,15 @@
    ],
    "substitute": "Empyrean/Primarius (China) at mature nodes only.",
    "substitution_time": "5-10 years at leading edge",
-   "source": "https://www.shashi.co/2026/07/synopsys-cadence-and-siemens-eda-design.html"
+   "source": "https://www.shashi.co/2026/07/synopsys-cadence-and-siemens-eda-design.html",
+   "label": {
+    "he": "כלי התכנון",
+    "en": "Design tools"
+   },
+   "blurb": {
+    "he": "Synopsys, Cadence ו-Siemens 70-80% מכלי התכנון. הענקיות קונות את המאתגרות במקום להידחק.",
+    "en": "Synopsys, Cadence and Siemens hold 70-80% of design tools. The incumbents buy the challengers rather than being displaced."
+   }
   }
  ],
  "vulnerable": [
@@ -9084,5 +9294,117 @@
    "why": "a line drawn through a series that prints a few times a year is an interpolation presented as a measurement"
   }
  },
- "edge_note": "v2.2: 45 supplier-customer edges added from customer-concentration disclosures (10-K/20-F), supplier awards and trade reports; each carries source and as_of. Weakest: ter->nvda, mpwr->nvda, etn->nvda (see what field)."
+ "edge_note": "v2.2: 45 supplier-customer edges added from customer-concentration disclosures (10-K/20-F), supplier awards and trade reports; each carries source and as_of. Weakest: ter->nvda, mpwr->nvda, etn->nvda (see what field).",
+ "labels": {
+  "layers": {
+   "L1": {
+    "he": "חומרי גלם",
+    "en": "materials"
+   },
+   "L2": {
+    "he": "ציוד",
+    "en": "equipment"
+   },
+   "L3": {
+    "he": "תכנון",
+    "en": "design"
+   },
+   "L4": {
+    "he": "מעצבות",
+    "en": "chip designers"
+   },
+   "L5": {
+    "he": "מפעל ואריזה",
+    "en": "fab & packaging"
+   },
+   "L6": {
+    "he": "מערכות",
+    "en": "systems"
+   },
+   "L7": {
+    "he": "ענן",
+    "en": "cloud"
+   },
+   "L9": {
+    "he": "חשמל",
+    "en": "power"
+   }
+  },
+  "lines": {
+   "logic": {
+    "he": "לוגיקה",
+    "en": "logic",
+    "color": "#7d93b8"
+   },
+   "memory": {
+    "he": "זיכרון",
+    "en": "memory",
+    "color": "#c08878"
+   },
+   "packaging": {
+    "he": "אריזה",
+    "en": "packaging",
+    "color": "#b39a6a"
+   },
+   "network": {
+    "he": "רשת",
+    "en": "network",
+    "color": "#7aa894"
+   },
+   "power": {
+    "he": "חשמל",
+    "en": "power",
+    "color": "#9b90bd"
+   },
+   "cloud": {
+    "he": "ענן",
+    "en": "cloud",
+    "color": "#a9a396"
+   }
+  },
+  "lanes": {
+   "hbm": {
+    "he": "זיכרון HBM",
+    "en": "HBM memory"
+   },
+   "litho": {
+    "he": "ליתוגרפיה",
+    "en": "lithography"
+   },
+   "fab": {
+    "he": "מפעל ואריזה",
+    "en": "fab & packaging"
+   },
+   "mat": {
+    "he": "חומרים",
+    "en": "materials"
+   },
+   "power": {
+    "he": "חשמל",
+    "en": "power"
+   },
+   "cloud": {
+    "he": "ענן",
+    "en": "cloud"
+   }
+  },
+  "stages": {
+   "research": {
+    "he": "מחקר",
+    "en": "research"
+   },
+   "pilot": {
+    "he": "פיילוט",
+    "en": "pilot"
+   },
+   "qualified": {
+    "he": "הסמכה",
+    "en": "qualified"
+   },
+   "volume": {
+    "he": "ייצור",
+    "en": "volume"
+   }
+  }
+ }
 }

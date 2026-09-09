@@ -32,10 +32,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from chains import adr, mapfile                                # noqa: E402
+from chains import mapfile
+from tools.probes import adr                                # noqa: E402
 from chains.paths import map_path, out_dir                     # noqa: E402
 from chains.paths import api_token                             # noqa: E402
-from chains.scripts.probe_coverage import probe_one            # noqa: E402
+from tools.probes.probe_coverage import probe_one             # noqa: E402
 from chains.providers.eodhd import EODHDClient                   # noqa: E402
 
 # Decided by Michael, 2026-09-08, on the four fields the parser could not read.

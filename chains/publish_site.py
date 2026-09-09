@@ -2,13 +2,21 @@
 
     python -m chains.publish_site
 
-    out/public-map-en.html  ->  site/index.html
-    out/public-map.html     ->  site/he.html
-    out/live_en.json        ->  site/live_en.json
-    out/live.json           ->  site/live.json
-    out/brief-free-<date>.md    ->  site/brief.md
-    out/brief-he-free-<date>.md ->  site/brief-he.md
-                                site/.nojekyll
+    out/<domain>/public-map-en.html  ->  site/<domain>/index.html
+    out/<domain>/public-map.html     ->  site/<domain>/he.html
+    out/<domain>/live_en.json        ->  site/<domain>/live_en.json
+    out/<domain>/live.json           ->  site/<domain>/live.json
+    out/<domain>/brief-free-<date>.md    ->  site/<domain>/brief.md
+    out/<domain>/brief-he-free-<date>.md ->  site/<domain>/brief-he.md
+                                         site/index.html  (redirect)
+                                         site/.nojekyll
+
+EVERY DOMAIN GETS A DIRECTORY
+-----------------------------
+A map lives at /<domain>/, and site/index.html is a redirect to the one that is
+the product today. That costs one hop and buys the thing that matters: adding a
+second map never moves the first one's URL, and every link anybody has already
+shared keeps working.
 
 WHY THE ENGLISH PAGE IS index.html
 ----------------------------------
@@ -53,7 +61,7 @@ import sys
 from pathlib import Path
 
 from chains.build_pages import hebrew_runs
-from chains.paths import out_dir, site_dir
+from chains.paths import domain, out_dir, site_dir, site_root
 
 # (source in out/, name in site/). The briefs are resolved by glob because
 # their filename carries the build date.
@@ -95,6 +103,31 @@ def latest(pattern: str) -> Path | None:
     return max(hits, key=lambda p: p.name) if hits else None
 
 
+DEFAULT_DOMAIN_FOR_ROOT = "semi"
+
+
+def write_root_redirect(dom: str | None = None) -> Path:
+    """site/index.html -> /<domain>/.
+
+    A meta refresh and a link, not a server rule: Pages serves static files and
+    there is nowhere to put a redirect except in a document. The link matters --
+    it is what a reader sees if the refresh is blocked, and what a crawler
+    follows.
+    """
+    dom = dom or DEFAULT_DOMAIN_FOR_ROOT
+    p = site_root() / "index.html"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(
+        "<!doctype html>\n<html lang=\"en\">\n<head>\n"
+        "<meta charset=\"utf-8\">\n"
+        f"<meta http-equiv=\"refresh\" content=\"0; url=./{dom}/\">\n"
+        f"<link rel=\"canonical\" href=\"./{dom}/\">\n"
+        "<title>The Living Chip Map</title>\n</head>\n<body>\n"
+        f"<p><a href=\"./{dom}/\">The Living Chip Map</a></p>\n"
+        "</body>\n</html>\n", encoding="utf-8", newline="\n")
+    return p
+
+
 def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
     """Copy everything in, then gate. Returns (site dir, what was written)."""
     site = dst or site_dir()
@@ -118,8 +151,10 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
         shutil.copyfile(src, site / dst_name)
         written.append(f"{dst_name}  (from {src.name})")
 
-    (site / ".nojekyll").write_text("", encoding="utf-8")
-    written.append(".nojekyll")
+    (site_root() / ".nojekyll").write_text("", encoding="utf-8")
+    written.append("../.nojekyll")
+    write_root_redirect()
+    written.append("../index.html  (redirect)")
 
     for name in GATED:
         text = (site / name).read_text(encoding="utf-8")

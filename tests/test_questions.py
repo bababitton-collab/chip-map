@@ -51,12 +51,18 @@ def test_the_skeleton_is_all_still_there(rows):
         assert need <= set(r), f"{r.get('id')} is missing {need - set(r)}"
 
 
-def test_the_generator_tables_carry_no_text_either():
-    """data/ is generated from chains/watch.py and chains/en_data.py. Stripping
-    only the JSON would leave the sentences one file away."""
-    from chains import en_data, watch
-    assert len(watch.W[0]) == 8 and len(en_data.W[0]) == 8
-    assert "q" not in watch.FIELDS and "listen" not in watch.FIELDS
+def test_no_module_in_the_package_carries_a_question():
+    """The tables that used to generate data/ held the text one file away from
+    the JSON it was stripped out of. They are gone: the watch lists are the
+    source now, and nothing in the engine holds a question."""
+    import pathlib
+    import re
+    text = " ".join(
+        p.read_text(encoding="utf-8")
+        for p in pathlib.Path("chains").rglob("*.py"))
+    assert not re.search(r"\bq_he\b\s*:", text)
+    assert "chains/watch.py" not in [str(p) for p in
+                                     pathlib.Path("chains").rglob("*.py")]
 
 
 # -- what is open ------------------------------------------------------------

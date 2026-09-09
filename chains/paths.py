@@ -1,5 +1,6 @@
 """Where chip-map reads and writes. Everything from the environment.
 
+    CHIP_MAP_DOMAIN  which map to build   default "semi"
     CHIP_MAP_DATA    curated input   default ./data
     CHIP_MAP_OUT     derived output  default ./out
     CHIP_MAP_SITE    what is served  default ./site
@@ -8,6 +9,18 @@
     QUESTIONS_URL    required; the question text, see chains/questions.py
     ANSWERS_URL      optional; see chains/answers.py
     SIGNUP_URL       optional; where the page's CTA points
+
+ONE ENGINE, MANY MAPS
+---------------------
+Everything under data/ is namespaced by DOMAIN: data/semi/ holds the
+semiconductor map and its questions, and a second domain is a second directory
+with the same three files. Nothing in the package knows what a chokepoint is
+made of -- the layer names, the metro lines and their colours, the board's
+lanes and every chokepoint's title all live in the map's ``labels`` block, so
+the same code draws a different industry by reading a different file.
+
+That is checked mechanically in tests/test_isolation.py: the package may not
+contain the vocabulary of any one domain.
 
 INPUT IS TRACKED, OUTPUT IS NOT
 -------------------------------
@@ -39,11 +52,13 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-MAP_FILENAME = "semi_chain_v2.json"
+MAP_FILENAME = "map.json"
 WATCH_FILENAME = "watch.json"
 WATCH_EN_FILENAME = "watch_en.json"
-FALLBACK_MAP_FILENAME = "semiconductors-ai-compute.json"
 ANSWERS_FILENAME = "answers.json"
+
+DOMAIN_ENV = "CHIP_MAP_DOMAIN"
+DEFAULT_DOMAIN = "semi"
 
 # chains/paths.py -> the repository root
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -63,26 +78,47 @@ def _dir(env: str, default: str) -> Path:
     return Path(v).expanduser().resolve() if v else (REPO_ROOT / default)
 
 
-def data_dir() -> Path:
-    """Curated input: the map and the two watch lists. Tracked."""
+def domain() -> str:
+    """Which map this build is about. One word, and it names a directory."""
+    v = os.environ.get(DOMAIN_ENV, "").strip() or DEFAULT_DOMAIN
+    if not v.isidentifier():
+        raise SystemExit(f"{DOMAIN_ENV}={v!r} is not a plain name")
+    return v
+
+
+def data_root() -> Path:
+    """Everything curated, for every domain."""
     return _dir("CHIP_MAP_DATA", "data")
 
 
-def out_dir() -> Path:
-    """Derived output. Regenerable, large, gitignored."""
-    return _dir("CHIP_MAP_OUT", "out")
+def data_dir(dom: str | None = None) -> Path:
+    """Curated input for one domain: its map and its two watch lists."""
+    return data_root() / (dom or domain())
 
 
-def site_dir() -> Path:
-    """What GitHub Pages serves. Assembled by chains/publish_site.py."""
+def out_dir(dom: str | None = None) -> Path:
+    """Derived output for one domain. Regenerable, large, gitignored."""
+    return _dir("CHIP_MAP_OUT", "out") / (dom or domain())
+
+
+def site_root() -> Path:
+    """What GitHub Pages serves, across every domain."""
     return _dir("CHIP_MAP_SITE", "site")
+
+
+def site_dir(dom: str | None = None) -> Path:
+    """One domain's corner of the site: /<domain>/index.html and its data."""
+    return site_root() / (dom or domain())
 
 
 def prices_dir() -> Path:
     """The price parquets. Separately overridable because CI caches this one
     directory -- restoring it is what makes the weekly run incremental."""
+    # Not per-domain: two maps naming the same company should not download it
+    # twice, and a price series is the same series whoever is looking at it.
     v = os.environ.get("CHIP_MAP_PRICES")
-    return Path(v).expanduser().resolve() if v else (out_dir() / "prices")
+    return (Path(v).expanduser().resolve() if v
+            else _dir("CHIP_MAP_OUT", "out") / "prices")
 
 
 def map_path() -> Path:
@@ -95,8 +131,7 @@ def map_path() -> Path:
     override = os.environ.get("CHIP_MAP_PATH")
     if override:
         return Path(override)
-    p = data_dir() / MAP_FILENAME
-    return p if p.exists() else data_dir() / FALLBACK_MAP_FILENAME
+    return data_dir() / MAP_FILENAME
 
 
 def watch_path() -> Path:

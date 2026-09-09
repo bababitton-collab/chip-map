@@ -83,7 +83,8 @@ import json
 from pathlib import Path
 
 from chains import answers as answers_mod
-from chains import en_data, forecast, mapfile, prices, questions
+from chains import forecast, mapfile, prices, questions
+from chains import paths
 from chains.paths import out_dir, signup_url, watch_en_path, watch_path
 
 # DECIMAL, not binary. "250 KB" could mean 250,000 or 256,000 and the two
@@ -97,70 +98,36 @@ HARD_LIMIT = 256_000            # what the artifact database refuses
 
 SPARK_WEEKS = 52
 
-# ---------------------------------------------------------------- metro lines
-LINE = {
-    "logic": ["asml", "amat", "lrcx", "klac", "tel", "snps", "cdns", "arm",
-              "nvda", "avgo", "amd", "intc", "mrvl", "alab", "crdo", "mpwr",
-              "tsmc", "smci", "foxconn"],
-    "memory": ["shinetsu", "sumco", "globalwafers", "skhynix", "samsung", "mu",
-               "advantest", "ter"],
-    "packaging": ["ajinomoto", "ibiden", "unimicron", "entegris", "tok", "hoya",
-                  "ase", "amkr"],
-    "network": ["cohr", "fn", "anet"],
-    "power": ["gev", "siemensenergy", "etn", "ceg", "vrt"],
-    "cloud": ["msft", "googl", "amzn", "meta", "orcl", "crwv"],
-}
-LINE_OF = {n: k for k, v in LINE.items() for n in v}
-
-HE = {
-    "CP1": "מכונת האור", "CP2": "העדשות והלייזרים", "CP3": "המפעל המתקדם",
-    "CP4": "האריזה המתקדמת", "CP5": "הזיכרון המהיר", "CP6": "פרוסות הסיליקון",
-    "CP7": "הרזיסט והכימיקלים", "CP8": "הדבק של Ajinomoto", "CP9": "מסכות ה-EUV",
-    "CP10": "הלייזרים והסיבים", "CP11": "טורבינות ושנאים",
-    "CP12": "המתכות הקריטיות", "CP13": "בדיקת השבבים", "CP14": "כלי התכנון",
-}
-BLURB = {
-    "CP1": "ASML היחידה בעולם שבונה מכונות EUV. כ-65 מכונות בשנה, וזו תקרה פיזית על כמה שבבים מתקדמים העולם יכול לייצר.",
-    "CP2": "Zeiss לאופטיקה, TRUMPF ללייזר. שתיהן פרטיות, בגרמניה. אין תחליף ואי אפשר להשקיע בהן.",
-    "CP3": "TSMC מייצרת כ-90% מהשבבים מתחת ל-7 ננומטר, כולם בטייוואן. אינטל וסמסונג הן ביטוח, לא תחליף.",
-    "CP4": "CoWoS: כ-70% אצל TSMC. הפער בין ביקוש להיצע הצטמצם מ-20% ל-10%.",
-    "CP5": "HBM: שלוש יצרניות בלבד, כמעט חצי מעלות המעבד, מכור מראש עד 2027.",
-    "CP6": "Shin-Etsu ו-SUMCO מעל מחצית מפרוסות הסיליקון בעולם. יפן מספקת יותר מחצי מהמצעים.",
-    "CP7": "מעל 90% מרזיסט ה-EUV אצל שלוש חברות יפניות. מנה פגומה אחת עלתה ל-TSMC כ-550 מיליון דולר ב-2019.",
-    "CP8": "Ajinomoto, חברת מזון, מעל 95% מסרט ה-ABF שבכל אריזת שבב. מפעל שני רק ב-2032.",
-    "CP9": "AGC ו-HOYA כ-93% ממסכות ה-EUV. אין תחליף מוסמך בכמויות.",
-    "CP10": "ספקים סיניים כ-60% מהטרנסיברים. ההגבלה של ה-FCC מהדקת את הצוואר במקום לשחרר אותו.",
-    "CP11": "GE Vernova ו-Siemens Energy: תור טורבינות עד 2030, שנאים 4-5 שנים. עובדי ליפוף הם המגבלה האמיתית.",
-    "CP12": "סין 98% מהגליום, 77% מהגרמניום. ההשעיה של איסור הייצוא פוקעת ב-27 בנובמבר 2026.",
-    "CP13": "Advantest 66% מבודקי ה-SoC. בדיקת HBM4 לוקחת פי שניים מ-HBM2E.",
-    "CP14": "Synopsys, Cadence ו-Siemens 70-80% מכלי התכנון. הענקיות קונות את המאתגרות במקום להידחק.",
-}
-STAGE_HE = {"research": "מחקר", "pilot": "פיילוט", "qualified": "הסמכה",
-            "volume": "ייצור"}
-SHORT = {
-    "shinetsu": "Shin-Etsu", "sumco": "SUMCO", "globalwafers": "GlobalWafers",
-    "ajinomoto": "Ajinomoto", "ibiden": "Ibiden", "unimicron": "Unimicron",
-    "entegris": "ENTG", "tok": "TOK", "hoya": "HOYA", "tel": "TEL",
-    "advantest": "Advantest", "ter": "TER", "skhynix": "SK hynix",
-    "samsung": "Samsung", "tsmc": "TSMC", "ase": "ASE", "amkr": "AMKR",
-    "smci": "SMCI", "foxconn": "Foxconn", "anet": "ANET", "cohr": "COHR",
-    "fn": "FN", "vrt": "VRT", "gev": "GEV", "siemensenergy": "Siemens En.",
-    "etn": "ETN", "ceg": "CEG", "crwv": "CRWV", "alab": "ALAB",
-    "crdo": "CRDO", "mpwr": "MPWR", "arm": "ARM",
-}
-
-# The four things that differ between the two snapshots. Everything else --
-# every price, return and pressure number -- is computed once and shared.
-# en_data.HE keeps that name because it is the English text that lands in the
-# field the page still calls "he"; renaming the field would mean touching the
-# template in a way that has nothing to do with language.
+# What differs between the two snapshots is which language is read out of the
+# map, and which watch list. Every price, return and pressure number is
+# computed once and shared.
+#
+# The vocabulary itself used to live here: the metro lines, the layer names,
+# every chokepoint's title and blurb, and a table of display names. It is all
+# in the map now, under "labels" and on the node and chokepoint records, so
+# this module can draw an industry it has never heard of. Pinned by
+# tests/test_isolation.py, which fails if any of that vocabulary comes back.
 LANG = {
-    "he": {"cp_name": HE, "blurb": BLURB, "stage": STAGE_HE,
-           "watch": watch_path, "file": "live.json"},
-    "en": {"cp_name": en_data.HE, "blurb": en_data.BLURB,
-           "stage": en_data.STAGE, "watch": watch_en_path,
-           "file": "live_en.json"},
+    "he": {"watch": watch_path, "file": "live.json"},
+    "en": {"watch": watch_en_path, "file": "live_en.json"},
 }
+
+
+def labels_for(m: dict, lang: str) -> dict:
+    """The map's own words, resolved to one language.
+
+    Shipped whole to the page, which renders whatever is here: a domain with
+    four layers and two lines draws four columns and two colours without a
+    line of code changing.
+    """
+    lb = m.get("labels") or {}
+    return {
+        "layers": {k: v.get(lang, k) for k, v in (lb.get("layers") or {}).items()},
+        "lines": {k: {"name": v.get(lang, k), "color": v.get("color")}
+                  for k, v in (lb.get("lines") or {}).items()},
+        "lanes": {k: v.get(lang, k) for k, v in (lb.get("lanes") or {}).items()},
+        "stages": {k: v.get(lang, k) for k, v in (lb.get("stages") or {}).items()},
+    }
 
 
 def load_watch(lang: str = "he") -> list[dict]:
@@ -290,6 +257,8 @@ def build(today: dt.date | None = None, lang: str = "he",
     today = today or dt.date.today()
     L = LANG[lang]
     m = mapfile.load()
+    labels = labels_for(m, lang)
+    stages = labels["stages"]
     page = json.loads((out_dir() / "chain_page.json").read_text(encoding="utf-8"))
     fnd = json.loads((out_dir() / "chain_fundamentals.json").read_text(
         encoding="utf-8"))
@@ -303,9 +272,9 @@ def build(today: dt.date | None = None, lang: str = "he",
         px = get(n.get("price_symbol"))
         nodes.append({
             "id": n["id"], "name": n["name"], "ticker": n.get("ticker"),
-            "short": SHORT.get(n["id"])
+            "short": n.get("short")
                      or (n.get("ticker") or n["name"]).split(".")[0][:8],
-            "layer": n["layer"], "line": LINE_OF.get(n["id"], "logic"),
+            "layer": n["layer"], "line": n.get("line"),
             "cap": n.get("market_cap_usd_b"), "role": n.get("role", ""),
             "country": n.get("exchange", ""),
             "sym": n.get("price_symbol"), "kind": n.get("price_symbol_kind"),
@@ -345,12 +314,12 @@ def build(today: dt.date | None = None, lang: str = "he",
             chal.append({
                 "name": ch["name"], "sym": None if same else sym,
                 "same_as_holder": same, "stage": ch.get("stage"),
-                "stage_he": L["stage"].get(ch.get("stage"), ""),
+                "stage_he": stages.get(ch.get("stage"), ""),
                 "px": r13_only(get(sym)) if sym and not same else None,
             })
         sigs = [{
             "name": ch["name"], "stage": ch.get("stage"),
-            "stage_he": L["stage"].get(ch.get("stage"), ""),
+            "stage_he": stages.get(ch.get("stage"), ""),
             "signal": (ch.get("signal") or "")[:170], "as_of": ch.get("as_of"),
             "src": ch.get("signal_source"),
             # The map station funding this attack, where the map records one.
@@ -385,7 +354,8 @@ def build(today: dt.date | None = None, lang: str = "he",
                       if s.get("price_symbol") else None,
             })
         cps.append({
-            "id": cid, "he": L["cp_name"][cid], "blurb": L["blurb"][cid],
+            "id": cid, "he": (c.get("label") or {}).get(lang, c["name"]),
+            "blurb": (c.get("blurb") or {}).get(lang, ""),
             "name": c["name"],
             "holders": holders, "chal": chal, "sigs": sigs,
             "pressure": pressure,
@@ -445,7 +415,8 @@ def build(today: dt.date | None = None, lang: str = "he",
         "as_of": today.isoformat(), "map_version": m.get("version"),
         "nodes": nodes, "edges": edges, "flows": flows, "cps": cps,
         "fund": fund, "cal": cal, "watch": watch,
-        "answers": answers, "ledger": ledger,
+        "answers": answers, "ledger": ledger, "labels": labels,
+        "domain": paths.domain(),
         "signup": signup_url(),
         "n_open": sum(1 for r in watch if r["open"]),
         "last_price_date": max((p["last"] for p in cache.values() if p),

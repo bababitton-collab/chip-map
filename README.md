@@ -62,10 +62,11 @@ so two lines can be compared in shape but never in level.
 
 | | |
 |---|---|
-| `chains/` | the package: builders, page templates, the weekly entry point |
-| `data/` | curated input, tracked: the map and the two dated-question lists |
-| `out/` | derived output — prices, snapshots, pages, briefs. Gitignored |
-| `site/` | what Pages serves, assembled by `chains/publish_site.py`. Gitignored |
+| `chains/` | the engine: builders, page templates, the entry point. Holds no domain's vocabulary |
+| `data/<domain>/` | curated input, tracked: `map.json`, `watch.json`, `watch_en.json` |
+| `out/<domain>/` | derived output; `out/prices/` is shared across domains. Gitignored |
+| `site/<domain>/` | what Pages serves; `site/index.html` redirects. Gitignored |
+| `tools/probes/` | vendor probes, run by hand. They carry one map's hints, so they live outside the engine |
 | `tests/` | the suite, including the isolation check described below |
 | `tools/tour/` | `render_tour.py`, which renders the map's tour mode to video. Run by hand, needs Chrome and ffmpeg, not part of CI; it drives the frozen page beside it because the templates carry no tour overlay |
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from chains import adr
+from tools.probes import adr
 
 # how many US names contain each token, from the vendor's own 51,111 symbols
 DF = {"tokyo": 155, "japan": 486, "carrier": 36, "steel": 120, "pet": 90,

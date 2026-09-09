@@ -174,9 +174,8 @@ def test_output_is_not_input():
 
 
 @pytest.mark.parametrize("env,helper", [
-    ("CHIP_MAP_DATA", "data_dir"),
-    ("CHIP_MAP_OUT", "out_dir"),
-    ("CHIP_MAP_SITE", "site_dir"),
+    ("CHIP_MAP_DATA", "data_root"),
+    ("CHIP_MAP_SITE", "site_root"),
     ("CHIP_MAP_PRICES", "prices_dir"),
 ])
 def test_every_directory_can_be_moved_by_the_environment(env, helper,
@@ -188,15 +187,49 @@ def test_every_directory_can_be_moved_by_the_environment(env, helper,
     assert getattr(paths, helper)() == tmp_path.resolve()
 
 
+@pytest.mark.parametrize("helper", ["data_dir", "out_dir", "site_dir"])
+def test_the_per_domain_directories_carry_the_domain(helper, monkeypatch,
+                                                     tmp_path):
+    """One engine, many maps: every curated and derived path is namespaced, so
+    a second domain cannot overwrite the first one's snapshot."""
+    from chains import paths
+    monkeypatch.setenv("CHIP_MAP_DATA", str(tmp_path))
+    monkeypatch.setenv("CHIP_MAP_OUT", str(tmp_path))
+    monkeypatch.setenv("CHIP_MAP_SITE", str(tmp_path))
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "widgets")
+    assert getattr(paths, helper)().name == "widgets"
+
+
+def test_the_price_store_is_shared_across_domains(monkeypatch, tmp_path):
+    """Two maps naming the same company should not download it twice, and a
+    price series is the same series whoever is looking at it."""
+    from chains import paths
+    monkeypatch.setenv("CHIP_MAP_OUT", str(tmp_path))
+    monkeypatch.delenv("CHIP_MAP_PRICES", raising=False)
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "widgets")
+    a = paths.prices_dir()
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "gadgets")
+    assert paths.prices_dir() == a
+
+
+def test_a_domain_must_be_a_plain_name(monkeypatch):
+    """It names a directory. A path fragment here would write outside data/."""
+    from chains import paths
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "../etc")
+    with pytest.raises(SystemExit):
+        paths.domain()
+
+
 def test_the_defaults_need_no_environment_at_all(monkeypatch):
     """A fresh clone builds with no configuration but the token."""
     from chains import paths
     for env in ("CHIP_MAP_DATA", "CHIP_MAP_OUT", "CHIP_MAP_SITE",
-                "CHIP_MAP_PRICES", "CHIP_MAP_PATH"):
+                "CHIP_MAP_PRICES", "CHIP_MAP_PATH", "CHIP_MAP_DOMAIN"):
         monkeypatch.delenv(env, raising=False)
-    assert paths.data_dir() == paths.REPO_ROOT / "data"
-    assert paths.out_dir() == paths.REPO_ROOT / "out"
-    assert paths.site_dir() == paths.REPO_ROOT / "site"
+    monkeypatch.delenv("CHIP_MAP_DOMAIN", raising=False)
+    assert paths.data_dir() == paths.REPO_ROOT / "data" / "semi"
+    assert paths.out_dir() == paths.REPO_ROOT / "out" / "semi"
+    assert paths.site_dir() == paths.REPO_ROOT / "site" / "semi"
     assert paths.prices_dir() == paths.REPO_ROOT / "out" / "prices"
 
 
@@ -255,7 +288,7 @@ def test_the_package_imports_with_the_old_projects_blocked(monkeypatch):
     monkeypatch.setattr(builtins, "__import__", guard)
 
     for name in ("chains.paths", "chains.mapfile", "chains.exchanges",
-                 "chains.answers", "chains.edgar", "chains.leaks",
+                 "chains.answers", "chains.edgar", "chains.questions",
                  "chains.build_pages", "chains.publish_site"):
         importlib.import_module(name)
 
@@ -264,8 +297,9 @@ def test_no_module_reads_an_environment_variable_that_is_not_documented():
     """Every knob is in chains/paths.py's docstring, so "what does this build
     need" is answerable by reading one file."""
     documented = {"CHIP_MAP_DATA", "CHIP_MAP_OUT", "CHIP_MAP_SITE",
-                  "CHIP_MAP_PRICES", "CHIP_MAP_PATH", "EODHD_API_TOKEN",
-                  "ANSWERS_URL"}
+                  "CHIP_MAP_PRICES", "CHIP_MAP_PATH", "CHIP_MAP_DOMAIN",
+                  "EODHD_API_TOKEN", "ANSWERS_URL", "QUESTIONS_URL",
+                  "SIGNUP_URL"}
     seen: set[str] = set()
     for path in modules():
         tree = ast.parse(path.read_text(encoding="utf-8"))
@@ -280,3 +314,64 @@ def test_no_module_reads_an_environment_variable_that_is_not_documented():
                     and node.args[0].value.isupper()):
                 seen.add(node.args[0].value)
     assert seen <= documented, f"undocumented environment reads: {seen - documented}"
+
+
+# -- the engine holds no domain's vocabulary --------------------------------
+
+# The words of ONE map. If they can be found in the package's own source, the
+# package is not an engine: it is a chip map with the data smeared through it,
+# and a second industry would mean editing Python instead of writing JSON.
+#
+# Comments and docstrings are exempt on purpose. Prose has to be able to say
+# what the code is for, and this file names most of these words itself.
+DOMAIN_WORDS = ("HBM", "EUV", "TSMC", "NVIDIA", "memory", "lithography",
+                "packaging", "cloud", "power")
+
+
+def _string_literals(path: Path) -> list[str]:
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    skip = docstring_ids(tree)
+    return [n.value for n in ast.walk(tree)
+            if isinstance(n, ast.Constant) and isinstance(n.value, str)
+            and id(n) not in skip]
+
+
+@pytest.mark.parametrize("path", modules(), ids=lambda p: p.name)
+def test_no_module_names_one_domains_vocabulary(path: Path):
+    """Layer names, line names, lane names and chokepoint titles belong in the
+    map's ``labels`` block, not here."""
+    import re
+    pat = re.compile("|".join(DOMAIN_WORDS), re.I)
+    bad = [(v[:70], pat.search(v).group(0))
+           for v in _string_literals(path) if pat.search(v)]
+    assert bad == [], f"{path.relative_to(REPO)} carries domain words: {bad}"
+
+
+def test_the_map_supplies_every_label_the_package_stopped_holding():
+    """The other half of the rule: taking the words out is only correct if the
+    data puts them back."""
+    from chains.mapfile import load
+    lb = (load().get("labels") or {})
+    for block in ("layers", "lines", "lanes", "stages"):
+        assert lb.get(block), f"the map declares no {block}"
+    for k, v in lb["lines"].items():
+        assert v.get("color", "").startswith("#"), f"{k} has no colour"
+        assert v.get("he") and v.get("en"), f"{k} is missing a language"
+
+
+def test_every_node_carries_its_line_and_display_name():
+    """They used to be two tables in live_snapshot.py keyed by company id."""
+    from chains.mapfile import load
+    m = load()
+    lines = set((m.get("labels") or {}).get("lines") or {})
+    bad = [n["id"] for n in m["nodes"]
+           if n.get("line") not in lines or not n.get("short")]
+    assert bad == []
+
+
+def test_every_chokepoint_carries_its_title_and_blurb_in_both_languages():
+    from chains.mapfile import load
+    for c in load()["chokepoints"]:
+        for field in ("label", "blurb"):
+            v = c.get(field) or {}
+            assert v.get("he") and v.get("en"), f"{c['id']} {field}"

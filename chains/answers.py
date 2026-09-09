@@ -68,7 +68,14 @@ STATUSES = frozenset({"yes", "no", "mixed", "none", "open"})
 # written by hand. The page renders an auto row differently -- a tag and a
 # dashed border -- so a reader can tell a mark that was checked from one that
 # was inferred, and any manual edit clears the flag.
-FIELDS = frozenset({"status", "note", "updated", "auto"})
+# ``basis`` records which of the two sentences the call actually matched --
+# the card says what yes and no sound like, and a mark is worth more when it
+# says which one it heard. ``evidence`` is the one line that justifies it.
+# Both optional: every record written before they existed is still valid.
+BASES = frozenset({"yes", "no", "unclear"})
+MAX_EVIDENCE = 400
+
+FIELDS = frozenset({"status", "note", "updated", "auto", "basis", "evidence"})
 
 MAX_NOTE = 300          # what the page's input caps a note at
 
@@ -128,6 +135,15 @@ def check_row(qid: str, rec: object, ids: set[str]) -> str | None:
         return f"{qid}: note must be a string, got {type(note).__name__}"
     if len(note) > MAX_NOTE:
         return f"{qid}: note is {len(note)} chars, over {MAX_NOTE}"
+    basis = rec.get("basis")
+    if basis is not None and basis not in BASES:
+        return f"{qid}: basis {basis!r} is not one of {sorted(BASES)}"
+    ev = rec.get("evidence")
+    if ev is not None:
+        if not isinstance(ev, str):
+            return f"{qid}: evidence must be a string"
+        if len(ev) > MAX_EVIDENCE:
+            return f"{qid}: evidence is {len(ev)} chars, over {MAX_EVIDENCE}"
     auto = rec.get("auto", False)
     if not isinstance(auto, bool):
         return f"{qid}: auto must be true or false, got {auto!r}"
@@ -256,7 +272,9 @@ def collect(raw: object, ids: set[str]) -> tuple[dict[str, dict], list[str]]:
             continue
         good[qid] = {"status": rec["status"], "note": rec.get("note") or "",
                      "updated": rec.get("updated"),
-                     "auto": bool(rec.get("auto", False))}
+                     "auto": bool(rec.get("auto", False)),
+                     "basis": rec.get("basis"),
+                     "evidence": (rec.get("evidence") or "").strip()}
     return good, problems
 
 

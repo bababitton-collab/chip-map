@@ -1,10 +1,10 @@
 <title>Linchpin Signal</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Suez+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Inter:wght@400;600&family=Suez+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 :root{
-  --bg:#0d1117; --bg2:#131a22; --panel:#161e28; --ink:#e9e4d8; --ink2:#b3b9c2; --ink3:#7d8590; --rule:#232c37; --rule2:#31405000;
+  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#7d8797; --rule:#222a36; --rule2:#31405000;
   --logic:#7d93b8; --memory:#c08878; --packaging:#b39a6a; --network:#7aa894; --power:#9b90bd; --cloud:#a9a396;
-  --tight:#ff5a3c; --erode:#4fd18b; --amber:#e0b04a;
+  --tight:#ff5a3c; --erode:#3fd18b; --amber:#f2b632;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -144,6 +144,38 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .cta2 a.btn:hover{filter:brightness(1.1)}
 .cta2 .soon{display:inline-block;border:1px dashed var(--rule);color:var(--ink3);padding:10px 22px}
 .cta2 .disc{color:var(--ink3);font-size:.82rem;margin-top:10px;max-width:70ch}
+.qcards{padding:18px 22px 6px;border-top:1px solid var(--rule)}
+.qcards .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
+.qcards h2{font-family:"Source Serif 4",serif;font-weight:400;font-size:1.6rem;margin:0 0 4px}
+.qcards .lede{color:var(--ink2);max-width:72ch;margin:0 0 26px;line-height:1.5}
+.card{display:grid;grid-template-columns:150px minmax(0,1fr) 340px;gap:0 34px;padding:28px 30px;background:var(--panel);border:1px solid var(--rule);border-radius:14px;margin-bottom:18px;align-items:start;position:relative}
+.card.next{border-color:#3a4658;box-shadow:0 0 0 1px #2a3444,0 20px 50px rgba(0,0,0,.35)}
+.ring{position:relative;width:118px;height:118px}
+.ring svg{width:118px;height:118px;transform:rotate(-90deg)}
+.ring .n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .n b{font-family:"IBM Plex Mono",monospace;font-size:2.1rem;font-weight:600;line-height:1}
+.ring .n small{color:var(--ink3);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.who{margin-top:14px}.who b{display:block;font-size:1.05rem;font-weight:600}
+.who .d{font-family:"IBM Plex Mono",monospace;color:var(--ink2);font-size:.85rem;margin-top:2px}
+.tag{display:inline-block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.08em;padding:2px 7px;border:1px solid var(--erode);color:var(--erode);border-radius:4px;text-transform:uppercase}
+.tag.exp{border-color:var(--amber);color:var(--amber)}
+.q{font-family:"Source Serif 4",serif;font-size:1.45rem;line-height:1.35;margin:0 0 18px;max-width:34ch}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px}
+.yn div{border-top:2px solid;padding-top:9px;font-size:.95rem;color:var(--ink2);line-height:1.45}
+.yn .y{border-color:var(--erode)}.yn .no{border-color:var(--tight)}
+.yn b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.yn .y b{color:var(--erode)}.yn .no b{color:var(--tight)}
+.why{font-size:.95rem;color:var(--ink3);line-height:1.45;max-width:60ch}.why b{color:var(--ink2);font-weight:600}
+.cons svg{width:340px;height:210px;display:block}
+.cons .cap{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;display:flex;gap:16px}
+.cons .cap i{display:inline-block;width:18px;border-top:2px solid;vertical-align:middle;margin-right:6px}
+.mid{position:relative}
+.lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.lock div{background:rgba(20,25,34,.85);border:1px solid var(--rule);padding:12px 18px;border-radius:10px;font-size:.95rem;color:var(--ink2);backdrop-filter:blur(2px)}
+.lock div b{color:var(--amber);font-weight:600}
+.blur{filter:blur(6px);opacity:.55;user-select:none}
+.answered summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:8px 0 14px}
+@media (max-width:900px){.card{grid-template-columns:1fr;gap:18px}.cons svg{width:100%;height:auto}.q{max-width:none}}
 .ledger{padding:18px 22px 6px;border-top:1px solid var(--rule)}
 .ledger h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
 .ledger .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 12px}
@@ -256,11 +288,13 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 <div id="ltiles"></div>
 <div id="lcards"></div>
 </div>
-<div class="watch" id="watch">
-<h2>שאלות עם תאריך</h2>
-<p class="lede">כל שורה היא שאלה שמתבררת ביום ידוע. לא "מה לקנות" — אלא על מה כדאי שתהיה לך דעה לפני שהתשובה מתפרסמת, ומי מרוויח או מפסיד אם היא חיובית. "מאושר" — תאריך מפורסם. "צפוי" — לפי המחזור של השנה שעברה, עד שהחברה תאשר. אחרי שהאירוע קרה, סמן מה יצא: הסימון נשמר בעמוד.</p>
-<div class="wf" id="wf"></div>
-<div id="wlist"></div>
+<section class="qcards" id="qcards-section">
+<div class="eyebrow">04 · שאלות עם תאריך</div>
+<h2>מה מתברר בהמשך — ואיך תיראה התשובה</h2>
+<p class="lede">כל כרטיס הוא שאלה שמתבררת ביום ידוע. לא "מה לקנות": איך נשמעת תשובה חיובית ואיך נשמעת שלילית בשיחת התוצאות, ואילו תחנות על המפה זזות אם היא חיובית. השאלה הבאה פתוחה; השאר מגיעות במייל השבועי.</p>
+<div id="qcards"></div>
+<div id="qpast"></div>
+</section>
 <div class="cta2" id="cta2"></div>
 </div>
 <div class="foot" id="foot"></div>
@@ -486,7 +520,7 @@ function header(){
   const stale = D.last_price_date;
   document.getElementById('asof').innerHTML=`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`;
   const nx=document.getElementById('next'); nx.querySelectorAll('.ev').forEach(e=>e.remove());
-  D.cal.filter(e=>e.days>=-3).sort((a,b)=>a.days-b.days).slice(0,8).forEach(e=>{ const d=document.createElement('div'); d.className='ev'+(e.days<=30?' soon':''); d.innerHTML=`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'היום':'בעוד '+e.days+' ימים'} · ${e.d}</i>`; d.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===e.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h) open(h); }); nx.appendChild(d); });
+  D.cal.filter(e=>e.days>=-3).sort((a,b)=>a.days-b.days).slice(0,8).forEach(e=>{ const d=document.createElement('div'); d.className='ev'+(e.days<=30?' soon':''); d.innerHTML=`<b>${e.who}</b><i>${e.days<=0?'היום':(e.days===1?'מחר':'בעוד '+e.days+' ימים')} · ${e.d}</i>`; d.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===e.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h) open(h); }); nx.appendChild(d); });
   // Two labelled rows, because the map now says two different things with
   // colour and the old single strip made them look like one scale.
   document.getElementById('legend').innerHTML=
@@ -657,45 +691,183 @@ function lockedHTML(){
   }).join('');
 })();
 
-// ---- dated questions (watchlist) ----
+// ---- question cards ----
+// One card per dated question. The paywall is in the DATA: an open row carries
+// q/yes/no/why, a locked one carries none of them, so the blurred block below
+// is filled with a fixed placeholder and never with the real sentence. A CSS
+// blur is a picture, not a lock.
 (function(){
+  const list = document.getElementById('qcards'); if(!list) return;
   const W = D.watch||LIVE.watch||[]; if(!W.length) return;
-  const today = new Date(D.as_of+'T00:00:00Z'); const now = new Date(); const ref = now>today?now:today;
-  const days = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
-  const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};
-  const WT = {auto:'אוטומטי'};   // the tag on a row a machine marked
-  let filter='all', statuses={}, dbref=null, dbState='pending';
-  // A row's mark comes from the exported answers first and the page's own
-  // database second, the same merge the board does. Without the fallback the
-  // board colours a row that the table below it still shows as open -- and an
-  // auto mark, which only ever arrives in the export, would never be labelled.
-  const list=document.getElementById('wlist'), wf=document.getElementById('wf');
-  const nameOf = id => (byId[id]&&byId[id].short) || id.toUpperCase();
-  function render(){
-    const rows = W.slice().sort((a,b)=>a.d.localeCompare(b.d)).filter(w=>{ const dd=days(w.d); if(filter==='30') return dd>=0&&dd<=30; if(filter==='past') return dd<0; if(filter==='cp') return w.cps.length>0; return dd>=-14; });
-    list.innerHTML = rows.map(w=>{ const dd=days(w.d); const st=Object.assign({}, (D.answers||{})[w.id]||{}, statuses[w.id]||{}); const s=st.status||'open';
-      return `<div class="wrow ${dd<0?'past':''} ${dd>=0&&dd<=21?'soon':''} ${w.locked?'locked':''}" data-id="${w.id}">
-        <div class="wd"><b>${dd<0?'עבר':(dd===0?'היום':'בעוד '+dd+' ימים')}</b>${w.d}<small>${w.tk}</small><em class="${w.confirmed?'c':''}">${w.confirmed?'מאושר':'צפוי'}</em></div>
-        <div class="ww"><b>${w.who}</b>${(!w.locked&&dd>=0)?'<span class="wbadge">'+LOCK.badge+'</span>':''}${st.auto?'<span class="autotag">'+WT.auto+'</span>':''}${w.cps.map(c=>`<span class="cp" data-cp="${c}">${c}</span>`).join('')}<span class="wl">${w.win.length?'מרוויח אם כן: <span dir="ltr">'+w.win.map(nameOf).join(' · ')+'</span>':''}${w.lose.length?' · מפסיד: <span dir="ltr">'+w.lose.map(nameOf).join(' · ')+'</span>':''}</span><span class="whints">${(w.leaks||[]).length? (w.leaks||[]).length+' רמזים' : ''}</span></div>
-        <div class="wq">${w.locked? lockedHTML() : `${w.q}<span class="lis"><b>להקשיב ל:</b> ${w.listen}</span>`}${(!w.locked&&dd<0&&st.status&&st.status!=='open')? `<span class="wmark"><b>${STATUS[st.status]}</b>${st.note? ' — '+st.note : ''}</span>` : ''}</div>
-        <div class="ws"><select class="${s==='yes'?'ok':(s==='no'?'no':'')}${st.auto?' auto':''}">${Object.keys(STATUS).map(k=>`<option value="${k}" ${k===s?'selected':''}>${STATUS[k]}</option>`).join('')}</select><input placeholder="הערה קצרה" value="${(st.note||'').replace(/"/g,'&quot;')}"><div class="saved">${st.updated?('saved '+st.updated.slice(0,10)):(dbState==='off'?'ללא שמירה — מסד הנתונים לא זמין':'')}</div></div>
-      </div>`; }).join('') || '<p class="lede">אין שורות בסינון הזה.</p>';
-    list.querySelectorAll('.cp').forEach(el=>el.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===el.dataset.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h){ open(h); document.getElementById('stage').scrollIntoView({behavior:'smooth'}); } }));
-    list.querySelectorAll('.wrow').forEach(row=>{ const id=row.dataset.id; const sel=row.querySelector('select'), inp=row.querySelector('input');
-      const save=async()=>{ const rec={status:sel.value, note:inp.value.slice(0,300), updated:new Date().toISOString(), auto:false}; statuses[id]=rec; sel.className=sel.value==='yes'?'ok':(sel.value==='no'?'no':''); BOARD.statuses=statuses; BOARD.render(); if(!dbref){ row.querySelector('.saved').textContent='ללא שמירה — מסד הנתונים לא זמין'; return; } try{ await dbref.doc(id).set(rec); row.querySelector('.saved').textContent='saved '+rec.updated.slice(0,10); }catch(e){ row.querySelector('.saved').textContent='שמירה נכשלה'; } };
-      sel.addEventListener('change',save); inp.addEventListener('change',save); });
-    list.querySelectorAll('.wrow.locked').forEach(row=>{
-      row.classList.add('locked');
-      row.addEventListener('click',ev=>{ if(ev.target.closest('select,input,.cp')) return;
-        const c=document.getElementById('cta2'); if(c) c.scrollIntoView({behavior:'smooth',block:'center'}); });
-    });
-    BOARD.statuses=statuses; BOARD.render();
+  const T = {
+    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',
+    lockA:'\u{1F512} השאלה, ואיך נשמעת תשובה חיובית ושלילית — ',
+    lockB:'במייל השבועי',
+    conf:'מאושר', exp:'צפוי',
+    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',
+    up:'עולה אם כן', down:'יורד אם כן',
+    answered:'נענו', more:'נוספים', auto:'אוטומטי',
+    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',
+           open:'לא ברור'},
+  };
+  // Fixed, and never the real text.
+  const PH = {q:'איזה מספר בשיחת התוצאות מכריע את השאלה שכולם כאן כבר מתווכחים עליה',
+    yes:'החברה נוקבת במספר מעל הטווח שעליו הנחתה ברבעון שעבר, ואומרת שהמגבלה זזה.',
+    no:'המספר נוחת בתוך הטווח הישן והשפה על הקיבולת לא משתנה מהפעם הקודמת.',
+    why:'זה קובע איזו משתי החברות מחזיקה את החלק הנדיר בעוד שנה.'};
+
+  const esc = v => String(v==null?'':v).replace(/[&<>"]/g, c=>(
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  // Every field goes through this: a missing one becomes an empty string, so
+  // "undefined" can never reach the page.
+  const f = (o,k) => (o && o[k]!=null) ? String(o[k]) : '';
+
+  const today = new Date(D.as_of+'T00:00:00Z');
+  const now = new Date(); const ref = now>today?now:today;
+  const dayOf = d => Math.round((Date.parse(d+'T00:00:00Z')
+    - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
+
+  // "in 1 days" was the bug. One day is a day.
+  function countdown(n){
+    if(n===0) return {n:'0', unit:T.today};
+    if(n===1) return {n:'1', unit:T.tomorrow};
+    if(n<0)   return {n:String(-n), unit:(-n===1?T.day:T.days)+' '+T.past};
+    return {n:String(n), unit:T.days};
   }
-  const F=[['all','הקרובים'],['30','30 יום'],['cp','צווארי בקבוק בלבד'],['past','מה שכבר קרה']];
-  wf.innerHTML=F.map(([k,l])=>`<button data-f="${k}" aria-pressed="${k===filter}">${l}</button>`).join('');
-  wf.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ filter=b.dataset.f; wf.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); render(); }));
-  render();
-  (async()=>{ try{ if(!window.claude||!claude.use){dbState='off';render();return;} const db=await claude.use('db'); if(!db){dbState='off';render();return;} dbState='on'; dbref=db.collection('watch'); const snap=await dbref.get(); snap.docs.forEach(d=>{ if(d.exists) statuses[d.id]=d.data(); }); render(); }catch(e){} })();
+  const CIRC = 326.7;
+  function ringColor(n){ return n<=3?'#ff5a3c' : (n<=14?'#f2b632' : '#7d8797'); }
+  function ringOffset(n){ const c=Math.max(0,Math.min(60,n)); return CIRC*(c/60); }
+  function ringSVG(n){
+    const col=ringColor(n), off=ringOffset(n), c=countdown(n);
+    return `<div class="ring"><svg viewBox="0 0 118 118">
+      <circle cx="59" cy="59" r="52" fill="none" stroke="#222a36" stroke-width="7"/>
+      <circle cx="59" cy="59" r="52" fill="none" stroke="${col}" stroke-width="7"
+        stroke-linecap="round" stroke-dasharray="${CIRC}" stroke-dashoffset="${off.toFixed(1)}"/>
+    </svg><div class="n"><b>${esc(c.n)}</b><small>${esc(c.unit)}</small></div></div>`;
+  }
+  // A mark a machine made is drawn dashed and labelled, the same rule the old
+  // table followed: an auto mark and a checked one must not look identical.
+  function markSVG(mark, auto){
+    const M = T.marks;
+    const col = mark===M.yes?'#3fd18b':(mark===M.no?'#ff5a3c':'#7d8797');
+    const dash = auto?' stroke-dasharray="6 5"':'';
+    return `<div class="ring"><svg viewBox="0 0 118 118">
+      <circle cx="59" cy="59" r="52" fill="none" stroke="${col}" stroke-width="7" opacity=".85"${dash}/>
+    </svg><div class="n"><small style="color:${col};font-size:.8rem">${esc(mark)}</small>${auto?`<small class="autotag">${T.auto}</small>`:''}</div></div>`;
+  }
+
+  // --- the constellation -----------------------------------------------
+  // Built from the PRE-REGISTERED baskets and nothing else. The reason beside
+  // each node is the map's own edge label, or the node's layer when the map
+  // records no edge -- never a guess at why.
+  const nodeById = {}; (D.nodes||[]).forEach(n=>nodeById[n.id]=n);
+  const byTicker = {};
+  (D.nodes||[]).forEach(n=>{ if(n.ticker) byTicker[String(n.ticker).toUpperCase()]=n; });
+  const layerName = n => ((D.labels||{}).layers||{})[n&&n.layer] || '';
+  function labelOf(id){
+    const n=nodeById[id]; if(!n) return String(id).toUpperCase().slice(0,6);
+    return String(n.short||n.ticker||n.id).slice(0,6);
+  }
+  function reasonOf(centreId, id){
+    const n=nodeById[id];
+    for(const e of (D.edges||[])){
+      if((e.from===centreId&&e.to===id)||(e.from===id&&e.to===centreId)){
+        const w=(e.what||'').split(';')[0].trim();
+        // ~68px of room at x=272 in a 340 box: eleven characters at 11px.
+        if(w) return w.length>11 ? w.slice(0,11)+'…' : w;
+      }
+    }
+    const ln=layerName(n);
+    return ln.length>11 ? ln.slice(0,11)+'…' : ln;
+  }
+  function bezMid(y){
+    // t=0.5 on M100,105 C160,105 180,y 250,y
+    const x=(100+3*160+3*180+250)/8, yy=(105+3*105+3*y+y)/8;
+    return {x:x, y:yy};
+  }
+  function constellation(w){
+    const centre = byTicker[String(w.tk||'').toUpperCase()];
+    const centreId = centre?centre.id:null;
+    const wins=(w.win||[]).slice(0,3), loses=(w.lose||[]).slice(0,3);
+    const all=[...wins.map(i=>({id:i,win:true})), ...loses.map(i=>({id:i,win:false}))];
+    const total=(w.win||[]).length+(w.lose||[]).length;
+    if(!all.length) return '';
+    const ys = all.length===1 ? [105]
+      : all.map((_,i)=>40+i*(130/(all.length-1)));
+    let g='';
+    all.forEach((o,i)=>{
+      const y=ys[i], col=o.win?'#3fd18b':'#ff5a3c';
+      const lab=labelOf(o.id), r=lab.length<=4?16:15;
+      // Fit the label inside the node instead of letting it cross the stroke.
+      const fs=Math.max(7.5, Math.min(11, (r*1.9)/Math.max(1,lab.length)*1.35));
+      const m=bezMid(y);
+      g+=`<path d="M100,105 C160,105 180,${y.toFixed(1)} 250,${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
+      g+=`<circle cx="${m.x.toFixed(1)}" cy="${m.y.toFixed(1)}" r="2.2" fill="${col}"/>`;
+      g+=`<circle cx="250" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="2"/>`;
+      g+=`<text x="250" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(lab)}</text>`;
+      const reason=reasonOf(centreId,o.id);
+      if(reason) g+=`<text x="${250+r+6}" y="${(y+4).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#7d8797">${esc(reason)}</text>`;
+    });
+    if(total>6) g+=`<text x="250" y="195" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#7d8797">+${total-6} ${T.more}</text>`;
+    const ctr=esc(w.tk||(centre?centre.short:'')||'');
+    return `<div class="cons"><svg viewBox="0 0 340 210">
+      <circle cx="100" cy="105" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
+      ${g}
+      <circle cx="100" cy="105" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2"/>
+      <text x="100" y="109" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr}</text>
+    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span></div></div>`;
+  }
+
+  // --- one card ---------------------------------------------------------
+  function midOpen(w){
+    const q=f(w,'q'), yes=f(w,'yes'), no=f(w,'no'), why=f(w,'why');
+    let h = q?`<p class="q">${esc(q)}</p>`:'';
+    if(yes||no) h+=`<div class="yn">`
+      + (yes?`<div class="y"><b>${T.yes}</b>${esc(yes)}</div>`:'')
+      + (no?`<div class="no"><b>${T.no}</b>${esc(no)}</div>`:'')
+      + `</div>`;
+    if(why) h+=`<p class="why"><b>${T.why}</b> ${esc(why)}</p>`;
+    return h;
+  }
+  function midLocked(){
+    return `<div class="blur"><p class="q">${esc(PH.q)}</p>`
+      + `<div class="yn"><div class="y"><b>${T.yes}</b>${esc(PH.yes)}</div>`
+      + `<div class="no"><b>${T.no}</b>${esc(PH.no)}</div></div>`
+      + `<p class="why"><b>${T.why}</b> ${esc(PH.why)}</p></div>`
+      + `<div class="lock"><div>${T.lockA}<b>${T.lockB}</b></div></div>`;
+  }
+  function card(w, opts){
+    const dd=dayOf(w.d);
+    const mark = opts.mark || '';
+    const ring = mark ? markSVG(mark, opts.auto) : ringSVG(dd);
+    const tag = w.confirmed
+      ? `<span class="tag">${T.conf}</span>`
+      : `<span class="tag exp">${T.exp}</span>`;
+    return `<article class="card${opts.next?' next':''}" data-id="${esc(w.id)}">
+      <div class="left">${ring}
+        <div class="who"><b>${esc(f(w,'who'))}</b>
+          <div class="d">${esc(f(w,'d'))}${w.tk?' · '+esc(w.tk):''}</div>${tag}</div>
+      </div>
+      <div class="mid">${w.locked?midLocked():midOpen(w)}</div>
+      ${constellation(w)}
+    </article>`;
+  }
+
+  const marks = Object.assign({}, D.answers||{});
+  const markOf = id => { const m=marks[id]; return (m&&m.status&&m.status!=='open')
+    ? (T.marks[m.status]||T.marks.open) : ''; };
+  const autoOf = id => !!(marks[id] && marks[id].auto);
+
+  const upcoming = W.filter(w=>dayOf(w.d)>=0).sort((a,b)=>a.d.localeCompare(b.d));
+  const done = W.filter(w=>dayOf(w.d)<0).sort((a,b)=>b.d.localeCompare(a.d));
+  list.innerHTML = upcoming.map((w,i)=>card(w,{next:i===0})).join('');
+  const past=document.getElementById('qpast');
+  if(past){
+    past.innerHTML = done.length
+      ? `<details class="answered"><summary>${T.answered} · ${done.length}</summary>`
+        + done.map(w=>card(w,{mark:markOf(w.id)||T.marks.open, auto:autoOf(w.id)})).join('') + `</details>`
+      : '';
+  }
 })();
 
 // ---- the call to action, and what the free page already gave away ----
@@ -706,13 +878,15 @@ function lockedHTML(){
     promise:'כל שאלה עם תאריך, מה להקשיב לו, מי מדליף קודם, והתשובה עם המקור שלה — לפני כל אירוע ואחריו.',
     btn:'קבל את המייל השבועי', soon:'בקרוב',
     disc:'חינם ובתשלום, בלי המלצות. זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה לאף אדם.',
-    q:'שאלות', open:'פתוחות', next:'התשובה הבאה בעוד', days:'ימים', today:'היום'};
+    q:'שאלות', open:'פתוחות', next:'התשובה הבאה', days:'ימים', today:'היום', tomorrow:'מחר'};
   const today = new Date(D.as_of+'T00:00:00Z'); const now=new Date(); const ref = now>today?now:today;
   const dd = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
   const nOpen = W.filter(w=>!w.locked).length;
   const up = W.filter(w=>dd(w.d)>=0).sort((a,b)=>a.d.localeCompare(b.d));
   const nd = up.length? dd(up[0].d) : null;
-  const stats = `${W.length} ${T.q} · ${nOpen} ${T.open}` + (nd==null? '' : ` · ${T.next} ${nd===0?T.today:nd+' '+T.days}`);
+  const when = n => n===0?T.today : (n===1?T.tomorrow : n+' '+T.days);
+  const stats = `${W.length} ${T.q} · ${nOpen} ${T.open}`
+    + (nd==null? '' : ` · ${T.next} ${when(nd)}`);
   const url = D.signup||null;
   el.innerHTML = `<div class="stats">${stats}</div><h3>${T.head}</h3><p>${T.promise}</p>`
     + (url? `<a class="btn" href="${url}">${T.btn}</a>` : `<span class="soon">${T.soon}</span>`)

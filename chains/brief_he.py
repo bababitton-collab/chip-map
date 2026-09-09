@@ -25,6 +25,15 @@ from chains import answers, questions
 USAGE = "usage: python -m chains.brief_he <live.json> <watch.json> [answers.json] [out.md] [--free]"
 
 
+def when(n: int) -> str:
+    """יום אחד הוא יום."""
+    if n == 0:
+        return "היום"
+    if n == 1:
+        return "מחר"
+    return f"בעוד {n} ימים" if n > 0 else f"לפני {-n} ימים"
+
+
 def render(live: dict, watch: list, statuses: dict) -> str:
     T = dt.date.fromisoformat(live['as_of'])
     byid = {n['id']: n for n in live['nodes']}
@@ -95,11 +104,22 @@ def render(live: dict, watch: list, statuses: dict) -> str:
         tag = 'מאושר' if w['confirmed'] else 'צפוי'
         who = ', '.join(name(i) for i in w['win'])
         lose = ', '.join(name(i) for i in w['lose'])
-        out.append(f"### {w['who']} · {w['d']} · בעוד {days(w['d'])} ימים · {tag}")
+        out.append(f"### {w['who']} · {w['d']} · {when(days(w['d']))} · {tag}")
         out.append("")
-        out.append(w['q'])
+        # A locked row reaches the free letter with no text
+        # at all; it gets the lock line instead of a blank.
+        out.append(w["q"] if w.get("q") else "_השאלה, ואיך נשמעת תשובה חיובית ושלילית, במייל השבועי._")
         out.append("")
-        out.append(f"להקשיב ל: {w['listen']}.")
+        # The four parts, in the order the card shows them. A part the
+        # question has nothing for is omitted rather than printed
+        # empty: a v1 file has no "no" sentence, and inventing one
+        # would be inventing the product.
+        if w.get("yes"):
+            out.append(f"**תשובה חיובית נשמעת כך:** {w['yes']}")
+        if w.get("no"):
+            out.append(f"**תשובה שלילית נשמעת כך:** {w['no']}")
+        if w.get("why"):
+            out.append(f"**למה זה משנה:** {w['why']}")
         if leak_line(w): out.append(leak_line(w))
         if who or lose:
             out.append(f"מושפעים אם כן: {who}" + (f" · מפסידים: {lose}" if lose else '') + '.')
@@ -122,7 +142,7 @@ def render(live: dict, watch: list, statuses: dict) -> str:
         out.append("## בהמשך")
         out.append("")
         for w in later:
-            out.append(f"- {w['d']} · **{w['who']}** — {w['listen']}" + ('' if w['confirmed'] else ' (צפוי)'))
+            out.append(f"- {w['d']} · **{w['who']}** — {w.get('q') or '_במייל השבועי_'}" + ('' if w['confirmed'] else ' (צפוי)'))
         out.append("")
 
     # movers among map nodes, 1 week
@@ -155,11 +175,11 @@ def main(argv=None) -> int:
     live = json.load(open(argv[0], encoding="utf-8"))
     watch = json.load(open(argv[1], encoding="utf-8"))
     # The text is not in the watch file any more. The paid mail unlocks every
-    # row; the free one carries only what the site already shows.
+    # row; the free letter keeps every row too -- the dates are the free half
+    # of the offer -- and a locked one prints its header and the lock line
+    # instead of a sentence.
     watch = questions.merge(watch, questions.fetch(), "he",
                             unlock_all=not free)
-    if free:
-        watch = [w for w in watch if w["open"]]
     statuses = {}
     if len(argv) > 2 and argv[2]:
         # Through the validator, not json.load. A bad status is not a crash --

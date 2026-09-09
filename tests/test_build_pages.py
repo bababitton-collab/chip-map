@@ -100,32 +100,6 @@ def test_each_public_page_fetches_its_own_snapshot(tmp_path):
     assert "claude.use('db')" not in page, "the db read must be gone"
 
 
-@needs_live
-def test_a_drifted_replacement_constant_fails_the_build(tmp_path):
-    """This is the bug that shipped. The .wrow constant had stopped matching
-    the template, str.replace returned the page unchanged, and every public
-    page went out with an empty 220px column. A no-op replacement is now a
-    failed build."""
-    src = tmp_path / "live-map-en.html"
-    src.write_text(EN_TEMPLATE.read_text(encoding="utf-8")
-                   .replace(bp.WROW_PRIVATE, ".wrow{display:grid;"),
-                   encoding="utf-8", newline="\n")
-    with pytest.raises(ValueError) as e:
-        bp.build_public_en(template=src, live=LIVE_EN,
-                           out=tmp_path / "out.html")
-    assert "watch row grid" in str(e.value)
-
-
-@needs_live
-def test_the_public_page_is_not_the_private_one(tmp_path):
-    """The status control and its four-column row belong to the private page."""
-    out = tmp_path / "public-map-en.html"
-    bp.build_public_en(live=LIVE_EN, out=out)
-    page = out.read_text(encoding="utf-8")
-    assert bp.WROW_PRIVATE not in page
-    assert bp.WROW_PUBLIC in page
-
-
 # -- the translation fails loudly -------------------------------------------
 
 def test_a_reworded_hebrew_string_fails_the_translation(tmp_path):
@@ -161,31 +135,19 @@ def test_the_translated_template_keeps_the_board(tmp_path):
 # so the difference is labelled rather than hidden.
 
 def test_the_hebrew_template_labels_an_auto_mark():
+    """The table that carried the tag is gone; the rule is not. An answered
+    card a machine marked is drawn dashed and labelled, and the board's hints
+    still carry their suffix."""
     t = HE_TEMPLATE.read_text(encoding="utf-8")
-    assert "autotag" in t and "autohint" in t
-    assert "autoSuffix" in t and "WT.auto" in t
+    assert "autohint" in t and "autoSuffix" in t
+    assert "stroke-dasharray=\"6 5\"" in t and "T.auto" in t
 
 
 def test_the_english_template_labels_an_auto_mark_in_english():
     t = EN_TEMPLATE.read_text(encoding="utf-8")
-    assert "const WT = {auto:'auto'};" in t
+    assert "auto:'auto'" in t
     assert "autoSuffix:' (auto)'" in t
     assert bp.hebrew_runs(t) == []
-
-
-def test_a_manual_edit_clears_the_auto_flag():
-    """It is a person's mark now. Leaving the flag set would keep labelling it
-    as machine-written for ever."""
-    t = HE_TEMPLATE.read_text(encoding="utf-8")
-    assert "auto:false}" in t, "the save path must write auto:false"
-
-
-def test_the_watch_table_falls_back_to_the_exported_answers():
-    """Without this the board colours a row that the table below it still
-    shows as open -- and an auto mark, which only ever arrives in the export,
-    would never be labelled at all."""
-    t = HE_TEMPLATE.read_text(encoding="utf-8")
-    assert "(D.answers||{})[w.id]" in t
 
 
 @needs_live
@@ -232,8 +194,8 @@ def test_the_ledger_never_prints_the_question_text():
     question itself is the product boundary and it is not in this section --
     on either page, so the public build does not have to strip it."""
     t = HE_TEMPLATE.read_text(encoding="utf-8")
-    i, j = t.index("// ---- the forecast ledger ----"), t.index(
-        "// ---- dated questions (watchlist) ----")
+    i = t.index("// ---- the forecast ledger ----")
+    j = t.index("// ---- question cards ----", i)
     assert "${w.q}" not in t[i:j]
 
 

@@ -241,7 +241,7 @@ def test_live_json_now_carries_the_watch_list():
     """
     live = ls.build()
     assert len(live["watch"]) >= 39
-    assert {"q", "listen", "leaks", "lane"} <= set(live["watch"][0])
+    assert {"q", "yes", "leaks", "lane"} <= set(live["watch"][0])
 
 
 @needs_build

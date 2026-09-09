@@ -46,6 +46,15 @@ from chains import answers, questions
 USAGE = "usage: python -m chains.brief <live.json> <watch.json> [answers.json] [out.md] [--free]"
 
 
+def when(n: int) -> str:
+    """One day is a day. "in 1 days" shipped once."""
+    if n == 0:
+        return "today"
+    if n == 1:
+        return "tomorrow"
+    return f"in {n} days" if n > 0 else f"{-n} days ago"
+
+
 def render(live: dict, watch: list, statuses: dict) -> str:
     T = dt.date.fromisoformat(live['as_of'])
     byid = {n['id']: n for n in live['nodes']}
@@ -116,11 +125,22 @@ def render(live: dict, watch: list, statuses: dict) -> str:
         tag = 'confirmed' if w['confirmed'] else 'expected'
         who = ', '.join(name(i) for i in w['win'])
         lose = ', '.join(name(i) for i in w['lose'])
-        out.append(f"### {w['who']} · {w['d']} · in {days(w['d'])} days · {tag}")
+        out.append(f"### {w['who']} · {w['d']} · {when(days(w['d']))} · {tag}")
         out.append("")
-        out.append(w['q'])
+        # A locked row reaches the free letter with no text
+        # at all; it gets the lock line instead of a blank.
+        out.append(w["q"] if w.get("q") else "_The question, and what yes and no sound like, are in the weekly mail._")
         out.append("")
-        out.append(f"Listen for: {w['listen']}.")
+        # The four parts, in the order the card shows them. A part the
+        # question has nothing for is omitted rather than printed
+        # empty: a v1 file has no "no" sentence, and inventing one
+        # would be inventing the product.
+        if w.get("yes"):
+            out.append(f"**Yes looks like:** {w['yes']}")
+        if w.get("no"):
+            out.append(f"**No looks like:** {w['no']}")
+        if w.get("why"):
+            out.append(f"**Why it matters:** {w['why']}")
         if leak_line(w): out.append(leak_line(w))
         if who or lose:
             out.append(f"Affected if yes: {who}" + (f" · loses: {lose}" if lose else '') + '.')
@@ -143,7 +163,7 @@ def render(live: dict, watch: list, statuses: dict) -> str:
         out.append("## Further out")
         out.append("")
         for w in later:
-            out.append(f"- {w['d']} · **{w['who']}** — {w['listen']}" + ('' if w['confirmed'] else ' (expected)'))
+            out.append(f"- {w['d']} · **{w['who']}** — {w.get('q') or '_in the weekly mail_'}" + ('' if w['confirmed'] else ' (expected)'))
         out.append("")
 
     # movers among map nodes, 1 week
@@ -176,11 +196,11 @@ def main(argv=None) -> int:
     live = json.load(open(argv[0], encoding="utf-8"))
     watch = json.load(open(argv[1], encoding="utf-8"))
     # The text is not in the watch file any more. The paid mail unlocks every
-    # row; the free one carries only what the site already shows.
+    # row; the free letter keeps every row too -- the dates are the free half
+    # of the offer -- and a locked one prints its header and the lock line
+    # instead of a sentence.
     watch = questions.merge(watch, questions.fetch(), "en",
                             unlock_all=not free)
-    if free:
-        watch = [w for w in watch if w["open"]]
     statuses = {}
     if len(argv) > 2 and argv[2]:
         # Through the validator, not json.load. A bad status is not a crash --

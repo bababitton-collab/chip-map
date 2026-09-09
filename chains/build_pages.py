@@ -4,7 +4,7 @@
 
     live-map.html  --(translate)-->  live-map-en.html
            |                                |
-           +--(teaser + fetch)--> public-map.html / public-map-en.html
+           +--------(fetch)--> public-map.html / public-map-en.html
 
 ONE HEBREW SOURCE, THREE DERIVED PAGES
 --------------------------------------
@@ -12,8 +12,9 @@ ONE HEBREW SOURCE, THREE DERIVED PAGES
 person edits. The English template is a translation of it, produced by
 :func:`build_en_template` from an explicit list of before/after pairs, and the
 two public pages are each built from one of those templates by swapping the
-private watch table for a five-row teaser and the artifact-database read for a
-plain ``fetch``.
+artifact-database read for a plain ``fetch``. Nothing else differs: the paywall
+lives in the data, so both pages render the same cards and a locked one carries
+no sentence in either.
 
 The translation list is the fragile part, and it fails LOUDLY. Every pair must
 match: if a string in the Hebrew template is reworded, its pair stops matching
@@ -65,8 +66,6 @@ from chains.paths import out_dir, templates_dir
 # template, which is a reviewed artifact and belongs beside its Hebrew source.
 TEMPLATE_HE = "live-map.html"
 TEMPLATE_EN = "live-map-en.html"
-TEASER_HE = "teaser.js"
-TEASER_EN = "teaser_en.js"
 LIVE_HE = "live.json"
 LIVE_EN = "live_en.json"
 PUBLIC_HE = "public-map.html"
@@ -74,11 +73,6 @@ PUBLIC_EN = "public-map-en.html"
 
 HEBREW = re.compile(r"[֐-׿]")
 
-# The two anchors the teaser is spliced between, in every template.
-WATCH_JS_START = "// ---- dated questions (watchlist) ----"
-WATCH_JS_END = "// live data: newer snapshot"
-WATCH_HTML_START = '<div class="watch" id="watch">'
-WATCH_HTML_END = '<div class="foot" id="foot"></div>'
 
 # The board tooltip used to be stripped here, because the private page printed
 # every question and the public one could print none. Both pages now obey the
@@ -89,32 +83,6 @@ WATCH_HTML_END = '<div class="foot" id="foot"></div>'
 DB_READ = """(async()=>{ try{ if(!window.claude||!claude.use) return; const db=await claude.use('db'); if(!db) return; const snap=await db.doc('live/latest').get(); const doc=snap&&(snap.data?snap.data():snap); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
 
 FETCH_READ = """(async()=>{ try{ const r=await fetch('%s',{cache:'no-store'}); if(!r.ok) return; const doc=await r.json(); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
-
-# The private table has a fourth column for the status control. The teaser has
-# no control, so the row goes back to three.
-#
-# The sandbox script carried "96px ... 210px" here, which had stopped matching
-# the template: the rule is 110px/220px. The replacement quietly did nothing
-# and every public page shipped with a 220px column of white space where the
-# status control used to be. That is why _must_replace exists below -- a
-# constant that has drifted from the template it describes now fails the build
-# instead of producing a page that is subtly wrong.
-WROW_PRIVATE = (".wrow{display:grid;grid-template-columns:110px "
-                "minmax(0,1.5fr) minmax(0,2.2fr) 220px;")
-WROW_PUBLIC = (".wrow{display:grid;grid-template-columns:110px "
-               "minmax(0,1.5fr) minmax(0,2.4fr);")
-
-MEDIA_PRIVATE = ("@media (max-width:820px){.wrow{grid-template-columns:80px "
-                 "minmax(0,1fr)}.wrow .wq,.wrow .ws{grid-column:2}}")
-MEDIA_PUBLIC = (
-    "@media (max-width:820px){.wrow{grid-template-columns:80px "
-    "minmax(0,1fr)}.wrow .wq{grid-column:2}}\n"
-    ".cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;"
-    "margin:16px 0 6px}\n"
-    ".cta a{background:var(--tight);color:#fff;text-decoration:none;"
-    "font-weight:700;padding:10px 20px;font-size:1rem}\n"
-    ".cta a:hover{filter:brightness(1.1)}\n"
-    ".cta span{color:var(--ink3);font-size:.85rem}")
 
 # The Hebrew footer sentence gains the full disclaimer on the public page. The
 # English one does not need this step: its translated form below already
@@ -128,31 +96,17 @@ HE_FOOT_TO = ("זו מפה להבנת חשיפות, לא אות מסחר, לא �
 
 PUB = {
     "he": {
-        "template": TEMPLATE_HE, "teaser": TEASER_HE, "live": LIVE_HE,
+        "template": TEMPLATE_HE, "live": LIVE_HE,
         "out": PUBLIC_HE, "lang": "he", "dir": "rtl",
         "desc": ("מפה חיה של שרשרת האספקה של שבבי הבינה המלאכותית: 49 תחנות, "
                  "14 צווארי בקבוק שדופקים לפי השוק, ושאלות עם תאריך."),
-        "watch_html": """<div class="watch" id="watch">
-<h2>שאלות עם תאריך</h2>
-<p class="lede">המפה לא אומרת מה לקנות. היא אומרת איזו שאלה מתבררת ביום ידוע, מי מושפע אם התשובה חיובית, ולמה להקשיב בשיחת התוצאות. אלה החמש הקרובות. את הרשימה המלאה — כל שבוע, בעברית, עם מה שהתברר בשבוע שעבר — מקבלים במייל.</p>
-<div id="wlist"></div>
-<div class="cta"><a id="cta" href="#signup">קבל את השאלות של השבוע</a><span>חינם. בלי המלצות. בלי "חייבים לקנות".</span></div>
-</div>
-""",
     },
     "en": {
-        "template": TEMPLATE_EN, "teaser": TEASER_EN, "live": LIVE_EN,
+        "template": TEMPLATE_EN, "live": LIVE_EN,
         "out": PUBLIC_EN, "lang": "en", "dir": "ltr",
         "desc": ("A living map of the AI chip supply chain: 49 stations, 14 "
                  "chokepoints pulsing with the market, a forecast board and "
                  "questions with a date."),
-        "watch_html": """<div class="watch" id="watch">
-<h2>Questions with a date</h2>
-<p class="lede">The map does not say what to buy. It says which question gets answered on a known day, who is affected if the answer is yes, and what to listen for on the call. These are the next five. The full list — every week, with what was answered the week before — comes by mail.</p>
-<div id="wlist"></div>
-<div class="cta"><a id="cta" href="#signup">Get this week's questions</a><span>Free. No recommendations. No "must buy".</span></div>
-</div>
-""",
     },
 }
 
@@ -164,7 +118,7 @@ TRANSLATIONS = [
  ('html{direction:rtl}', 'html{direction:ltr}'),
  ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
  ("`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`", "`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`"),
- ("`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'היום':'בעוד '+e.days+' ימים'} · ${e.d}</i>`", "`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'today':'in '+e.days+' days'} · ${e.d}</i>`"),
+ ("`<b>${e.who}</b><i>${e.days<=0?'היום':(e.days===1?'מחר':'בעוד '+e.days+' ימים')} · ${e.d}</i>`", "`<b>${e.who}</b><i>${e.days<=0?'today':(e.days===1?'tomorrow':'in '+e.days+' days')} · ${e.d}</i>`"),
  ("`13 שבועות <span dir=\"ltr\">${pct(px.r13w)}</span> · שנה <span dir=\"ltr\">${pct(px.r52w)}</span>`:'אין קו מחיר'", "`13 weeks <span dir=\"ltr\">${pct(px.r13w)}</span> · 1 year <span dir=\"ltr\">${pct(px.r52w)}</span>`:'no price line'"),
  ("return '<p class=\"role\">אין קו מחיר.</p>'", "return '<p class=\"role\">No price line.</p>'"),
  ("const he={research:'מחקר',pilot:'פיילוט',qualified:'הסמכה',volume:'ייצור'}[st]||''", "const he={research:'research',pilot:'pilot',qualified:'qualified',volume:'volume'}[st]||''"),
@@ -178,18 +132,7 @@ TRANSLATIONS = [
   "`<b>The pulse</b> is the market's vote over the last 13 weeks: the holder's return minus its listed challengers' return. Positive — the lock is tightening, red and fast. Negative — eroding, green and slow. Right now: ${nt} tightening, ${ne} eroding, ${na} with no listed challenger. Station size is market cap. Each company in its own currency; Japanese names via US depositary receipts. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone. Every number carries a source; \"estimate\" means none was found. Prices lag by up to a week.`"),
  # The private watch table. The public build replaces this whole section, but
  # the private English page needs it translated too.
- ('<h2>שאלות עם תאריך</h2>', '<h2>Questions with a date</h2>'),
- ('<p class="lede">כל שורה היא שאלה שמתבררת ביום ידוע. לא "מה לקנות" — אלא על מה כדאי שתהיה לך דעה לפני שהתשובה מתפרסמת, ומי מרוויח או מפסיד אם היא חיובית. "מאושר" — תאריך מפורסם. "צפוי" — לפי המחזור של השנה שעברה, עד שהחברה תאשר. אחרי שהאירוע קרה, סמן מה יצא: הסימון נשמר בעמוד.</p>',
-  '<p class="lede">Each row is a question that gets answered on a known day. Not "what to buy" — what to have a view on before the answer is public, and who gains or loses if it is yes. "Confirmed" — a published date. "Expected" — last year\'s cycle, until the company confirms. After the event, mark what came out: it is saved on the page.</p>'),
  ("const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};", "const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};"),
- ("<b>${dd<0?'עבר':(dd===0?'היום':'בעוד '+dd+' ימים')}</b>${w.d}<small>${w.tk}</small><em class=\"${w.confirmed?'c':''}\">${w.confirmed?'מאושר':'צפוי'}</em>", "<b>${dd<0?'past':(dd===0?'today':'in '+dd+' days')}</b>${w.d}<small>${w.tk}</small><em class=\"${w.confirmed?'c':''}\">${w.confirmed?'confirmed':'expected'}</em>"),
- ("${w.win.length?'מרוויח אם כן: <span dir=\"ltr\">'+w.win.map(nameOf).join(' · ')+'</span>':''}${w.lose.length?' · מפסיד: <span dir=\"ltr\">'+w.lose.map(nameOf).join(' · ')+'</span>':''}", "${w.win.length?'gains if yes: <span dir=\"ltr\">'+w.win.map(nameOf).join(' · ')+'</span>':''}${w.lose.length?' · loses: <span dir=\"ltr\">'+w.lose.map(nameOf).join(' · ')+'</span>':''}"),
- ("<span class=\"lis\"><b>להקשיב ל:</b> ${w.listen}</span>", "<span class=\"lis\"><b>Listen for:</b> ${w.listen}</span>"),
- ('<input placeholder="הערה קצרה"', '<input placeholder="short note"'),
- ("'ללא שמירה — מסד הנתונים לא זמין'", "'not saved — database unavailable'"),
- ("'<p class=\"lede\">אין שורות בסינון הזה.</p>'", "'<p class=\"lede\">Nothing in this filter.</p>'"),
- ("const F=[['all','הקרובים'],['30','30 יום'],['cp','צווארי בקבוק בלבד'],['past','מה שכבר קרה']];", "const F=[['all','upcoming'],['30','30 days'],['cp','chokepoints only'],['past','already happened']];"),
- ("row.querySelector('.saved').textContent='שמירה נכשלה'", "row.querySelector('.saved').textContent='save failed'"),
  # Layout flip. RTL reads raw materials on the right; LTR reads them on the
  # left, so the column order and the panel's opening direction both reverse.
  ("const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);", "const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);"),
@@ -205,8 +148,6 @@ TRANSLATIONS = [
  # the board identically, so the page labels the difference rather than hiding
  # it -- a reader who cannot tell them apart is reading a stronger claim than
  # the page is making.
- ("const WT = {auto:'אוטומטי'};   // the tag on a row a machine marked",
-  "const WT = {auto:'auto'};   // the tag on a row a machine marked"),
  (".btip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);padding:10px 12px;font-size:.95rem;max-width:380px;line-height:1.35;z-index:5;display:none;direction:rtl;", ".btip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);padding:10px 12px;font-size:.95rem;max-width:380px;line-height:1.35;z-index:5;display:none;direction:ltr;"),
  # The forecast ledger. Its own STATUS copy is caught by the STATUS pair
  # above, which replaces every occurrence.
@@ -220,10 +161,8 @@ TRANSLATIONS = [
  # sentence; the dummy below is fixed and is never the real text.
  ("const LOCK = {\n  dummy: 'שאלה נעולה — הטקסט המלא מגיע במייל השבועי יחד עם מה שצריך להקשיב לו בשיחת התוצאות',\n  line: 'הטקסט המלא', mail: 'במייל השבועי',\n  badge: 'השאלה הפתוחה השבוע',\n  marked: 'סומן', };",
   "const LOCK = {\n  dummy: 'Locked question — the full text arrives in the weekly mail, with what to listen for on the call',\n  line: 'The full question', mail: 'in the weekly mail',\n  badge: 'this week\\'s open question',\n  marked: 'marked', };"),
- ("  const T = {head:'כל שאלה, לפני שהיא נענית',\n    promise:'כל שאלה עם תאריך, מה להקשיב לו, מי מדליף קודם, והתשובה עם המקור שלה — לפני כל אירוע ואחריו.',\n    btn:'קבל את המייל השבועי', soon:'בקרוב',\n    disc:'חינם ובתשלום, בלי המלצות. זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה לאף אדם.',\n    q:'שאלות', open:'פתוחות', next:'התשובה הבאה בעוד', days:'ימים', today:'היום'};",
-  "  const T = {head:'Every question, before it is answered',\n    promise:'Every dated question, what to listen for, who leaks first, and the answer with its source — before and after each event.',\n    btn:'Get the weekly mail', soon:'coming soon',\n    disc:'Free and paid, no recommendations. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone.',\n    q:'questions', open:'open', next:'next answer in', days:'days', today:'today'};"),
- ("${(w.leaks||[]).length? (w.leaks||[]).length+' רמזים' : ''}",
-  "${(w.leaks||[]).length? (w.leaks||[]).length+' hints' : ''}"),
+ ("  const T = {head:'כל שאלה, לפני שהיא נענית',\n    promise:'כל שאלה עם תאריך, מה להקשיב לו, מי מדליף קודם, והתשובה עם המקור שלה — לפני כל אירוע ואחריו.',\n    btn:'קבל את המייל השבועי', soon:'בקרוב',\n    disc:'חינם ובתשלום, בלי המלצות. זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה לאף אדם.',\n    q:'שאלות', open:'פתוחות', next:'התשובה הבאה', days:'ימים', today:'היום', tomorrow:'מחר'};",
+  "  const T = {head:'Every question, before it is answered',\n    promise:'Every dated question, what to listen for, who leaks first, and the answer with its source — before and after each event.',\n    btn:'Get the weekly mail', soon:'coming soon',\n    disc:'Free and paid, no recommendations. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone.',\n    q:'questions', open:'open', next:'next answer', days:'days', today:'today', tomorrow:'tomorrow'};"),
  # One visual language: plain words for holder/challenger, a two-row
  # legend, and the peer panel's section titles.
  ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',\n  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?'};",
@@ -246,10 +185,52 @@ TRANSLATIONS = [
  # the brand header replaced; it is still here and still needs a pair.
  ('<div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div>',
   '<div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div>'),
+ # The question cards. The placeholder below is fixed text in both
+ # languages and is never the real sentence.
+ ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, ואיך נשמעת תשובה חיובית ושלילית — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
+  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, and what yes and no sound like — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes',\n    answered:'Answered', more:'more', auto:'auto',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
+ ("  const PH = {q:'איזה מספר בשיחת התוצאות מכריע את השאלה שכולם כאן כבר מתווכחים עליה',\n    yes:'החברה נוקבת במספר מעל הטווח שעליו הנחתה ברבעון שעבר, ואומרת שהמגבלה זזה.',\n    no:'המספר נוחת בתוך הטווח הישן והשפה על הקיבולת לא משתנה מהפעם הקודמת.',\n    why:'זה קובע איזו משתי החברות מחזיקה את החלק הנדיר בעוד שנה.'};",
+  "  const PH = {q:'Which number on the call settles the question that everyone in this room is already arguing about',\n    yes:'The company names a figure above the range it guided to last quarter, and says the constraint has moved.',\n    no:'The number lands inside the old range and the language about capacity is unchanged from last time.',\n    why:'It decides which of two companies is holding the scarce part twelve months from now.'};"),
+ ('<div class="eyebrow">04 · שאלות עם תאריך</div>',
+  '<div class="eyebrow">04 · Questions with a date</div>'),
+ ('<h2>מה מתברר בהמשך — ואיך תיראה התשובה</h2>',
+  '<h2>What gets answered next — and what the answer will look like</h2>'),
+ ('<p class="lede">כל כרטיס הוא שאלה שמתבררת ביום ידוע. לא "מה לקנות": איך נשמעת תשובה חיובית ואיך נשמעת שלילית בשיחת התוצאות, ואילו תחנות על המפה זזות אם היא חיובית. השאלה הבאה פתוחה; השאר מגיעות במייל השבועי.</p>',
+  '<p class="lede">Every card is a question that gets answered on a known day. Not "what to buy": what "yes" and "no" sound like on the call, and which stations on the map move if it is yes. The next question is open; the rest arrive in the weekly mail.</p>'),
 ]
 
 
-# ---------------------------------------------------------------- the gate
+# ---------------------------------------------------------------- the gates
+SCRIPT_OR_STYLE = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.S | re.I)
+
+# What a reader can actually see. The page's own source legitimately contains
+# both of these words -- `typeof x !== 'undefined'`, and the English ternary
+# that produces "in N days" -- so a check over the whole file would be a check
+# that can only be satisfied by writing worse JavaScript.
+def visible_text(html: str) -> str:
+    return SCRIPT_OR_STYLE.sub(" ", html)
+
+
+# Rendered-text defects that mean a field was missing or a plural was not
+# thought about. Both have shipped before.
+BAD_RENDER = (
+    ("undefined", "a field reached the page as the word 'undefined'"),
+    ("1 days", "'1 days' -- one day is a day"),
+    ("NaN", "a number reached the page as NaN"),
+)
+
+
+def render_faults(html: str) -> list[str]:
+    text = visible_text(html)
+    return [f"{needle!r}: {why}" for needle, why in BAD_RENDER if needle in text]
+
+
+def assert_renders_clean(html: str, where: str) -> None:
+    faults = render_faults(html)
+    if faults:
+        raise ValueError(f"{where}: " + "; ".join(faults))
+
+
 def hebrew_runs(text: str, context: int = 40) -> list[str]:
     """Every stretch of Hebrew in ``text``, with enough around it to find it."""
     out, seen = [], set()
@@ -322,26 +303,19 @@ def _must_replace(h: str, a: str, b: str, what: str) -> str:
     return h.replace(a, b)
 
 
-def public_page(template: str, teaser: str, live: str, cfg: dict) -> str:
-    """A template plus a snapshot, minus everything the public does not get."""
+def public_page(template: str, live: str, cfg: dict) -> str:
+    """A template plus a snapshot, wired for a page with no database.
+
+    There used to be a five-row teaser spliced in here, because the private
+    page printed every question and the public one could print none. Both pages
+    now obey the data -- a locked row carries no sentence in either -- so there
+    is nothing left to swap, and no public-only variant that could be built
+    wrong and leak.
+    """
     h = template
 
     # 1. the artifact database is not reachable from a public page
     h = _must_replace(h, DB_READ, FETCH_READ % cfg["live"], "database read")
-
-    # 2. the full watch table becomes the teaser's shell
-    i = h.index(WATCH_HTML_START)
-    j = h.index(WATCH_HTML_END)
-    h = h[:i] + cfg["watch_html"] + h[j:]
-
-    # 4. the table renderer becomes the five-row teaser
-    i = h.index(WATCH_JS_START)
-    j = h.index(WATCH_JS_END)
-    h = h[:i] + teaser + h[j:]
-
-    # 5. and the row loses its status column
-    h = _must_replace(h, WROW_PRIVATE, WROW_PUBLIC, "watch row grid")
-    h = _must_replace(h, MEDIA_PRIVATE, MEDIA_PUBLIC, "watch row mobile grid")
 
     if cfg["lang"] == "he":
         h = _must_replace(h, HE_FOOT_FROM, HE_FOOT_TO, "footer disclaimer")
@@ -356,29 +330,30 @@ def public_page(template: str, teaser: str, live: str, cfg: dict) -> str:
     return doc.replace("__LIVE__", live)
 
 
-def _build_public(lang: str, template=None, teaser=None, live=None, out=None):
+def _build_public(lang: str, template=None, live=None, out=None,
+                  teaser=None):
     cfg = PUB[lang]
     template = template or (templates_dir() / cfg["template"])
-    teaser = teaser or (templates_dir() / cfg["teaser"])
     live = live or (out_dir() / cfg["live"])
     out = out or (out_dir() / cfg["out"])
     doc = public_page(template.read_text(encoding="utf-8"),
-                      teaser.read_text(encoding="utf-8"),
                       live.read_text(encoding="utf-8"), cfg)
     return doc, out
 
 
-def build_public_he(template=None, teaser=None, live=None, out=None):
-    doc, out = _build_public("he", template, teaser, live, out)
+def build_public_he(template=None, live=None, out=None, teaser=None):
+    doc, out = _build_public("he", template, live, out)
+    assert_renders_clean(doc, out.name)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8", newline="\n")
     return out, len(doc.encode("utf-8"))
 
 
-def build_public_en(template=None, teaser=None, live=None, out=None):
+def build_public_en(template=None, live=None, out=None, teaser=None):
     """The English public page. Refuses to write a Hebrew character."""
-    doc, out = _build_public("en", template, teaser, live, out)
+    doc, out = _build_public("en", template, live, out)
     assert_no_hebrew(doc, out.name)
+    assert_renders_clean(doc, out.name)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8", newline="\n")
     return out, len(doc.encode("utf-8"))

@@ -47,11 +47,28 @@ from chains.paths import watch_path
 QUESTIONS_URL_ENV = "QUESTIONS_URL"
 HTTP_TIMEOUT = 10.0
 
-FIELDS = ("q_he", "listen_he", "q_en", "listen_en")
+# TWO SHAPES, ONE MEANING
+# -----------------------
+# v2 says what each answer will sound like:
+#     q, yes, no, why      -- per language
+# v1 said only what to listen for:
+#     q, listen
+# A v1 file is read as v2 with ``listen`` standing in for ``yes`` and the other
+# two empty. Empty, not filled in: "what no sounds like" is a claim about the
+# world, and inventing one to make a card look finished would be inventing the
+# product.
+PARTS = ("q", "yes", "no", "why")
+LANGS = ("he", "en")
+
+# Every field a question can carry, in every language.
+FIELDS = tuple(f"{part}_{lang}" for lang in LANGS for part in PARTS)
+
+# Only the question itself has to be there. The rest are a v1 file's gaps.
+REQUIRED = tuple(f"q_{lang}" for lang in LANGS)
 
 # What a row carries in each language once merged.
-LANG_FIELDS = {"he": {"q": "q_he", "listen": "listen_he"},
-               "en": {"q": "q_en", "listen": "listen_en"}}
+LANG_FIELDS = {lang: {part: f"{part}_{lang}" for part in PARTS}
+               for lang in LANGS}
 
 
 class QuestionsError(RuntimeError):
@@ -118,13 +135,34 @@ def fetch(url: str | None = None) -> dict[str, dict]:
     return validate(payload)
 
 
+def normalise(rec: dict) -> dict:
+    """One question's text, in the canonical four-part shape.
+
+    A v1 record has ``listen`` and no ``yes``; its sentence moves to ``yes``
+    because that is what it always meant -- what you would hear if the answer
+    were yes. ``no`` and ``why`` stay empty rather than being invented.
+    """
+    out = {}
+    for lang in LANGS:
+        legacy = rec.get(f"listen_{lang}")
+        for part in PARTS:
+            v = rec.get(f"{part}_{lang}")
+            if v is None and part == "yes" and legacy is not None:
+                v = legacy
+            out[f"{part}_{lang}"] = (v or "").strip()
+    return out
+
+
 def validate(payload: object, ids: set[str] | None = None) -> dict[str, dict]:
-    """Every watch id present, every field a non-empty string. Or raise.
+    """Every watch id present, every question a non-empty string. Or raise.
 
     Strict, unlike the answers file, and for the opposite reason: an answer
     that is missing colours nothing and the page renders the row open. A
-    question that is missing renders a headline with no sentence under it,
-    which looks like a bug in the page rather than a gap in the data.
+    question that is missing renders a card with no sentence in it, which looks
+    like a bug in the page rather than a gap in the data.
+
+    ``yes``, ``no`` and ``why`` may be empty -- a v1 file has no way to supply
+    them -- and the card simply omits the part it has nothing for.
     """
     if isinstance(payload, dict) and "questions" in payload:
         payload = payload["questions"]
@@ -142,11 +180,15 @@ def validate(payload: object, ids: set[str] | None = None) -> dict[str, dict]:
         rec = payload[qid]
         if not isinstance(rec, dict):
             raise QuestionsError(f"{qid}: expected an object")
-        for f in FIELDS:
+        for f in FIELDS + ("listen_he", "listen_en"):
             v = rec.get(f)
-            if not isinstance(v, str) or not v.strip():
+            if v is not None and not isinstance(v, str):
+                raise QuestionsError(f"{qid}: {f} must be a string")
+        norm = normalise(rec)
+        for f in REQUIRED:
+            if not norm[f]:
                 raise QuestionsError(f"{qid}: {f} is missing or empty")
-        out[qid] = {f: rec[f].strip() for f in FIELDS}
+        out[qid] = norm
     return out
 
 
@@ -177,10 +219,13 @@ def merge(rows: list[dict], text: dict[str, dict], lang: str,
           unlock_all: bool = False) -> list[dict]:
     """Watch rows with the text attached where the row is open.
 
-    A locked row gets ``locked: true`` and NO text field at all. Not an empty
-    string, not a placeholder: the field is absent, so a page that forgot to
-    check the flag renders nothing rather than something, and a snapshot that
-    leaked would have to leak a field that is not there.
+    A locked row gets ``locked: true`` and none of the four text fields. Not an
+    empty string, not a placeholder: the fields are absent, so a page that
+    forgot to check the flag renders nothing rather than something, and a
+    snapshot that leaked would have to leak a field that is not there.
+
+    An OPEN row omits a part it has nothing for, so the card can tell "this
+    question has no 'no' sentence yet" from "this row is locked".
     """
     fields = LANG_FIELDS[lang]
     unlocked = open_ids(rows, today)
@@ -201,8 +246,10 @@ def merge(rows: list[dict], text: dict[str, dict], lang: str,
         if is_open:
             t = text.get(r["id"])
             if t:
-                row["q"] = t[fields["q"]]
-                row["listen"] = t[fields["listen"]]
+                for part in PARTS:
+                    v = t.get(fields[part], "")
+                    if v:
+                        row[part] = v
         out.append(row)
     return out
 

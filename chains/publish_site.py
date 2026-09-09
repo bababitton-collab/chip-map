@@ -70,6 +70,7 @@ from pathlib import Path
 
 from chains.build_pages import hebrew_runs
 from chains.paths import domain, out_dir, site_dir, site_root
+from chains.questions import FIELDS as QUESTION_FIELDS
 
 # (source in out/, name in site/). The briefs are resolved by glob because
 # their filename carries the build date.
@@ -91,8 +92,12 @@ GATED = ("index.html", "live_en.json")
 PAYWALLED = ("index.html", "he.html", "live.json", "live_en.json",
              "brief.md", "brief-he.md")
 
-# The question sentence and the listen-for line, in both languages.
-FIELDS_CHECKED = ("q_en", "q_he", "listen_en", "listen_he")
+# Every sentence a locked question owns, in both languages. All four parts
+# count: "what no sounds like" is as much the product as the question itself,
+# and a card that leaked only the "why" would still have given the thing away.
+# Taken from chains/questions.py so a fifth part cannot be added there and
+# quietly escape this scan.
+FIELDS_CHECKED = QUESTION_FIELDS
 
 # Shorter than this and a phrase is not evidence of anything: "capex guidance"
 # occurs in prose that has nothing to do with the row it belongs to.

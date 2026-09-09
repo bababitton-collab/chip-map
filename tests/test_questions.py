@@ -27,8 +27,10 @@ ROWS = [
 ]
 TODAY = dt.date(2026, 6, 1)
 
-TEXT = {r["id"]: {"q_he": f"HE q {r['id']}", "listen_he": f"HE listen {r['id']}",
-                  "q_en": f"EN q {r['id']}", "listen_en": f"EN listen {r['id']}"}
+TEXT = {r["id"]: {"q_he": f"HE q {r['id']}", "yes_he": f"HE yes {r['id']}",
+                  "no_he": f"HE no {r['id']}", "why_he": f"HE why {r['id']}",
+                  "q_en": f"EN q {r['id']}", "yes_en": f"EN yes {r['id']}",
+                  "no_en": f"EN no {r['id']}", "why_en": f"EN why {r['id']}"}
         for r in ROWS}
 
 
@@ -102,7 +104,9 @@ def test_with_nothing_upcoming_only_the_past_is_open():
 def test_an_open_row_gets_its_text_in_the_right_language(lang, prefix):
     merged = {r["id"]: r for r in questions.merge(ROWS, TEXT, lang, TODAY)}
     assert merged["next"]["q"] == f"{prefix} q next"
-    assert merged["next"]["listen"] == f"{prefix} listen next"
+    assert merged["next"]["yes"] == f"{prefix} yes next"
+    assert merged["next"]["no"] == f"{prefix} no next"
+    assert merged["next"]["why"] == f"{prefix} why next"
 
 
 @pytest.mark.parametrize("lang", ["he", "en"])
@@ -111,7 +115,7 @@ def test_a_locked_row_has_no_text_field_at_all(lang):
     rather than something, and a leaked snapshot has nothing to leak."""
     merged = {r["id"]: r for r in questions.merge(ROWS, TEXT, lang, TODAY)}
     for rid in ("later", "latest"):
-        assert "q" not in merged[rid] and "listen" not in merged[rid]
+        assert not ({"q", "yes", "no", "why"} & set(merged[rid]))
         assert merged[rid]["locked"] is True and merged[rid]["open"] is False
 
 
@@ -136,8 +140,8 @@ def test_a_missing_question_fails_rather_than_rendering_an_empty_headline():
     assert "no text for" in str(e.value)
 
 
-@pytest.mark.parametrize("field", questions.FIELDS)
-def test_an_empty_field_is_refused(field):
+@pytest.mark.parametrize("field", questions.REQUIRED)
+def test_an_empty_question_is_refused(field):
     bad = dict(TEXT["next"]); bad[field] = "  "
     with pytest.raises(questions.QuestionsError) as e:
         questions.validate({"next": bad}, {"next"})

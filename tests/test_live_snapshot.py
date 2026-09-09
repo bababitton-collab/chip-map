@@ -296,7 +296,8 @@ def test_a_subnode_carries_only_the_number_it_shows():
 def test_answers_default_to_empty_and_are_never_invented(tmp_path,
                                                          monkeypatch):
     """No file, no answers. Not a guess, not a lean, not a default status."""
-    monkeypatch.setenv("CHAINS_DATA_DIR", str(tmp_path))
+    monkeypatch.setenv("CHIP_MAP_OUT", str(tmp_path))
+    monkeypatch.delenv("ANSWERS_URL", raising=False)
     from chains import answers
     assert answers.load(ids={"mu_fq4"}) == {}
 
@@ -314,7 +315,7 @@ def test_a_bad_answer_row_is_dropped_and_the_snapshot_still_builds(tmp_path):
         "nvda_q3": {"status": "probably"},
     }), encoding="utf-8")
 
-    good, problems = answers.read(p, ids={r["id"] for r in WATCH})
+    good, _forecasts, problems = answers.read(p, ids={r["id"] for r in WATCH})
     assert set(good) == {"mu_fq4"}
     assert len(problems) == 1
     assert "nvda_q3" in problems[0] and "probably" in problems[0]
@@ -341,3 +342,42 @@ def test_a_cal_row_can_be_matched_to_a_chokepoint_by_cps():
     make every match fail without erroring."""
     rows = ls.calendar_from(ls.load_watch(), dt.date(2026, 9, 9))
     assert all(isinstance(r["cps"], list) and r["cps"] for r in rows)
+
+
+# -- the ledger --------------------------------------------------------------
+
+@needs_build
+def test_both_snapshots_carry_the_same_ledger():
+    """It is ids, symbols and numbers -- no prose -- so one scoring run serves
+    both files. A ledger that differed between them would be two different
+    records of the same claim."""
+    he, en = ls.build(lang="he"), ls.build(lang="en")
+    assert he["ledger"] == en["ledger"]
+
+
+@needs_build
+def test_the_ledger_is_present_even_with_nothing_marked():
+    """An empty ledger is a valid ledger. The page renders "nothing marked
+    yet"; a missing key would render a broken section."""
+    live = ls.build(ledger={"summary": {"n_scored": 0}, "rows": []})
+    assert "ledger" in live and live["ledger"]["rows"] == []
+
+
+@needs_build
+def test_the_snapshot_stays_under_the_ceiling_with_a_ledger():
+    """The assertion the whole trim ladder exists for. write() refuses to
+    produce an oversized file; this states the invariant at the call site."""
+    for lang in ("he", "en"):
+        blob = ls._dump(ls.build(lang=lang))
+        assert len(blob) < ls.MAX_BYTES, f"{lang} is {len(blob):,} bytes"
+
+
+def test_the_first_rung_sheds_the_per_symbol_series_not_the_basket_one():
+    """Under pressure the detail goes and the claim stays."""
+    assert ls.TRIM_LADDER[0][0] == "ledger per-symbol series"
+    live = {"cps": [], "nodes": [], "ledger": {"rows": [
+        {"series": [1, 2, 3], "symbols": [{"series": [1, 2, 3]}]}]}}
+    ls.TRIM_LADDER[0][1](live)
+    row = live["ledger"]["rows"][0]
+    assert "series" not in row["symbols"][0]
+    assert row["series"] == [1, 2, 3]

@@ -124,6 +124,40 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .autotag{display:inline-block;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);border:1px dashed var(--rule);padding:0 4px;margin-inline-start:6px;vertical-align:middle;font-family:"IBM Plex Mono",monospace}
 .hb .bar i.autohint{outline:1px dashed var(--ink3);outline-offset:1px}
 @media (max-width:820px){.wrow{grid-template-columns:80px minmax(0,1fr)}.wrow .wq,.wrow .ws{grid-column:2}}
+.ledger{padding:18px 22px 6px;border-top:1px solid var(--rule)}
+.ledger h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
+.ledger .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin:0 0 8px}
+.tile{background:var(--bg2);border:1px solid var(--rule);padding:9px 12px}
+.tile b{display:block;font-family:"IBM Plex Mono",monospace;font-size:1.35rem;font-weight:600;direction:ltr;text-align:start}
+.tile span{display:block;font-size:.78rem;color:var(--ink3);margin-top:2px}
+.tile.pos b{color:var(--erode)}.tile.neg b{color:var(--tight)}
+.gate{background:var(--bg2);border:1px solid var(--rule);padding:9px 12px;margin:0 0 14px}
+.gate .bar{height:6px;background:var(--rule);margin-top:6px;position:relative}
+.gate .bar i{position:absolute;inset-block:0;inset-inline-start:0;background:var(--amber);display:block}
+.gate span{font-size:.82rem;color:var(--ink2)}
+.fcard{border:1px solid var(--rule);padding:12px 14px;margin:0 0 10px;background:var(--panel)}
+.fcard .hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.fcard .hd b{font-size:1.05rem}
+.fcard .hd .dt,.fcard .hd .en{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--ink3);direction:ltr}
+.fcard .dir{font-family:"IBM Plex Mono",monospace;font-weight:700}
+.fcard .dir.up{color:var(--erode)}.fcard .dir.dn{color:var(--tight)}
+.fcard .note{color:var(--ink2);font-size:.92rem;margin:6px 0 8px}
+.fcard .note em{color:var(--ink3);font-style:normal}
+.ftab{width:100%;border-collapse:collapse;font-size:.86rem;direction:ltr;margin:4px 0 8px}
+.ftab th{text-align:start;color:var(--ink3);font-weight:600;border-bottom:1px solid var(--rule);padding:3px 6px}
+.ftab td{padding:3px 6px;border-bottom:1px solid var(--rule);font-family:"IBM Plex Mono",monospace}
+.ftab td.name{font-family:Assistant,system-ui,sans-serif}
+.ftab td.pos{color:var(--erode)}.ftab td.neg{color:var(--tight)}
+.ftab tr.lose td.name{color:var(--ink3)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{border:1px solid var(--rule);padding:2px 8px;font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--ink3)}
+.chip.on{color:var(--ink);border-color:var(--ink3)}
+.chip.hit{border-color:var(--erode);color:var(--erode)}
+.chip.miss{border-color:var(--tight);color:var(--tight)}
+.fspark{margin-top:8px}
+.fspark svg{width:100%;height:44px;display:block}
+.pending{color:var(--amber);font-family:"IBM Plex Mono",monospace;font-size:.82rem}
 .board{padding:18px 22px 6px;border-top:1px solid var(--rule)}
 .board h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
 .board .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 10px}
@@ -191,6 +225,12 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 <div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>מדליף → שאלה</span></div>
 <div class="bwrap" id="bwrap"><div class="btip" id="btip"></div></div>
 <div class="hints" id="hints"></div>
+</div>
+<div class="ledger" id="ledger">
+<h2>יומן התחזיות</h2>
+<p class="lede">כל תשובה שסומנה הופכת לרישום: הסלים נקבעו מראש בקובץ שבגיט, לפני האירוע, והציון נמדד מהסגירה הראשונה שאחרי הסימון מול שאר המפה. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>
+<div id="ltiles"></div>
+<div id="lcards"></div>
 </div>
 <div class="watch" id="watch">
 <h2>שאלות עם תאריך</h2>
@@ -416,6 +456,77 @@ const BOARD={statuses:{},render(){}};
     hints.innerHTML=h;
   }
   BOARD.render=board; board();
+})();
+
+// ---- the forecast ledger ----
+(function(){
+  const L = D.ledger||{}; const S = L.summary||null; const rows = L.rows||[];
+  const tiles = document.getElementById('ltiles'), cards = document.getElementById('lcards');
+  if(!tiles||!cards) return;
+  // STATUS is declared inside the board and the watch closures, and neither is
+  // visible here. Its own copy, rather than hoisting theirs into a scope two
+  // other sections would then share by accident.
+  const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};
+  const LT = {h2:'יומן התחזיות', none:'עוד לא סומנה אף תשובה. הרישום הראשון ייפתח כאן ברגע שתסומן.',
+    scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',
+    entry:'כניסה', close:'אחרון', gate:'N=30 לפני כל החלטת הון', of:'מתוך',
+    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',
+    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',
+    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון'};
+  const p2 = v => v==null? '—' : ((v>0?'+':'')+(v*100).toFixed(2)+'%');
+  const sgn = v => v==null? '' : (v>0?'pos':(v<0?'neg':''));
+  if(!rows.length){
+    tiles.innerHTML = `<p class="lede">${LT.none}</p>`;
+    if(S) tiles.innerHTML += gate(S);
+    cards.innerHTML=''; return;
+  }
+  function gate(S){
+    const n = S.horizons['5'].n, pctv = Math.min(100, Math.round(100*n/S.min_n));
+    return `<div class="gate"><span>${LT.gate} — ${n} ${LT.of} ${S.min_n}</span>
+      <div class="bar"><i style="width:${pctv}%"></i></div></div>`;
+  }
+  const H = ['5','10','20'];
+  tiles.innerHTML = `<div class="tiles">
+    <div class="tile"><b>${S.n_scored}</b><span>${LT.scored}</span></div>
+    ${H.map(h=>{const d=S.horizons[h]; return `<div class="tile"><b>${d.hit_rate==null?'—':Math.round(d.hit_rate*100)+'%'}</b><span>${LT.rate} ${h} (N=${d.n})</span></div>`;}).join('')}
+    ${H.map(h=>{const d=S.horizons[h]; return `<div class="tile ${sgn(d.mean_excess)}"><b>${p2(d.mean_excess)}</b><span>${LT.mean} ${h}</span></div>`;}).join('')}
+    <div class="tile"><b>${S.n_pending}</b><span>${LT.pending}</span></div>
+  </div>` + gate(S);
+
+  const byQ = {}; (D.watch||LIVE.watch||[]).forEach(w=>byQ[w.id]=w);
+  const nameOf = id => (byId[id]&&byId[id].short) || id.toUpperCase();
+  function spark(series){
+    const s = (series||[]).filter(v=>v!=null); if(s.length<2) return '';
+    const W=600,Hh=40, lo=Math.min(0,...s), hi=Math.max(0,...s);
+    const y = v => 4 + (1-(v-lo)/((hi-lo)||1))*(Hh-8);
+    const d = s.map((v,i)=>(i?'L':'M')+(i/(s.length-1)*W).toFixed(1)+' '+y(v).toFixed(1)).join('');
+    const col = s[s.length-1]>=0 ? tok('--erode') : tok('--tight');
+    return `<div class="fspark"><svg viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none" direction="ltr">
+      <line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="#ffffff22" stroke-dasharray="3 3"/>
+      <path d="${d}" fill="none" stroke="${col}" stroke-width="1.8"/></svg></div>`;
+  }
+  cards.innerHTML = rows.map(r=>{
+    const w = byQ[r.qid]||{}; const a = (D.answers||{})[r.qid]||{};
+    const dir = r.direction>0 ? `<span class="dir up">▲ ${LT.dirUp}</span>`
+                              : `<span class="dir dn">▼ ${LT.dirDn}</span>`;
+    if(r.pending_entry) return `<div class="fcard"><div class="hd"><b>${w.who||r.qid}</b>
+      <span class="dt">${LT.marked} ${String(r.marked_at).slice(0,10)}</span>${dir}</div>
+      <div class="note"><span class="pending">${LT.pend} — ${LT.noentry}</span></div></div>`;
+    const chips = H.map(h=>{const d=r.horizons[h];
+      return `<span class="chip ${d? (d.hit?'hit':'miss') : ''}">${h}: ${d? p2(d.excess) : LT.pend}</span>`;}).join('');
+    const tbl = (r.symbols||[]).map(x=>`<tr class="${x.side}">
+      <td class="name">${nameOf(x.id)}</td><td>${x.sym}</td>
+      <td>${x.entry==null?'—':x.entry}</td><td>${x.last==null?'—':x.last}</td>
+      <td class="${sgn(x.ret)}">${p2(x.ret)}</td><td class="${sgn(x.exc)}">${p2(x.exc)}</td></tr>`).join('');
+    return `<div class="fcard">
+      <div class="hd"><b>${w.who||r.qid}</b>
+        <span class="dt">${LT.marked} ${String(r.marked_at).slice(0,10)} · ${LT.entry} ${r.entry_session} · ${LT.close} ${r.entry_close} · ${r.sessions} ${LT.sess}</span>
+        ${dir}</div>
+      <div class="note">${STATUS[r.status]||r.status}${a.note?` — ${a.note}`:''}${a.updated?` <em>(${LT.src} ${String(a.updated).slice(0,10)})</em>`:''}</div>
+      <div class="chips">${chips}</div>
+      <table class="ftab"><tr><th>${LT.sym}</th><th></th><th>${LT.ent}</th><th>${LT.last}</th><th>${LT.ret}</th><th>${LT.exc}</th></tr>${tbl}</table>
+      ${spark(r.series)}</div>`;
+  }).join('');
 })();
 
 // ---- dated questions (watchlist) ----

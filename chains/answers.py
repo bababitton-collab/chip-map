@@ -2,6 +2,19 @@
 
     python -m chains.answers        # check the file and print what is in it
 
+TWO THINGS CROSS, NOT ONE
+-------------------------
+The payload carries ``answers`` -- what was marked -- and ``forecasts``, the
+record of each mark being turned into a dated, directional claim. They are
+validated separately and neither can fail the build.
+
+A forecast is only a forecast if its baskets were fixed BEFORE the event. They
+are: they live in data/watch.json, in git, with a commit date. So the incoming
+row's baskets are not used to score anything -- they are compared against the
+registered ones, and a row whose baskets have drifted is dropped and named. A
+forward test whose hypothesis can be edited after the fact is a backtest
+wearing a disguise, and this is the check that stops that happening quietly.
+
 THE GAP THIS BRIDGES
 --------------------
 The private artifact writes each answer into its own database collection
@@ -59,6 +72,21 @@ FIELDS = frozenset({"status", "note", "updated", "auto"})
 
 MAX_NOTE = 300          # what the page's input caps a note at
 
+# A forecast is made only where the answer points somewhere. "mixed" and "none"
+# are real answers and they are not directions: a question that was answered
+# ambiguously, or not disclosed, supports no claim about which basket should
+# outrun which. Rows carrying them are skipped, not failed.
+DIRECTIONAL = frozenset({"yes", "no"})
+
+FORECAST_FIELDS = frozenset({"id", "qid", "marked_at", "status", "direction",
+                             "win", "lose", "benchmark", "horizons"})
+
+# +1: the win basket is expected to outrun the lose basket. -1: reversed.
+DIRECTIONS = {1: 1, -1: -1, "long": 1, "short": -1}
+
+BENCHMARK = "EW_MAP"
+HORIZONS = (5, 10, 20)
+
 # The answers may arrive as a file or as a URL. A share link is a redirect
 # chain, so redirects are followed; and it is somebody else's server, so it
 # gets a short timeout and no ability to fail the build.
@@ -114,6 +142,104 @@ def check_row(qid: str, rec: object, ids: set[str]) -> str | None:
     return None
 
 
+def registered_baskets() -> dict[str, tuple[list[str], list[str]]]:
+    """The win/lose lists as committed in data/watch.json.
+
+    This is the pre-registration. It is in git with a commit date, which is
+    what makes a claim scored against it a forward test rather than a story
+    told afterwards.
+    """
+    rows = json.loads(watch_path().read_text(encoding="utf-8"))
+    return {r["id"]: (list(r.get("win") or []), list(r.get("lose") or []))
+            for r in rows}
+
+
+def check_forecast(rec: object, ids: set[str],
+                   baskets: dict[str, tuple[list, list]]) -> str | None:
+    """The reason this forecast cannot be used, or None if it can."""
+    if not isinstance(rec, dict):
+        return f"expected an object, got {type(rec).__name__}"
+    fid = rec.get("id")
+    if not isinstance(fid, str) or not fid:
+        return "no id"
+    extra = sorted(set(rec) - FORECAST_FIELDS)
+    if extra:
+        return f"{fid}: unexpected field(s) {extra}"
+    qid = rec.get("qid")
+    if qid not in ids:
+        return f"{fid}: qid {qid!r} is not a question in the watch list"
+    status = rec.get("status")
+    if status not in STATUSES:
+        return f"{fid}: status {status!r} is not one of {sorted(STATUSES)}"
+    if status not in DIRECTIONAL:
+        return (f"{fid}: status {status!r} supports no direction -- "
+                f"no forecast is made from it")
+    if rec.get("direction") not in DIRECTIONS:
+        return (f"{fid}: direction {rec.get('direction')!r} is not one of "
+                f"{sorted(DIRECTIONS, key=str)}")
+    marked = rec.get("marked_at")
+    if not isinstance(marked, str):
+        return f"{fid}: marked_at must be an ISO string"
+    try:
+        _iso(marked)
+    except ValueError:
+        return f"{fid}: marked_at {marked!r} is not an ISO date"
+    for side in ("win", "lose"):
+        v = rec.get(side)
+        if not isinstance(v, list) or not all(isinstance(x, str) for x in v):
+            return f"{fid}: {side} must be a list of ids"
+    if rec.get("benchmark") != BENCHMARK:
+        return (f"{fid}: benchmark {rec.get('benchmark')!r} is not "
+                f"{BENCHMARK!r}; nothing here scores against anything else")
+    h = rec.get("horizons")
+    if h is not None and list(h) != list(HORIZONS):
+        return f"{fid}: horizons {h!r} are not {list(HORIZONS)}"
+    reg_win, reg_lose = baskets.get(qid, ([], []))
+    if (list(rec["win"]), list(rec["lose"])) != (reg_win, reg_lose):
+        return (f"{fid}: baskets do not match the ones registered for {qid} "
+                f"in the watch list. Registered win={reg_win} lose={reg_lose}; "
+                f"received win={rec['win']} lose={rec['lose']}. A forecast "
+                f"whose hypothesis moved after the event is not a forecast.")
+    return None
+
+
+def collect_forecasts(rows: object, ids: set[str] | None = None,
+                      baskets: dict | None = None
+                      ) -> tuple[list[dict], list[str]]:
+    """The usable forecasts and the reasons the rest were dropped."""
+    if rows is None:
+        return [], []
+    if not isinstance(rows, list):
+        return [], [f"forecasts must be a list, got {type(rows).__name__}"]
+    ids = known_ids() if ids is None else ids
+    baskets = registered_baskets() if baskets is None else baskets
+    good: list[dict] = []
+    problems: list[str] = []
+    seen: set[str] = set()
+    for rec in rows:
+        why = check_forecast(rec, ids, baskets)
+        if why:
+            problems.append(why)
+            continue
+        if rec["id"] in seen:
+            problems.append(f"{rec['id']}: duplicate forecast id")
+            continue
+        seen.add(rec["id"])
+        good.append({
+            "id": rec["id"], "qid": rec["qid"], "marked_at": rec["marked_at"],
+            "status": rec["status"],
+            "direction": DIRECTIONS[rec["direction"]],
+            # The REGISTERED baskets, not the received ones. They were just
+            # proved equal; using the registered copy means the thing scored
+            # is the thing in git even if that check is ever loosened.
+            "win": list(baskets[rec["qid"]][0]),
+            "lose": list(baskets[rec["qid"]][1]),
+            "benchmark": BENCHMARK, "horizons": list(HORIZONS),
+        })
+    good.sort(key=lambda r: (r["marked_at"], r["id"]))
+    return good, problems
+
+
 def collect(raw: object, ids: set[str]) -> tuple[dict[str, dict], list[str]]:
     """Split the file into the rows that can be used and the reasons the rest
     cannot. Never raises: a caller mid-pipeline has nothing useful to do with
@@ -134,8 +260,8 @@ def collect(raw: object, ids: set[str]) -> tuple[dict[str, dict], list[str]]:
     return good, problems
 
 
-def read_url(url: str, ids: set[str]) -> tuple[dict[str, dict], list[str]]:
-    """GET the answers from a URL. Never raises, never fails the build.
+def _fetch(url: str) -> tuple[object, list[str]]:
+    """GET the payload from a URL. Never raises, never fails the build.
 
     The URL is a share link, which is a redirect chain ending at somebody
     else's file server. Three things follow, and all three are deliberate:
@@ -150,79 +276,102 @@ def read_url(url: str, ids: set[str]) -> tuple[dict[str, dict], list[str]]:
     try:
         import httpx
     except ImportError:                                   # pragma: no cover
-        return {}, ["httpx is not installed -- cannot fetch ANSWERS_URL"]
+        return None, ["httpx is not installed -- cannot fetch ANSWERS_URL"]
     try:
         r = httpx.get(url, timeout=HTTP_TIMEOUT, follow_redirects=True)
         if r.status_code != 200:
-            return {}, [f"ANSWERS_URL returned HTTP {r.status_code} "
-                        f"-- no answers read"]
-        raw = r.json()
+            return None, [f"ANSWERS_URL returned HTTP {r.status_code} "
+                          f"-- nothing read"]
+        return r.json(), []
     except ValueError:
         # A share link that has lost its permission serves an HTML sign-in
         # page with a 200. That is the common failure and it is not JSON.
-        return {}, ["ANSWERS_URL did not return JSON (a share link that is no "
-                    "longer public serves HTML with a 200) -- no answers read"]
+        return None, ["ANSWERS_URL did not return JSON (a share link that is "
+                      "no longer public serves HTML with a 200) -- "
+                      "nothing read"]
     except Exception as e:                                # noqa: BLE001
-        return {}, [f"ANSWERS_URL unreachable ({type(e).__name__}: "
-                    f"{str(e)[:120]}) -- no answers read"]
-    return collect(raw, ids)
+        return None, [f"ANSWERS_URL unreachable ({type(e).__name__}: "
+                      f"{str(e)[:120]}) -- nothing read"]
+
+
+def _split(raw: object) -> tuple[object, object]:
+    """The payload's two halves, in either shape.
+
+    The exporter used to publish a bare mapping of answers. It now publishes
+    {"answers": ..., "forecasts": ...}. Both are accepted, because the old
+    shape is still what a hand-written file looks like and there is no reason
+    to make that an error.
+    """
+    if isinstance(raw, dict) and ("answers" in raw or "forecasts" in raw):
+        return raw.get("answers"), raw.get("forecasts")
+    return raw, None
 
 
 def read(path: Path | None = None, ids: set[str] | None = None,
-         url: str | None = None) -> tuple[dict[str, dict], list[str]]:
-    """The answers and the problems, from whichever source is configured.
+         url: str | None = None
+         ) -> tuple[dict[str, dict], list[dict], list[str]]:
+    """(answers, forecasts, problems), from whichever source is configured.
 
-    A URL wins when one is set, because in CI there is no file: the cloud job
-    that marks the answers publishes them, and this build fetches them. The
-    file path stays for a local run and for the case where the export is
-    dropped next to the build instead of served.
+    A URL wins when one is set, because in CI there is no file: the job that
+    marks the answers publishes them, and this build fetches them. The file
+    path stays for a local run and for the case where the export is dropped
+    next to the build instead of served.
 
     Neither source being present is not a problem. It is the normal state
-    before the first export, and "no answer is known" is what an empty dict
-    says.
+    before the first export.
     """
     ids = known_ids() if ids is None else ids
     url = url if url is not None else answers_url()
     if url:
-        return read_url(url, ids)
-    p = path or answers_path()
-    if not p.exists():
-        return {}, []
-    try:
-        raw = json.loads(p.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        # The exporting job wrote something unparseable. Worth shouting about,
-        # and still not worth losing the whole build over.
-        return {}, [f"{p} is not valid JSON ({e}) -- no answers read"]
-    return collect(raw, ids)
+        raw, problems = _fetch(url)
+    else:
+        p = path or answers_path()
+        if not p.exists():
+            return {}, [], []
+        try:
+            raw, problems = json.loads(p.read_text(encoding="utf-8")), []
+        except json.JSONDecodeError as e:
+            # The exporting job wrote something unparseable. Worth shouting
+            # about, and still not worth losing the whole build over.
+            return {}, [], [f"{p} is not valid JSON ({e}) -- nothing read"]
+    if problems:
+        return {}, [], problems
+    a_raw, f_raw = _split(raw)
+    answers, a_problems = collect(a_raw or {}, ids)
+    forecasts, f_problems = collect_forecasts(f_raw, ids)
+    return answers, forecasts, a_problems + f_problems
 
 
 def load(path: Path | None = None, ids: set[str] | None = None,
          on_problem=None, url: str | None = None) -> dict[str, dict]:
-    """The usable answers. Every dropped row is reported, then skipped."""
-    good, problems = read(path, ids, url)
+    """Just the answers. Every dropped row is reported, then skipped."""
+    answers, _forecasts, problems = read(path, ids, url)
     report = print if on_problem is None else on_problem
     for why in problems:
         report(f"  answers: DROPPED {why}")
-    return good
+    return answers
 
 
 def main() -> int:
     url = answers_url()
     src = url or answers_path()
     if not url and not answers_path().exists():
-        print(f"{src}: absent -- no answer is known yet, which is not an error")
+        print(f"{src}: absent -- nothing marked yet, which is not an error")
         return 0
-    good, problems = read()
-    print(f"{src}: {len(good)} usable, {len(problems)} dropped")
+    answers, forecasts, problems = read()
+    print(f"{src}: {len(answers)} answers, {len(forecasts)} forecasts, "
+          f"{len(problems)} dropped")
     by: dict[str, int] = {}
-    for rec in good.values():
+    for rec in answers.values():
         by[rec["status"]] = by.get(rec["status"], 0) + 1
     for k in sorted(by):
         print(f"  {k:<6} {by[k]}")
-    n_auto = sum(1 for r in good.values() if r["auto"])
+    n_auto = sum(1 for r in answers.values() if r["auto"])
     if n_auto:
         print(f"  {n_auto} of them marked auto")
+    for f in forecasts:
+        print(f"  forecast {f['id']:<18} {f['qid']:<12} {f['status']:<5} "
+              f"dir {f['direction']:+d}  marked {f['marked_at'][:10]}")
     for why in problems:
         print(f"  DROPPED {why}", file=sys.stderr)
     # Loud by hand, quiet in the pipeline. A broken exporter should fail the

@@ -5,7 +5,7 @@
 
 Writes a CANDIDATE map to <root>/chains/out/semi_chain_v2.1_candidate.json.
 Nothing touches the tracked map until the report is accepted; point
-CHAINS_MAP_PATH at the candidate to try it.
+CHIP_MAP_PATH at the candidate to try it.
 
 Each entry gains:
     price_symbol       the symbol actually priced, or null
@@ -294,7 +294,7 @@ def main() -> int:
         p.write_text(json.dumps(cand, indent=1, ensure_ascii=False),
                      encoding="utf-8")
         print(f"wrote candidate map {p}")
-        print("  try it with:  set CHAINS_MAP_PATH=" + str(p))
+        print("  try it with:  set CHIP_MAP_PATH=" + str(p))
     return 0
 
 

@@ -207,3 +207,48 @@ def test_the_public_page_leaves_no_reference_to_the_table_it_removed(tmp_path):
     bp.build_public_en(live=LIVE_EN, out=out)
     page = out.read_text(encoding="utf-8")
     assert "WT.auto" not in page and "const WT" not in page
+
+
+# -- the forecast ledger -----------------------------------------------------
+
+def test_the_hebrew_template_has_the_ledger_section():
+    t = HE_TEMPLATE.read_text(encoding="utf-8")
+    assert 'id="ltiles"' in t and 'id="lcards"' in t
+    assert "יומן התחזיות" in t
+
+
+def test_the_english_template_has_the_ledger_in_english():
+    t = EN_TEMPLATE.read_text(encoding="utf-8")
+    assert "The Forecast Ledger" in t
+    assert "N=30 before any capital decision" in t
+    assert bp.hebrew_runs(t) == []
+
+
+def test_the_ledger_never_prints_the_question_text():
+    """The ledger names the question and shows the answer that was marked. The
+    question itself is the product boundary and it is not in this section --
+    on either page, so the public build does not have to strip it."""
+    t = HE_TEMPLATE.read_text(encoding="utf-8")
+    i, j = t.index("// ---- the forecast ledger ----"), t.index(
+        "// ---- dated questions (watchlist) ----")
+    assert "${w.q}" not in t[i:j]
+
+
+@needs_live
+def test_the_public_english_page_carries_the_ledger(tmp_path):
+    out = tmp_path / "public-map-en.html"
+    bp.build_public_en(live=LIVE_EN, out=out)
+    page = out.read_text(encoding="utf-8")
+    assert "The Forecast Ledger" in page and 'id="lcards"' in page
+    assert bp.hebrew_runs(page) == []
+
+
+@needs_live
+def test_the_ledger_survives_the_public_build_intact(tmp_path):
+    """It sits before the block the teaser replaces. A splice that swallowed
+    it would leave a page that still loads and has quietly lost the record."""
+    out = tmp_path / "public-map.html"
+    bp.build_public_he(live=out_dir() / bp.LIVE_HE, out=out)
+    page = out.read_text(encoding="utf-8")
+    assert "// ---- the forecast ledger ----" in page
+    assert 'id="ltiles"' in page

@@ -46,7 +46,7 @@ def test_a_missing_file_is_an_empty_dict_not_a_failure(tmp_path):
 
 
 def test_a_missing_file_reports_no_problem(tmp_path):
-    assert answers.read(tmp_path / "nope.json", ids=IDS) == ({}, [])
+    assert answers.read(tmp_path / "nope.json", ids=IDS) == ({}, [], [])
 
 
 def test_an_empty_file_is_an_empty_dict(tmp_path):
@@ -203,3 +203,141 @@ def test_a_non_boolean_auto_is_dropped_and_named(tmp_path):
 
 def test_auto_is_an_accepted_field_not_an_unexpected_one():
     assert "auto" in answers.FIELDS
+
+
+# -- forecasts: the pre-registration is the whole point ----------------------
+# A forecast is only a forecast if its baskets were fixed before the event.
+# They are, in data/watch.json, in git, with a commit date. So an incoming row
+# is checked against that copy and its own baskets are never used to score
+# anything. A forward test whose hypothesis can be edited afterwards is a
+# backtest wearing a disguise.
+
+BASKETS = {"mu_fq4": (["mu"], ["skhynix", "samsung"]),
+           "nvda_q3": (["tsmc", "skhynix", "mu"], [])}
+FIDS = set(BASKETS)
+
+
+def forecast_row(**over):
+    r = {"id": "f1", "qid": "mu_fq4", "marked_at": "2026-09-30T21:05:00Z",
+         "status": "yes", "direction": 1, "win": ["mu"],
+         "lose": ["skhynix", "samsung"], "benchmark": "EW_MAP",
+         "horizons": [5, 10, 20]}
+    r.update(over)
+    return r
+
+
+def collect_f(rows):
+    return answers.collect_forecasts(rows, FIDS, BASKETS)
+
+
+def test_a_well_formed_forecast_survives():
+    good, log = collect_f([forecast_row()])
+    assert len(good) == 1 and log == []
+    assert good[0]["direction"] == 1 and good[0]["qid"] == "mu_fq4"
+
+
+def test_baskets_that_drifted_from_the_registered_ones_are_refused():
+    """The check the forward test rests on. A row that quietly added a name to
+    the winning side would be scoring a hypothesis nobody committed."""
+    good, log = collect_f([forecast_row(win=["mu", "nvda"])])
+    assert good == []
+    assert "do not match the ones registered" in log[0]
+    assert "not a forecast" in log[0]
+
+
+def test_the_registered_baskets_are_what_gets_scored():
+    """Not the received copy. They were just proved equal; using the git copy
+    means the thing scored is the thing in git even if that check is loosened."""
+    good, _ = collect_f([forecast_row()])
+    assert good[0]["win"] == BASKETS["mu_fq4"][0]
+    assert good[0]["lose"] == BASKETS["mu_fq4"][1]
+
+
+@pytest.mark.parametrize("status", ["mixed", "none"])
+def test_an_ambiguous_answer_supports_no_forecast(status):
+    """"Partial" and "not disclosed" are real answers and neither points
+    anywhere. A direction taken from one would be invented."""
+    good, log = collect_f([forecast_row(status=status)])
+    assert good == [] and "supports no direction" in log[0]
+
+
+def test_an_unknown_direction_is_refused():
+    good, log = collect_f([forecast_row(direction="sideways")])
+    assert good == [] and "direction" in log[0]
+
+
+@pytest.mark.parametrize("given,want", [(1, 1), (-1, -1),
+                                        ("long", 1), ("short", -1)])
+def test_a_direction_is_normalised_to_plus_or_minus_one(given, want):
+    good, _ = collect_f([forecast_row(direction=given)])
+    assert good[0]["direction"] == want
+
+
+def test_a_qid_that_is_not_a_question_is_refused():
+    good, log = collect_f([forecast_row(qid="nope_q9")])
+    assert good == [] and "not a question" in log[0]
+
+
+def test_another_benchmark_is_refused():
+    """Nothing here scores against anything but EW_MAP, so a row naming
+    something else is a row this build cannot honour."""
+    good, log = collect_f([forecast_row(benchmark="SPX")])
+    assert good == [] and "EW_MAP" in log[0]
+
+
+def test_different_horizons_are_refused():
+    good, log = collect_f([forecast_row(horizons=[1, 3])])
+    assert good == [] and "horizons" in log[0]
+
+
+def test_a_bad_marked_at_is_refused():
+    good, log = collect_f([forecast_row(marked_at="30/09/2026")])
+    assert good == [] and "marked_at" in log[0]
+
+
+def test_a_duplicate_forecast_id_is_refused():
+    good, log = collect_f([forecast_row(), forecast_row()])
+    assert len(good) == 1 and "duplicate" in log[0]
+
+
+def test_one_bad_forecast_does_not_take_the_good_one_with_it():
+    good, log = collect_f([forecast_row(),
+                           forecast_row(id="f2", qid="nvda_q3",
+                                        win=["tsmc"], lose=[])])
+    assert [g["id"] for g in good] == ["f1"] and len(log) == 1
+
+
+def test_forecasts_are_returned_oldest_first():
+    good, _ = collect_f([
+        forecast_row(id="b", marked_at="2026-10-15T00:00:00Z"),
+        forecast_row(id="a", marked_at="2026-09-30T00:00:00Z"),
+    ])
+    assert [g["id"] for g in good] == ["a", "b"]
+
+
+def test_a_forecasts_value_that_is_not_a_list_is_refused():
+    good, log = collect_f({"nope": 1})
+    assert good == [] and "must be a list" in log[0]
+
+
+# -- the payload's two shapes -----------------------------------------------
+
+def test_the_new_shape_carries_both_halves(tmp_path):
+    p = write(tmp_path, {"answers": {"mu_fq4": {"status": "yes"}},
+                         "forecasts": []})
+    a, f, problems = answers.read(p, ids=IDS)
+    assert set(a) == {"mu_fq4"} and f == [] and problems == []
+
+
+def test_the_old_bare_shape_is_still_read(tmp_path):
+    """A hand-written file looks like this, and there is no reason to make
+    that an error."""
+    p = write(tmp_path, {"mu_fq4": {"status": "yes"}})
+    a, f, problems = answers.read(p, ids=IDS)
+    assert set(a) == {"mu_fq4"} and f == [] and problems == []
+
+
+def test_forecasts_alone_is_a_valid_payload(tmp_path):
+    p = write(tmp_path, {"forecasts": []})
+    a, f, problems = answers.read(p, ids=IDS)
+    assert a == {} and f == [] and problems == []

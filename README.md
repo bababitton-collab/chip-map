@@ -11,8 +11,19 @@ question leaks part of the answer first. Every number carries a source URL;
 where no source was found the figure is marked **estimate**, and estimates are
 never quietly upgraded into facts.
 
-The whole thing rebuilds itself every Saturday on GitHub Actions and serves
-itself from GitHub Pages. `python -m chains.build_all` runs eight steps in
+Marked answers become a **forecast ledger**: the baskets that gain and lose are
+pre-registered in `data/watch.json`, in git, before the event; the score runs
+from the first close after the mark against an equal-weight index of the whole
+map, at 5, 10 and 20 sessions. It is a forward test and it cannot be anything
+else — a row whose baskets differ from the registered ones is refused. The
+sample is small and every number carries its N, with `no capital decision below
+N=30` attached to the summary at every horizon.
+
+The whole thing rebuilds itself after every US session (05:30 UTC, Tue-Sat) on
+GitHub Actions and serves itself from GitHub Pages. The two snapshots are also
+force-pushed to an orphan `live` branch, so the current one is readable at
+`https://raw.githubusercontent.com/bababitton-collab/chip-map/live/live.json`
+without going through Pages. `python -m chains.build_all` runs eight steps in
 dependency order — prices, repair, page, fundamentals, live, pages, and the two
 briefs — and each one fails the run, because a green build that quietly served
 a fortnight-old snapshot would be worse than a red one. Prices come from EODHD
@@ -46,6 +57,7 @@ so two lines can be compared in shape but never in level.
 | `out/` | derived output — prices, snapshots, pages, briefs. Gitignored |
 | `site/` | what Pages serves, assembled by `chains/publish_site.py`. Gitignored |
 | `tests/` | the suite, including the isolation check described below |
+| `tools/tour/` | `render_tour.py`, which renders the map's tour mode to video. Run by hand, needs Chrome and ffmpeg, not part of CI; it drives the frozen page beside it because the templates carry no tour overlay |
 
 Everything is configured by environment, with defaults relative to the
 repository root, so a fresh clone builds with no configuration but the token:

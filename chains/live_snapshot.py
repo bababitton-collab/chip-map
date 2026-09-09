@@ -28,6 +28,12 @@ is the source and the inline copy is the fallback the page uses when the fetch
 fails. ``cal`` stays lean and stays separate: it is the marker layer, and it is
 filtered by date in a way the full list is not.
 
+``ledger`` rides along too: the forecast ledger from chains/forecast.py,
+{summary, rows}. It is language-neutral -- ids, symbols and numbers, no prose --
+so one build serves both files. It is the first thing trimmed when the snapshot
+is over its ceiling, and the per-symbol sparklines go before the basket ones:
+the basket line is the claim, the per-symbol lines are the detail behind it.
+
 ``answers`` rides along with it: {question_id: {status, note, updated}}, read
 from <root>/chains/answers.json, or {} when that file has not been exported
 yet. The page reads it as the fallback status for each question, which is what
@@ -64,7 +70,7 @@ import json
 from pathlib import Path
 
 from chains import answers as answers_mod
-from chains import en_data, mapfile, prices
+from chains import en_data, forecast, mapfile, prices
 from chains.paths import out_dir, watch_en_path, watch_path
 
 # DECIMAL, not binary. "250 KB" could mean 250,000 or 256,000 and the two
@@ -258,12 +264,13 @@ def price_block(symbol: str, today: dt.date, cache: dict):
 
 # ---------------------------------------------------------------- the snapshot
 def build(today: dt.date | None = None, lang: str = "he",
-          answers: dict | None = None) -> dict:
+          answers: dict | None = None, ledger: dict | None = None) -> dict:
     """One snapshot, in one language.
 
-    ``answers`` is read here when not supplied, so a direct call works. main()
-    reads it once and passes it to both builds, because reading it twice would
-    print every dropped row twice and say nothing new the second time.
+    ``answers`` and ``ledger`` are read/built here when not supplied, so a
+    direct call works. main() does both once and passes them to both builds:
+    reading twice would print every dropped row twice and say nothing new the
+    second time, and scoring twice would load the whole price store twice.
     """
     today = today or dt.date.today()
     L = LANG[lang]
@@ -406,12 +413,15 @@ def build(today: dt.date | None = None, lang: str = "he",
     cal = calendar_from(watch, today)
     if answers is None:
         answers = answers_mod.load(ids={r["id"] for r in watch})
+    if ledger is None:
+        _a, forecasts, _p = answers_mod.read(ids={r["id"] for r in watch})
+        ledger = forecast.build(forecasts, m)
 
     return {
         "as_of": today.isoformat(), "map_version": m.get("version"),
         "nodes": nodes, "edges": edges, "flows": flows, "cps": cps,
         "fund": fund, "cal": cal, "watch": watch,
-        "answers": answers,
+        "answers": answers, "ledger": ledger,
         "last_price_date": max((p["last"] for p in cache.values() if p),
                                default=None),
     }
@@ -425,13 +435,17 @@ def _dump(live: dict) -> bytes:
 
 # Cheapest cut first, and "cheapest" is measured in what a reader loses.
 #
-# ``flows`` goes first because the page does not read it: it is layer-to-layer
+# The ledger's per-symbol sparklines go first: they are the detail behind a
+# claim whose own line is kept, so losing them costs a reader the breakdown and
+# not the finding. Then ``flows``, because the page does not read it: it is layer-to-layer
 # dollar totals kept for a chart that was never built, so dropping it costs the
 # reader nothing at all. The blurbs go second -- they are the one piece of prose
 # on the page that repeats what the panel below already says, and a truncated
 # blurb still names the companies. Only then do the rungs that were here before
 # start cutting into text that is the only place its fact appears.
 TRIM_LADDER = [
+    ("ledger per-symbol series", lambda L: forecast.drop_symbol_series(
+        L.get("ledger") or {})),
     ("drop flows", lambda L: L.pop("flows", None)),
     ("blurb ->150", lambda L: _cap_cp(L, "blurb", 150)),
     ("blurb ->90", lambda L: _cap_cp(L, "blurb", 90)),
@@ -495,15 +509,22 @@ def main() -> int:
     # Read once, log once, embed in both. A dropped row is printed here and
     # the run continues on the rows that survived -- see chains/answers.py for
     # why a bad row must not cost the whole Saturday chain.
-    good, problems = answers_mod.read()
+    good, forecasts, problems = answers_mod.read()
     for why in problems:
-        print(f"  answers.json: DROPPED {why}")
+        print(f"  answers: DROPPED {why}")
     if problems:
-        print(f"  answers.json: {len(good)} usable, {len(problems)} dropped")
+        print(f"  answers: {len(good)} answers, {len(forecasts)} forecasts, "
+              f"{len(problems)} dropped")
+
+    # Scored once. The ledger carries no prose, so both languages share it.
+    log: list[str] = []
+    ledger = forecast.build(forecasts, log=log)
+    for line in log:
+        print(f"  ledger: {line}")
 
     first = None
     for lang in LANG:
-        live = build(lang=lang, answers=good)
+        live = build(lang=lang, answers=good, ledger=ledger)
         p, size, applied = write(live, out_dir() / LANG[lang]["file"])
         # Belt and braces. write() already refuses to produce an oversized
         # file; this says out loud, at the call site, what the invariant is.
@@ -513,7 +534,9 @@ def main() -> int:
         if applied:
             print(f"  trimmed: {', '.join(applied)}")
         print(f"  watch {len(live['watch'])} rows  "
-              f"answers {len(live['answers'])}  calendar {len(live['cal'])}")
+              f"answers {len(live['answers'])}  calendar {len(live['cal'])}  "
+              f"ledger {len(live['ledger']['rows'])} scored, "
+              f"{live['ledger']['summary']['n_pending']} pending")
         first = first or live
 
     live = first

@@ -1,11 +1,12 @@
 name: build
 
-# Saturday 05:00 UTC, and on demand. The map is a weekly object: prices are
-# weekly closes and the dated questions move on a calendar of quarters, so a
-# daily build would spend a vendor quota to redraw the same picture.
+# 05:30 UTC Tuesday to Saturday: after each US session has settled, and never
+# on a day that follows one. The ledger is why this is daily now -- a forecast
+# entered on Monday's close has a 5-session horizon that lands on a weekday,
+# and a weekly build would show it locking up to six days late.
 on:
   schedule:
-    - cron: "0 5 * * 6"
+    - cron: "30 5 * * 2-6"
   workflow_dispatch:
   # Also on push, so a change to the map, the questions or the page is served
   # when it is merged rather than on the next Saturday. The concurrency group
@@ -16,8 +17,10 @@ on:
 
 # What deploy-pages needs, and nothing else. No contents: write anywhere here:
 # this workflow publishes a site, it never commits to the repository.
+# contents: write is for the `live` branch below, and for nothing else. The
+# workflow never commits to main.
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -78,6 +81,35 @@ jobs:
       # Assembles site/ and runs the no-Hebrew gate on what will be served.
       - name: publish
         run: python -m chains.publish_site
+
+      # The snapshots on a branch of their own, so anything can read the
+      # current one at a stable raw URL without going through Pages.
+      #
+      # An ORPHAN branch with a single commit, force-pushed: this is a
+      # published artifact, not a history. Keeping every day's snapshot would
+      # add ~200 KB a day to every clone of the repository for ever, to record
+      # something the run log already records.
+      - name: publish the snapshots to the live branch
+        env:
+          GIT_AUTHOR_NAME: github-actions
+          GIT_AUTHOR_EMAIL: github-actions@github.com
+          GIT_COMMITTER_NAME: github-actions
+          GIT_COMMITTER_EMAIL: github-actions@github.com
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          cp out/live.json out/live_en.json "$tmp/"
+          git worktree add --detach "$tmp/wt"
+          cd "$tmp/wt"
+          git checkout --orphan live
+          git rm -rq --cached . || true
+          find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
+          cp "$tmp/live.json" "$tmp/live_en.json" .
+          git add live.json live_en.json
+          git commit -qm "live snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push -f origin live
+          echo "pushed $(du -b live.json live_en.json | tr '
+' ' ')"
 
       - uses: actions/configure-pages@v5
 

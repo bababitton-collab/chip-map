@@ -38,7 +38,7 @@ def edge(f, t, **over):
 DOC = {
     "nodes": [node(i) for i in
               ("reporter", "a", "b", "c", "s1", "s2", "s3", "s4", "s5", "s6",
-               "s7", "both", "p1", "rival")]
+               "s7", "s8", "s9", "both", "p1", "rival")]
     + [node("cash", price_symbol=None),          # nothing to price it with
        node("noticker", ticker=None),            # not a listed company
        node("none_kind", price_symbol_kind="none")],
@@ -46,7 +46,7 @@ DOC = {
     "edges": [
         edge("s1", "a"), edge("s2", "a", share="20% of a's cost"),
         edge("s3", "a"), edge("s4", "a"), edge("s5", "a"), edge("s6", "a"),
-        edge("s7", "a"),
+        edge("s7", "a"), edge("s8", "a"), edge("s9", "a"),
         edge("reporter", "a"),      # the subject of the question
         edge("b", "a"),             # already in the first ring
         edge("both", "a"), edge("both", "c"),   # no sign
@@ -123,16 +123,16 @@ def test_the_lose_side_gets_its_own_ring():
 
 # -- the cap -----------------------------------------------------------------
 
-def test_six_a_side_at_most():
+def test_eight_a_side_at_most():
     got = ring()
-    assert len(got["win2"]) == rings.MAX_PER_SIDE == 6
+    assert len(got["win2"]) == rings.MAX_PER_SIDE == 8
 
 
 def test_the_cap_is_applied_after_the_both_sides_rule():
     """Otherwise a node could survive on one side purely because its copy on
     the other side fell off the end of the list."""
     doc = copy.deepcopy(DOC)
-    # Push "both" past the cap on the win side; it must still leave both sides.
+    # "both" now sits past the cap on the win side; it must still leave both.
     doc["edges"] = [e for e in doc["edges"] if e["from"] != "both"] + [
         edge("both", "a"), edge("both", "c")]
     got = rings.second_ring(doc, WIN, LOSE, "reporter")
@@ -183,17 +183,116 @@ def test_an_edge_with_no_words_gets_an_empty_label_not_an_invented_one():
     assert rings.second_ring(doc, ["a"], [], None)["ring2_edges"][0]["label"] == ""
 
 
-# -- order -------------------------------------------------------------------
+# -- order: multiplicity, then round robin, then share -----------------------
+#
+# A second map, with two first-ring parents that both have suppliers of their
+# own. DOC above has one, which is enough for the exclusions and useless for
+# the ordering.
 
-def test_a_disclosed_share_ranks_an_edge_first():
-    """``share`` is a sentence out of a 10-K, not a number, so it cannot sort
-    an edge -- but an edge somebody disclosed and sourced outranks one nobody
-    put a number on."""
-    assert ring()["win2"][0] == "s2"
+TWO = {
+    "nodes": [node(i) for i in
+              ("pa", "pb", "shared", "x1", "x2", "x3", "y1", "y2")],
+    "subnodes": [],
+    "edges": [
+        # pa's own, in map order; x1 is the only one with a NUMBER on it.
+        edge("x1", "pa", share=40), edge("x2", "pa"), edge("x3", "pa"),
+        edge("shared", "pa", what="shared feeds pa"),
+        # pb's own; "shared" is its first, and feeds two of the first ring.
+        edge("shared", "pb", what="shared feeds pb"),
+        edge("y1", "pb"), edge("y2", "pb"),
+    ],
+}
+PARENTS = ["pa", "pb"]
 
 
-def test_the_rest_keep_the_map_s_own_order():
-    assert ring()["win2"][1:] == ["s1", "s3", "s4", "s5", "s6"]
+def two(win=None, lose=None):
+    return rings.second_ring(TWO, win or PARENTS, lose or [], None)
+
+
+def test_multiplicity_beats_share():
+    """"shared" carries no number and is listed fourth under pa. It supplies
+    two of the first ring, and that outranks a disclosed 40% to one of them --
+    a name exposed to the answer twice is the point of drawing a second ring at
+    all."""
+    got = two()
+    assert got["win2"][0] == "shared"
+    assert got["win2"][1] == "x1", "share still decides among equals"
+
+
+def test_a_numeric_share_orders_within_one_parent():
+    """x1 is listed third in the map and has the only number on it."""
+    got = rings.second_ring(TWO, ["pa"], [], None)
+    assert got["win2"][0] == "x1"
+
+
+def test_prose_in_the_share_field_does_not_order_anything():
+    """DOC's s2 carries "20% of a's cost" -- a sentence. Reading the 20 out of
+    it would be a ranking this code invented and attributed to the map."""
+    assert rings.numeric_share("20% of a's cost") is None
+    assert rings.numeric_share("19") == 19.0
+    assert rings.numeric_share(0.4) == 0.4
+    assert rings.numeric_share(None) is None
+    assert rings.numeric_share(True) is None, "a flag is not a share"
+
+
+def test_round_robin_gives_each_parent_its_first_pick():
+    """Every parent contributes before any parent contributes twice. Without
+    it the node with the most mapped inputs takes the whole ring: NVIDIA has
+    seventeen suppliers in the live map and AMD has two."""
+    got = two()["win2"]
+    # pa's first is x1, pb's first is "shared". pa's SECOND is x2, and it comes
+    # after both of them.
+    assert got.index("x1") < got.index("x2")
+    assert got.index("shared") < got.index("x2")
+    assert got.index("y1") < got.index("x3"), "pb's second beats pa's third"
+
+
+def test_one_parent_with_everything_does_not_take_the_whole_ring():
+    doc = copy.deepcopy(TWO)
+    doc["edges"] += [edge(f"z{n}", "pa") for n in range(8)]
+    doc["nodes"] += [node(f"z{n}") for n in range(8)]
+    got = rings.second_ring(doc, PARENTS, [], None)["win2"]
+    assert {"y1", "y2"} <= set(got), "pb's suppliers survive pa's crowd"
+
+
+def test_a_parent_that_runs_out_stops_holding_a_place():
+    """pb has three and pa has four. The last slot goes to pa rather than to a
+    blank."""
+    got = two()["win2"]
+    assert set(got) == {"shared", "x1", "x2", "x3", "y1", "y2"}
+
+
+# -- one node, two lines -----------------------------------------------------
+
+def test_a_two_parent_node_keeps_an_edge_to_each_parent():
+    """The drawing needs both: one circle, two thin lines. Dropping the second
+    would hide the very thing that ranked the node first."""
+    edges = [e for e in two()["ring2_edges"] if e["from"] == "shared"]
+    assert [e["to"] for e in edges] == ["pa", "pb"]
+
+
+def test_each_of_those_edges_keeps_its_own_words():
+    edges = [e for e in two()["ring2_edges"] if e["from"] == "shared"]
+    assert [e["label"] for e in edges] == ["shared feeds pa", "shared feeds pb"]
+
+
+def test_a_one_parent_node_still_has_exactly_one_edge():
+    edges = [e for e in two()["ring2_edges"] if e["from"] == "x1"]
+    assert len(edges) == 1 and edges[0]["to"] == "pa"
+
+
+def test_there_are_more_edges_than_nodes_when_a_node_is_shared():
+    got = two()
+    assert len(got["ring2_edges"]) == len(got["win2"]) + 1
+
+
+def test_every_edge_names_a_node_that_was_kept():
+    """An edge to a node the cap dropped would draw a line to nothing."""
+    doc = copy.deepcopy(TWO)
+    doc["edges"] += [edge(f"z{n}", "pa") for n in range(8)]
+    doc["nodes"] += [node(f"z{n}") for n in range(8)]
+    got = rings.second_ring(doc, PARENTS, [], None)
+    assert {e["from"] for e in got["ring2_edges"]} == set(got["win2"])
 
 
 # -- purity ------------------------------------------------------------------

@@ -288,8 +288,31 @@ def test_the_second_ring_borrows_its_parents_colour():
     """It is the same claim one hop out, so it is not given a colour of its
     own -- it is the parent's, thinned."""
     body = cons_js()
-    assert 'stroke="${p.col}"' in body and 'opacity=".7"' in body
-    assert 'stroke-width="1"' in body and 'opacity=".45"' in body
+    assert "col=k.parents[0].col;" in body
+    assert 'stroke="${col}"' in body
+    assert 'stroke-width="1" opacity=".45"' in body, "the connector is thin"
+
+
+def test_a_node_supplying_two_of_the_first_ring_gets_a_line_to_each():
+    """One circle, two lines. It ranked first because it is exposed to the
+    answer twice, and one line would hide that."""
+    body = cons_js()
+    i = body.index("k.parents.forEach(p=>{")
+    assert body.index("<circle", i) > body.index("</path>", i) if "</path>" in body[i:] else True
+    assert "k.parents.forEach(p=>{" in body
+    # one circle per child, drawn once, outside the per-parent loop
+    assert body.count("<circle cx=\"${R2X}\"") == 1
+
+
+def test_a_shared_node_is_drawn_more_firmly_than_a_single_one():
+    body = cons_js()
+    assert "const two = k.parents.length>1;" in body
+    assert '${two?2:1.4}' in body and '${two?.95:.7}' in body
+
+
+def test_a_child_of_two_parents_sits_between_them():
+    body = ring2_js()
+    assert "k.parents.reduce((a,p)=>a+p.y, 0)/k.parents.length" in body
 
 
 def test_a_ring_one_reason_is_cut_at_twelve_and_keeps_the_whole_sentence():

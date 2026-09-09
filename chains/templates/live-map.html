@@ -833,20 +833,33 @@ function lockedHTML(){
     const side = {};
     (w.win2||[]).forEach(i=>{ side[i]='win'; });
     (w.lose2||[]).forEach(i=>{ side[i]='lose'; });
-    const kids = [];
+    // One entry per child. A supplier feeding two of the first ring is ONE
+    // circle with two lines into it -- it ranks first for exactly that reason,
+    // and drawing it twice would hide the reason while doubling the node.
+    const by = {}, kids = [];
     for(const e of (w.ring2_edges||[])){
       const p = at[e.to]; if(!p) continue;         // parent not drawn
       if(!(e.from in side)) continue;
-      kids.push({id:e.from, parent:p, win:side[e.from]==='win',
-                 label:e.label||''});
+      if(!by[e.from]){
+        by[e.from] = {id:e.from, parents:[], win:side[e.from]==='win',
+                      labels:[]};
+        kids.push(by[e.from]);
+      }
+      by[e.from].parents.push(p);
+      by[e.from].labels.push(e.label||'');
     }
     const total = kids.length;
     const show = kids.slice(0, R2_MAX);
-    // Spread siblings around their parent, then a single sweep for overlap.
-    const byParent = {};
-    show.forEach(k=>{ (byParent[k.parent.id]=byParent[k.parent.id]||[]).push(k); });
-    Object.values(byParent).forEach(g=>{
-      g.forEach((k,n)=>{ k.y = g[0].parent.y + (n-(g.length-1)/2)*GAP; });
+    // Siblings spread around the mean of their parents' rows -- a child of two
+    // sits between them -- then one sweep for overlap.
+    const groups = {};
+    show.forEach(k=>{
+      k.at = k.parents.reduce((a,p)=>a+p.y, 0)/k.parents.length;
+      const key = k.parents.map(p=>p.id).join(',');
+      (groups[key]=groups[key]||[]).push(k);
+    });
+    Object.values(groups).forEach(g=>{
+      g.forEach((k,n)=>{ k.y = g[0].at + (n-(g.length-1)/2)*GAP; });
     });
     show.sort((a,b)=>a.y-b.y);
     let prev = -1e9;
@@ -896,11 +909,17 @@ function lockedHTML(){
     const r2 = ring2For(w, drawn);
     let g2='';
     r2.show.forEach(k=>{
-      const y=k.y, p=k.parent;
-      g2+=`<path d="M${R1X+p.r},${p.y.toFixed(1)} C${R1X+55},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${k.col=p.col}" stroke-width="1" opacity=".45"/>`;
-      g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${p.col}" stroke-width="1.4" opacity=".7"/>`;
+      const y=k.y, col=k.parents[0].col;
+      // A line from each parent. Two lines into one node is the drawing of a
+      // supplier that is exposed to this answer twice.
+      k.parents.forEach(p=>{
+        g2+=`<path d="M${R1X+p.r},${p.y.toFixed(1)} C${R1X+55},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${p.col}" stroke-width="1" opacity=".45"/>`;
+      });
+      const two = k.parents.length>1;
+      g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${col}" stroke-width="${two?2:1.4}" opacity="${two?.95:.7}"/>`;
       const lab=clip(labelBeside(k.id), 9);
-      g2+=`<text x="${R2X+R2R+4}" y="${(y+3).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#9aa4b2">${esc(lab)}${k.label?`<title>${esc(k.label)}</title>`:''}</text>`;
+      const tip=k.labels.filter(Boolean).join(' · ');
+      g2+=`<text x="${R2X+R2R+4}" y="${(y+3).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="9" fill="${two?'#c7d0dc':'#9aa4b2'}" font-weight="${two?600:400}">${esc(lab)}${tip?`<title>${esc(tip)}</title>`:''}</text>`;
     });
     if(r2.hidden>0) g2+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#7d8797">+${r2.hidden}</text>`;
 

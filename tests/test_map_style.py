@@ -138,10 +138,33 @@ def test_l9_has_its_own_layer_outside_the_sticky_header():
     assert 'data-l="L9"' in TPL[j:j + 300]
 
 
-def test_the_l9_chip_sits_at_the_left_edge_on_its_row_s_centre_line():
-    assert "left:14px;" in TPL
-    assert "top:${l9y.toFixed(1)}px;transform:translateY(-50%)" in TPL
+def test_the_l9_chip_sits_beside_ceg_on_its_row_s_centre_line():
+    """Anchored to the node, not to the map's edge: L9 is a row, and a chip out
+    at the edge named nothing in particular. It goes on the far side of CEG
+    from the rest of the row, so it never lands between two of its own nodes."""
+    assert "const ceg = byId.ceg;" in TPL
+    assert "const outer = !others.length || ceg.x <= Math.min(...others);" in TPL
+    assert "l9x = outer ? Math.max(8, ceg.x-16-14) : Math.min(W-8, ceg.x+16+14);" in TPL
+    assert "left:${l9x.toFixed(1)}px;" in TPL
+    assert "top:${l9y.toFixed(1)}px;transform:${shift}" in TPL
     assert "l9y = H-34;" in TPL, "the row the L9 nodes are drawn on"
+
+
+def test_the_l9_chip_hangs_off_the_side_it_is_anchored_to():
+    """Anchored right means the chip's right edge meets CEG; anchored left
+    means its left edge does. Without the swap it would sit on top of the node
+    it is naming."""
+    assert ("const shift = l9anchor==='right' ? 'translate(-100%,-50%)' "
+            ": 'translateY(-50%)';") in TPL
+
+
+def test_the_shut_panel_carries_no_border():
+    """The stage's second column is 0px when the panel is shut, but a 1px
+    border made that element 1px wide -- one pixel past the viewport, and a
+    horizontal scrollbar at every width. The border belongs to the open state,
+    which is the only state with anything to divide."""
+    assert ".panel{background:var(--panel);overflow:hidden;height:720px}" in TPL
+    assert ".stage.open .panel{border-inline-start:1px solid var(--rule)}" in TPL
 
 
 def test_l9_is_no_longer_painted_on_the_canvas():

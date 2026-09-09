@@ -6,8 +6,6 @@
   "who": "Oracle Q1 FY27",
   "tk": "ORCL",
   "cps": [],
-  "q": "How much Oracle is buying: capex pace and RPO. After the big four, it is NVIDIA's and AMD's hungriest customer.",
-  "listen": "FY27 capex guidance and the RPO number",
   "win": [
    "nvda",
    "amd",
@@ -27,8 +25,6 @@
   "cps": [
    "CP5"
   ],
-  "q": "Does Micron reach its HBM share target, and how fast is HBM4 capacity coming.",
-  "listen": "HBM share target for 2027 and capex",
   "win": [
    "mu"
   ],
@@ -50,8 +46,6 @@
    "CP5",
    "CP3"
   ],
-  "q": "Do memory profits confirm that Samsung's HBM4 is shipping to NVIDIA in volume.",
-  "listen": "Memory division operating profit vs prior quarter",
   "win": [
    "samsung"
   ],
@@ -74,8 +68,6 @@
    "CP1",
    "CP2"
   ],
-  "q": "How many EUV machines were ordered, how many High-NA, and China's share. This is the ceiling on everything below.",
-  "listen": "EUV bookings, High-NA units, 2027 outlook",
   "win": [
    "asml"
   ],
@@ -94,8 +86,6 @@
    "CP3",
    "CP4"
   ],
-  "q": "Actual CoWoS capacity, the 2nm ramp, and whether it commits to High-NA for A14 or defers again.",
-  "listen": "A CoWoS capacity number for end-2026 and 2027 capex",
   "win": [
    "tsmc",
    "asml"
@@ -119,8 +109,6 @@
   "cps": [
    "CP11"
   ],
-  "q": "The only US maker of electrical steel: is the Butler upgrade on time, and what is transformer demand doing.",
-  "listen": "Update on the $195M upgrade and GOES pricing",
   "win": [
    "clf"
   ],
@@ -138,8 +126,6 @@
   "cps": [
    "CP3"
   ],
-  "q": "Is there a committed external customer for 14A. The CEO said decisions would land in the second half. The sharpest test on this list.",
-  "listen": "A customer name, or \"decisions deferred\"",
   "win": [
    "intc"
   ],
@@ -160,8 +146,6 @@
    "CP6",
    "CP7"
   ],
-  "q": "Demand for silicon wafers and EUV resist. Down 19% this quarter — do the numbers explain why.",
-  "listen": "300mm wafer shipments and H2 outlook",
   "win": [
    "shinetsu"
   ],
@@ -184,8 +168,6 @@
   "cps": [
    "CP5"
   ],
-  "q": "HBM share, HBM4 pricing, and whether the base die at TSMC is hurting margins.",
-  "listen": "HBM share and HBM4 vs HBM3E pricing",
   "win": [
    "skhynix"
   ],
@@ -209,8 +191,6 @@
   "cps": [
    "CP4"
   ],
-  "q": "Is there an anchor customer for the Peoria, Arizona plant. This is what turns advanced packaging from Taiwanese into American.",
-  "listen": "A customer name for Arizona",
   "win": [
    "amkr"
   ],
@@ -233,8 +213,6 @@
   "cps": [
    "CP14"
   ],
-  "q": "China revenue after the restrictions were lifted, and how much of the growth comes from AI tools.",
-  "listen": "China's share of revenue",
   "win": [
    "cdns"
   ],
@@ -252,8 +230,6 @@
   "cps": [
    "CP13"
   ],
-  "q": "Is Teradyne taking HBM and GPU test share from Advantest. The tell: \"merchant GPU\" with no customer named.",
-  "listen": "HBM/GPU test orders and a customer name",
   "win": [
    "ter"
   ],
@@ -276,8 +252,6 @@
   "cps": [
    "CP11"
   ],
-  "q": "How many turbine slots remain for 2029-2030, and what the transformer lead time is.",
-  "listen": "GW signed and reserved, LPT lead time",
   "win": [
    "gev"
   ],
@@ -302,8 +276,6 @@
    "CP3",
    "CP5"
   ],
-  "q": "Customer mix: Samsung 16%, TSMC 15%, hynix 12%, Micron 12%. A change in the order is a change in who is building.",
-  "listen": "Customers above 10% and WFE outlook",
   "win": [
    "lrcx"
   ],
@@ -326,8 +298,6 @@
   "cps": [
    "CP12"
   ],
-  "q": "Doubling germanium at Trail — is it on time before the Chinese suspension expires.",
-  "listen": "Germanium output and timeline",
   "win": [
    "teck"
   ],
@@ -343,8 +313,6 @@
   "who": "Alphabet Q3",
   "tk": "GOOGL",
   "cps": [],
-  "q": "Capex for 2026 and 2027. The big four are $730B — any change here moves the whole map.",
-  "listen": "Capex guidance",
   "win": [
    "nvda",
    "avgo",
@@ -366,8 +334,6 @@
   "cps": [
    "CP13"
   ],
-  "q": "SoC tester share (66%) and what the Korean testers are doing at SK hynix.",
-  "listen": "SoC share and full-year outlook",
   "win": [
    "advantest"
   ],
@@ -391,8 +357,6 @@
    "CP5",
    "CP3"
   ],
-  "q": "HBM4 detail: how much goes to NVIDIA, and what is happening at 2nm in the foundry.",
-  "listen": "HBM share and SF2 yield",
   "win": [
    "samsung"
   ],
@@ -418,8 +382,6 @@
    "CP4",
    "CP5"
   ],
-  "q": "The supplier that lost half its HBM4 bonder orders to ASMPT. Has the bleeding stopped.",
-  "listen": "TC bonder orders and a customer name",
   "win": [
    "hanmi"
   ],
@@ -443,8 +405,6 @@
   "cps": [
    "CP4"
   ],
-  "q": "Will ASE name its CoWoS-equivalent capacity. That is what dilutes the concentration at TSMC.",
-  "listen": "An advanced-packaging capacity number",
   "win": [
    "ase"
   ],
@@ -467,8 +427,6 @@
   "cps": [
    "CP10"
   ],
-  "q": "InP substrates — all made in China under license. Price up 250%. Are the licenses continuing.",
-  "listen": "InP revenue and MOFCOM license status",
   "win": [
    "axti"
   ],
@@ -489,8 +447,6 @@
   "cps": [
    "CP3"
   ],
-  "q": "TSMC is 16% of revenue. A change here gauges the pace of 2nm construction.",
-  "listen": "TSMC's share and outlook",
   "win": [
    "entegris"
   ],
@@ -509,8 +465,6 @@
   "who": "Amazon Q3",
   "tk": "AMZN",
   "cps": [],
-  "q": "Capex and Trainium: how much compute is moving to in-house chips instead of NVIDIA.",
-  "listen": "Capex guidance and any Trainium mention",
   "win": [
    "alab",
    "crdo",
@@ -535,8 +489,6 @@
   "cps": [
    "CP11"
   ],
-  "q": "Turbine blade castings — 60-90 weeks per batch. Is capacity growing.",
-  "listen": "IGT orders",
   "win": [
    "hwm"
   ],
@@ -556,8 +508,6 @@
   "cps": [
    "CP3"
   ],
-  "q": "Power content in Blackwell and Rubin. A quiet supplier every chip passes through.",
-  "listen": "Datacenter revenue",
   "win": [
    "mpwr"
   ],
@@ -577,8 +527,6 @@
   "cps": [
    "CP9"
   ],
-  "q": "EUV mask blanks: is the third plant in Singapore on time, and what is AGC's share.",
-  "listen": "Mask blank revenue and outlook",
   "win": [
    "hoya"
   ],
@@ -599,8 +547,6 @@
   "cps": [
    "CP10"
   ],
-  "q": "Down 30% this quarter. Is 1.6T taking off, and is the FCC really restricting the Chinese vendors.",
-  "listen": "1.6T orders and any FCC comment",
   "win": [
    "cohr",
    "fn"
@@ -623,8 +569,6 @@
   "cps": [
    "CP8"
   ],
-  "q": "ABF film: volumes and prices after a 30% increase. Operating margin above 50%.",
-  "listen": "Electronic materials revenue and margin",
   "win": [
    "ajinomoto"
   ],
@@ -645,8 +589,6 @@
   "cps": [
    "CP6"
   ],
-  "q": "300mm wafer shipments. China's NSIG is approaching 1.2 million a month.",
-  "listen": "Shipment outlook",
   "win": [
    "sumco"
   ],
@@ -667,8 +609,6 @@
   "cps": [
    "CP12"
   ],
-  "q": "A hard date. If the suspension is not extended, magnet controls return.",
-  "listen": "Official notice: extension or expiry",
   "win": [
    "mp"
   ],
@@ -686,8 +626,6 @@
   "cps": [
    "CP3"
   ],
-  "q": "Sole supplier of EUV resist coaters. China's share of revenue.",
-  "listen": "China's share and outlook",
   "win": [
    "tel"
   ],
@@ -709,8 +647,6 @@
   "cps": [
    "CP3"
   ],
-  "q": "China, HBM, and 2027. AMAT is the health gauge of the whole equipment layer.",
-  "listen": "2027 WFE outlook",
   "win": [
    "amat",
    "lrcx",
@@ -735,8 +671,6 @@
   "cps": [
    "CP11"
   ],
-  "q": "Transformer lead times. A drop below three years means the constraint is easing.",
-  "listen": "LPT lead time and backlog",
   "win": [
    "siemensenergy"
   ],
@@ -762,8 +696,6 @@
    "CP3",
    "CP4"
   ],
-  "q": "All of it: HBM supplier mix, Rubin, and NVHBM moving the base die in-house.",
-  "listen": "Memory supplier mentions and Q4 guidance",
   "win": [
    "tsmc",
    "skhynix",
@@ -793,8 +725,6 @@
   "cps": [
    "CP12"
   ],
-  "q": "A hard date. 98% of gallium. Extension, or back to the ban.",
-  "listen": "Official notice",
   "win": [
    "aa",
    "teck",
@@ -816,8 +746,6 @@
   "cps": [
    "CP6"
   ],
-  "q": "The industry's quarterly number. Are the Chinese taking share.",
-  "listen": "MSI shipped and year-over-year change",
   "win": [
    "globalwafers"
   ],
@@ -842,8 +770,6 @@
    "CP8",
    "CP4"
   ],
-  "q": "Package-level results or a customer name. The cleanest binary test in materials.",
-  "listen": "A customer announcement or credible results",
   "win": [
    "skc"
   ],
@@ -867,8 +793,6 @@
   "cps": [
    "CP9"
   ],
-  "q": "Sole source for EUV mask inspection. High-NA orders.",
-  "listen": "Orders and outlook",
   "win": [
    "lasertec"
   ],
@@ -890,8 +814,6 @@
    "CP7",
    "CP1"
   ],
-  "q": "Metal-oxide resist in production, and any hint of a second optics supplier for ASML.",
-  "listen": "TSMC/Intel talks on dry resist",
   "win": [
    "lrcx"
   ],

@@ -16,6 +16,19 @@ share nothing but the numbers. What differs is the chokepoint names, the
 blurbs, the stage labels and which watch list is read; every price, return and
 pressure figure is computed once per symbol and is identical in both.
 
+THE TEXT IS NOT IN THIS REPOSITORY AND NOT IN EVERY ROW
+--------------------------------------------------------
+``watch`` carries the skeleton of all 39 questions -- who, when, which
+chokepoints, which baskets, how many hints have landed -- and the question
+itself only where the row is OPEN: every date that has passed, plus the single
+nearest upcoming one. A locked row has no ``q`` and no ``listen`` key at all,
+so a page that forgot to check ``locked`` renders nothing rather than
+something, and a leaked snapshot has nothing to leak. See chains/questions.py.
+
+``signup`` is where the page's call to action points, or null while the
+newsletter platform is not wired up; the page says "coming soon" rather than
+offering a button that goes nowhere.
+
 THE WATCH LIST NOW TRAVELS IN THE FILE
 --------------------------------------
 It used to not. The page carried all 39 rows inline and live.json held only
@@ -70,8 +83,8 @@ import json
 from pathlib import Path
 
 from chains import answers as answers_mod
-from chains import en_data, forecast, mapfile, prices
-from chains.paths import out_dir, watch_en_path, watch_path
+from chains import en_data, forecast, mapfile, prices, questions
+from chains.paths import out_dir, signup_url, watch_en_path, watch_path
 
 # DECIMAL, not binary. "250 KB" could mean 250,000 or 256,000 and the two
 # readings differ by 6 KB -- which is more than the headroom at the current
@@ -264,13 +277,15 @@ def price_block(symbol: str, today: dt.date, cache: dict):
 
 # ---------------------------------------------------------------- the snapshot
 def build(today: dt.date | None = None, lang: str = "he",
-          answers: dict | None = None, ledger: dict | None = None) -> dict:
+          answers: dict | None = None, ledger: dict | None = None,
+          text: dict | None = None) -> dict:
     """One snapshot, in one language.
 
-    ``answers`` and ``ledger`` are read/built here when not supplied, so a
-    direct call works. main() does both once and passes them to both builds:
-    reading twice would print every dropped row twice and say nothing new the
-    second time, and scoring twice would load the whole price store twice.
+    ``answers``, ``ledger`` and ``text`` are read/built here when not supplied,
+    so a direct call works. main() does all three once and passes them to both
+    builds: reading twice would print every dropped row twice and say nothing
+    new the second time, and scoring twice would load the whole price store
+    twice.
     """
     today = today or dt.date.today()
     L = LANG[lang]
@@ -410,6 +425,11 @@ def build(today: dt.date | None = None, lang: str = "he",
     # the marker layer: join keys only, and only for rows that have a
     # chokepoint and a date that has not passed.
     watch = load_watch(lang)
+    # The text, attached only where the row is open. Everything downstream --
+    # cal, the page, the briefs -- reads the merged rows, so there is one
+    # place that decides what is unlocked and no second opinion about it.
+    watch = questions.merge(
+        watch, questions.fetch() if text is None else text, lang, today)
     cal = calendar_from(watch, today)
     if answers is None:
         answers = answers_mod.load(ids={r["id"] for r in watch})
@@ -422,6 +442,8 @@ def build(today: dt.date | None = None, lang: str = "he",
         "nodes": nodes, "edges": edges, "flows": flows, "cps": cps,
         "fund": fund, "cal": cal, "watch": watch,
         "answers": answers, "ledger": ledger,
+        "signup": signup_url(),
+        "n_open": sum(1 for r in watch if r["open"]),
         "last_price_date": max((p["last"] for p in cache.values() if p),
                                default=None),
     }
@@ -509,6 +531,17 @@ def main() -> int:
     # Read once, log once, embed in both. A dropped row is printed here and
     # the run continues on the rows that survived -- see chains/answers.py for
     # why a bad row must not cost the whole Saturday chain.
+    # Fetched once, before anything is written. A failure here stops the run
+    # rather than publishing a page with an empty sentence under every
+    # headline; see chains/questions.py.
+    try:
+        text = questions.fetch()
+    except questions.QuestionsError as e:
+        # One line, not a traceback: the cause is always a URL or a permission,
+        # and a stack through httpx says nothing useful about either.
+        raise SystemExit(f"QUESTIONS: {e}") from None
+    print(f"  questions: {len(text)} fetched")
+
     good, forecasts, problems = answers_mod.read()
     for why in problems:
         print(f"  answers: DROPPED {why}")
@@ -524,7 +557,7 @@ def main() -> int:
 
     first = None
     for lang in LANG:
-        live = build(lang=lang, answers=good, ledger=ledger)
+        live = build(lang=lang, answers=good, ledger=ledger, text=text)
         p, size, applied = write(live, out_dir() / LANG[lang]["file"])
         # Belt and braces. write() already refuses to produce an oversized
         # file; this says out loud, at the call site, what the invariant is.
@@ -537,6 +570,8 @@ def main() -> int:
               f"answers {len(live['answers'])}  calendar {len(live['cal'])}  "
               f"ledger {len(live['ledger']['rows'])} scored, "
               f"{live['ledger']['summary']['n_pending']} pending")
+        print(f"  questions open {live['n_open']} of {len(live['watch'])}"
+              f"  signup {'set' if live['signup'] else 'coming soon'}")
         first = first or live
 
     live = first

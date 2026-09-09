@@ -2,7 +2,8 @@
 
     python -m chains.build_all [--skip-prices]
 
-    prices -> repair -> page -> fundamentals -> live -> pages -> brief -> brief_he
+    prices -> repair -> page -> fundamentals -> live -> pages
+          -> brief, brief_free -> brief_he, brief_he_free
 
 NOTHING DOWNSTREAM RUNS ON STALE UPSTREAM
 -----------------------------------------
@@ -55,9 +56,17 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
         ("brief", ["-m", "chains.brief", str(o / "live_en.json"),
                    str(watch_en_path()), ans,
                    str(o / f"brief-{today.isoformat()}.md")]),
+        ("brief_free", ["-m", "chains.brief", str(o / "live_en.json"),
+                        str(watch_en_path()), ans,
+                        str(o / f"brief-free-{today.isoformat()}.md"),
+                        "--free"]),
         ("brief_he", ["-m", "chains.brief_he", str(o / "live.json"),
                       str(watch_path()), ans,
                       str(o / f"brief-he-{today.isoformat()}.md")]),
+        ("brief_he_free", ["-m", "chains.brief_he", str(o / "live.json"),
+                           str(watch_path()), ans,
+                           str(o / f"brief-he-free-{today.isoformat()}.md"),
+                           "--free"]),
     ]
     return [s for s in out if not (skip_prices and s[0] == "prices")]
 
@@ -66,7 +75,9 @@ def outputs(today: date) -> list[str]:
     return ["live.json", "live_en.json", "public-map.html",
             "public-map-en.html",
             f"brief-{today.isoformat()}.md",
-            f"brief-he-{today.isoformat()}.md"]
+            f"brief-free-{today.isoformat()}.md",
+            f"brief-he-{today.isoformat()}.md",
+            f"brief-he-free-{today.isoformat()}.md"]
 
 
 def main() -> int:

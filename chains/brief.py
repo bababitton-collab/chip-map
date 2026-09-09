@@ -1,6 +1,6 @@
 """The weekly brief, in English. This one is the product.
 
-    python -m chains.brief <live.json> <watch.json> [answers.json] [out.md]
+    python -m chains.brief <live.json> <watch.json> [answers.json] [out.md] [--free]
 
 Prints to stdout when no output path is given, so it still works in a pipe.
 
@@ -23,6 +23,15 @@ is a tracking view, not a signal.
 The Hebrew twin is chains/brief_he.py. Two files rather than one with a
 translation table, because every line of prose differs and only the shape of
 the reading is shared.
+
+
+WHO GETS WHICH
+--------------
+``--free`` is the public letter: only the questions whose text is already
+unlocked on the site -- everything past, plus the nearest upcoming one. Without
+it this is the paid mail and every row carries its question and what to listen
+for. The flag is the whole difference; there is no second template and no
+second set of numbers.
 """
 from __future__ import annotations
 
@@ -31,10 +40,10 @@ import json
 import sys
 from pathlib import Path
 
-from chains import answers
+from chains import answers, questions
 
 
-USAGE = "usage: python -m chains.brief <live.json> <watch.json> [answers.json] [out.md]"
+USAGE = "usage: python -m chains.brief <live.json> <watch.json> [answers.json] [out.md] [--free]"
 
 
 def render(live: dict, watch: list, statuses: dict) -> str:
@@ -155,11 +164,19 @@ def render(live: dict, watch: list, statuses: dict) -> str:
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    free = "--free" in argv
+    argv = [a for a in argv if a != "--free"]
     if not 2 <= len(argv) <= 4:
         print(USAGE, file=sys.stderr)
         return 2
     live = json.load(open(argv[0], encoding="utf-8"))
     watch = json.load(open(argv[1], encoding="utf-8"))
+    # The text is not in the watch file any more. The paid mail unlocks every
+    # row; the free one carries only what the site already shows.
+    watch = questions.merge(watch, questions.fetch(), "en",
+                            unlock_all=not free)
+    if free:
+        watch = [w for w in watch if w["open"]]
     statuses = {}
     if len(argv) > 2 and argv[2]:
         # Through the validator, not json.load. A bad status is not a crash --

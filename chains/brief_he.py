@@ -1,12 +1,16 @@
 """The weekly brief, in Hebrew. Michael's copy.
 
-    python -m chains.brief_he <live.json> <watch.json> [answers.json] [out.md]
+    python -m chains.brief_he <live.json> <watch.json> [answers.json] [out.md] [--free]
 
 The English twin, chains/brief.py, is the one that ships. This is the same
 reading of the same snapshot, in Hebrew, for one reader.
 
 Same two rules: every number comes from live.json, and nothing here is a
 recommendation. See chains/brief.py for why.
+
+
+``--free`` selects the public letter, the same rule as the English one: only
+the rows whose text is already unlocked on the site.
 """
 from __future__ import annotations
 
@@ -15,10 +19,10 @@ import json
 import sys
 from pathlib import Path
 
-from chains import answers
+from chains import answers, questions
 
 
-USAGE = "usage: python -m chains.brief_he <live.json> <watch.json> [answers.json] [out.md]"
+USAGE = "usage: python -m chains.brief_he <live.json> <watch.json> [answers.json] [out.md] [--free]"
 
 
 def render(live: dict, watch: list, statuses: dict) -> str:
@@ -139,11 +143,19 @@ def render(live: dict, watch: list, statuses: dict) -> str:
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    free = "--free" in argv
+    argv = [a for a in argv if a != "--free"]
     if not 2 <= len(argv) <= 4:
         print(USAGE, file=sys.stderr)
         return 2
     live = json.load(open(argv[0], encoding="utf-8"))
     watch = json.load(open(argv[1], encoding="utf-8"))
+    # The text is not in the watch file any more. The paid mail unlocks every
+    # row; the free one carries only what the site already shows.
+    watch = questions.merge(watch, questions.fetch(), "he",
+                            unlock_all=not free)
+    if free:
+        watch = [w for w in watch if w["open"]]
     statuses = {}
     if len(argv) > 2 and argv[2]:
         # Through the validator, not json.load. A bad status is not a crash --

@@ -74,14 +74,17 @@ def test_the_english_page_carries_the_forecast_board(tmp_path):
 
 
 @needs_live
-def test_the_english_page_hides_the_question_text(tmp_path):
-    """The board tooltip prints the question on the private page. On the
-    public one it points at the mail -- that is the product boundary."""
+def test_the_board_tooltip_obeys_the_lock_rather_than_a_public_variant(tmp_path):
+    """The tooltip used to be stripped by the public build. Both pages now
+    obey the same rule -- text only where the row is open -- so the tooltip
+    reads BT.locked for a locked row on either page, and there is no public
+    variant that could be built wrong and leak."""
     out = tmp_path / "public-map-en.html"
     bp.build_public_en(live=LIVE_EN, out=out)
     page = out.read_text(encoding="utf-8")
-    assert bp.PUB["en"]["pubq"] in page
-    assert bp.BOARD_TOOLTIP_Q not in page
+    assert "w.locked? BT.locked : w.q" in page
+    assert not hasattr(bp, "BOARD_TOOLTIP_Q"), (
+        "the public-only substitution is gone; the rule lives in the data")
 
 
 @needs_live

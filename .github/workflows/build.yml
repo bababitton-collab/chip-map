@@ -71,14 +71,23 @@ jobs:
       - name: tests
         run: python -m pytest tests/ -q
 
+      # QUESTIONS_URL and ANSWERS_URL are secrets, not variables: a repository
+      # variable is readable by anyone who can read the repository, and these
+      # two links are the product. SIGNUP_URL is a variable because it is a
+      # public page anyway.
       - name: build
         env:
           EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
-          ANSWERS_URL: ${{ vars.ANSWERS_URL }}
+          QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
+          ANSWERS_URL: ${{ secrets.ANSWERS_URL }}
+          SIGNUP_URL: ${{ vars.SIGNUP_URL }}
         run: python -m chains.build_all
 
-      # Assembles site/ and runs the no-Hebrew gate on what will be served.
+      # Assembles site/ and runs both gates on what will actually be served:
+      # no Hebrew in the English files, and no locked question's text anywhere.
       - name: publish
+        env:
+          QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
         run: python -m chains.publish_site
 
       # The snapshots on a branch of their own, so anything can read the

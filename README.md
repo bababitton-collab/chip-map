@@ -11,6 +11,16 @@ question leaks part of the answer first. Every number carries a source URL;
 where no source was found the figure is marked **estimate**, and estimates are
 never quietly upgraded into facts.
 
+**The question text is not in this repository.** What is here is the skeleton of
+each question — who reports, on what day, which chokepoints it touches, which
+basket gains if the answer is yes — and that is what the site shows for every
+row. The sentence itself, and what to listen for on the call, is fetched at
+build time from a private file and attached only to rows that are *open*: every
+date that has passed, plus the single nearest upcoming question. A locked row is
+fully visible and simply has no sentence; it carries no `q` field at all, so
+there is nothing in the published snapshot to leak. `chains/publish_site.py`
+searches every published file for every locked sentence before it will publish.
+
 Marked answers become a **forecast ledger**: the baskets that gain and lose are
 pre-registered in `data/watch.json`, in git, before the event; the score runs
 from the first close after the mark against an equal-weight index of the whole
@@ -62,8 +72,9 @@ so two lines can be compared in shape but never in level.
 Everything is configured by environment, with defaults relative to the
 repository root, so a fresh clone builds with no configuration but the token:
 `CHIP_MAP_DATA`, `CHIP_MAP_OUT`, `CHIP_MAP_SITE`, `CHIP_MAP_PRICES`,
-`EODHD_API_TOKEN` (prices only), `ANSWERS_URL` (optional). See
-`chains/paths.py`, which is the one file that knows where anything lives.
+`EODHD_API_TOKEN` (prices only), `QUESTIONS_URL` (required — a URL, or a local
+path for a local build), `ANSWERS_URL` (optional) and `SIGNUP_URL` (optional).
+See `chains/paths.py` and `chains/questions.py`.
 
 `tests/test_isolation.py` walks every module's AST and fails on an import of
 the projects this was extracted from, or on any string that names a path
@@ -75,13 +86,24 @@ kept the build tied to one laptop.
 
 Two things a person has to do, both by hand:
 
-1. **`EODHD_API_TOKEN`** — add it as a repository secret (Settings → Secrets
-   and variables → Actions). Never paste it into a terminal or a chat.
-2. **`CONTACT` in `chains/edgar.py`** — replace the placeholder with a real
-   email address. SEC's fair-access policy requires a User-Agent identifying
-   the caller, and rejects anything else with a 403.
+1. **`EODHD_API_TOKEN`** — repository secret. Never paste it into a terminal.
+2. **`QUESTIONS_URL`** — repository secret: a direct link to the private JSON
+   holding every question's text. Without it the build stops, deliberately: a
+   page with an empty sentence under every headline would publish over a good
+   one and say nothing about why.
 
-Optionally, `ANSWERS_URL` as a repository *variable*: a link to the exported
-answers, which colour the board. It is fetched with a short timeout, validated
-row by row, and any failure logs one line and continues with none — the map
-must never go dark because a share link expired.
+`ANSWERS_URL` is an optional secret (the marks and forecasts; any failure logs
+one line and continues with none — the map must never go dark because a share
+link expired). `SIGNUP_URL` is an optional *variable*, the newsletter link;
+until it is set the page's call to action says "coming soon" and offers no
+link.
+
+Both URLs are secrets rather than variables because a repository variable is
+readable by anyone who can read the repository, and these two links are the
+product.
+
+### The briefs
+
+`out/` holds four: the paid mail in each language, carrying every question, and
+the free letter, carrying only the questions the site already shows. The site
+serves the free one.

@@ -381,3 +381,49 @@ def test_the_first_rung_sheds_the_per_symbol_series_not_the_basket_one():
     row = live["ledger"]["rows"][0]
     assert "series" not in row["symbols"][0]
     assert row["series"] == [1, 2, 3]
+
+
+# -- no locked row carries text, in either snapshot --------------------------
+
+@needs_build
+@pytest.mark.parametrize("lang", ["he", "en"])
+def test_no_locked_row_carries_text_in_the_snapshot(lang):
+    """The property the whole paywall rests on, checked on the real build."""
+    from chains import questions
+    text = questions.fetch()
+    live = ls.build(lang=lang, text=text)
+    locked = [r for r in live["watch"] if r["locked"]]
+    assert locked, "nothing is locked -- the test would pass vacuously"
+    for r in locked:
+        assert "q" not in r and "listen" not in r, r["id"]
+
+
+@needs_build
+@pytest.mark.parametrize("lang", ["he", "en"])
+def test_exactly_one_upcoming_row_is_open(lang):
+    from chains import questions
+    live = ls.build(lang=lang, text=questions.fetch())
+    today = dt.date.fromisoformat(live["as_of"])
+    up_open = [r for r in live["watch"]
+               if r["open"] and dt.date.fromisoformat(r["d"]) >= today]
+    assert len(up_open) == 1
+
+
+@needs_build
+def test_a_locked_questions_sentence_is_nowhere_in_the_serialised_snapshot():
+    """Not "the field is absent" -- the actual sentence, searched for in the
+    bytes that get published."""
+    from chains import questions
+    text = questions.fetch()
+    for lang, qf in (("he", "q_he"), ("en", "q_en")):
+        live = ls.build(lang=lang, text=text)
+        blob = ls._dump(live).decode("utf-8")
+        for r in live["watch"]:
+            if r["locked"]:
+                assert text[r["id"]][qf] not in blob, r["id"]
+
+
+@needs_build
+def test_the_signup_url_travels_to_the_page():
+    live = ls.build(text={})
+    assert "signup" in live

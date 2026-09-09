@@ -5,7 +5,9 @@
     CHIP_MAP_SITE    what is served  default ./site
     CHIP_MAP_PRICES  price parquets  default ./out/prices
     EODHD_API_TOKEN  required by the prices step only
+    QUESTIONS_URL    required; the question text, see chains/questions.py
     ANSWERS_URL      optional; see chains/answers.py
+    SIGNUP_URL       optional; where the page's CTA points
 
 INPUT IS TRACKED, OUTPUT IS NOT
 -------------------------------
@@ -52,6 +54,7 @@ TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
 TOKEN_ENV = "EODHD_API_TOKEN"
 ANSWERS_URL_ENV = "ANSWERS_URL"
+SIGNUP_URL_ENV = "SIGNUP_URL"
 
 
 def _dir(env: str, default: str) -> Path:
@@ -140,3 +143,13 @@ def api_token() -> str:
 def answers_url() -> str | None:
     """Where to GET the answers, if they are published rather than local."""
     return os.environ.get(ANSWERS_URL_ENV, "").strip() or None
+
+
+def signup_url() -> str | None:
+    """Where the page's call to action points.
+
+    Unset is a normal state, not a missing configuration: the newsletter lives
+    on a platform that is not wired up yet, and until it is the page says so
+    rather than offering a button that goes nowhere.
+    """
+    return os.environ.get(SIGNUP_URL_ENV, "").strip() or None

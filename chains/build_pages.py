@@ -42,11 +42,16 @@ read time.
 
 WHAT THE PUBLIC PAGE DOES NOT CARRY
 -----------------------------------
-The question text. The private page shows all 39 questions in full; the public
-one shows five rows and hides the question in the board tooltip behind a line
-pointing at the weekly mail. That is the product boundary, and it is applied
-here rather than in the data, because the data file is shared with the private
-page.
+Nothing that the private page does not also withhold. The product boundary
+moved OUT of this module and into the data: a snapshot carries the question
+text only for rows that are open -- every past date, plus the nearest upcoming
+one -- and a locked row has no text field at all. Both pages render the same
+rows the same way, so there is no longer a public variant that could be built
+wrong and leak, and no private variant that has to be trusted not to.
+
+What is still applied here is the shape of the page: five rows instead of the
+whole table, a signup block instead of a status control, and a fetch instead of
+a database read.
 """
 from __future__ import annotations
 
@@ -75,9 +80,11 @@ WATCH_JS_END = "// live data: newer snapshot"
 WATCH_HTML_START = '<div class="watch" id="watch">'
 WATCH_HTML_END = '<div class="foot" id="foot"></div>'
 
-# The board tooltip prints the question. On the public page it prints a pointer
-# to the mail instead.
-BOARD_TOOLTIP_Q = "<b>${w.who}</b><span>${w.q}</span>"
+# The board tooltip used to be stripped here, because the private page printed
+# every question and the public one could print none. Both pages now obey the
+# same rule -- text only where the row is open -- so there is nothing left to
+# strip, and one rule is better than two that can disagree about the same row.
+# See chains/questions.py.
 
 DB_READ = """(async()=>{ try{ if(!window.claude||!claude.use) return; const db=await claude.use('db'); if(!db) return; const snap=await db.doc('live/latest').get(); const doc=snap&&(snap.data?snap.data():snap); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
 
@@ -121,7 +128,6 @@ PUB = {
     "he": {
         "template": TEMPLATE_HE, "teaser": TEASER_HE, "live": LIVE_HE,
         "out": PUBLIC_HE, "lang": "he", "dir": "rtl",
-        "pubq": "השאלה עצמה — במייל השבועי.",
         "desc": ("מפה חיה של שרשרת האספקה של שבבי הבינה המלאכותית: 49 תחנות, "
                  "14 צווארי בקבוק שדופקים לפי השוק, ושאלות עם תאריך."),
         "watch_html": """<div class="watch" id="watch">
@@ -135,7 +141,6 @@ PUB = {
     "en": {
         "template": TEMPLATE_EN, "teaser": TEASER_EN, "live": LIVE_EN,
         "out": PUBLIC_EN, "lang": "en", "dir": "ltr",
-        "pubq": "The question itself is in the weekly mail.",
         "desc": ("A living map of the AI chip supply chain: 49 stations, 14 "
                  "chokepoints pulsing with the market, a forecast board and "
                  "questions with a date."),
@@ -207,8 +212,8 @@ TRANSLATIONS = [
   '<p class="lede">The timeline of the questions. Each circle is a day an answer is published. The arrows show who leaks first: an early question that partly answers a later one. Hover a circle to see its chain of hints. When an answer lands, mark it in the table below — the board colors it and updates the lean of everything that depends on it. The lean is a count of hints already answered, not a forecast and not a recommendation.</p>'),
  ('<div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>מדליף → שאלה</span></div>',
   '<div class="bleg"><span><i class="f"></i>confirmed date</span><span><i></i>expected date</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>leaker → question</span></div>'),
- ("const BT = {lanes:{hbm:'זיכרון HBM',litho:'ליתוגרפיה',fab:'מפעל ואריזה',mat:'חומרים',power:'חשמל',cloud:'ענן'}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)'};",
-  "const BT = {lanes:{hbm:'HBM memory',litho:'lithography',fab:'fab & packaging',mat:'materials',power:'power',cloud:'cloud'}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)'};"),
+ ("const BT = {lanes:{hbm:'זיכרון HBM',litho:'ליתוגרפיה',fab:'מפעל ואריזה',mat:'חומרים',power:'חשמל',cloud:'ענן'}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};",
+  "const BT = {lanes:{hbm:'HBM memory',litho:'lithography',fab:'fab & packaging',mat:'materials',power:'power',cloud:'cloud'}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};"),
  # The tag on a row a machine marked. An auto mark and a checked mark colour
  # the board identically, so the page labels the difference rather than hiding
  # it -- a reader who cannot tell them apart is reading a stronger claim than
@@ -224,6 +229,14 @@ TRANSLATIONS = [
   '<p class="lede">Every marked answer becomes a record: the baskets were fixed in advance, in a file in git, before the event, and the score is measured from the first close after the mark against the rest of the map. There is no backtest here and there cannot be one — the forecast was written before the price moved. The sample is small, and every number here is shown with its N.</p>'),
  ("  const LT = {h2:'יומן התחזיות', none:'עוד לא סומנה אף תשובה. הרישום הראשון ייפתח כאן ברגע שתסומן.',\n    scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'N=30 לפני כל החלטת הון', of:'מתוך',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון'};",
   "  const LT = {h2:'The Forecast Ledger', none:'No answer has been marked yet. The first entry opens here the moment one is.',\n    scored:'recorded', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'N=30 before any capital decision', of:'of',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark'};"),
+ # The teaser layer. A locked row is fully visible and simply has no
+ # sentence; the dummy below is fixed and is never the real text.
+ ("const LOCK = {\n  dummy: 'שאלה נעולה — הטקסט המלא מגיע במייל השבועי יחד עם מה שצריך להקשיב לו בשיחת התוצאות',\n  line: 'הטקסט המלא', mail: 'במייל השבועי',\n  badge: 'השאלה הפתוחה השבוע',\n  marked: 'סומן', };",
+  "const LOCK = {\n  dummy: 'Locked question — the full text arrives in the weekly mail, with what to listen for on the call',\n  line: 'The full question', mail: 'in the weekly mail',\n  badge: 'this week\\'s open question',\n  marked: 'marked', };"),
+ ("  const T = {head:'כל שאלה, לפני שהיא נענית',\n    promise:'כל שאלה עם תאריך, מה להקשיב לו, מי מדליף קודם, והתשובה עם המקור שלה — לפני כל אירוע ואחריו.',\n    btn:'קבל את המייל השבועי', soon:'בקרוב',\n    disc:'חינם ובתשלום, בלי המלצות. זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה לאף אדם.',\n    q:'שאלות', open:'פתוחות', next:'התשובה הבאה בעוד', days:'ימים', today:'היום'};",
+  "  const T = {head:'Every question, before it is answered',\n    promise:'Every dated question, what to listen for, who leaks first, and the answer with its source — before and after each event.',\n    btn:'Get the weekly mail', soon:'coming soon',\n    disc:'Free and paid, no recommendations. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone.',\n    q:'questions', open:'open', next:'next answer in', days:'days', today:'today'};"),
+ ("${(w.leaks||[]).length? (w.leaks||[]).length+' רמזים' : ''}",
+  "${(w.leaks||[]).length? (w.leaks||[]).length+' hints' : ''}"),
 ]
 
 
@@ -311,11 +324,6 @@ def public_page(template: str, teaser: str, live: str, cfg: dict) -> str:
     i = h.index(WATCH_HTML_START)
     j = h.index(WATCH_HTML_END)
     h = h[:i] + cfg["watch_html"] + h[j:]
-
-    # 3. the board tooltip points at the mail instead of printing the question
-    h = _must_replace(h, BOARD_TOOLTIP_Q,
-                      "<b>${w.who}</b><span>" + cfg["pubq"] + "</span>",
-                      "board tooltip question")
 
     # 4. the table renderer becomes the five-row teaser
     i = h.index(WATCH_JS_START)

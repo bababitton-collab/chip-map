@@ -91,13 +91,28 @@ MAX_NOTE = 300          # what the page's input caps a note at
 DIRECTIONAL = frozenset({"yes", "no"})
 
 FORECAST_FIELDS = frozenset({"id", "qid", "marked_at", "status", "direction",
-                             "win", "lose", "benchmark", "horizons"})
+                             "win", "lose", "benchmark", "horizons", "order"})
 
 # +1: the win basket is expected to outrun the lose basket. -1: reversed.
 DIRECTIONS = {1: 1, -1: -1, "long": 1, "short": -1}
 
 BENCHMARK = "EW_MAP"
 HORIZONS = (5, 10, 20)
+
+# Order 1 is the registered basket: the claim somebody made by hand. Order 2 is
+# its second ring -- the same claim's mechanical consequence, read off the map's
+# supply edges. They are never pooled. A direct hit rate and an indirect one
+# answer different questions, and averaging them would answer neither.
+#
+# The indirect ring gets a fourth horizon. A second-order effect arrives
+# through somebody else's order book -- a quarter of wafer starts, not a press
+# release -- and 20 sessions is short for that. 40 is added, not substituted:
+# the first three stay so the two orders can be read side by side at the
+# horizons they share.
+HORIZONS_R2 = (5, 10, 20, 40)
+ORDERS = {1: HORIZONS, 2: HORIZONS_R2}
+DEFAULT_ORDER = 1
+R2_SUFFIX = "-r2"
 
 # The answers may arrive as a file or as a URL. A share link is a redirect
 # chain, so redirects are followed; and it is somebody else's server, so it
@@ -175,8 +190,41 @@ def registered_baskets() -> dict[str, tuple[list[str], list[str]]]:
             for r in rows}
 
 
+def twin_id(qid: str, marked_at: str) -> str:
+    """The indirect forecast's id, derived from the mark it follows.
+
+    Derived rather than random so that creating it twice is impossible: the
+    same mark on the same day always names the same row.
+    """
+    return f"{qid}-{marked_at[:10]}{R2_SUFFIX}"
+
+
+def derived_baskets() -> dict[str, tuple[list[str], list[str]]]:
+    """The order-2 baskets: the second ring of each registered basket.
+
+    This is a pre-registration too, and it is a stricter one than the direct
+    baskets get. Those are typed by hand into watch.json; these are a pure
+    function of watch.json and map.json, both in git with commit dates. There
+    is no way to write an indirect basket without first committing an edge that
+    produces it -- so an incoming r2 record whose legs drifted is refused for
+    the same reason a drifted direct one is.
+    """
+    from chains import mapfile, rings
+    doc = mapfile.load()
+    by_ticker = {str(n.get("ticker", "")).upper(): n["id"]
+                 for n in doc.get("nodes", []) if n.get("ticker")}
+    out = {}
+    for r in json.loads(watch_path().read_text(encoding="utf-8")):
+        got = rings.second_ring(doc, r.get("win") or [], r.get("lose") or [],
+                                by_ticker.get(str(r.get("tk") or "").upper()))
+        out[r["id"]] = (got["win2"], got["lose2"])
+    return out
+
+
 def check_forecast(rec: object, ids: set[str],
-                   baskets: dict[str, tuple[list, list]]) -> str | None:
+                   baskets: dict[str, tuple[list, list]],
+                   baskets2: dict[str, tuple[list, list]] | None = None
+                   ) -> str | None:
     """The reason this forecast cannot be used, or None if it can."""
     if not isinstance(rec, dict):
         return f"expected an object, got {type(rec).__name__}"
@@ -189,6 +237,10 @@ def check_forecast(rec: object, ids: set[str],
     qid = rec.get("qid")
     if qid not in ids:
         return f"{fid}: qid {qid!r} is not a question in the watch list"
+    order = rec.get("order", DEFAULT_ORDER)
+    if order not in ORDERS:
+        return (f"{fid}: order {order!r} is not one of {sorted(ORDERS)} -- "
+                f"1 is the registered basket, 2 is its second ring")
     status = rec.get("status")
     if status not in STATUSES:
         return f"{fid}: status {status!r} is not one of {sorted(STATUSES)}"
@@ -212,20 +264,31 @@ def check_forecast(rec: object, ids: set[str],
     if rec.get("benchmark") != BENCHMARK:
         return (f"{fid}: benchmark {rec.get('benchmark')!r} is not "
                 f"{BENCHMARK!r}; nothing here scores against anything else")
+    want_h = ORDERS[order]
     h = rec.get("horizons")
-    if h is not None and list(h) != list(HORIZONS):
-        return f"{fid}: horizons {h!r} are not {list(HORIZONS)}"
-    reg_win, reg_lose = baskets.get(qid, ([], []))
-    if (list(rec["win"]), list(rec["lose"])) != (reg_win, reg_lose):
+    if h is not None and list(h) != list(want_h):
+        return (f"{fid}: horizons {h!r} are not {list(want_h)} "
+                f"(order {order})")
+    if order == 1:
+        reg_win, reg_lose = baskets.get(qid, ([], []))
+        where = "in the watch list"
+    else:
+        if baskets2 is None:
+            baskets2 = derived_baskets()
+        reg_win, reg_lose = baskets2.get(qid, ([], []))
+        where = "by the map's supply edges"
+    if (list(rec["win"]), list(rec["lose"])) != (list(reg_win),
+                                                 list(reg_lose)):
         return (f"{fid}: baskets do not match the ones registered for {qid} "
-                f"in the watch list. Registered win={reg_win} lose={reg_lose}; "
+                f"{where}. Registered win={reg_win} lose={reg_lose}; "
                 f"received win={rec['win']} lose={rec['lose']}. A forecast "
                 f"whose hypothesis moved after the event is not a forecast.")
     return None
 
 
 def collect_forecasts(rows: object, ids: set[str] | None = None,
-                      baskets: dict | None = None
+                      baskets: dict | None = None,
+                      baskets2: dict | None = None
                       ) -> tuple[list[dict], list[str]]:
     """The usable forecasts and the reasons the rest were dropped."""
     if rows is None:
@@ -238,7 +301,10 @@ def collect_forecasts(rows: object, ids: set[str] | None = None,
     problems: list[str] = []
     seen: set[str] = set()
     for rec in rows:
-        why = check_forecast(rec, ids, baskets)
+        if (isinstance(rec, dict) and rec.get("order", DEFAULT_ORDER) == 2
+                and baskets2 is None):
+            baskets2 = derived_baskets()
+        why = check_forecast(rec, ids, baskets, baskets2)
         if why:
             problems.append(why)
             continue
@@ -246,19 +312,61 @@ def collect_forecasts(rows: object, ids: set[str] | None = None,
             problems.append(f"{rec['id']}: duplicate forecast id")
             continue
         seen.add(rec["id"])
+        order = rec.get("order", DEFAULT_ORDER)
+        reg = (baskets if order == 1 else baskets2)[rec["qid"]]
         good.append({
             "id": rec["id"], "qid": rec["qid"], "marked_at": rec["marked_at"],
-            "status": rec["status"],
+            "status": rec["status"], "order": order,
             "direction": DIRECTIONS[rec["direction"]],
             # The REGISTERED baskets, not the received ones. They were just
             # proved equal; using the registered copy means the thing scored
             # is the thing in git even if that check is ever loosened.
-            "win": list(baskets[rec["qid"]][0]),
-            "lose": list(baskets[rec["qid"]][1]),
-            "benchmark": BENCHMARK, "horizons": list(HORIZONS),
+            "win": list(reg[0]),
+            "lose": list(reg[1]),
+            "benchmark": BENCHMARK, "horizons": list(ORDERS[order]),
         })
     good.sort(key=lambda r: (r["marked_at"], r["id"]))
     return good, problems
+
+
+def with_twins(forecasts: list[dict],
+               baskets2: dict | None = None) -> list[dict]:
+    """Every direct forecast gets its indirect twin, and gets it once.
+
+    The task that writes marks.json registers the direct row. It is not
+    required to know about the second ring, and older files predate it, so the
+    twin is created here from the same mark and the same date -- never from
+    today, which would date a forecast to the day the code shipped rather than
+    the day the claim was made.
+
+    Idempotent by construction: the twin's id is derived from (qid, mark date),
+    so a file that already carries it produces no second copy, and a file that
+    carries a hand-written one keeps the hand-written one.
+    """
+    have = {f["id"] for f in forecasts}
+    made = []
+    for f in forecasts:
+        if f.get("order", DEFAULT_ORDER) != 1:
+            continue
+        tid = twin_id(f["qid"], f["marked_at"])
+        if tid in have:
+            continue
+        if baskets2 is None:
+            baskets2 = derived_baskets()
+        win2, lose2 = baskets2.get(f["qid"], ([], []))
+        # No second ring, no second forecast. An empty basket is not a claim.
+        if not win2 and not lose2:
+            continue
+        have.add(tid)
+        made.append({
+            "id": tid, "qid": f["qid"], "marked_at": f["marked_at"],
+            "status": f["status"], "order": 2, "direction": f["direction"],
+            "win": list(win2), "lose": list(lose2),
+            "benchmark": BENCHMARK, "horizons": list(HORIZONS_R2),
+        })
+    out = list(forecasts) + made
+    out.sort(key=lambda r: (r["marked_at"], r["id"]))
+    return out
 
 
 def collect(raw: object, ids: set[str]) -> tuple[dict[str, dict], list[str]]:
@@ -406,7 +514,7 @@ def read(path: Path | None = None, ids: set[str] | None = None,
             problems += p5 + p6
             answers, forecasts = merge_sources((answers, forecasts), (c, h))
 
-    return answers, forecasts, problems
+    return answers, with_twins(forecasts), problems
 
 
 def load(path: Path | None = None, ids: set[str] | None = None,

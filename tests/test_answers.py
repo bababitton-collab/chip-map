@@ -20,7 +20,7 @@ import shutil
 import pytest
 
 from chains import answers
-from chains.paths import watch_path
+from chains.paths import map_path, watch_path
 
 IDS = {"mu_fq4", "nvda_q3", "asml_q3"}
 
@@ -364,6 +364,9 @@ def marks_env(monkeypatch, tmp_path, payload=None, url=None):
     # The tracked watch list travels with it: it is where the question ids and
     # the registered baskets come from, and a forecast is checked against it.
     shutil.copy(watch_path(), data / "semi" / "watch.json")
+    # And the map: the order-2 baskets are derived from its supply edges, so a
+    # forecast cannot be validated without it.
+    shutil.copy(map_path(), data / "semi" / "map.json")
     monkeypatch.setenv("CHIP_MAP_DATA", str(data))
     monkeypatch.setenv("CHIP_MAP_OUT", str(tmp_path / "out"))
     (tmp_path / "out").mkdir(exist_ok=True)
@@ -397,7 +400,10 @@ def test_the_marks_come_from_the_repository_with_no_url_at_all(monkeypatch,
     a, f, problems = answers.read()
     assert a["mu_fq4"]["status"] == "yes"
     assert a["mu_fq4"]["note"] == "from git"
-    assert [r["id"] for r in f] == ["f-1"]
+    direct = [r for r in f if r["order"] == 1]
+    assert [r["id"] for r in direct] == ["f-1"]
+    # The indirect twin rides along, derived from the same mark and the map.
+    assert [r["id"] for r in f if r["order"] == 2] == ["mu_fq4-2026-09-30-r2"]
     assert problems == []
 
 
@@ -441,7 +447,8 @@ def test_a_forecast_already_in_the_file_is_never_re_registered(monkeypatch,
     got = {r["id"]: r for r in f}
     assert got["f-1"]["direction"] == 1, "the committed registration stands"
     assert got["f-1"]["marked_at"] == "2026-09-30T21:05:00Z"
-    assert set(got) == {"f-1", "f-2"}, "a genuinely new id is still added"
+    direct = {i for i, r in got.items() if r["order"] == 1}
+    assert direct == {"f-1", "f-2"}, "a genuinely new id is still added"
     assert problems == []
 
 

@@ -83,7 +83,7 @@ import json
 from pathlib import Path
 
 from chains import answers as answers_mod
-from chains import forecast, mapfile, prices, questions
+from chains import forecast, mapfile, prices, questions, rings
 from chains import paths
 from chains.paths import out_dir, signup_url, watch_en_path, watch_path
 
@@ -411,6 +411,9 @@ def build(today: dt.date | None = None, lang: str = "he",
     # place that decides what is unlocked and no second opinion about it.
     watch = questions.merge(
         watch, questions.fetch() if text is None else text, lang, today)
+    # The second ring, attached to every row -- locked ones included. It is
+    # derived from the map, which is public, so it costs the paywall nothing.
+    rings.for_rows(watch, m)
     cal = calendar_from(watch, today)
     if answers is None:
         answers = answers_mod.load(ids={r["id"] for r in watch})

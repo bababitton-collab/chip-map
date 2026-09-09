@@ -19,7 +19,7 @@ import json
 import sys
 from pathlib import Path
 
-from chains import answers, questions
+from chains import answers, questions, rings
 
 
 USAGE = "usage: python -m chains.brief_he <live.json> <watch.json> [answers.json] [out.md] [--free]"
@@ -123,6 +123,13 @@ def render(live: dict, watch: list, statuses: dict) -> str:
         if leak_line(w): out.append(leak_line(w))
         if who or lose:
             out.append(f"מושפעים אם כן: {who}" + (f" · מפסידים: {lose}" if lose else '') + '.')
+        # הטבעת השנייה: לא טענה חדשה, אלא התוצאה המכנית של הראשונה,
+        # לפי קשתות אספקה שהיו במפה עוד לפני שהשאלה נשאלה.
+        up2 = ', '.join(name(i) for i in (w.get("win2") or []))
+        dn2 = ', '.join(name(i) for i in (w.get("lose2") or []))
+        if up2 or dn2:
+            bits = ([f"{up2} ↑"] if up2 else []) + ([f"{dn2} ↓"] if dn2 else [])
+            out.append("טבעת שנייה (לפי המפה): " + " · ".join(bits) + ".")
         out.append("")
 
 
@@ -174,6 +181,10 @@ def main(argv=None) -> int:
         return 2
     live = json.load(open(argv[0], encoding="utf-8"))
     watch = json.load(open(argv[1], encoding="utf-8"))
+    # The same second ring the page draws, derived from the same map.
+    # Derived here rather than copied out of live.json so the letter
+    # and the page cannot drift: both read map.json and watch.json.
+    rings.for_rows(watch)
     # The text is not in the watch file any more. The paid mail unlocks every
     # row; the free letter keeps every row too -- the dates are the free half
     # of the offer -- and a locked one prints its header and the lock line

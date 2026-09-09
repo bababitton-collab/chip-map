@@ -184,7 +184,7 @@ def test_winners_and_losers_get_their_own_colour():
 def test_more_than_six_nodes_says_how_many_are_hidden():
     i = TPL.index("function constellation(")
     body = TPL[i:TPL.index("// --- one card", i)]
-    assert "total>6" in body and 'y="195"' in body
+    assert "total>6" in body and 'y="215"' in body
 
 
 def test_the_reason_label_comes_from_the_map_or_the_layer_never_a_guess():
@@ -223,3 +223,167 @@ def test_the_english_page_has_no_hebrew_in_the_cards():
     i = EN.index("// ---- question cards ----")
     j = EN.index("// ---- the call to action", i)
     assert build_pages.hebrew_runs(EN[i:j]) == []
+
+
+# -- the second ring ---------------------------------------------------------
+#
+# The drawing is JavaScript, so the geometry is pinned here against the
+# template's own constants and then checked against the widths the REAL watch
+# list produces. A constant that drifts fails the first group; a label that
+# happens to be too long for the box fails the second, which is the failure
+# that actually reaches a reader.
+
+R1X, R2X, R2R, VBW, VBH = 230, 345, 8, 420, 230
+REASON_MAX, R2_LABEL_MAX, R2_MAX = 12, 9, 8
+
+# Inter's average advance is about 0.56em. Ring-1 reasons render at 11px and
+# ring-2 labels at 9px; both are rounded up, because a test that under-measures
+# a width is worse than no test.
+EM11, EM9 = 6.3, 5.2
+
+
+def cons_js():
+    i = TPL.index("function constellation(")
+    return TPL[i:TPL.index("// --- one card", i)]
+
+
+def ring2_js():
+    i = TPL.index("function ring2For(")
+    return TPL[i:TPL.index("function constellation(", i)]
+
+
+def test_the_viewbox_widened_for_the_second_ring():
+    assert f"const VBW={VBW}, VBH={VBH}," in TPL
+    assert f"R1X={R1X}, R2X={R2X}, R2R={R2R};" in TPL
+
+
+def test_the_column_holds_the_wider_drawing_without_shrinking_it():
+    """A 420 viewBox in the old 340px column renders 11px type at 8.9px. The
+    column takes the 40px; the gap gives 12 of them back."""
+    assert "grid-template-columns:150px minmax(0,1fr) 380px;gap:0 28px" in TPL
+    assert ".cons svg{width:380px;height:208px" in TPL
+
+
+def test_ring_two_draws_at_most_eight_and_counts_the_rest():
+    assert f"const R2_MAX={R2_MAX};" in TPL
+    body = ring2_js()
+    assert "kids.slice(0, R2_MAX)" in body
+    assert "hidden:total-show.length" in body
+    assert "+${r2.hidden}" in cons_js(), "the hidden ones are counted, not lost"
+
+
+def test_children_are_pushed_apart_rather_than_drawn_on_top_of_each_other():
+    body = ring2_js()
+    assert "const GAP=18;" in TPL
+    assert "Math.max(k.y, prev+GAP)" in body
+
+
+def test_a_child_is_only_drawn_if_its_parent_is():
+    """Ring 1 shows three a side. A second-ring node whose parent fell off that
+    list has nothing to hang from, and a line to nowhere is not a relationship."""
+    assert "const p = at[e.to]; if(!p) continue;" in ring2_js()
+
+
+def test_the_second_ring_borrows_its_parents_colour():
+    """It is the same claim one hop out, so it is not given a colour of its
+    own -- it is the parent's, thinned."""
+    body = cons_js()
+    assert 'stroke="${p.col}"' in body and 'opacity=".7"' in body
+    assert 'stroke-width="1"' in body and 'opacity=".45"' in body
+
+
+def test_a_ring_one_reason_is_cut_at_twelve_and_keeps_the_whole_sentence():
+    """"power & cooli" shipped. The cut is now explicit, and the full text is
+    on the element, so hovering gives it back."""
+    assert f"const REASON_MAX={REASON_MAX};" in TPL
+    body = cons_js()
+    assert "clip(full,REASON_MAX)" in body
+    assert "<title>${esc(full)}</title>" in body
+
+
+def test_the_legend_names_the_second_ring():
+    body = cons_js()
+    assert "T.ring2" in body and 'class="ln"' in body
+    assert ".cons .cap i.ln{border-top-width:1px" in TPL
+    assert "second ring · via the map" in EN
+
+
+def label_of(nid, doc):
+    for coll in ("nodes", "subnodes"):
+        for n in doc.get(coll, []):
+            if n["id"] == nid:
+                return (n.get("short")
+                        or (n.get("ticker") or n["name"]).split(".")[0][:8])
+    return nid.upper()
+
+
+def clip(t, n):
+    return t[:n] + "…" if len(t) > n else t
+
+
+def test_no_ring_two_label_reaches_the_edge_of_the_viewbox():
+    """Measured on every row the live watch list produces, not on a sample."""
+    doc = load_map()
+    rows = [dict(r) for r in WATCH]
+    from chains import rings
+    rings.for_rows(rows, doc)
+    worst = 0.0
+    for r in rows:
+        for nid in (r["win2"] + r["lose2"]):
+            lab = clip(label_of(nid, doc), R2_LABEL_MAX)
+            worst = max(worst, R2X + R2R + 4 + len(lab) * EM9)
+    assert worst <= VBW, f"a ring-2 label reaches {worst:.1f} of {VBW}"
+
+
+def test_no_ring_one_reason_reaches_the_second_ring():
+    """The reason sits between the two rings. Cut at twelve characters it has
+    to stop before x=337, where the ring-2 nodes begin."""
+    longest = R1X + 16 + 6 + (REASON_MAX + 1) * EM11
+    assert longest <= R2X - R2R, f"{longest:.1f} runs into ring 2"
+
+
+def test_every_ring_two_edge_names_a_node_in_the_basket():
+    """The drawing joins ring2_edges to win2/lose2 by id. An edge naming
+    something outside them would draw a line from nowhere."""
+    doc = load_map()
+    rows = [dict(r) for r in WATCH]
+    from chains import rings
+    rings.for_rows(rows, doc)
+    for r in rows:
+        legs = set(r["win2"]) | set(r["lose2"])
+        assert {e["from"] for e in r["ring2_edges"]} == legs
+        assert all(e["to"] in (r["win"] + r["lose"]) for e in r["ring2_edges"])
+
+
+# -- the board shows two orders ---------------------------------------------
+
+def test_the_board_shows_a_direct_row_and_an_indirect_row():
+    i = TPL.index("// ---- the forecast ledger ----")
+    body = TPL[i:TPL.index("// ---- question cards ----", i)]
+    assert "tileRow(S, LT.direct)" in body
+    assert "tileRow(IND, LT.indirect)" in body
+
+
+def test_the_board_never_adds_the_two_orders_together():
+    """Each row reads one summary object. Nothing here sums them, and the
+    ledger does not hand it a pooled one to read."""
+    i = TPL.index("// ---- the forecast ledger ----")
+    body = TPL[i:TPL.index("// ---- question cards ----", i)]
+    assert "S.n_scored + " not in body and "+ IND.n" not in body
+    from chains import forecast
+    s = forecast.summarise([])
+    assert "indirect" not in s, "summarise() knows about one order at a time"
+
+
+def test_the_gate_is_drawn_from_the_direct_row_only():
+    i = TPL.index("// ---- the forecast ledger ----")
+    body = TPL[i:TPL.index("// ---- question cards ----", i)]
+    assert "tileRow(S, LT.direct) + gate(S)" in body
+
+
+def test_each_ledger_row_says_which_order_it_is():
+    i = TPL.index("// ---- the forecast ledger ----")
+    body = TPL[i:TPL.index("// ---- question cards ----", i)]
+    assert "r.order===2?LT.indirect:LT.direct" in body
+    # the em dash is an escape in the template source, not a character
+    assert "second ring, via the map" in EN

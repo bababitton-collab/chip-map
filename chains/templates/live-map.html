@@ -148,7 +148,7 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .qcards .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
 .qcards h2{font-family:"Source Serif 4",serif;font-weight:400;font-size:1.6rem;margin:0 0 4px}
 .qcards .lede{color:var(--ink2);max-width:72ch;margin:0 0 26px;line-height:1.5}
-.card{display:grid;grid-template-columns:150px minmax(0,1fr) 340px;gap:0 34px;padding:28px 30px;background:var(--panel);border:1px solid var(--rule);border-radius:14px;margin-bottom:18px;align-items:start;position:relative}
+.card{display:grid;grid-template-columns:150px minmax(0,1fr) 380px;gap:0 28px;padding:28px 30px;background:var(--panel);border:1px solid var(--rule);border-radius:14px;margin-bottom:18px;align-items:start;position:relative}
 .card.next{border-color:#3a4658;box-shadow:0 0 0 1px #2a3444,0 20px 50px rgba(0,0,0,.35)}
 .ring{position:relative;width:118px;height:118px}
 .ring svg{width:118px;height:118px;transform:rotate(-90deg)}
@@ -166,9 +166,11 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .yn b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
 .yn .y b{color:var(--erode)}.yn .no b{color:var(--tight)}
 .why{font-size:.95rem;color:var(--ink3);line-height:1.45;max-width:60ch}.why b{color:var(--ink2);font-weight:600}
-.cons svg{width:340px;height:210px;display:block}
-.cons .cap{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;display:flex;gap:16px}
+.cons svg{width:380px;height:208px;display:block}
+.cons .cap{font-family:"IBM Plex Mono",monospace;font-size:.64rem;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;margin-top:6px;display:flex;flex-wrap:wrap;gap:4px 14px}
+.cons .cap span{white-space:nowrap}
 .cons .cap i{display:inline-block;width:18px;border-top:2px solid;vertical-align:middle;margin-right:6px}
+.cons .cap i.ln{border-top-width:1px;opacity:.7}
 .mid{position:relative}
 .lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .lock div{background:rgba(20,25,34,.85);border:1px solid var(--rule);padding:12px 18px;border-radius:10px;font-size:.95rem;color:var(--ink2);backdrop-filter:blur(2px)}
@@ -179,6 +181,9 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .answered summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:8px 0 14px}
 @media (max-width:900px){.card{grid-template-columns:1fr;gap:18px}.cons svg{width:100%;height:auto}.q{max-width:none}}
 .ledger{padding:18px 22px 6px;border-top:1px solid var(--rule)}
+.ordlab{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:14px 0 8px}
+.ord{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--rule);border-radius:4px;color:var(--ink3)}
+.ord.o2{border-style:dashed}
 .ledger h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
 .ledger .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 12px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin:0 0 8px}
@@ -636,7 +641,9 @@ function lockedHTML(){
     entry:'כניסה', close:'אחרון', gate:'N=30 לפני כל החלטת הון', of:'מתוך',
     sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',
     pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',
-    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון'};
+    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',
+    direct:'ישיר — הסל הרשום', indirect:'עקיף — טבעת שנייה לפי המפה',
+    noind:'אין עדיין תחזית עקיפה'};
   const p2 = v => v==null? '—' : ((v>0?'+':'')+(v*100).toFixed(2)+'%');
   const sgn = v => v==null? '' : (v>0?'pos':(v<0?'neg':''));
   if(!rows.length){
@@ -649,13 +656,23 @@ function lockedHTML(){
     return `<div class="gate"><span>${LT.gate} — ${n} ${LT.of} ${S.min_n}</span>
       <div class="bar"><i style="width:${pctv}%"></i></div></div>`;
   }
-  const H = ['5','10','20'];
-  tiles.innerHTML = `<div class="tiles">
-    <div class="tile"><b>${S.n_scored}</b><span>${LT.scored}</span></div>
-    ${H.map(h=>{const d=S.horizons[h]; return `<div class="tile"><b>${d.hit_rate==null?'—':Math.round(d.hit_rate*100)+'%'}</b><span>${LT.rate} ${h} (N=${d.n})</span></div>`;}).join('')}
-    ${H.map(h=>{const d=S.horizons[h]; return `<div class="tile ${sgn(d.mean_excess)}"><b>${p2(d.mean_excess)}</b><span>${LT.mean} ${h}</span></div>`;}).join('')}
-    <div class="tile"><b>${S.n_pending}</b><span>${LT.pending}</span></div>
-  </div>` + gate(S);
+  // Two orders, two rows, one shape. Nothing here adds them together: a hit
+  // rate over a mixed population of registered and derived baskets would
+  // describe neither of them.
+  function tileRow(sum, label){
+    const H = sum.hz || ['5','10','20'];
+    return `<div class="ordlab">${label}</div><div class="tiles">
+      <div class="tile"><b>${sum.n_scored}</b><span>${LT.scored}</span></div>
+      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile"><b>${d.hit_rate==null?'—':Math.round(d.hit_rate*100)+'%'}</b><span>${LT.rate} ${h} (N=${d.n})</span></div>`;}).join('')}
+      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile ${sgn(d.mean_excess)}"><b>${p2(d.mean_excess)}</b><span>${LT.mean} ${h}</span></div>`;}).join('')}
+      <div class="tile"><b>${sum.n_pending}</b><span>${LT.pending}</span></div>
+    </div>`;
+  }
+  const IND = S.indirect || null;
+  // The gate reads the direct row and only the direct row. N=30 was set for
+  // the claim somebody registered; the derived ring does not borrow its count.
+  tiles.innerHTML = tileRow(S, LT.direct) + gate(S)
+    + (IND ? tileRow(IND, LT.indirect) : '');
 
   const byQ = {}; (D.watch||LIVE.watch||[]).forEach(w=>byQ[w.id]=w);
   const nameOf = id => (byId[id]&&byId[id].short) || id.toUpperCase();
@@ -673,10 +690,11 @@ function lockedHTML(){
     const w = byQ[r.qid]||{}; const a = (D.answers||{})[r.qid]||{};
     const dir = r.direction>0 ? `<span class="dir up">▲ ${LT.dirUp}</span>`
                               : `<span class="dir dn">▼ ${LT.dirDn}</span>`;
+    const ord = `<span class="ord ${r.order===2?'o2':'o1'}">${r.order===2?LT.indirect:LT.direct}</span>`;
     if(r.pending_entry) return `<div class="fcard"><div class="hd"><b>${w.who||r.qid}</b>
-      <span class="dt">${LT.marked} ${String(r.marked_at).slice(0,10)}</span>${dir}</div>
+      <span class="dt">${LT.marked} ${String(r.marked_at).slice(0,10)}</span>${dir}${ord}</div>
       <div class="note"><span class="pending">${LT.pend} — ${LT.noentry}</span></div></div>`;
-    const chips = H.map(h=>{const d=r.horizons[h];
+    const chips = Object.keys(r.horizons||{}).map(h=>{const d=r.horizons[h];
       return `<span class="chip ${d? (d.hit?'hit':'miss') : ''}">${h}: ${d? p2(d.excess) : LT.pend}</span>`;}).join('');
     const tbl = (r.symbols||[]).map(x=>`<tr class="${x.side}">
       <td class="name">${nameOf(x.id)}</td><td>${x.sym}</td>
@@ -685,7 +703,7 @@ function lockedHTML(){
     return `<div class="fcard">
       <div class="hd"><b>${w.who||r.qid}</b>
         <span class="dt">${LT.marked} ${String(r.marked_at).slice(0,10)} · ${LT.entry} ${r.entry_session} · ${LT.close} ${r.entry_close} · ${r.sessions} ${LT.sess}</span>
-        ${dir}</div>
+        ${dir}${ord}</div>
       <div class="note">${STATUS[r.status]||r.status}${a.note?` — ${a.note}`:''}${a.updated?` <em>(${LT.src} ${String(a.updated).slice(0,10)})</em>`:''}</div>
       <div class="chips">${chips}</div>
       <table class="ftab"><tr><th>${LT.sym}</th><th></th><th>${LT.ent}</th><th>${LT.last}</th><th>${LT.ret}</th><th>${LT.exc}</th></tr>${tbl}</table>
@@ -707,7 +725,7 @@ function lockedHTML(){
     lockB:'במייל השבועי',
     conf:'מאושר', exp:'צפוי',
     day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',
-    up:'עולה אם כן', down:'יורד אם כן',
+    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',
     answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',
     marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',
            open:'לא ברור'},
@@ -770,6 +788,13 @@ function lockedHTML(){
     const n=nodeById[id]; if(!n) return String(id).toUpperCase().slice(0,6);
     return String(n.short||n.ticker||n.id).slice(0,6);
   }
+  // Ring 1 puts its label INSIDE a 30px circle, which is where the six-
+  // character squeeze above comes from. Ring 2 puts it beside an 8px one with
+  // 60px of room, so it gets the whole name -- "Samsung", not "Samsun".
+  function labelBeside(id){
+    const n=nodeById[id];
+    return n ? String(n.short||n.ticker||n.id) : String(id).toUpperCase();
+  }
   function reasonOf(centreId, id){
     const n=nodeById[id];
     for(const e of (D.edges||[])){
@@ -783,10 +808,60 @@ function lockedHTML(){
     return ln.length>11 ? ln.slice(0,11)+'…' : ln;
   }
   function bezMid(y){
-    // t=0.5 on M100,105 C160,105 180,y 250,y
-    const x=(100+3*160+3*180+250)/8, yy=(105+3*105+3*y+y)/8;
+    // t=0.5 on M100,115 C160,115 180,y 230,y
+    const x=(100+3*160+3*180+230)/8, yy=(115+3*115+3*y+y)/8;
     return {x:x, y:yy};
   }
+  // Geometry. Ring 1 is the registered basket, ring 2 is what ring 1 depends
+  // on -- read off the map's supply edges at build time, never here.
+  const VBW=420, VBH=230, CX=100, CY=115, R1X=230, R2X=345, R2R=8;
+  const R2_MAX=8;          // drawn; the rest are counted
+  const GAP=18;            // the least vertical room a 9px label needs
+  const REASON_MAX=12;     // characters, then an ellipsis and a <title>
+
+  function clip(t, n){
+    t = String(t||'');
+    return t.length>n ? t.slice(0,n)+'\u2026' : t;
+  }
+
+  // Children of the drawn ring-1 nodes, in basket order, capped, then pushed
+  // apart until none overlaps. Preferred y is the parent's, so a child stays
+  // beside the node it belongs to unless a neighbour has already taken the
+  // room.
+  function ring2For(w, drawn){
+    const at = {}; drawn.forEach(d=>{ at[d.id]=d; });
+    const side = {};
+    (w.win2||[]).forEach(i=>{ side[i]='win'; });
+    (w.lose2||[]).forEach(i=>{ side[i]='lose'; });
+    const kids = [];
+    for(const e of (w.ring2_edges||[])){
+      const p = at[e.to]; if(!p) continue;         // parent not drawn
+      if(!(e.from in side)) continue;
+      kids.push({id:e.from, parent:p, win:side[e.from]==='win',
+                 label:e.label||''});
+    }
+    const total = kids.length;
+    const show = kids.slice(0, R2_MAX);
+    // Spread siblings around their parent, then a single sweep for overlap.
+    const byParent = {};
+    show.forEach(k=>{ (byParent[k.parent.id]=byParent[k.parent.id]||[]).push(k); });
+    Object.values(byParent).forEach(g=>{
+      g.forEach((k,n)=>{ k.y = g[0].parent.y + (n-(g.length-1)/2)*GAP; });
+    });
+    show.sort((a,b)=>a.y-b.y);
+    let prev = -1e9;
+    show.forEach(k=>{ k.y = Math.max(k.y, prev+GAP); prev = k.y; });
+    // Move the whole stack into the box, never the nodes individually:
+    // clamping one node at a time closes the gap the sweep just opened.
+    if(show.length){
+      const lift = 22 - show[0].y;
+      if(lift>0) show.forEach(k=>{ k.y += lift; });
+      const drop = show[show.length-1].y - (VBH-22);
+      if(drop>0) show.forEach(k=>{ k.y -= drop; });
+    }
+    return {show:show, hidden:total-show.length};
+  }
+
   function constellation(w){
     const centre = byTicker[String(w.tk||'').toUpperCase()];
     const centreId = centre?centre.id:null;
@@ -794,30 +869,50 @@ function lockedHTML(){
     const all=[...wins.map(i=>({id:i,win:true})), ...loses.map(i=>({id:i,win:false}))];
     const total=(w.win||[]).length+(w.lose||[]).length;
     if(!all.length) return '';
-    const ys = all.length===1 ? [105]
-      : all.map((_,i)=>40+i*(130/(all.length-1)));
-    let g='';
+    const ys = all.length===1 ? [CY]
+      : all.map((_,i)=>45+i*(130/(all.length-1)));
+    let g='', drawn=[];
     all.forEach((o,i)=>{
       const y=ys[i], col=o.win?'#3fd18b':'#ff5a3c';
       const lab=labelOf(o.id), r=lab.length<=4?16:15;
       // Fit the label inside the node instead of letting it cross the stroke.
       const fs=Math.max(7.5, Math.min(11, (r*1.9)/Math.max(1,lab.length)*1.35));
       const m=bezMid(y);
-      g+=`<path d="M100,105 C160,105 180,${y.toFixed(1)} 250,${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
+      drawn.push({id:o.id, y:y, col:col, r:r});
+      g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
       g+=`<circle cx="${m.x.toFixed(1)}" cy="${m.y.toFixed(1)}" r="2.2" fill="${col}"/>`;
-      g+=`<circle cx="250" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="2"/>`;
-      g+=`<text x="250" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(lab)}</text>`;
-      const reason=reasonOf(centreId,o.id);
-      if(reason) g+=`<text x="${250+r+6}" y="${(y+4).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#7d8797">${esc(reason)}</text>`;
+      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="2"/>`;
+      g+=`<text x="${R1X}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(lab)}</text>`;
+      const full=reasonOf(centreId,o.id);
+      if(full){
+        // Truncated to fit the room left of ring 2; the whole sentence is on
+        // the element, so nothing is lost, only folded.
+        g+=`<text x="${R1X+r+6}" y="${(y+4).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#7d8797">${esc(clip(full,REASON_MAX))}<title>${esc(full)}</title></text>`;
+      }
     });
-    if(total>6) g+=`<text x="250" y="195" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#7d8797">+${total-6} ${T.more}</text>`;
+    if(total>6) g+=`<text x="${R1X}" y="215" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#7d8797">+${total-6} ${T.more}</text>`;
+
+    // --- ring 2 -----------------------------------------------------------
+    const r2 = ring2For(w, drawn);
+    let g2='';
+    r2.show.forEach(k=>{
+      const y=k.y, p=k.parent;
+      g2+=`<path d="M${R1X+p.r},${p.y.toFixed(1)} C${R1X+55},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${k.col=p.col}" stroke-width="1" opacity=".45"/>`;
+      g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${p.col}" stroke-width="1.4" opacity=".7"/>`;
+      const lab=clip(labelBeside(k.id), 9);
+      g2+=`<text x="${R2X+R2R+4}" y="${(y+3).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#9aa4b2">${esc(lab)}${k.label?`<title>${esc(k.label)}</title>`:''}</text>`;
+    });
+    if(r2.hidden>0) g2+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#7d8797">+${r2.hidden}</text>`;
+
     const ctr=esc(w.tk||(centre?centre.short:'')||'');
-    return `<div class="cons"><svg viewBox="0 0 340 210">
-      <circle cx="100" cy="105" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
-      ${g}
-      <circle cx="100" cy="105" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2"/>
-      <text x="100" y="109" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr}</text>
-    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span></div></div>`;
+    const leg2 = r2.show.length
+      ? `<span><i class="ln" style="border-color:#7d8797"></i>${T.ring2}</span>` : '';
+    return `<div class="cons"><svg viewBox="0 0 ${VBW} ${VBH}">
+      <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
+      ${g2}${g}
+      <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2"/>
+      <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr}</text>
+    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span>${leg2}</div></div>`;
   }
 
   // --- one card ---------------------------------------------------------

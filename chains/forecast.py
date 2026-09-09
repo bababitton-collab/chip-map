@@ -59,7 +59,8 @@ import statistics
 from bisect import bisect_right
 
 from chains import mapfile, prices
-from chains.answers import BENCHMARK, HORIZONS
+from chains.answers import (BENCHMARK, DEFAULT_ORDER, HORIZONS,
+                            HORIZONS_R2, ORDERS)
 
 # A date on which at least this share of US-listed symbols printed is a
 # session. Half is far above any plausible outage and far below the fraction
@@ -229,8 +230,10 @@ def score_one(f: dict, book: Book, cal: list[dt.date],
               node_symbols: list[str], symbol_of: dict[str, str],
               log: list[str]) -> dict | None:
     entry = entry_session(f["marked_at"], cal)
+    order = f.get("order", DEFAULT_ORDER)
     if entry is None:
         return {"id": f["id"], "qid": f["qid"], "status": f["status"],
+                "order": order,
                 "direction": f["direction"], "marked_at": f["marked_at"],
                 "entry_session": None, "pending_entry": True,
                 "symbols": [], "series": [], "horizons": {},
@@ -277,7 +280,9 @@ def score_one(f: dict, book: Book, cal: list[dt.date],
         })
 
     hz: dict[str, dict] = {}
-    for h in HORIZONS:
+    # The row's own horizons, not the module's: an indirect forecast is scored
+    # at 40 sessions as well, and 40 is not a horizon a direct row has.
+    for h in (f.get("horizons") or ORDERS[order]):
         # h sessions AFTER entry: window[0] is entry itself.
         if len(window) > h and exc[h] is not None:
             e = exc[h]
@@ -292,7 +297,7 @@ def score_one(f: dict, book: Book, cal: list[dt.date],
             hz[str(h)] = None
 
     return {
-        "id": f["id"], "qid": f["qid"], "status": f["status"],
+        "id": f["id"], "qid": f["qid"], "status": f["status"], "order": order,
         "direction": f["direction"], "marked_at": f["marked_at"],
         "entry_session": entry.isoformat(),
         "entry_close": window[-1].isoformat(),
@@ -309,9 +314,10 @@ def score_one(f: dict, book: Book, cal: list[dt.date],
     }
 
 
-def summarise(rows: list[dict]) -> dict:
+def summarise(rows: list[dict], horizons: tuple[int, ...] = HORIZONS) -> dict:
+    """One order's numbers. Never two orders' -- see ORDERS in answers.py."""
     out: dict[str, dict] = {}
-    for h in HORIZONS:
+    for h in horizons:
         vals = [r["horizons"][str(h)]["excess"] for r in rows
                 if r.get("horizons", {}).get(str(h))]
         hits = [r["horizons"][str(h)]["hit"] for r in rows
@@ -332,6 +338,7 @@ def summarise(rows: list[dict]) -> dict:
     scored = [r for r in rows if any((r.get("horizons") or {}).values())]
     return {
         "horizons": out,
+        "hz": [str(h) for h in horizons],
         "n_forecasts": len(rows),
         "n_scored": len(scored),
         "n_pending": len(rows) - len(scored),
@@ -354,7 +361,7 @@ def build(forecasts: list[dict], doc: dict | None = None,
                     if n.get("price_symbol")
                     and n.get("price_symbol_kind") != "none"]
     if not forecasts:
-        return {"summary": summarise([]), "rows": []}
+        return {"summary": _summaries([]), "rows": []}
 
     wanted = set(node_symbols)
     for f in forecasts:
@@ -370,7 +377,27 @@ def build(forecasts: list[dict], doc: dict | None = None,
         if r:
             rows.append(r)
     rows.sort(key=lambda r: (r["marked_at"], r["id"]), reverse=True)
-    return {"summary": summarise(rows), "rows": rows}
+    return {"summary": _summaries(rows), "rows": rows}
+
+
+def _summaries(rows: list[dict]) -> dict:
+    """The direct summary, with the indirect one hanging beneath it.
+
+    The shape is deliberate. The top level is order 1 and nothing else, so
+    every existing reader -- the board's headline tiles, the N=30 gate, the
+    brief -- keeps reading the direct number it has always read. The indirect
+    numbers are a sibling, at the same size, under their own name. Nothing adds
+    the two together, because a hit rate over a mixed population of first- and
+    second-order claims is not a hit rate for either.
+    """
+    direct = [r for r in rows if r.get("order", DEFAULT_ORDER) == 1]
+    indirect = [r for r in rows if r.get("order", DEFAULT_ORDER) == 2]
+    out = summarise(direct, HORIZONS)
+    out["order"] = 1
+    ind = summarise(indirect, HORIZONS_R2)
+    ind["order"] = 2
+    out["indirect"] = ind
+    return out
 
 
 def drop_symbol_series(ledger: dict) -> None:

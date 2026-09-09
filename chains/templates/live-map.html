@@ -174,6 +174,8 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .lock div{background:rgba(20,25,34,.85);border:1px solid var(--rule);padding:12px 18px;border-radius:10px;font-size:.95rem;color:var(--ink2);backdrop-filter:blur(2px)}
 .lock div b{color:var(--amber);font-weight:600}
 .blur{filter:blur(6px);opacity:.55;user-select:none}
+.evid{font-size:.9rem;color:var(--ink2);line-height:1.45;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--rule)}
+.evid b{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-inline-end:6px}
 .answered summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:8px 0 14px}
 @media (max-width:900px){.card{grid-template-columns:1fr;gap:18px}.cons svg{width:100%;height:auto}.q{max-width:none}}
 .ledger{padding:18px 22px 6px;border-top:1px solid var(--rule)}
@@ -706,7 +708,7 @@ function lockedHTML(){
     conf:'מאושר', exp:'צפוי',
     day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',
     up:'עולה אם כן', down:'יורד אם כן',
-    answered:'נענו', more:'נוספים', auto:'אוטומטי',
+    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',
     marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',
            open:'לא ברור'},
   };
@@ -848,7 +850,7 @@ function lockedHTML(){
         <div class="who"><b>${esc(f(w,'who'))}</b>
           <div class="d">${esc(f(w,'d'))}${w.tk?' · '+esc(w.tk):''}</div>${tag}</div>
       </div>
-      <div class="mid">${w.locked?midLocked():midOpen(w)}</div>
+      <div class="mid">${w.locked?midLocked():midOpen(w)}${opts.evidence?`<p class="evid"><b>${T.evidence}</b> ${esc(opts.evidence)}</p>`:''}</div>
       ${constellation(w)}
     </article>`;
   }
@@ -857,6 +859,10 @@ function lockedHTML(){
   const markOf = id => { const m=marks[id]; return (m&&m.status&&m.status!=='open')
     ? (T.marks[m.status]||T.marks.open) : ''; };
   const autoOf = id => !!(marks[id] && marks[id].auto);
+  const evidenceOf = w => {
+    const m = marks[w.id];
+    return (m && !w.locked) ? (m.evidence || '') : '';
+  };
 
   const upcoming = W.filter(w=>dayOf(w.d)>=0).sort((a,b)=>a.d.localeCompare(b.d));
   const done = W.filter(w=>dayOf(w.d)<0).sort((a,b)=>b.d.localeCompare(a.d));
@@ -865,7 +871,8 @@ function lockedHTML(){
   if(past){
     past.innerHTML = done.length
       ? `<details class="answered"><summary>${T.answered} · ${done.length}</summary>`
-        + done.map(w=>card(w,{mark:markOf(w.id)||T.marks.open, auto:autoOf(w.id)})).join('') + `</details>`
+        + done.map(w=>card(w,{mark:markOf(w.id)||T.marks.open, auto:autoOf(w.id),
+                              evidence:evidenceOf(w)})).join('') + `</details>`
       : '';
   }
 })();

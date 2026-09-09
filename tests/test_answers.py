@@ -15,10 +15,12 @@ command exits non-zero.
 from __future__ import annotations
 
 import json
+import shutil
 
 import pytest
 
 from chains import answers
+from chains.paths import watch_path
 
 IDS = {"mu_fq4", "nvda_q3", "asml_q3"}
 
@@ -342,3 +344,113 @@ def test_forecasts_alone_is_a_valid_payload(tmp_path):
     p = write(tmp_path, {"forecasts": []})
     a, f, problems = answers.read(p, ids=IDS)
     assert a == {} and f == [] and problems == []
+
+
+# -- where the marks come from ----------------------------------------------
+#
+# They come from git: data/<domain>/marks.json, committed to main. A mark is a
+# claim with a date on it, and in git it carries a commit hash, a diff and an
+# author. ANSWERS_URL is a second source now, merged UNDERNEATH the file, and
+# the file wins every conflict -- so a link serving stale or edited content
+# cannot quietly overwrite what was committed.
+
+MARK_URL = "https://marks.example/answers.json"
+
+
+def marks_env(monkeypatch, tmp_path, payload=None, url=None):
+    """A domain whose data directory is empty except for the marks we choose."""
+    data = tmp_path / "data"
+    (data / "semi").mkdir(parents=True)
+    # The tracked watch list travels with it: it is where the question ids and
+    # the registered baskets come from, and a forecast is checked against it.
+    shutil.copy(watch_path(), data / "semi" / "watch.json")
+    monkeypatch.setenv("CHIP_MAP_DATA", str(data))
+    monkeypatch.setenv("CHIP_MAP_OUT", str(tmp_path / "out"))
+    (tmp_path / "out").mkdir(exist_ok=True)
+    if url is None:
+        monkeypatch.delenv("ANSWERS_URL", raising=False)
+    else:
+        monkeypatch.setenv("ANSWERS_URL", url)
+    if payload is not None:
+        (data / "semi" / "marks.json").write_text(json.dumps(payload),
+                                                  encoding="utf-8")
+    return data / "semi" / "marks.json"
+
+
+def a_forecast(**over):
+    """Baskets as registered in the tracked watch list, so the row survives."""
+    r = {"id": "f-1", "qid": "mu_fq4", "marked_at": "2026-09-30T21:05:00Z",
+         "status": "yes", "direction": 1, "win": ["mu"],
+         "lose": ["skhynix", "samsung"], "benchmark": "EW_MAP",
+         "horizons": [5, 10, 20]}
+    r.update(over)
+    return r
+
+
+def test_the_marks_come_from_the_repository_with_no_url_at_all(monkeypatch,
+                                                               tmp_path):
+    """File-only mode: the normal one. Nothing is fetched, nothing is needed
+    from outside the commit."""
+    marks_env(monkeypatch, tmp_path, {
+        "answers": {"mu_fq4": {"status": "yes", "note": "from git"}},
+        "forecasts": [a_forecast()]})
+    a, f, problems = answers.read()
+    assert a["mu_fq4"]["status"] == "yes"
+    assert a["mu_fq4"]["note"] == "from git"
+    assert [r["id"] for r in f] == ["f-1"]
+    assert problems == []
+
+
+def test_the_file_wins_and_the_url_only_adds(monkeypatch, tmp_path):
+    """Merge precedence, both halves of it: the URL cannot change a mark the
+    repository already carries, and it can still contribute one the repository
+    has not got."""
+    import httpx
+    import respx
+    marks_env(monkeypatch, tmp_path,
+              {"answers": {"mu_fq4": {"status": "yes", "note": "from git"}}},
+              url=MARK_URL)
+    with respx.mock:
+        respx.get(MARK_URL).mock(return_value=httpx.Response(200, json={
+            "answers": {"mu_fq4": {"status": "no", "note": "from the url"},
+                        "nvda_q3": {"status": "mixed", "note": "url only"}}}))
+        a, _f, problems = answers.read()
+    assert a["mu_fq4"]["note"] == "from git", "the committed mark stands"
+    assert a["nvda_q3"]["note"] == "url only", "and the URL still adds"
+    assert problems == []
+
+
+def test_a_forecast_already_in_the_file_is_never_re_registered(monkeypatch,
+                                                               tmp_path):
+    """The ledger's whole claim is that a basket was fixed before the event.
+    A second source restating the same forecast id -- with a later timestamp,
+    or a different direction -- is ignored: the registration already happened,
+    in a commit, and it happens once."""
+    import httpx
+    import respx
+    marks_env(monkeypatch, tmp_path, {"forecasts": [a_forecast()]},
+              url=MARK_URL)
+    with respx.mock:
+        respx.get(MARK_URL).mock(return_value=httpx.Response(200, json={
+            "forecasts": [a_forecast(direction=-1, status="no",
+                                     marked_at="2026-10-15T21:05:00Z"),
+                          a_forecast(id="f-2", qid="orcl_q1",
+                                     win=["nvda", "amd", "vrt"], lose=[],
+                                     marked_at="2026-10-01T21:05:00Z")]}))
+        _a, f, problems = answers.read()
+    got = {r["id"]: r for r in f}
+    assert got["f-1"]["direction"] == 1, "the committed registration stands"
+    assert got["f-1"]["marked_at"] == "2026-09-30T21:05:00Z"
+    assert set(got) == {"f-1", "f-2"}, "a genuinely new id is still added"
+    assert problems == []
+
+
+def test_an_unset_answers_url_is_silent_and_normal(monkeypatch, tmp_path):
+    """It is optional. There is no failure, no warning and no empty-string
+    fetch when it is not configured -- the file alone is a complete answer."""
+    marks_env(monkeypatch, tmp_path,
+              {"answers": {"mu_fq4": {"status": "yes"}}})
+    a, _f, problems = answers.read()
+    assert problems == []
+    assert set(a) == {"mu_fq4"}
+    assert answers.main() == 0

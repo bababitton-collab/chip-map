@@ -15,15 +15,19 @@ registered ones, and a row whose baskets have drifted is dropped and named. A
 forward test whose hypothesis can be edited after the fact is a backtest
 wearing a disguise, and this is the check that stops that happening quietly.
 
-THE GAP THIS BRIDGES
+WHERE THE MARKS LIVE
 --------------------
-The private artifact writes each answer into its own database collection
-(``watch``), one document per question id, ``{status, note, updated}``. There is
-no route from this laptop to that database: it is the artifact's own storage
-and nothing outside the page can read it. So the crossing is a file. The Friday
-cloud job exports the collection to ``<root>/chains/answers.json``; the
-Saturday local job reads it, and every consumer here reads that file and
-nothing else.
+In git: ``data/<domain>/marks.json``, committed to main by a cloud task through
+the contents API. A mark is a claim with a date on it, and in git it has a
+commit hash, a diff and an author instead of a row in somebody's spreadsheet.
+The forecast ledger's whole argument is that the baskets were registered before
+the event; the marks that score them belong under the same discipline.
+
+``ANSWERS_URL`` still works and is now a SECOND source, merged on top of the
+file rather than replacing it -- and the file wins every conflict. That order
+is the point: the repository is the record, and a link that is serving stale or
+edited content cannot quietly overwrite what was committed. An unset
+``ANSWERS_URL`` is silent and normal.
 
 A BAD ROW IS DROPPED AND NAMED. IT DOES NOT STOP THE RUN.
 ---------------------------------------------------------
@@ -57,7 +61,8 @@ import json
 import sys
 from pathlib import Path
 
-from chains.paths import answers_path, answers_url, watch_path
+from chains.paths import (answers_path, answers_url, marks_path,
+                          watch_path)
 
 # The five the page's own <select> can produce. "open" is a real value, not a
 # missing one: it means somebody looked and the question is still open.
@@ -325,6 +330,36 @@ def _split(raw: object) -> tuple[object, object]:
     return raw, None
 
 
+def _read_file(p: Path) -> tuple[object, list[str]]:
+    """One JSON file, or a reason it could not be read. Never raises."""
+    if not p.exists():
+        return None, []
+    try:
+        return json.loads(p.read_text(encoding="utf-8")), []
+    except json.JSONDecodeError as e:
+        # A cloud task wrote something unparseable. Worth shouting about, and
+        # still not worth losing the whole build over.
+        return None, [f"{p} is not valid JSON ({e}) -- nothing read from it"]
+
+
+def merge_sources(primary: tuple[dict, list], secondary: tuple[dict, list]
+                  ) -> tuple[dict[str, dict], list[dict]]:
+    """Two (answers, forecasts) pairs, with the primary winning.
+
+    Answers merge per question id. Forecasts merge per forecast id and are
+    never re-registered: a forecast already in the file keeps its entry, so a
+    URL cannot restate a claim that is already committed. That is the same
+    rule the baskets follow, applied to the row that points at them.
+    """
+    a1, f1 = primary
+    a2, f2 = secondary
+    answers = {**a2, **a1}
+    seen = {f["id"] for f in f1}
+    forecasts = list(f1) + [f for f in f2 if f["id"] not in seen]
+    forecasts.sort(key=lambda r: (r["marked_at"], r["id"]))
+    return answers, forecasts
+
+
 def read(path: Path | None = None, ids: set[str] | None = None,
          url: str | None = None
          ) -> tuple[dict[str, dict], list[dict], list[str]]:
@@ -340,24 +375,38 @@ def read(path: Path | None = None, ids: set[str] | None = None,
     """
     ids = known_ids() if ids is None else ids
     url = url if url is not None else answers_url()
+    problems: list[str] = []
+
+    # The file first, and it is the one that wins.
+    raw, why = _read_file(path or marks_path())
+    problems += why
+    a_raw, f_raw = _split(raw if raw is not None else {})
+    answers, p1 = collect(a_raw or {}, ids)
+    forecasts, p2 = collect_forecasts(f_raw, ids)
+    problems += p1 + p2
+
+    # A local by-hand export, if somebody dropped one next to the build.
+    extra, why = _read_file(answers_path())
+    problems += why
+    if extra is not None:
+        b_raw, g_raw = _split(extra)
+        b, p3 = collect(b_raw or {}, ids)
+        g, p4 = collect_forecasts(g_raw, ids)
+        problems += p3 + p4
+        answers, forecasts = merge_sources((answers, forecasts), (b, g))
+
+    # Then the URL, merged underneath both.
     if url:
-        raw, problems = _fetch(url)
-    else:
-        p = path or answers_path()
-        if not p.exists():
-            return {}, [], []
-        try:
-            raw, problems = json.loads(p.read_text(encoding="utf-8")), []
-        except json.JSONDecodeError as e:
-            # The exporting job wrote something unparseable. Worth shouting
-            # about, and still not worth losing the whole build over.
-            return {}, [], [f"{p} is not valid JSON ({e}) -- nothing read"]
-    if problems:
-        return {}, [], problems
-    a_raw, f_raw = _split(raw)
-    answers, a_problems = collect(a_raw or {}, ids)
-    forecasts, f_problems = collect_forecasts(f_raw, ids)
-    return answers, forecasts, a_problems + f_problems
+        raw, why = _fetch(url)
+        problems += why
+        if raw is not None:
+            c_raw, h_raw = _split(raw)
+            c, p5 = collect(c_raw or {}, ids)
+            h, p6 = collect_forecasts(h_raw, ids)
+            problems += p5 + p6
+            answers, forecasts = merge_sources((answers, forecasts), (c, h))
+
+    return answers, forecasts, problems
 
 
 def load(path: Path | None = None, ids: set[str] | None = None,
@@ -371,13 +420,14 @@ def load(path: Path | None = None, ids: set[str] | None = None,
 
 
 def main() -> int:
-    url = answers_url()
-    src = url or answers_path()
-    if not url and not answers_path().exists():
-        print(f"{src}: absent -- nothing marked yet, which is not an error")
-        return 0
+    sources = [str(marks_path())]
+    if answers_path().exists():
+        sources.append(str(answers_path()))
+    if answers_url():
+        sources.append("ANSWERS_URL")
     answers, forecasts, problems = read()
-    print(f"{src}: {len(answers)} answers, {len(forecasts)} forecasts, "
+    print(f"{' + '.join(sources)}")
+    print(f"  {len(answers)} answers, {len(forecasts)} forecasts, "
           f"{len(problems)} dropped")
     by: dict[str, int] = {}
     for rec in answers.values():

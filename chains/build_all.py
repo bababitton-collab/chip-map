@@ -46,14 +46,14 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
-from chains.paths import answers_path, out_dir, watch_en_path, watch_path  # noqa: E402
+from chains.paths import marks_path, out_dir, watch_en_path, watch_path  # noqa: E402
 
 PY = sys.executable
 
 
 def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]:
     o = out_dir()
-    ans = str(answers_path())
+    ans = str(marks_path())
     out = [
         ("prices", ["chains/scripts/build_prices.py"]),
         ("repair", ["chains/scripts/repair_prices.py"]),

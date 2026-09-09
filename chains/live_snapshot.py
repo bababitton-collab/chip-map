@@ -48,7 +48,7 @@ is over its ceiling, and the per-symbol sparklines go before the basket ones:
 the basket line is the claim, the per-symbol lines are the detail behind it.
 
 ``answers`` rides along with it: {question_id: {status, note, updated}}, read
-from <root>/chains/answers.json, or {} when that file has not been exported
+from data/<domain>/marks.json in git, or {} when nothing has been marked
 yet. The page reads it as the fallback status for each question, which is what
 lets the PUBLIC board colour itself -- the private board's own answers live in
 an artifact database no public reader can see. Nothing here invents an answer;

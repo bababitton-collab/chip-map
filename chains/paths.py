@@ -56,6 +56,7 @@ MAP_FILENAME = "map.json"
 WATCH_FILENAME = "watch.json"
 WATCH_EN_FILENAME = "watch_en.json"
 ANSWERS_FILENAME = "answers.json"
+MARKS_FILENAME = "marks.json"
 
 DOMAIN_ENV = "CHIP_MAP_DOMAIN"
 DEFAULT_DOMAIN = "semi"
@@ -150,8 +151,21 @@ def watch_en_path() -> Path:
     return data_dir() / WATCH_EN_FILENAME
 
 
+def marks_path(dom: str | None = None) -> Path:
+    """The marks: what was answered, and the forecasts made from it.
+
+    Curated input, tracked beside the map, and written by a cloud task that
+    commits to main through the contents API. That is deliberate: a mark is a
+    claim with a date on it, and putting it in git gives it a commit hash and a
+    diff instead of a row in somebody's spreadsheet. The forecast ledger's
+    whole argument rests on the baskets having been registered before the
+    event; the marks belong in the same place for the same reason.
+    """
+    return data_dir(dom) / MARKS_FILENAME
+
+
 def answers_path() -> Path:
-    """The exported answers, when they arrive as a file rather than a URL."""
+    """A local override, for a by-hand run. Not written by anything."""
     return out_dir() / ANSWERS_FILENAME
 
 

@@ -451,13 +451,13 @@ def test_an_open_question_text_rides_along(book):
 def test_the_publisher_scans_the_track_page_for_locked_text():
     from chains import publish_site
     assert "track/index.html" in publish_site.PAYWALLED
-    assert "track/track.json" in publish_site.PAYWALLED
+    assert "track/track.enc.json" in publish_site.PAYWALLED
 
 
 def test_the_track_page_is_published_under_its_own_path():
     from chains import publish_site
     assert ("track.html", "index.html") in publish_site.TRACK_FILES
-    assert ("track.json", "track.json") in publish_site.TRACK_FILES
+    assert ("track.enc.json", "track.enc.json") in publish_site.TRACK_FILES
 
 
 TEMPLATE = None
@@ -517,11 +517,11 @@ def test_the_rendered_page_says_nothing_undefined(book):
 
 
 def test_the_page_never_shows_a_bare_dash_in_a_tile():
-    """With nothing scored the honest reading is a zero out of a zero, and a
+    """With nothing finished the honest reading is a zero out of a zero, and a
     caption that says which zero it is."""
     body = template()
     assert "'0 / 0'" in body
-    assert "no scored forecasts yet" in body
+    assert "no finished forecasts yet" in body
 
 
 # -- what the edge carries ----------------------------------------------------
@@ -535,19 +535,23 @@ def test_the_reason_is_the_edge_between_the_company_and_the_station(book):
     assert track.reason_for(doc, "up", "acme") == "wafers and packaging"
 
 
-def test_a_station_with_no_edge_falls_back_to_its_layer(book):
-    """Honest rather than blank, and what the map says in the same case."""
+def test_a_station_with_no_edge_gets_no_reason_at_all(book):
+    """The layer name used to stand in there, which put the same three words
+    beside every station on a card and read like three findings when it was one
+    label. A blank says what is true: the map records no link."""
     doc = {"nodes": [{"id": "up", "layer": "L4"}], "subnodes": [], "edges": [],
-           "labels": {"layers": {"L4": {"he": "מעצבות", "en": "chip designers"}}}}
-    assert track.reason_for(doc, "acme", "up") == "chip designers"
+           "labels": {"layers": {"L4": {"he": "x", "en": "chip designers"}}}}
+    assert track.reason_for(doc, "acme", "up") == ""
 
 
-def test_the_layer_name_is_the_english_one():
-    """The page is English-only; the map keeps both."""
-    doc = {"nodes": [{"id": "up", "layer": "L4"}], "subnodes": [], "edges": [],
-           "labels": {"layers": {"L4": {"he": "מעצבות", "en": "chip designers"}}}}
+def test_a_reason_is_never_hebrew():
+    """The page is English-only, and the only text that can reach it is an
+    edge's own words from the map, which are English."""
     from chains import build_pages
-    assert build_pages.hebrew_runs(track.reason_for(doc, None, "up")) == []
+    doc = {"nodes": [{"id": "up"}], "subnodes": [],
+           "edges": [{"from": "up", "to": "acme", "type": "supplies",
+                      "what": "wafers"}]}
+    assert build_pages.hebrew_runs(track.reason_for(doc, "acme", "up")) == []
 
 
 def test_a_station_the_map_has_never_heard_of_gets_no_reason():
@@ -590,14 +594,221 @@ def test_the_reasons_do_not_ride_in_the_slim_copy(book):
 
 # -- the drawing keeps the cut and the whole ---------------------------------
 
+def cards_source() -> str:
+    from chains.paths import templates_dir
+    return (templates_dir() / "track-cards.js").read_text(encoding="utf-8")
+
+
 def test_the_page_clips_the_reason_at_twelve_and_titles_the_whole():
-    body = template()
+    body = cards_source()
     assert "const REASON_MAX=12;" in body
     assert "esc(clip(full,REASON_MAX))" in body
     assert "<title>${esc(full)}</title>" in body
 
 
 def test_the_second_ring_keeps_its_own_words_on_hover():
-    body = template()
+    body = cards_source()
     assert "by[e.from].labels.push(e.label||'');" in body
     assert "(k.labels||[]).filter(Boolean).join(' · ')" in body
+
+
+# -- the sealed payload ------------------------------------------------------
+
+def key() -> bytes:
+    import os
+    return os.urandom(32)
+
+
+def test_a_payload_survives_a_round_trip(book):
+    data = built(book, [q("a", "2026-06-01", ["up"], ["down"])])
+    k = key()
+    assert track.decrypt(track.encrypt(data, k), k) == data
+
+
+def test_the_sealed_file_is_the_shape_the_page_expects(book):
+    """The page reads it with WebCrypto and no library, so the field names and
+    the base64 are the contract."""
+    import base64
+    blob = track.encrypt(built(book, [q("a", "2026-06-01", ["up"], [])]), key())
+    assert blob["v"] == 1 and blob["alg"] == "A256GCM"
+    assert len(base64.b64decode(blob["nonce"])) == track.NONCE_BYTES
+    assert len(base64.b64decode(blob["tag"])) == 16
+    assert base64.b64decode(blob["ct"])
+
+
+def test_as_of_rides_outside_the_ciphertext(book):
+    """The page has to say how fresh the locked data is without holding the
+    key."""
+    data = built(book, [q("a", "2026-06-01", ["up"], [])])
+    assert track.encrypt(data, key())["as_of"] == data["as_of"]
+
+
+def test_the_wrong_key_is_a_clean_error_not_a_partial_read(book):
+    data = built(book, [q("a", "2026-06-01", ["up"], [])])
+    blob = track.encrypt(data, key())
+    with pytest.raises(track.TrackKeyError) as e:
+        track.decrypt(blob, key())
+    assert "does not open" in str(e.value)
+
+
+def test_a_changed_file_fails_to_open_rather_than_opening_wrong(book):
+    """GCM authenticates. A byte flipped in transit is not a partial read."""
+    import base64
+    k = key()
+    blob = track.encrypt(built(book, [q("a", "2026-06-01", ["up"], [])]), k)
+    ct = bytearray(base64.b64decode(blob["ct"]))
+    ct[0] ^= 0x01
+    blob["ct"] = base64.b64encode(bytes(ct)).decode()
+    with pytest.raises(track.TrackKeyError):
+        track.decrypt(blob, k)
+
+
+def test_an_unknown_algorithm_is_refused(book):
+    k = key()
+    blob = track.encrypt(built(book, [q("a", "2026-06-01", ["up"], [])]), k)
+    blob["alg"] = "rot13"
+    with pytest.raises(track.TrackKeyError) as e:
+        track.decrypt(blob, k)
+    assert "unknown algorithm" in str(e.value)
+
+
+def test_a_missing_key_stops_the_build(monkeypatch):
+    """The one bug in this arrangement nobody would notice: the site would look
+    exactly right and be unlocked."""
+    monkeypatch.delenv(track.KEY_ENV, raising=False)
+    with pytest.raises(track.TrackKeyError) as e:
+        track.load_key()
+    assert "will not fall back to plaintext" in str(e.value)
+
+
+@pytest.mark.parametrize("bad,why", [
+    ("not base64!!", "base64"),
+    ("c2hvcnQ=", "AES-256 needs"),
+])
+def test_a_malformed_key_says_which_way_it_is_wrong(bad, why, monkeypatch):
+    monkeypatch.setenv(track.KEY_ENV, bad)
+    with pytest.raises(track.TrackKeyError) as e:
+        track.load_key()
+    assert why in str(e.value)
+
+
+def test_a_good_key_loads(monkeypatch):
+    import base64
+    import os
+    raw = os.urandom(32)
+    monkeypatch.setenv(track.KEY_ENV, base64.b64encode(raw).decode())
+    assert track.load_key() == raw
+
+
+# -- the free half -----------------------------------------------------------
+
+def test_the_public_payload_describes_nothing_in_flight(book):
+    """Anything still running is counted, never described: its members and its
+    prices are not in the object at all."""
+    watch = [q("t", "2026-01-06", ["up"], ["down"]),
+             q("u", (TODAY + dt.timedelta(days=9)).isoformat(), ["up"], [])]
+    fs = [fc("f", "t", ["up"], ["down"], CAL[-8].isoformat())]
+    pub = track.public(built(book, watch, fs, {"t": {"status": "yes"}}))
+    blob = json.dumps(pub)
+    assert pub["n_active"] == 1 and pub["closed"] == []
+    for word in ("members", "series", "entry_close", "since_pct", "win2",
+                 "ring2_edges", "UP", "DOWN"):
+        assert word not in blob, word
+
+
+def test_a_finished_forecast_goes_out_whole(book):
+    """The record is the evidence, and evidence nobody can see is not
+    evidence."""
+    watch = [q("c", "2026-01-06", ["up"], ["down"])]
+    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
+    pub = track.public(built(book, watch, fs, {"c": {"status": "yes"}}))
+    assert len(pub["closed"]) == 1
+    row = pub["closed"][0]
+    assert row["who"] == "C" and row["status"] == "yes"
+    assert row["horizons"]["5"]["spread"] is not None
+    assert "members" not in row
+
+
+def test_the_second_ring_is_a_count_not_a_cast_list(book):
+    marked = CAL[0].isoformat()
+    watch = [q("c", "2026-01-06", ["up"], ["down"])]
+    fs = [fc("f", "c", ["up"], ["down"], marked),
+          fc("c-" + marked + "-r2", "c", ["s1"], ["s2"], marked, order=2)]
+    pub = track.public(built(book, watch, fs, {"c": {"status": "yes"}}))
+    row = pub["closed"][0]
+    assert isinstance(row["ring2_scored"], int)
+    blob = json.dumps(pub)
+    assert "s1" not in blob and "S1" not in blob
+
+
+def test_the_public_payload_names_the_next_date_and_who(book):
+    """A date is not a finding; it is a public fact with a countdown on it."""
+    pub = track.public(built(book, [
+        q("a", "2026-06-02", ["up"], []), q("b", "2026-06-01", ["down"], [])]))
+    assert pub["next_up"] == {"d": "2026-06-01", "who": "B", "confirmed": True}
+    assert pub["n_upcoming"] == 2
+
+
+def test_the_public_payload_is_small(book):
+    """It is the free half of a paid product; it should not be most of it."""
+    full = built(book, [q("a", "2026-06-01", ["up"], ["down"])])
+    assert len(json.dumps(track.public(full))) < len(json.dumps(full)) / 10
+
+
+# -- what the publisher ships ------------------------------------------------
+
+def test_only_the_sealed_file_is_published():
+    from chains import publish_site
+    names = [dst for _src, dst in publish_site.TRACK_FILES]
+    assert "track.enc.json" in names
+    assert "track.json" not in names
+    assert publish_site.TRACK_PLAINTEXT == "track.json"
+
+
+def test_the_sealed_file_goes_through_the_leak_scan():
+    from chains import publish_site
+    assert "track/track.enc.json" in publish_site.PAYWALLED
+    assert "track/track.json" not in publish_site.PAYWALLED
+
+
+def test_the_page_asks_for_a_key_and_keeps_it_in_the_browser():
+    body = template()
+    assert "crypto.subtle.decrypt" in body and "AES-GCM" in body
+    assert "track.enc.json" in body
+    assert "localStorage.setItem" in body
+    assert "That key does not open this month" in body
+
+
+def test_the_key_input_is_a_password_field():
+    """It is a shared secret; it should not sit in a screenshot or a screen
+    share in plain sight."""
+    assert 'id="key" type="password"' in template()
+
+
+def test_the_locked_panel_holds_no_real_content():
+    body = template()
+    i = body.index('id="locked"')
+    j = body.index("// ---- the key", i)
+    panel = body[i:j]
+    assert "gb" in panel and "gring" in panel, "generic bars and a ring"
+    assert "members" not in panel
+
+
+def test_the_shared_renderer_is_one_file():
+    """The unlocked public view and the private map's section draw the same
+    cards; two copies would drift."""
+    from chains.paths import templates_dir
+    js = (templates_dir() / "track-cards.js").read_text(encoding="utf-8")
+    assert "window.renderTrack" in js
+    assert track.CARDS_PLACEHOLDER in template()
+    assert track.CARDS_PLACEHOLDER in (
+        templates_dir() / "live-map.html").read_text(encoding="utf-8")
+
+
+def test_the_renderer_does_not_fetch_or_decrypt_anything():
+    """It draws what it is handed. Deciding what a reader may see is not its
+    job and it has no way to do it."""
+    from chains.paths import templates_dir
+    js = (templates_dir() / "track-cards.js").read_text(encoding="utf-8")
+    for word in ("fetch(", "crypto.subtle", "localStorage", "track.enc"):
+        assert word not in js, word

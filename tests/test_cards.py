@@ -187,10 +187,14 @@ def test_more_than_six_nodes_says_how_many_are_hidden():
     assert "total>6" in body and 'y="215"' in body
 
 
-def test_the_reason_label_comes_from_the_map_or_the_layer_never_a_guess():
+def test_the_reason_label_comes_from_a_map_edge_or_from_nothing():
+    """No layer-name fallback: the same three words beside every station read
+    like three findings when they were one label."""
     i = TPL.index("function reasonOf(")
     body = TPL[i:TPL.index("function bezMid(", i)]
-    assert "e.what" in body and "layerName" in body
+    assert "e.what" in body
+    assert "layerName" not in body
+    assert "return '';" in body
 
 
 def test_every_question_has_a_basket_to_draw():

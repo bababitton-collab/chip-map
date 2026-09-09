@@ -43,8 +43,11 @@ map's supply edges. One card carries both, and every number is kept apart.
 """
 from __future__ import annotations
 
+import base64
+import binascii
 import datetime as dt
 import json
+import os
 import statistics
 
 from chains import forecast, mapfile, rings
@@ -190,9 +193,10 @@ def reason_for(doc: dict, centre: str | None, nid: str) -> str:
     """What the edge between the reporting company and a ring-1 station carries.
 
     The same rule the map's cards use: the first clause of the edge's ``what``
-    in either direction, and the station's layer when the map records no edge
-    between the two -- which is honest rather than blank, and is what the map
-    says in that case too.
+    in either direction, and NOTHING where the map records no edge between the
+    two. The layer name used to stand in there, which put the same three words
+    beside every station on a card and read like three findings when it was one
+    label. A blank line says what is true: the map does not record a link.
 
     The WHOLE clause. The page clips it for the drawing and keeps this in a
     <title>, so truncating here would make the hover give back the cut text.
@@ -204,9 +208,7 @@ def reason_for(doc: dict, centre: str | None, nid: str) -> str:
                 w = (e.get("what") or "").split(";")[0].strip()
                 if w:
                     return w[:MAX_REASON]
-    layer = _node(doc, nid).get("layer")
-    lab = ((doc.get("labels") or {}).get("layers") or {}).get(layer) or {}
-    return lab.get("en") or ""
+    return ""
 
 
 def _from_ledger(row: dict | None) -> dict:
@@ -445,8 +447,149 @@ def slim(data: dict) -> dict:
                           for r in data["forecasts"]]}
 
 
+# ------------------------------------------------------------------- tiers
+# What the public page may hold. chains/access.py decides; this shapes the
+# payload to match, so the free file cannot leak by omission of a filter.
+PUBLIC_CARD = ("qid", "who", "tk", "d", "confirmed", "state", "status",
+               "marked_at", "entry_date", "day_index", "auto")
+
+
+def public(data: dict) -> dict:
+    """The free half: finished forecasts in full, everything else as a count.
+
+    A closed forecast is the record and the record is the evidence -- it goes
+    out whole. Anything still running is the working position: it is counted,
+    never described, and its members and prices are not in this object at all.
+    """
+    from chains import access
+    rows, active, upcoming = [], 0, []
+    for r in data.get("forecasts", []):
+        if r["state"] == "closed":
+            assert access.is_free("forecast_closed")
+            row = {k: r[k] for k in PUBLIC_CARD if k in r}
+            row["horizons"] = r.get("horizons") or {}
+            # The second ring is a count, not a cast list.
+            row["ring2_scored"] = sum(
+                1 for v in (r.get("horizons2") or {}).values() if v)
+            if r.get("q"):
+                row["q"] = r["q"]
+            rows.append(row)
+            continue
+        if r["state"] == "upcoming":
+            upcoming.append({"d": r.get("d"), "who": r["who"],
+                             "confirmed": r.get("confirmed")})
+        else:
+            active += 1
+    s = dict(data.get("summary") or {})
+    scored = [r for r in rows]
+    return {
+        "as_of": data.get("as_of"),
+        "closed": rows,
+        "n_active": active,
+        "n_upcoming": len(upcoming),
+        "next_up": min(upcoming, key=lambda x: x["d"] or "9999", default=None),
+        "n_closed": len(scored),
+        "capital_rule": s.get("capital_rule"),
+    }
+
+
+# ------------------------------------------------------------------- crypto
+# The tracking detail is the paid half of the product, and a static host serves
+# whatever is in the directory. So the plaintext never leaves the runner: the
+# build writes it, encrypts it, and publishes only the ciphertext. A subscriber
+# decrypts it in their own browser with a key from the mail; the key never
+# reaches this repository, the site, or the server logs.
+#
+# AES-256-GCM: authenticated, so a tampered file fails to open rather than
+# opening wrong, and available in WebCrypto without a library on the page.
+KEY_ENV = "TRACK_KEY"
+ALG = "A256GCM"
+NONCE_BYTES = 12                      # what GCM is specified for
+KEY_BYTES = 32
+
+
+class TrackKeyError(RuntimeError):
+    """The key is missing, malformed, or the wrong one."""
+
+
+def load_key(env: str = KEY_ENV) -> bytes:
+    """The 32-byte key, base64, out of the environment.
+
+    Missing is a hard failure. The alternative -- writing the plaintext when
+    the secret is not set -- is the one bug in this whole arrangement that
+    nobody would notice, because the site would look exactly right.
+    """
+    raw = os.environ.get(env, "").strip()
+    if not raw:
+        raise TrackKeyError(
+            f"{env} is not set. The tracking payload is published encrypted "
+            f"and this build will not fall back to plaintext -- a site that "
+            f"looks right and is unlocked is the failure nobody sees. Add the "
+            f"repository secret, or run with --plain for a local build.")
+    try:
+        key = base64.b64decode(raw, validate=True)
+    except (ValueError, binascii.Error) as e:
+        raise TrackKeyError(f"{env} is not valid base64 ({e}).") from None
+    if len(key) != KEY_BYTES:
+        raise TrackKeyError(
+            f"{env} decodes to {len(key)} bytes; AES-256 needs {KEY_BYTES}.")
+    return key
+
+
+def encrypt(payload: dict, key: bytes) -> dict:
+    """``{v, alg, nonce, ct, tag, as_of}``, every binary field base64.
+
+    ``as_of`` rides outside the ciphertext on purpose: the page has to be able
+    to say how fresh the locked data is without holding the key.
+    """
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    nonce = os.urandom(NONCE_BYTES)
+    blob = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    sealed = AESGCM(key).encrypt(nonce, blob.encode("utf-8"), None)
+    # cryptography returns ciphertext||tag; WebCrypto wants them joined again,
+    # and the file keeps them apart because the brief says so and because it
+    # makes a truncated file obvious rather than merely broken.
+    ct, tag = sealed[:-16], sealed[-16:]
+    return {
+        "v": 1, "alg": ALG,
+        "nonce": base64.b64encode(nonce).decode(),
+        "ct": base64.b64encode(ct).decode(),
+        "tag": base64.b64encode(tag).decode(),
+        "as_of": payload.get("as_of"),
+    }
+
+
+def decrypt(blob: dict, key: bytes) -> dict:
+    """The payload back, or a clean error. Never a partial object."""
+    from cryptography.exceptions import InvalidTag
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    if blob.get("alg") != ALG:
+        raise TrackKeyError(f"unknown algorithm {blob.get('alg')!r}")
+    try:
+        nonce = base64.b64decode(blob["nonce"])
+        sealed = base64.b64decode(blob["ct"]) + base64.b64decode(blob["tag"])
+    except (KeyError, ValueError, binascii.Error) as e:
+        raise TrackKeyError(f"malformed encrypted payload ({e})") from None
+    try:
+        out = AESGCM(key).decrypt(nonce, sealed, None)
+    except InvalidTag:
+        raise TrackKeyError(
+            "that key does not open this file. GCM authenticates, so this is "
+            "either the wrong key or a file that was changed after it was "
+            "written -- it is not a partial read.") from None
+    return json.loads(out.decode("utf-8"))
+
+
 # ------------------------------------------------------------------ the page
 PLACEHOLDER = "__TRACK__"
+CARDS_PLACEHOLDER = "__CARDS_JS__"
+
+
+def cards_js() -> str:
+    """The shared card renderer, read once."""
+    from chains.paths import templates_dir
+    return (templates_dir() / "track-cards.js").read_text(
+        encoding="utf-8")
 
 
 def render(data: dict, template: str | None = None) -> str:
@@ -459,6 +602,10 @@ def render(data: dict, template: str | None = None) -> str:
     from chains.paths import templates_dir
     t = template if template is not None else (
         (templates_dir() / "track.html").read_text(encoding="utf-8"))
+    # The card renderer is one file, inlined into this page and into the
+    # private map, so the unlocked view and the private view cannot drift.
+    if CARDS_PLACEHOLDER in t:
+        t = t.replace(CARDS_PLACEHOLDER, cards_js())
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "
@@ -466,38 +613,108 @@ def render(data: dict, template: str | None = None) -> str:
     return t.replace(PLACEHOLDER, json.dumps(data, ensure_ascii=False))
 
 
-def main() -> int:
-    """Build the FULL record set and write the page beside its data.
+def _write(p, text: str) -> None:
+    p.write_text(text, encoding="utf-8", newline="\n")
 
-    live.json carries a slimmed copy, so this rebuilds rather than reads: the
-    watch rows, the answers and the ledger come out of live_en.json -- already
-    merged, already in English, already scored -- and only the members and the
-    series are computed again here.
+
+def build_files(plain: bool = False) -> dict:
+    """Write the page and its data. Returns what was written, for the report.
+
+    Three files, and only one of them is ever published:
+      track.json      the full payload. Local only -- out/ is gitignored and
+                      publish_site does not copy it.
+      track.enc.json  the same thing sealed. This is what ships.
+      track.html      the page, with the FREE half inlined and nothing else.
     """
     from chains import answers as answers_mod
-    from chains.paths import out_dir
+    from chains.paths import out_dir, watch_en_path
     live = json.loads((out_dir() / "live_en.json").read_text(encoding="utf-8"))
     _a, forecasts, _p = answers_mod.read()
-    data = build(forecasts, live.get("ledger"), live.get("watch"),
+    # The baskets come from the tracked watch file, not from live_en.json:
+    # that file now strips them off every locked row, which is the point. The
+    # question TEXT still comes from live, where only an open row carries it.
+    rows = json.loads(watch_en_path().read_text(encoding="utf-8"))
+    text = {w["id"]: w.get("q") for w in (live.get("watch") or []) if w.get("q")}
+    for r in rows:
+        if text.get(r["id"]):
+            r["q"] = text[r["id"]]
+    data = build(forecasts, live.get("ledger"), rows,
                  marks=live.get("answers"),
                  today=dt.date.fromisoformat(live["as_of"]))
     out_dir().mkdir(parents=True, exist_ok=True)
+    wrote = {}
+
     j = out_dir() / "track.json"
-    j.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n",
-                 encoding="utf-8", newline="\n")
+    _write(j, json.dumps(data, ensure_ascii=False, indent=1) + "\n")
+    wrote["track.json"] = j
+
+    enc = out_dir() / "track.enc.json"
+    if plain:
+        # A local build with no secret. The file is REMOVED rather than left
+        # stale, so a publish cannot pick up last run's ciphertext and serve
+        # it beside this run's page.
+        enc.unlink(missing_ok=True)
+    else:
+        _write(enc, json.dumps(encrypt(data, load_key()),
+                               ensure_ascii=False, indent=1) + "\n")
+        wrote["track.enc.json"] = enc
+
     h = out_dir() / "track.html"
-    h.write_text(render(data), encoding="utf-8", newline="\n")
+    _write(h, render(public(data)))
+    wrote["track.html"] = h
+    return {"wrote": wrote, "data": data}
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+    ap = argparse.ArgumentParser(prog="python -m chains.track")
+    sub = ap.add_subparsers(dest="cmd")
+    ap.add_argument("--plain", action="store_true",
+                    help="local build: skip encryption and write no sealed "
+                         "file. Never used in CI -- publishing refuses to run "
+                         "without one.")
+    d = sub.add_parser("decrypt", help="open a sealed payload")
+    d.add_argument("--in", dest="src", required=True)
+    d.add_argument("--key-env", dest="key_env", default=KEY_ENV)
+    d.add_argument("--out", dest="dst", required=True)
+    a = ap.parse_args(argv)
+
+    if a.cmd == "decrypt":
+        from pathlib import Path
+        blob = json.loads(Path(a.src).read_text(encoding="utf-8"))
+        try:
+            got = decrypt(blob, load_key(a.key_env))
+        except TrackKeyError as e:
+            print(f"track: {e}")
+            return 1
+        _write(Path(a.dst), json.dumps(got, ensure_ascii=False, indent=1)
+               + "\n")
+        n = len(got.get("forecasts", []))
+        print(f"wrote {a.dst}  ({n} card{'' if n == 1 else 's'})")
+        return 0
+
+    try:
+        got = build_files(plain=a.plain)
+    except TrackKeyError as e:
+        print(f"track: {e}")
+        return 1
     by: dict[str, int] = {}
-    for r in data["forecasts"]:
+    for r in got["data"]["forecasts"]:
         by[r["state"]] = by.get(r["state"], 0) + 1
-    print(f"wrote {j}  ({j.stat().st_size:,} bytes)")
-    print(f"wrote {h}  ({h.stat().st_size:,} bytes)")
+    for name, p in got["wrote"].items():
+        note = "  (local only, never published)" if name == "track.json" else ""
+        print(f"wrote {p}  ({p.stat().st_size:,} bytes){note}")
+    if a.plain:
+        print("  --plain: no track.enc.json written; publishing will refuse")
     print("  " + (" · ".join(f"{k} {v}" for k, v in sorted(by.items()))
                   or "no dated questions"))
     return 0
 
 
 __all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
+           "public", "PUBLIC_CARD", "build_files", "cards_js",
+           "CARDS_PLACEHOLDER",
+           "encrypt", "decrypt", "load_key", "TrackKeyError", "KEY_ENV",
            "render", "main", "slim", "sort_key", "state_of", "members_for",
            "reason_for", "MAX_REASON",
            "report_close", "CHECKPOINTS", "STALE_AFTER", "MAX_POINTS",

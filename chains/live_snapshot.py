@@ -411,9 +411,15 @@ def build(today: dt.date | None = None, lang: str = "he",
     # place that decides what is unlocked and no second opinion about it.
     watch = questions.merge(
         watch, questions.fetch() if text is None else text, lang, today)
-    # The second ring, attached to every row -- locked ones included. It is
-    # derived from the map, which is public, so it costs the paywall nothing.
+    # The second ring, attached to every row. Both rings are then STRIPPED
+    # from every locked row: a constellation is one of the things the paywall
+    # holds, and a basket sitting in the JSON is the answer to "who moves"
+    # whether or not any pixel draws it. The locked card draws a placeholder.
     rings.for_rows(watch, m)
+    for r in watch:
+        if r.get("locked"):
+            for k in ("win", "lose", "win2", "lose2", "ring2_edges"):
+                r.pop(k, None)
     cal = calendar_from(watch, today)
     if answers is None:
         answers = answers_mod.load(ids={r["id"] for r in watch})

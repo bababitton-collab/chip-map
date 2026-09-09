@@ -88,7 +88,13 @@ BRIEFS = [("brief-free-*.md", "brief.md"),
 # The forward test, at /<domain>/track/. The page is English-only and its data
 # file carries question text, so both go through the Hebrew gate and the
 # locked-text scan below.
-TRACK_FILES = [("track.html", "index.html"), ("track.json", "track.json")]
+# The page and the SEALED payload. track.json is never copied: the plaintext
+# is the paid half of the product and a static host serves whatever is in the
+# directory. publish() refuses to run without the sealed file rather than
+# quietly shipping a page with nothing behind its unlock box.
+TRACK_FILES = [("track.html", "index.html"),
+               ("track.enc.json", "track.enc.json")]
+TRACK_PLAINTEXT = "track.json"
 
 GATED = ("index.html", "live_en.json")
 
@@ -97,8 +103,10 @@ GATED = ("index.html", "live_en.json")
 PAYWALLED = ("index.html", "he.html", "live.json", "live_en.json",
              "brief.md", "brief-he.md",
              # The forward test names the question behind every mark, so it is
-             # scanned on the same terms as the map and the letter.
-             "track/index.html", "track/track.json")
+             # scanned on the same terms as the map and the letter. The sealed
+             # payload is scanned too -- ciphertext cannot contain a sentence,
+             # and the day somebody publishes it plain the scan says so.
+             "track/index.html", "track/track.enc.json")
 
 # Every sentence a locked question owns, in both languages. All four parts
 # count: "what no sounds like" is as much the product as the question itself,
@@ -196,7 +204,15 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
     write_root_redirect()
     written.append("../index.html  (redirect)")
 
-    for name in ("track/index.html", "track/track.json"):
+    # Nothing unsealed, ever. Checked on the directory about to be served
+    # rather than inferred from the copy list above.
+    for stray in sorted(track.rglob("*")):
+        if stray.name == TRACK_PLAINTEXT:
+            raise SystemExit(
+                f"{stray} is the unencrypted tracking payload and it is about "
+                f"to be published. Remove it; only track.enc.json ships.")
+
+    for name in ("track/index.html", "track/track.enc.json"):
         text = (site / name).read_text(encoding="utf-8")
         runs = hebrew_runs(text)
         if runs:

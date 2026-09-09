@@ -83,6 +83,10 @@ jobs:
           QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
           ANSWERS_URL: ${{ secrets.ANSWERS_URL }}
           SIGNUP_URL: ${{ vars.SIGNUP_URL }}
+          # The tracking payload is published sealed. chains/track.py refuses
+          # to write a plaintext file when this is missing, so an unset secret
+          # fails the build instead of shipping the paid half unlocked.
+          TRACK_KEY: ${{ secrets.TRACK_KEY }}
         run: python -m chains.build_all
 
       # Assembles site/ and runs both gates on what will actually be served:
@@ -91,6 +95,21 @@ jobs:
         env:
           QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
         run: python -m chains.publish_site
+
+      # Belt and braces on the one property that cannot be recovered once it
+      # is wrong: the plaintext tracking payload must not be in the directory
+      # about to be served, and must not be in the repository either.
+      - name: the plaintext payload never leaves the runner
+        run: |
+          set -euo pipefail
+          if find site -name 'track.json' | grep -q .; then
+            echo "site/ contains the unencrypted tracking payload"; exit 1
+          fi
+          if git ls-files | grep -q 'track\.json$'; then
+            echo "track.json is tracked in git"; exit 1
+          fi
+          test -f site/semi/track/track.enc.json
+          echo "sealed payload present, plaintext absent"
 
       # The snapshots on a branch of their own, so anything can read the
       # current one at a stable raw URL without going through Pages.
@@ -109,13 +128,16 @@ jobs:
           set -euo pipefail
           tmp="$(mktemp -d)"
           cp out/semi/live.json out/semi/live_en.json "$tmp/"
+          cp out/semi/track.enc.json "$tmp/"
           git worktree add --detach "$tmp/wt"
           cd "$tmp/wt"
           git checkout --orphan live
           git rm -rq --cached . || true
           find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
-          cp "$tmp/live.json" "$tmp/live_en.json" .
-          git add live.json live_en.json
+          cp "$tmp/live.json" "$tmp/live_en.json" "$tmp/track.enc.json" .
+          # The sealed payload rides along so the 07:00 task can fetch it from
+          # a stable raw URL. It is ciphertext; the branch is public.
+          git add live.json live_en.json track.enc.json
           git commit -qm "live snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push -f origin live
           wc -c live.json live_en.json

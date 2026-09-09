@@ -16,6 +16,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,
 .wrap{max-width:1340px;margin:0 auto;padding:34px 26px 70px}
 .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
 h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.1rem;line-height:1.2;margin:0 0 14px}
+h3{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:30px 0 12px}
 .lede{color:var(--ink2);font-size:1.05rem;max-width:74ch;margin:0 0 26px}
 .back{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);text-decoration:none;border-bottom:1px solid var(--rule)}
 .back:hover{color:var(--ink2)}
@@ -26,15 +27,49 @@ h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.1rem;line-heig
 .tile span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin-top:7px;line-height:1.5}
 .tile.pos b{color:var(--erode)} .tile.neg b{color:var(--tight)}
 
+/* the finished-forecast scoreboard: free, because a record nobody can see is
+   not a record */
+.board{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:6px 22px 14px;overflow-x:auto}
+table.sb{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.7rem}
+table.sb th{text-align:right;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);padding:12px 0 7px;border-bottom:1px solid var(--rule);white-space:nowrap}
+table.sb th:first-child,table.sb td:first-child{text-align:left}
+table.sb th+th,table.sb td+td{padding-left:14px}
+table.sb td{padding:6px 0;border-bottom:1px solid rgba(34,42,54,.55);text-align:right;white-space:nowrap}
+table.sb td:first-child{color:var(--ink2)}
+.hit{color:var(--erode)} .miss{color:var(--tight)}
+.pill{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:4px;border:1px solid}
+.pill.yes{color:var(--erode);border-color:var(--erode)}
+.pill.no{color:var(--tight);border-color:var(--tight)}
+.empty{color:var(--ink3);padding:18px 0 8px;font-family:"Source Serif 4",serif;font-style:italic}
+
+/* the locked panel */
+.locked{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:22px 26px;overflow:hidden}
+.locked .count{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:16px}
+.blur{filter:blur(6px);opacity:.55;user-select:none;pointer-events:none}
+.lockover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px}
+.lockover div{background:rgba(20,25,34,.88);border:1px solid var(--rule);padding:14px 20px;border-radius:10px;font-size:.98rem;color:var(--ink2);backdrop-filter:blur(2px);max-width:52ch;text-align:center}
+.lockover b{color:var(--amber);font-weight:600}
+.ghost{display:grid;grid-template-columns:240px minmax(0,1fr) 575px;gap:0 22px;align-items:start}
+.ghost .gb{height:14px;border-radius:3px;background:#243043;margin-bottom:10px}
+.ghost .gring{width:112px;height:112px;border-radius:50%;border:7px solid #243043}
+
+/* the key */
+.unlock{margin:22px 0 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.unlock input{font:inherit;font-family:"IBM Plex Mono",monospace;font-size:.8rem;background:var(--bg2);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:9px 12px;min-width:min(420px,100%)}
+.unlock button{font:inherit;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;background:var(--panel);color:var(--amber);border:1px solid #3a3320;border-radius:6px;padding:9px 16px;cursor:pointer}
+.unlock button:hover{border-color:var(--amber)}
+.unlock .msg{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink3);flex-basis:100%}
+.unlock .msg.bad{color:var(--tight)}
+.unlock .msg.ok{color:var(--erode)}
+
+/* the full cards, drawn only after a key opens them */
 .fc{display:grid;grid-template-columns:240px minmax(0,1fr) 575px;gap:0 22px;background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:24px 26px;margin-bottom:18px;align-items:start}
 .fc.tracking{border-color:#3a4658}
 .fc .who{font-family:"IBM Plex Mono",monospace;font-size:.95rem;color:var(--ink);font-weight:500}
 .fc .dt{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.06em;color:var(--ink3);margin-top:5px;line-height:1.6}
 .fc .q{font-family:"Source Serif 4",serif;font-size:1rem;line-height:1.4;color:var(--ink2);margin:12px 0 0}
 .fc .pre{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:14px;line-height:1.6}
-.pill{display:inline-block;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;border:1px solid}
-.pill.yes{color:var(--erode);border-color:var(--erode)}
-.pill.no{color:var(--tight);border-color:var(--tight)}
+.fc .pill{margin-top:12px;font-size:.66rem;padding:3px 9px}
 .pill.grey{color:var(--ink3);border-color:var(--rule)}
 .pill .how{color:var(--ink3);margin-left:7px}
 .day{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:14px}
@@ -44,20 +79,16 @@ h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.1rem;line-heig
 .small{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding-top:11px;border-top:1px solid var(--rule)}
 .small div b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.95rem;font-weight:500;line-height:1.1}
 .pos{color:var(--erode)} .neg{color:var(--tight)} .flat{color:var(--ink2)}
-
 .ring{position:relative;width:118px;height:118px}
 .ring svg{width:118px;height:118px;display:block}
 .ring .n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .ring .n b{font-family:"IBM Plex Mono",monospace;font-size:1.9rem;font-weight:500;line-height:1}
 .ring .n small{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-top:3px}
-
-.cons svg{width:100%;height:auto;display:block}
-.chart svg{width:100%;height:auto;display:block}
+.cons svg,.chart svg{width:100%;height:auto;display:block}
 .cap{display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:9px;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
 .cap span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .cap i{width:16px;height:0;border-top:2px solid;display:inline-block}
 .pending{font-family:"Source Serif 4",serif;font-style:italic;font-size:1rem;color:var(--ink3);margin:10px 0 0}
-
 .tw{overflow-x:auto}
 table.mem{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.62rem}
 table.mem th+th,table.mem td+td{padding-left:10px}
@@ -73,19 +104,17 @@ table.mem tr.grp td{padding:13px 0 5px;border-bottom:1px solid var(--rule)}
 .bar{display:inline-block;height:6px;border-radius:2px;vertical-align:middle;margin-left:7px}
 .stale{color:var(--amber);cursor:help}
 .arrow{color:var(--ink3)}
-
 details.closed{background:var(--panel);border:1px solid var(--rule);border-radius:14px;margin-bottom:12px}
 details.closed>summary{cursor:pointer;list-style:none;padding:14px 22px;font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--ink2);display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center}
 details.closed>summary::-webkit-details-marker{display:none}
 details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid var(--rule);border-radius:0}
-.hit{color:var(--erode)} .miss{color:var(--tight)}
 .sect{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:26px 0 12px}
 
 .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);color:var(--ink3);font-size:.85rem;max-width:80ch}
 @media (max-width:900px){
   .wrap{padding:22px 14px 50px}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .fc{grid-template-columns:minmax(0,1fr);gap:22px 0}
+  .fc,.ghost{grid-template-columns:minmax(0,1fr);gap:22px 0}
   h2{font-size:1.6rem}
 }
 </style>
@@ -98,310 +127,162 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
 <p class="lede">Every "yes" or "no" on a question registers a forecast the day it is marked: a basket that should go up, a basket that should go down, both measured against the equal-weight map from the next session's close. Updated with each day's prices. Nothing is added after the fact.</p>
 
 <div id="tiles"></div>
-<div id="cards"></div>
+<h3 id="sbh">The record · forecasts whose forty sessions are complete</h3>
+<div class="board" id="board"></div>
 
+<h3>Active tracking</h3>
+<div class="locked" id="locked"></div>
+
+<div class="unlock" id="unlock">
+  <input id="key" type="password" autocomplete="off" spellcheck="false"
+         placeholder="Key from the mail">
+  <button id="go" type="button">Unlock</button>
+  <span class="msg" id="msg"></span>
+</div>
+
+<div id="full"></div>
 <div class="foot" id="foot"></div>
 </div>
 
 <script>
-const TRACK = __TRACK__;
+// The FREE half, inlined. Everything still in flight is a count here and a
+// count is all it is -- the detail lives in track.enc.json, sealed, and is
+// opened in the reader's own browser by a key that never leaves it.
+const PUBLIC = __TRACK__;
+</script>
+<script>
+__CARDS_JS__
+</script>
+<script>
 (function(){
   const esc = v => String(v==null?'':v).replace(/[&<>"]/g, c=>(
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const F = TRACK.forecasts||[], S = TRACK.summary||{};
-  const UP='#3fd18b', DN='#ff5a3c', MAP='#7d8797';
-
-  // Percent in, percent out. chains/track.py converts the ledger's fractions
-  // once, at the boundary, so nothing here multiplies anything by a hundred.
   const p2 = v => v==null ? '—' : (v>0?'+':'') + v.toFixed(2) + '%';
-  const n2 = v => v==null ? '—'
-    : (Math.abs(v) >= 10000 ? Math.round(v).toLocaleString('en-US')
-                            : v.toFixed(2));
-  const sgn = v => v==null ? 'flat' : (v>0?'pos':(v<0?'neg':'flat'));
-  // The word the card's own claim is stated in: "yes" until an answer says no.
-  const word = r => r.status==='no' ? 'no' : 'yes';
-  const today = TRACK.as_of ? new Date(TRACK.as_of+'T00:00:00Z') : new Date();
-  const daysTo = d => Math.round((Date.parse(d+'T00:00:00Z')
-    - Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate()))/86400000);
+  const P = PUBLIC||{}, closed = P.closed||[];
 
-  // ---- the six tiles ----------------------------------------------------
-  const tile = (v,label,cls) =>
-    `<div class="tile ${cls||''}"><b>${v}</b><span>${esc(label)}</span></div>`;
-  // Never a bare dash: with nothing scored the honest reading is a zero out of
-  // a zero, and a caption that says which zero it is.
-  const rate = s => (s && s.value!=null) ? Math.round(s.value*100)+'%' : '0 / 0';
-  const mean = s => (s && s.value!=null) ? p2(s.value) : '0 / 0';
-  const cap = (s,txt) => (s && s.n) ? txt+' (n='+s.n+')'
-                                    : 'no scored forecasts yet';
-  const nu = S.next_up||null;
+  // ---- tiles: closed forecasts only ------------------------------------
+  const nums = h => closed.map(r=>(r.horizons||{})[h]).filter(Boolean);
+  const rate = h => { const v=nums(h); return v.length
+    ? Math.round(v.filter(x=>x.hit).length/v.length*100)+'%' : '0 / 0'; };
+  const mean = h => { const v=nums(h); return v.length
+    ? p2(v.reduce((a,x)=>a+x.spread,0)/v.length) : '0 / 0'; };
+  const cap = (h,t) => nums(h).length ? t+' (n='+nums(h).length+')'
+                                      : 'no finished forecasts yet';
+  const tile = (v,label) =>
+    `<div class="tile"><b>${v}</b><span>${esc(label)}</span></div>`;
+  const nu = P.next_up||null;
+  const ring2 = closed.reduce((a,r)=>a+(r.ring2_scored||0),0);
   document.getElementById('tiles').innerHTML = `<div class="tiles">
-    ${tile(`${S.n_scored||0} / ${S.n_cards||0}`,'tracking / all questions')}
-    ${tile(rate(S.direct_hit_5), cap(S.direct_hit_5,'direct hit rate 5d'))}
-    ${tile(mean(S.direct_spread_5), cap(S.direct_spread_5,'direct avg spread 5d'),
-           S.direct_spread_5&&S.direct_spread_5.n?sgn(S.direct_spread_5.value):'')}
-    ${tile(mean(S.direct_spread_20), cap(S.direct_spread_20,'direct vs map 20d'),
-           S.direct_spread_20&&S.direct_spread_20.n?sgn(S.direct_spread_20.value):'')}
-    ${tile(rate(S.ring2_hit_5), cap(S.ring2_hit_5,'second ring hit 5d'))}
-    ${tile(S.n_upcoming||0, nu ? 'pre-registered · next '+nu.d+' '+nu.who
+    ${tile(P.n_closed||0,'forecasts complete')}
+    ${tile(rate('5'), cap('5','hit rate 5d'))}
+    ${tile(mean('20'), cap('20','avg spread 20d'))}
+    ${tile(mean('40'), cap('40','avg spread 40d'))}
+    ${tile(ring2, 'second ring · scored')}
+    ${tile(P.n_upcoming||0, nu ? 'pre-registered · next '+nu.d+' '+nu.who
                                : 'pre-registered')}
   </div>`;
 
-  // ---- the countdown ring ------------------------------------------------
-  const CIRC = 326.7;
-  function ringSVG(n){
-    const col = n<=3?DN : (n<=14?'#f2b632':MAP);
-    const off = CIRC*(Math.max(0,Math.min(60,n))/60);
-    const unit = n<0 ? 'days ago' : (n===0?'today':(n===1?'day':'days'));
-    const num = n<0 ? -n : (n===0?'·':n);
-    return `<div class="ring"><svg viewBox="0 0 118 118">
-      <circle cx="59" cy="59" r="47" fill="#141922"/>
-      <circle cx="59" cy="59" r="52" fill="none" stroke="#222a36" stroke-width="7"/>
-      <circle cx="59" cy="59" r="52" fill="none" stroke="${col}" stroke-width="7"
-        stroke-linecap="round" stroke-dasharray="${CIRC}" stroke-dashoffset="${off.toFixed(1)}"/>
-    </svg><div class="n"><b>${esc(num)}</b><small>${esc(unit)}</small></div></div>`;
+  // ---- the scoreboard ---------------------------------------------------
+  const board = document.getElementById('board');
+  if(!closed.length){
+    board.innerHTML = `<p class="empty">No forecast has run its full forty
+      sessions yet. The first one lands here the moment it does — with what was
+      claimed, when, and what happened, whichever way it went.</p>`;
+  } else {
+    const rows = closed.map(r=>{
+      const cells = ['5','10','20','40'].map(h=>{
+        const d=(r.horizons||{})[h];
+        return `<td class="${d?(d.hit?'hit':'miss'):''}">${d?p2(d.spread):'—'}</td>`;
+      }).join('');
+      const m = r.status==='no' ? 'no' : 'yes';
+      return `<tr><td>${esc(r.who)}</td>
+        <td>${esc(String(r.marked_at||'').slice(0,10))}</td>
+        <td><span class="pill ${m}">${m}</span></td>${cells}
+        <td>${r.ring2_scored||0}</td></tr>`;
+    }).join('');
+    board.innerHTML = `<table class="sb">
+      <tr><th>Question</th><th>Marked</th><th>Answer</th>
+        <th>5d</th><th>10d</th><th>20d</th><th>40d</th>
+        <th>Second ring · scored</th></tr>${rows}</table>`;
   }
 
-  // ---- the constellation: ring 1 and ring 2 ------------------------------
-  const VBW=420, VBH=230, CX=100, CY=115, R1X=230, R2X=345, R2R=8, GAP=18, R2MAX=8;
-  // Cut for the drawing, whole in the <title>: the same rule the map's
-  // cards use, and the reason the hover is worth having.
-  const REASON_MAX=12;
-  const clip = (t,n) => { t=String(t||''); return t.length>n?t.slice(0,n)+'…':t; };
-  function constellation(r){
-    const lab = {};
-    (r.members||[]).forEach(m=>{ lab[m.id]=m.label; });
-    const nameOf = i => lab[i] || String(i).toUpperCase();
-    const why = {};
-    (r.ring1_edges||[]).forEach(e=>{ why[e.id]=e.label||''; });
-    const wins=(r.win||[]).slice(0,3), loses=(r.lose||[]).slice(0,3);
-    const all=[...wins.map(i=>({id:i,win:true})),...loses.map(i=>({id:i,win:false}))];
-    const total=(r.win||[]).length+(r.lose||[]).length;
-    if(!all.length) return '';
-    const ys = all.length===1 ? [CY] : all.map((_,i)=>45+i*(130/(all.length-1)));
-    let g='', drawn=[];
-    all.forEach((o,i)=>{
-      const y=ys[i], col=o.win?UP:DN;
-      const t=clip(nameOf(o.id),6), rr=t.length<=4?16:15;
-      const fs=Math.max(7.5,Math.min(11,(rr*1.9)/Math.max(1,t.length)*1.35));
-      drawn.push({id:o.id,y:y,col:col,r:rr});
-      g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
-      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${rr}" fill="#0b0e14" stroke="${col}" stroke-width="2"/>`;
-      g+=`<text x="${R1X}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(t)}</text>`;
-      const full=why[o.id];
-      if(full){
-        g+=`<text x="${R1X+rr+6}" y="${(y+4).toFixed(1)}" font-family="Inter,sans-serif" font-size="11" fill="${MAP}">${esc(clip(full,REASON_MAX))}<title>${esc(full)}</title></text>`;
-      }
-    });
-    if(total>6) g+=`<text x="${R1X}" y="215" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="${MAP}">+${total-6} more</text>`;
+  // ---- the locked panel -------------------------------------------------
+  // The placeholder under the blur is generic on purpose: no ticker, no date,
+  // no label. A blur is a picture, and a picture of the real thing is the
+  // real thing to anyone who can read a screenshot.
+  const bars = n => Array.from({length:n},()=>'<div class="gb"></div>').join('');
+  document.getElementById('locked').innerHTML = `
+    <div class="count">${P.n_active||0} forecast${P.n_active===1?'':'s'} in
+      progress · ${P.n_upcoming||0} pre-registered</div>
+    <div class="ghost blur" aria-hidden="true">
+      <div><div class="gring"></div>${bars(3)}</div>
+      <div>${bars(6)}</div>
+      <div>${bars(9)}</div>
+    </div>
+    <div class="lockover"><div>🔒 Which stations, what they have done since
+      entry, and every spread against the map — <b>in the weekly mail</b>.
+      Subscribers: paste this month's key below.</div></div>`;
 
-    // ring 2: one circle per child, one line per parent
-    const at={}; drawn.forEach(d=>{ at[d.id]=d; });
-    const side={}; (r.win2||[]).forEach(i=>{side[i]='win';});
-    (r.lose2||[]).forEach(i=>{side[i]='lose';});
-    const by={}, kids=[];
-    for(const e of (r.ring2_edges||[])){
-      const p=at[e.to]; if(!p) continue;
-      if(!(e.from in side)) continue;
-      if(!by[e.from]){ by[e.from]={id:e.from,parents:[],labels:[],win:side[e.from]==='win'}; kids.push(by[e.from]); }
-      by[e.from].parents.push(p);
-      by[e.from].labels.push(e.label||'');
+  // ---- the key ----------------------------------------------------------
+  const msg = document.getElementById('msg');
+  const say = (t, cls) => { msg.textContent = t; msg.className = 'msg '+(cls||''); };
+  const b64 = s => Uint8Array.from(atob(String(s||'').trim()), c=>c.charCodeAt(0));
+
+  async function open(keyB64){
+    const raw = b64(keyB64);
+    if(raw.length !== 32) throw new Error('length');
+    const res = await fetch('track.enc.json', {cache:'no-store'});
+    if(!res.ok) throw new Error('fetch');
+    const blob = await res.json();
+    const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false,
+                                              ['decrypt']);
+    // WebCrypto wants ciphertext and tag joined; the file keeps them apart so
+    // a truncated one is obvious rather than merely broken.
+    const ct = b64(blob.ct), tag = b64(blob.tag);
+    const sealed = new Uint8Array(ct.length + tag.length);
+    sealed.set(ct); sealed.set(tag, ct.length);
+    const out = await crypto.subtle.decrypt(
+      {name:'AES-GCM', iv:b64(blob.nonce)}, key, sealed);
+    return JSON.parse(new TextDecoder().decode(out));
+  }
+
+  function show(data){
+    const n = window.renderTrack(document.getElementById('full'), data);
+    document.getElementById('locked').style.display = 'none';
+    document.getElementById('tiles').style.display = 'none';
+    document.getElementById('sbh').textContent =
+      'The record · forecasts whose forty sessions are complete';
+    say(n + ' card' + (n===1?'':'s') + ' open · this key stays in this browser',
+        'ok');
+  }
+
+  async function tryKey(k, quiet){
+    try {
+      const data = await open(k);
+      try { localStorage.setItem('track_key', k); } catch(e) {}
+      show(data);
+      return true;
+    } catch(e) {
+      if(!quiet) say('That key does not open this month’s data.', 'bad');
+      return false;
     }
-    const show=kids.slice(0,R2MAX), hidden=kids.length-show.length;
-    const groups={};
-    show.forEach(k=>{ k.at=k.parents.reduce((a,p)=>a+p.y,0)/k.parents.length;
-      const key=k.parents.map(p=>p.id).join(','); (groups[key]=groups[key]||[]).push(k); });
-    Object.values(groups).forEach(gp=>{ gp.forEach((k,n)=>{ k.y=gp[0].at+(n-(gp.length-1)/2)*GAP; }); });
-    show.sort((a,b)=>a.y-b.y);
-    let prev=-1e9; show.forEach(k=>{ k.y=Math.max(k.y,prev+GAP); prev=k.y; });
-    if(show.length){
-      const lift=22-show[0].y; if(lift>0) show.forEach(k=>{k.y+=lift;});
-      const drop=show[show.length-1].y-(VBH-22); if(drop>0) show.forEach(k=>{k.y-=drop;});
-    }
-    let g2='';
-    show.forEach(k=>{
-      const y=k.y, col=k.parents[0].col, two=k.parents.length>1;
-      k.parents.forEach(p=>{
-        g2+=`<path d="M${R1X+p.r},${p.y.toFixed(1)} C${R1X+55},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${p.col}" stroke-width="1" opacity=".45"/>`;
-      });
-      g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${col}" stroke-width="${two?2:1.4}" opacity="${two?.95:.7}"/>`;
-      const tip=(k.labels||[]).filter(Boolean).join(' · ');
-      g2+=`<text x="${R2X+R2R+4}" y="${(y+3).toFixed(1)}" font-family="Inter,sans-serif" font-size="9" fill="${two?'#c7d0dc':'#9aa4b2'}" font-weight="${two?600:400}">${esc(clip(nameOf(k.id),9))}${tip?`<title>${esc(tip)}</title>`:''}</text>`;
-    });
-    if(hidden>0) g2+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="${MAP}">+${hidden}</text>`;
-
-    const m = word(r);
-    return `<div class="cons"><svg viewBox="0 0 ${VBW} ${VBH}">
-      <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
-      ${g2}${g}
-      <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2"/>
-      <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${esc(r.tk||'')}</text>
-    </svg><div class="cap">
-      <span><i style="border-color:${UP}"></i>up if ${m}</span>
-      <span><i style="border-color:${DN}"></i>down if ${m}</span>
-      ${show.length?`<span><i style="border-color:${UP};opacity:.55"></i>second ring</span>`:''}
-    </div></div>`;
   }
 
-  // ---- the chart ---------------------------------------------------------
-  const CW=560, CH=230, PADL=44, PADR=54, PADT=16, PADB=26;
-  function chart(r){
-    const s = r.series;
-    if(!s) return `<div class="chart"><svg viewBox="0 0 ${CW} ${CH}">
-      <line x1="${PADL}" x2="${CW-PADR}" y1="${CH/2}" y2="${CH/2}" stroke="#222a36"/>
-      <circle cx="${PADL}" cy="${CH/2}" r="3.4" fill="${MAP}"/>
-      </svg></div><p class="pending">first print after the next close</p>`;
-    const lines=['win','lose','ew','win2','lose2'].map(k=>({k:k,v:s[k]}))
-      .filter(o=>o.v&&o.v.length);
-    let hi=0; lines.forEach(o=>o.v.forEach(v=>{ if(v!=null) hi=Math.max(hi,Math.abs(v)); }));
-    let T=8; for(const t of [2,4,8,16,32]) if(hi<=t){ T=t; break; }
-    if(hi>32) T=Math.ceil(hi/8)*8;
-    const n=s.dates.length, span=Math.max(40,n-1);
-    const X=i=>PADL+(i/span)*(CW-PADL-PADR);
-    const Y=v=>PADT+(1-(v+T)/(2*T))*(CH-PADT-PADB);
-    let g='';
-    for(const t of [T,T/2,0,-T/2,-T]){
-      const y=Y(t);
-      g+=`<line x1="${PADL}" x2="${CW-PADR}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${t===0?'#2b3542':'#1a212c'}"/>`;
-      g+=`<text x="${PADL-7}" y="${(y+3).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="${MAP}">${t>0?'+':''}${t}%</text>`;
-    }
-    for(const h of [5,10,20,40]){
-      if(h>span) continue;
-      const x=X(h);
-      g+=`<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${PADT}" y2="${CH-PADB}" stroke="#1a212c" stroke-dasharray="2 4"/>`;
-      g+=`<text x="${x.toFixed(1)}" y="${CH-PADB+13}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="${MAP}">${h}d</text>`;
-    }
-    const xt=X(n-1);
-    g+=`<line x1="${xt.toFixed(1)}" x2="${xt.toFixed(1)}" y1="${PADT}" y2="${CH-PADB}" stroke="#3a4658"/>`;
-    g+=`<text x="${xt.toFixed(1)}" y="${PADT-4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="${MAP}">today</text>`;
-    const style={win:{c:UP,w:2.2,o:1,d:''},lose:{c:DN,w:2,o:1,d:''},
-      ew:{c:MAP,w:1.6,o:1,d:' stroke-dasharray="4 3"'},
-      win2:{c:UP,w:1.4,o:.55,d:''},lose2:{c:DN,w:1.4,o:.55,d:''}};
-    for(const o of lines){
-      const st=style[o.k]; let d='', started=false;
-      o.v.forEach((v,i)=>{ if(v==null) return;
-        d+=(started?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)+' '; started=true; });
-      if(!d) continue;
-      g+=`<path d="${d.trim()}" fill="none" stroke="${st.c}" stroke-width="${st.w}" opacity="${st.o}"${st.d} stroke-linejoin="round"/>`;
-      if(['win','lose','ew'].includes(o.k)){
-        const li=o.v.reduce((a,v,i)=>v==null?a:i,-1);
-        if(li>=0){ const x=X(li), y=Y(o.v[li]);
-          g+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${st.c}"/>`;
-          g+=`<text x="${(x+6).toFixed(1)}" y="${(y+3).toFixed(1)}" font-family="IBM Plex Mono,monospace" font-size="9" fill="${st.c}">${p2(o.v[li])}</text>`; }
-      }
-    }
-    const m=word(r);
-    return `<div class="chart"><svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
-      <div class="cap">
-        <span><i style="border-color:${UP}"></i>up if ${m}</span>
-        <span><i style="border-color:${DN}"></i>down if ${m}</span>
-        <span><i style="border-color:${MAP};border-top-style:dashed"></i>equal-weight map</span>
-        ${r.has_r2?`<span><i style="border-color:${UP};opacity:.55"></i>second ring</span>`:''}
-      </div>`;
-  }
+  document.getElementById('go').addEventListener('click', () => {
+    const k = document.getElementById('key').value;
+    if(!k) return say('Paste the key from the mail.', '');
+    say('opening…', '');
+    tryKey(k, false);
+  });
+  document.getElementById('key').addEventListener('keydown', e => {
+    if(e.key === 'Enter') document.getElementById('go').click();
+  });
 
-  // ---- the member table: the same columns in every state -----------------
-  function table(r){
-    const m = word(r);
-    const heads = {win:['up if '+m,'up'], lose:['down if '+m,'dn'],
-      win2:['up if '+m+' · second ring','up'],
-      lose2:['down if '+m+' · second ring','dn']};
-    const cols = `<tr><th>Station</th><th>Expected if ${esc(m)}</th>`
-      + `<th>Report-day close</th><th>Entry close</th><th>Last</th>`
-      + `<th>Today</th><th>Since entry</th></tr>`;
-    const ms = r.members||[];
-    if(!ms.length) return `<div class="tw"><table class="mem">${cols}
-      <tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-      </table></div>`;
-    const worst = Math.max(1, ...ms.map(x=>Math.abs(x.since_pct||0)));
-    let rows='';
-    for(const g of ['win','lose','win2','lose2']){
-      const inGroup = ms.filter(x=>x.group===g);
-      if(!inGroup.length) continue;
-      rows += `<tr class="grp"><td colspan="7"><span class="gchip ${heads[g][1]}">${esc(heads[g][0])}</span></td></tr>`;
-      for(const x of inGroup){
-        const w = Math.round(Math.min(40, Math.abs(x.since_pct||0)/worst*40));
-        const col = (x.since_pct||0) >= 0 ? UP : DN;
-        const bar = x.since_pct==null ? ''
-          : `<span class="bar" style="width:${w}px;background:${col}"></span>`;
-        rows += `<tr><td>${esc(x.label)}${x.stale?` <span class="stale" title="last close ${x.stale} sessions old">·</span>`:''}</td>
-          <td class="arrow">${x.expected_dir>0?'▲':'▼'}</td>
-          <td>${n2(x.report_close)}</td>
-          <td>${n2(x.entry_close)}</td>
-          <td>${n2(x.last)}</td>
-          <td class="${sgn(x.day_pct)}">${p2(x.day_pct)}</td>
-          <td class="${sgn(x.since_pct)}">${p2(x.since_pct)}${bar}</td></tr>`;
-      }
-    }
-    return `<div class="tw"><table class="mem">${cols}${rows}</table></div>`;
-  }
-
-  // ---- the left column, by state -----------------------------------------
-  function head(r){
-    const m = word(r);
-    const nStations = (r.members||[]).length;
-    const when = r.entry_date
-      ? `marked ${String(r.marked_at||'').slice(0,10)} · entry close ${r.entry_date}`
-      : (r.state==='marked'
-          ? `marked ${String(r.marked_at||'').slice(0,10)} · entry at next close`
-          : `${esc(r.d)} · ${r.confirmed?'confirmed':'expected'}`);
-    let badge='', line='';
-    if(r.state==='upcoming'){
-      badge = ringSVG(daysTo(r.d));
-      line = `<div class="pre">Pre-registered · ${nStations} stations · entry at the close after the mark</div>`;
-    } else if(r.state==='none'){
-      badge = ringSVG(daysTo(r.d));
-      line = `<span class="pill grey">no forecast — ${esc(r.status||'not marked')}</span>`;
-    } else {
-      badge = `<span class="pill ${m}">${m}<span class="how">${r.auto?'auto':'manual'}</span></span>`;
-      line = r.entry_date
-        ? `<div class="day">Day ${r.day_index} of 40`
-          + (r.next_checkpoint ? ` · next checkpoint ${r.next_checkpoint}d in ${r.sessions_to} session${r.sessions_to===1?'':'s'}` : ' · every checkpoint scored')
-          + `</div>`
-        : `<div class="day">not entered yet</div>`;
-    }
-    const t = r.today||{};
-    const nums = r.entry_date ? `<div class="big">
-        <div><b class="${sgn(t.win_lose)}">${p2(t.win_lose)}</b><span>up − down today</span></div>
-        <div><b class="${sgn(t.win_ew)}">${p2(t.win_ew)}</b><span>up − map today</span></div>
-      </div>` + (r.has_r2?`<div class="small">
-        <div><b class="${sgn(t.win2_lose2)}">${p2(t.win2_lose2)}</b><span>ring 2 up − down</span></div>
-        <div><b class="${sgn(t.win2_ew)}">${p2(t.win2_ew)}</b><span>ring 2 up − map</span></div>
-      </div>`:'') : '';
-    return `<div>
-      ${badge}
-      <div class="who" style="margin-top:12px">${esc(r.who)}${r.tk?' · '+esc(r.tk):''}</div>
-      <div class="dt">${esc(when)}</div>
-      ${r.q?`<p class="q">${esc(r.q)}</p>`:''}
-      ${line}${nums}
-    </div>`;
-  }
-
-  function middle(r){
-    return (r.state==='tracking'||r.state==='closed'||r.state==='marked')
-      ? chart(r) : constellation(r);
-  }
-
-  function card(r){
-    return `<article class="fc ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
-      ${head(r)}<div>${middle(r)}</div><div>${table(r)}</div></article>`;
-  }
-
-  function closedRow(r){
-    const chips = ['5','10','20','40'].map(h=>{
-      const d = (r.horizons||{})[h];
-      return `<span class="${d?(d.hit?'hit':'miss'):''}">${h}d ${d?p2(d.spread):'—'}</span>`;
-    }).join(' ');
-    return `<details class="closed" data-id="${esc(r.qid)}" data-state="closed">
-      <summary><b>${esc(r.who)}</b><span class="pill ${word(r)}">${word(r)}</span>${chips}</summary>
-      ${card(r)}</details>`;
-  }
-
-  const open = F.filter(r=>r.state!=='closed');
-  const shut = F.filter(r=>r.state==='closed');
-  document.getElementById('cards').innerHTML =
-    open.map(card).join('')
-    + (shut.length ? `<div class="sect">Closed · every checkpoint scored</div>`
-        + shut.map(closedRow).join('') : '');
+  // A key that worked before opens the page without being asked for again.
+  // Wrapped because a private window throws on the accessor itself.
+  let saved = null;
+  try { saved = localStorage.getItem('track_key'); } catch(e) {}
+  if(saved) tryKey(saved, true);
 
   document.getElementById('foot').innerHTML =
     'Entry is the close of the first session after a mark. Baskets are equal-weight,'

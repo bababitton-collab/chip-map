@@ -82,6 +82,29 @@ HEBREW = re.compile(r"[֐-׿]")
 
 DB_READ = """(async()=>{ try{ if(!window.claude||!claude.use) return; const db=await claude.use('db'); if(!db) return; const snap=await db.doc('live/latest').get(); const doc=snap&&(snap.data?snap.data():snap); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
 
+# The private page reads the decrypted tracking payload out of the artifact
+# database. The public build removes that block outright rather than pointing
+# it somewhere else: there is no public URL for it, and a public page must not
+# reach for a private database at all.
+TRACK_DB_READ = """// The forward test, in full, from the copy the 07:00 task decrypts into the
+// database. Absent on the public build and on any browser without it -- the
+// section stays hidden rather than showing an empty shell.
+(async()=>{ try{
+  if(!window.claude||!claude.use||!window.renderTrack) return;
+  const db=await claude.use('db'); if(!db) return;
+  const snap=await db.doc('track/latest').get();
+  const doc=snap&&(snap.data?snap.data():snap);
+  if(!doc||!doc.forecasts||!doc.forecasts.length) return;
+  const sect=document.getElementById('fwdsect');
+  const n=window.renderTrack(document.getElementById('fwdcards'), doc);
+  document.getElementById('fwdlede').textContent =
+    n+' '+FWD.tracked+' · '+FWD.through+' '+(doc.as_of||'');
+  sect.hidden=false;
+}catch(e){} })();"""
+
+TRACK_GONE = ("// the forward test is not on the public page: the payload is "
+              "published encrypted and opened in the reader's own browser")
+
 FETCH_READ = """(async()=>{ try{ const r=await fetch('%s',{cache:'no-store'}); if(!r.ok) return; const doc=await r.json(); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
 
 # The Hebrew footer sentence gains the full disclaimer on the public page. The
@@ -115,6 +138,10 @@ PUB = {
 # Every pair MUST match. A reworded Hebrew string silently stops matching, and
 # a silent no-op here is a Hebrew sentence on the English page.
 TRANSLATIONS = [
+ ("const FWD = {tracked:'שאלות במעקב', through:'מחירים עד'};",
+  "const FWD = {tracked:'questions tracked', through:'prices through'};"),
+ ('<h2>מבחן קדימה</h2>',
+  '<h2>Forward test</h2>'),
  ('    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`\n    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;',
   '    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`\n    + `<span><i class="pa"></i>cannot be measured</span></div>`;'),
     ("רחף על תחנה לדופק שלה · רחף על קו למה שהוא נושא ולחלק שלו אצל הקונה.", "Hover a station for its pulse · hover a line for what it carries and its share at the buyer."),
@@ -189,8 +216,8 @@ TRANSLATIONS = [
   '<div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div>'),
  # The question cards. The placeholder below is fixed text in both
  # languages and is never the real sentence.
- ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, ואיך נשמעת תשובה חיובית ושלילית — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
-  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, and what yes and no sound like — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
+ ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, איך נשמעת תשובה חיובית ושלילית, ומי זז — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
+  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, what yes and no sound like, and who moves — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
  ("  const PH = {q:'איזה מספר בשיחת התוצאות מכריע את השאלה שכולם כאן כבר מתווכחים עליה',\n    yes:'החברה נוקבת במספר מעל הטווח שעליו הנחתה ברבעון שעבר, ואומרת שהמגבלה זזה.',\n    no:'המספר נוחת בתוך הטווח הישן והשפה על הקיבולת לא משתנה מהפעם הקודמת.',\n    why:'זה קובע איזו משתי החברות מחזיקה את החלק הנדיר בעוד שנה.'};",
   "  const PH = {q:'Which number on the call settles the question that everyone in this room is already arguing about',\n    yes:'The company names a figure above the range it guided to last quarter, and says the constraint has moved.',\n    no:'The number lands inside the old range and the language about capacity is unchanged from last time.',\n    why:'It decides which of two companies is holding the scarce part twelve months from now.'};"),
  ('<div class="eyebrow">04 · שאלות עם תאריך</div>',
@@ -266,6 +293,17 @@ def translate(he_html: str) -> tuple[str, list[str]]:
     return out, missing
 
 
+def _inline_cards(text: str) -> str:
+    """Fill the shared card renderer into a page that asks for it.
+
+    One file, two pages: the private map's Forward test section and the public
+    tracking page's unlocked view. Inlined rather than fetched so the private
+    page keeps working from a database with no network of its own.
+    """
+    from chains.track import CARDS_PLACEHOLDER, cards_js
+    return text.replace(CARDS_PLACEHOLDER, cards_js())         if CARDS_PLACEHOLDER in text else text
+
+
 def build_en_template(src=None, dst=None) -> object:
     """The English template, from the Hebrew one.
 
@@ -318,6 +356,8 @@ def public_page(template: str, live: str, cfg: dict) -> str:
 
     # 1. the artifact database is not reachable from a public page
     h = _must_replace(h, DB_READ, FETCH_READ % cfg["live"], "database read")
+    h = _must_replace(h, TRACK_DB_READ, TRACK_GONE,
+                      "forward-test database read")
 
     if cfg["lang"] == "he":
         h = _must_replace(h, HE_FOOT_FROM, HE_FOOT_TO, "footer disclaimer")
@@ -340,7 +380,7 @@ def _build_public(lang: str, template=None, live=None, out=None,
     out = out or (out_dir() / cfg["out"])
     doc = public_page(template.read_text(encoding="utf-8"),
                       live.read_text(encoding="utf-8"), cfg)
-    return doc, out
+    return _inline_cards(doc), out
 
 
 def build_public_he(template=None, live=None, out=None, teaser=None):

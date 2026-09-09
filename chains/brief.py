@@ -55,7 +55,7 @@ def when(n: int) -> str:
     return f"in {n} days" if n > 0 else f"{-n} days ago"
 
 
-def render(live: dict, watch: list, statuses: dict) -> str:
+def render(live: dict, watch: list, statuses: dict, free: bool = False) -> str:
     T = dt.date.fromisoformat(live['as_of'])
     byid = {n['id']: n for n in live['nodes']}
     name = lambda i: (byid.get(i) or {}).get('short') or i.upper()
@@ -163,8 +163,13 @@ def render(live: dict, watch: list, statuses: dict) -> str:
     # and the page must not be able to disagree.
     tr = live.get("track") or {}
     ts, tf = tr.get("summary") or {}, tr.get("forecasts") or []
+    # The free letter carries the RECORD -- forecasts whose forty sessions are
+    # complete -- and nothing about a position still open. chains/access.py
+    # draws that line; this is the same line, applied to the letter.
     tf = [r for r in tf
           if r.get("entry_date") or r.get("state") == "marked"]
+    if free:
+        tf = [r for r in tf if r.get("state") == "closed"]
     if ts.get("n_scored") or tf:
         out.append("## Forward test")
         out.append("")
@@ -259,7 +264,7 @@ def main(argv=None) -> int:
         # Through the validator, not json.load. A bad status is not a crash --
         # it is a wrong word in a document that goes out to a reader.
         statuses = answers.load(Path(argv[2]), ids={w["id"] for w in watch})
-    text = render(live, watch, statuses)
+    text = render(live, watch, statuses, free=free)
     if len(argv) > 3:
         out = Path(argv[3])
         out.parent.mkdir(parents=True, exist_ok=True)

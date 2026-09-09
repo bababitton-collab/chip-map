@@ -213,6 +213,9 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .evid b{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-inline-end:6px}
 .answered summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:8px 0 14px}
 @media (max-width:900px){.card{grid-template-columns:1fr;gap:18px}.cons svg{width:100%;height:auto}.q{max-width:none}}
+.fwd-sect{padding:18px 22px 6px;border-top:1px solid var(--rule)}
+.fwd-sect h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
+.fwd-sect .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 12px}
 .ledger{padding:18px 22px 6px;border-top:1px solid var(--rule)}
 .fwd{display:inline-block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);text-decoration:none;border:1px solid #3a3320;border-radius:5px;padding:4px 10px;background:var(--panel)}
 .fwd:hover{border-color:var(--amber)}
@@ -320,6 +323,10 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
   </radialGradient>
 </defs></svg>
 
+<script>
+__CARDS_JS__
+</script>
+
 <div class="top">
   <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div></div>
   <div class="asof" id="asof"></div>
@@ -343,6 +350,11 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 <div class="bleg"><span><i class="f"></i>confirmed date</span><span><i></i>expected date</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>leaker → question</span></div>
 <div class="bwrap" id="bwrap"><div class="btip" id="btip"></div></div>
 <div class="hints" id="hints"></div>
+</div>
+<div class="fwd-sect" id="fwdsect" hidden>
+  <h2>Forward test</h2>
+  <p class="lede" id="fwdlede"></p>
+  <div id="fwdcards"></div>
 </div>
 <div class="ledger" id="ledger">
 <a class="fwd inline" href="track/">Forward test →</a>
@@ -378,6 +390,7 @@ readLabels();
 
 // Plain words. "Holder" and "challenger" are the field names in the data and
 // they stay there; nobody reading a map should have to learn them.
+const FWD = {tracked:'questions tracked', through:'prices through'};
 const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',
   buys:'Buys from', sells:'Sells to', peers:'Others in this layer',
   via:'Challenges through', against:'against', sells1:'sells', to:'to ',
@@ -902,7 +915,7 @@ function lockedHTML(){
   const W = D.watch||LIVE.watch||[]; if(!W.length) return;
   const T = {
     yes:'Yes looks like', no:'No looks like', why:'Why it matters.',
-    lockA:'\u{1F512} The question, and what yes and no sound like — ',
+    lockA:'\u{1F512} The question, what yes and no sound like, and who moves — ',
     lockB:'in the weekly mail',
     conf:'confirmed', exp:'expected',
     day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',
@@ -983,15 +996,21 @@ function lockedHTML(){
   // The WHOLE first clause. The drawing clips it to REASON_MAX and keeps this
   // in a <title>; truncating here as well made that hover give back the cut
   // text, which is the one thing a hover is for.
+  // The WHOLE first clause, or nothing. The drawing clips it to REASON_MAX and
+  // keeps this in a <title>; truncating here as well made that hover give back
+  // the cut text, which is the one thing a hover is for.
+  //
+  // No layer-name fallback. Where the map records no edge between the company
+  // and a station, the answer is that it does not know, and a layer name
+  // repeated beside every circle looked like three findings and was one label.
   function reasonOf(centreId, id){
-    const n=nodeById[id];
     for(const e of (D.edges||[])){
       if((e.from===centreId&&e.to===id)||(e.from===id&&e.to===centreId)){
         const w=(e.what||'').split(';')[0].trim();
         if(w) return w;
       }
     }
-    return layerName(n);
+    return '';
   }
   function bezMid(y){
     // t=0.5 on M100,115 C160,115 180,y 230,y
@@ -1059,6 +1078,27 @@ function lockedHTML(){
       if(drop>0) show.forEach(k=>{ k.y -= drop; });
     }
     return {show:show, hidden:total-show.length};
+  }
+
+  // Five generic circles -- three up, two down -- with no ticker, no edge
+  // and no label anywhere in them. Nothing real is under the blur, so a
+  // screenshot of a locked card gives away exactly what the card does and
+  // nothing else.
+  function ghostCons(){
+    let g='';
+    [45,110,175].forEach(y=>{
+      g+=`<path d="M100,115 C160,115 180,${y} 230,${y}" fill="none" stroke="#3fd18b" stroke-width="1.6" opacity=".8"/>`
+       + `<circle cx="230" cy="${y}" r="16" fill="#0b0e14" stroke="#3fd18b" stroke-width="2"/>`;
+    });
+    [70,150].forEach(y=>{
+      g+=`<path d="M100,115 C160,115 180,${y} 345,${y}" fill="none" stroke="#ff5a3c" stroke-width="1" opacity=".45"/>`
+       + `<circle cx="345" cy="${y}" r="8" fill="#0b0e14" stroke="#ff5a3c" stroke-width="1.4" opacity=".7"/>`;
+    });
+    return `<div class="cons blur" aria-hidden="true"><svg viewBox="0 0 420 230">
+      <circle cx="100" cy="115" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
+      ${g}
+      <circle cx="100" cy="115" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2"/>
+    </svg></div>`;
   }
 
   function constellation(w){
@@ -1154,7 +1194,7 @@ function lockedHTML(){
           <div class="d">${esc(f(w,'d'))}${w.tk?' · '+esc(w.tk):''}</div>${tag}</div>
       </div>
       <div class="mid">${w.locked?midLocked():midOpen(w)}${opts.evidence?`<p class="evid"><b>${T.evidence}</b> ${esc(opts.evidence)}</p>`:''}</div>
-      ${constellation(w)}
+      ${w.locked?ghostCons():constellation(w)}
     </article>`;
   }
 
@@ -1202,6 +1242,22 @@ function lockedHTML(){
     + (url? `<a class="btn" href="${url}">${T.btn}</a>` : `<span class="soon">${T.soon}</span>`)
     + `<div class="disc">${T.disc}</div>`;
 })();
+
+// The forward test, in full, from the copy the 07:00 task decrypts into the
+// database. Absent on the public build and on any browser without it -- the
+// section stays hidden rather than showing an empty shell.
+(async()=>{ try{
+  if(!window.claude||!claude.use||!window.renderTrack) return;
+  const db=await claude.use('db'); if(!db) return;
+  const snap=await db.doc('track/latest').get();
+  const doc=snap&&(snap.data?snap.data():snap);
+  if(!doc||!doc.forecasts||!doc.forecasts.length) return;
+  const sect=document.getElementById('fwdsect');
+  const n=window.renderTrack(document.getElementById('fwdcards'), doc);
+  document.getElementById('fwdlede').textContent =
+    n+' '+FWD.tracked+' · '+FWD.through+' '+(doc.as_of||'');
+  sect.hidden=false;
+}catch(e){} })();
 
 // live data: newer snapshot from the artifact database, if present
 (async()=>{ try{ if(!window.claude||!claude.use) return; const db=await claude.use('db'); if(!db) return; const snap=await db.doc('live/latest').get(); const doc=snap&&(snap.data?snap.data():snap); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();

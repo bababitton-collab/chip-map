@@ -1,0 +1,460 @@
+<title>The Living Chip Map</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Suez+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#0d1117; --bg2:#131a22; --panel:#161e28; --ink:#e9e4d8; --ink2:#b3b9c2; --ink3:#7d8590; --rule:#232c37; --rule2:#31405000;
+  --logic:#6ba3e8; --memory:#ef7f66; --packaging:#e0b04a; --network:#5cba86; --power:#ad8ce0; --cloud:#cfc7b6;
+  --tight:#ff5a3c; --erode:#4fd18b; --amber:#e0b04a;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{direction:ltr}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Assistant",system-ui,"Noto Sans Hebrew",sans-serif;font-size:18px;line-height:1.6}
+a{color:inherit}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;padding:18px 22px 8px;border-bottom:1px solid var(--rule)}
+.top h1{font-family:"Suez One",Georgia,serif;font-weight:400;font-size:2.2rem;margin:0;line-height:1.1}
+.top .sub{color:var(--ink2);font-size:1.05rem}
+.top .asof{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--ink3);letter-spacing:.06em}
+.top .asof b{color:var(--erode);font-weight:600}
+.next{display:flex;gap:10px;overflow-x:auto;padding:10px 22px;border-bottom:1px solid var(--rule);scrollbar-width:thin}
+.next .lbl{font-size:.9rem;color:var(--ink3);white-space:nowrap;align-self:center;letter-spacing:.08em}
+.ev{flex:0 0 auto;background:var(--panel);border:1px solid var(--rule);padding:9px 14px;cursor:pointer;min-width:230px;border-inline-start:3px solid var(--amber)}
+.ev:hover{border-color:var(--ink3)}
+.ev.soon{border-inline-start-color:var(--tight)}
+.ev b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.92rem;color:var(--ink);direction:ltr;text-align:start}
+.ev span{display:block;font-size:.95rem;color:var(--ink2);line-height:1.3}
+.ev i{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--amber)}
+.ev.soon i{color:var(--tight)}
+.stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0px;min-height:720px}
+.stage.open{grid-template-columns:minmax(0,1fr) 460px}
+canvas{display:block;width:100%;height:720px;cursor:crosshair}
+.hint{position:absolute;bottom:10px;inset-inline-start:16px;font-size:.78rem;color:var(--ink3);pointer-events:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.92rem;color:var(--ink2);padding:8px 22px;border-top:1px solid var(--rule);background:var(--bg2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend .pl{width:10px;height:10px;border-radius:50%;border:2px solid var(--tight)}
+.legend .pe{width:10px;height:10px;border-radius:50%;border:2px solid var(--erode)}
+.legend .pa{width:10px;height:10px;border-radius:50%;border:2px solid var(--amber)}
+.tip{position:absolute;pointer-events:none;background:#000d;color:var(--ink);font-size:.95rem;padding:6px 9px;border:1px solid var(--rule);display:none;max-width:280px;line-height:1.35;z-index:4}
+.tip b{font-family:"IBM Plex Mono",monospace;direction:ltr;display:block;text-align:start}
+.panel{background:var(--panel);border-inline-start:1px solid var(--rule);overflow:hidden;height:720px}
+.stage.open .panel{overflow-y:auto}
+.pin{padding:16px 18px 30px}
+.pin .close{float:left;background:none;border:1px solid var(--rule);color:var(--ink2);font:inherit;font-size:.8rem;padding:2px 10px;cursor:pointer}
+.pin .close:focus-visible{outline:2px solid var(--logic)}
+.pin h2{font-family:"Suez One",serif;font-weight:400;font-size:1.55rem;margin:0 0 2px;line-height:1.15}
+.pin .tk{font-family:"IBM Plex Mono",monospace;font-size:.88rem;color:var(--ink3);direction:ltr;text-align:start;display:block}
+.pin .role{color:var(--ink2);font-size:1rem;margin:8px 0 0}
+.pin h3{font-family:"Suez One",serif;font-weight:400;font-size:1.15rem;margin:18px 0 6px;color:var(--ink);border-top:1px solid var(--rule);padding-top:12px}
+.cpbox{margin-top:12px;border:1px solid var(--rule);padding:10px 12px;background:var(--bg2)}
+.cpbox .cpn{font-family:"Suez One",serif;font-size:1.2rem}
+.cpbox .cpid{font-family:"IBM Plex Mono",monospace;color:var(--tight);font-size:.75rem;margin-inline-end:8px}
+.cpbox p{margin:6px 0 0;font-size:1rem;color:var(--ink2)}
+.pulse{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:1rem}
+.pulse i{width:12px;height:12px;border-radius:50%;flex:none}
+.pulse.t i{background:var(--tight);box-shadow:0 0 12px var(--tight)}
+.pulse.e i{background:var(--erode);box-shadow:0 0 12px var(--erode)}
+.pulse.a i{background:var(--amber);box-shadow:0 0 10px var(--amber)}
+.pulse small{display:block;color:var(--ink3);font-family:"IBM Plex Mono",monospace;font-size:.85rem;direction:ltr;text-align:start}
+.spark{margin-top:10px}
+.spark svg{width:100%;height:56px;display:block}
+.spark .r{font-family:"IBM Plex Mono",monospace;font-size:.88rem;color:var(--ink3);display:flex;gap:12px;direction:ltr;justify-content:flex-start;margin-top:2px}
+.spark .r b{color:var(--ink);font-weight:600}
+.spark .r b.neg{color:var(--tight)}
+.spark .r b.pos{color:var(--erode)}
+.sub{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(90px,.9fr);gap:2px 10px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:1rem;align-items:baseline}
+.sub.t2{padding-inline-start:16px;border-inline-start:2px solid var(--rule);margin-inline-start:4px}
+.sub b{font-weight:600;direction:ltr;display:inline-block;text-align:start}
+.sub .w{grid-column:1/-1;color:var(--ink3);font-size:.9rem;direction:ltr;text-align:start;line-height:1.3}
+.sub .sh{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--ink2);direction:ltr;text-align:start;line-height:1.3}
+.sub .sh a{text-decoration:none;border-bottom:1px dotted var(--ink3)}
+.badge{font-size:.78rem;padding:0 6px;border-radius:2px;margin-inline-start:6px;vertical-align:middle;white-space:nowrap}
+.badge.sole{background:#3a1e15;color:var(--tight)}
+.badge.priv{border:1px solid var(--rule);color:var(--ink3)}
+.badge.r13{font-family:"IBM Plex Mono",monospace;border:1px solid var(--rule);color:var(--ink2);direction:ltr}
+.ch{padding:9px 0;border-bottom:1px solid var(--rule);font-size:1rem}
+.ch b{direction:ltr;display:block;text-align:start;font-weight:600}
+.ch .st{display:flex;gap:4px;align-items:center;margin-top:3px}
+.ch .st i{width:22px;height:5px;background:var(--rule);border-radius:2px;display:block}
+.ch .st i.on{background:var(--logic)}
+.ch .st em{font-style:normal;font-size:.85rem;color:var(--ink3);margin-inline-start:6px}
+.ch .sig{color:var(--ink2);font-size:.92rem;margin-top:3px;direction:ltr;text-align:start;line-height:1.3}
+.ch .sig a{text-decoration:none;border-bottom:1px dotted var(--ink3)}
+.ch .sig small{color:var(--ink3);font-family:"IBM Plex Mono",monospace}
+.ftab{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.85rem;direction:ltr;margin-top:4px}
+.ftab th,.ftab td{padding:3px 6px;border-bottom:1px solid var(--rule);text-align:right}
+.ftab th{color:var(--ink3);font-weight:500}
+.ftab td:first-child,.ftab th:first-child{text-align:left}
+.ftab .neg{color:var(--tight)}
+.nextcp{margin-top:10px;font-size:1rem;color:var(--ink2)}
+.nextcp b{font-family:"IBM Plex Mono",monospace;color:var(--amber);direction:ltr;display:inline-block}
+.more{background:none;border:none;color:var(--logic);font:inherit;font-size:.8rem;cursor:pointer;padding:4px 0}
+.foot{padding:16px 22px 30px;color:var(--ink3);font-size:.95rem;max-width:70ch;border-top:1px solid var(--rule)}
+.foot b{color:var(--ink2)}
+@media (max-width:900px){.stage.open{grid-template-columns:minmax(0,1fr)}.stage.open .panel{position:absolute;inset:0;height:100%;z-index:3}}
+
+.watch{padding:18px 22px 10px;border-top:1px solid var(--rule)}
+.watch h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
+.watch .lede{color:var(--ink2);font-size:1.05rem;max-width:70ch;margin:0 0 12px}
+.wf{display:flex;flex-wrap:wrap;gap:6px 10px;margin:0 0 10px;font-size:.8rem}
+.wf button{font:inherit;font-size:.78rem;font-family:"IBM Plex Mono",monospace;background:var(--panel);color:var(--ink2);border:1px solid var(--rule);padding:3px 10px;cursor:pointer}
+.wf button[aria-pressed="true"]{color:var(--ink);border-color:var(--ink3)}
+.wrow{display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,2.2fr) 220px;gap:8px 18px;padding:13px 0;border-bottom:1px solid var(--rule);align-items:start;font-size:1rem}
+.wrow.past{opacity:.55}
+.wrow .wd{font-family:"IBM Plex Mono",monospace;font-size:.88rem;direction:ltr;text-align:start}
+.wrow .wd b{display:block;font-size:1.15rem;color:var(--amber);font-weight:600}
+.wrow.soon .wd b{color:var(--tight)}
+.wrow .wd small{display:block;color:var(--ink3)}
+.wrow .wd em{font-style:normal;font-size:.68rem;padding:0 5px;border:1px solid var(--rule);color:var(--ink3)}
+.wrow .wd em.c{color:var(--erode);border-color:var(--erode)}
+.wrow .ww b{direction:ltr;display:block;text-align:start;font-weight:600}
+.wrow .ww .cp{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--tight);margin-inline-end:6px;cursor:pointer}
+.wrow .ww .cp:hover{text-decoration:underline}
+.wrow .ww .wl{color:var(--ink3);font-size:.9rem;display:block;margin-top:3px}
+.wrow .wq{color:var(--ink2);line-height:1.4}
+.wrow .wq .lis{display:block;color:var(--ink3);font-size:.92rem;margin-top:3px}
+.wrow .wq .lis b{color:var(--ink2);font-weight:600}
+.wrow .ws select{width:100%;font:inherit;font-size:.82rem;background:var(--panel);color:var(--ink);border:1px solid var(--rule);padding:3px 6px}
+.wrow .ws input{width:100%;font:inherit;font-size:.8rem;background:var(--bg2);color:var(--ink);border:1px solid var(--rule);padding:3px 6px;margin-top:4px}
+.wrow .ws .saved{font-size:.7rem;color:var(--ink3);font-family:"IBM Plex Mono",monospace;margin-top:2px;direction:ltr;text-align:start}
+.wrow .ws select.ok{border-color:var(--erode)}.wrow .ws select.no{border-color:var(--tight)}
+/* auto: a mark a machine made. Dashed everywhere, so the difference between
+   a checked answer and an inferred one is visible without reading a word. */
+.wrow .ws select.auto{border-style:dashed}
+.autotag{display:inline-block;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);border:1px dashed var(--rule);padding:0 4px;margin-inline-start:6px;vertical-align:middle;font-family:"IBM Plex Mono",monospace}
+.hb .bar i.autohint{outline:1px dashed var(--ink3);outline-offset:1px}
+@media (max-width:820px){.wrow{grid-template-columns:80px minmax(0,1fr)}.wrow .wq,.wrow .ws{grid-column:2}}
+.board{padding:18px 22px 6px;border-top:1px solid var(--rule)}
+.board h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
+.board .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 10px}
+.board .bwrap{direction:ltr;overflow-x:auto;position:relative}
+.board svg{display:block;width:100%;min-width:900px;height:auto;font-family:Assistant,system-ui,sans-serif}
+.board .lane{fill:var(--ink3);font-size:13px;font-weight:600}
+.board .lanebg:nth-child(even){fill:var(--bg2)}
+.board .tick{stroke:var(--rule);stroke-width:1}
+.board .tickl{fill:var(--ink3);font-size:12px;font-family:"IBM Plex Mono",monospace}
+.board .today{stroke:var(--tight);stroke-width:1.5;stroke-dasharray:4 4}
+.board .todayl{fill:var(--tight);font-size:12px;font-weight:700}
+.board .lk{fill:none;stroke:var(--ink3);stroke-width:1.1;opacity:.28}
+.board .lk.on{stroke:var(--amber);stroke-width:2.2;opacity:1}
+.board .lk.dim{opacity:.06}
+.board .q{cursor:pointer}
+.board .q circle{stroke-width:2}
+.board .q.dim{opacity:.2}
+.board .q text{font-size:13px;font-weight:600;fill:var(--ink)}
+.board .q.past text{fill:var(--ink3)}
+.board .q .n{font-size:10px;font-weight:700;fill:var(--bg);pointer-events:none}
+.btip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);padding:10px 12px;font-size:.95rem;max-width:380px;line-height:1.35;z-index:5;display:none;direction:ltr;text-align:start;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.btip b{display:block;font-size:1.05rem}
+.btip .h{color:var(--ink3);font-size:.85rem;margin-top:4px}
+.btip .lk1{margin-top:6px;border-top:1px solid var(--rule);padding-top:6px}
+.btip .lk1 i{font-style:normal;display:inline-block;padding:0 5px;margin:2px 3px 0 0;border:1px solid var(--rule);font-size:.8rem}
+.btip .lk1 i.yes{border-color:var(--erode);color:var(--erode)}
+.btip .lk1 i.no{border-color:var(--tight);color:var(--tight)}
+.btip .lk1 i.mixed{border-color:var(--amber);color:var(--amber)}
+.bleg{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--ink3);font-size:.85rem;margin:6px 0 10px}
+.bleg i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-inline-end:5px;border:2px solid var(--ink3)}
+.bleg i.f{background:var(--ink3)}.bleg i.y{border-color:var(--erode);background:var(--erode)}.bleg i.n{border-color:var(--tight);background:var(--tight)}.bleg i.m{border-color:var(--amber);background:var(--amber)}
+.bleg s{display:inline-block;width:26px;border-top:2px solid var(--amber);vertical-align:3px;margin-inline-end:5px;text-decoration:none}
+.hints{margin:4px 0 8px}
+.hints h3{font-size:1.05rem;margin:10px 0 4px}
+.hrow{display:grid;grid-template-columns:200px minmax(0,1fr);gap:4px 14px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:.98rem}
+.hrow .hd{white-space:nowrap;font-family:"IBM Plex Mono",monospace;font-size:.85rem;direction:ltr;text-align:start;color:var(--ink3)}
+.hrow .hd b{display:block;color:var(--ink);font-size:1rem;font-family:Assistant,system-ui,sans-serif}
+.hrow .hb{color:var(--ink2)}
+.hrow .hb b{color:var(--ink)}
+.hrow .hb .bar{display:inline-flex;gap:2px;vertical-align:middle;margin-inline-end:8px}
+.hrow .hb .bar i{width:14px;height:10px;display:inline-block;border:1px solid var(--rule)}
+.hrow .hb .bar i.yes{background:var(--erode);border-color:var(--erode)}.hrow .hb .bar i.no{background:var(--tight);border-color:var(--tight)}.hrow .hb .bar i.mixed{background:var(--amber);border-color:var(--amber)}.hrow .hb .bar i.none{background:var(--ink3)}
+.hrow .hb .lean{font-weight:700}
+.hrow .hb .lean.y{color:var(--erode)}.hrow .hb .lean.n{color:var(--tight)}.hrow .hb .lean.m{color:var(--amber)}
+.hrow .hb small{display:block;color:var(--ink3);margin-top:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="top">
+  <div><h1>The Living Chip Map</h1><div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div></div>
+  <div class="asof" id="asof"></div>
+</div>
+<div class="next" id="next"><span class="lbl">NEXT CHECKPOINTS</span></div>
+<div class="stage" id="stage">
+  <div style="position:relative;min-width:0">
+    <canvas id="map"></canvas>
+    <div class="tip" id="tip"></div>
+  </div>
+  <div class="panel" id="panel"></div>
+</div>
+<div class="legend" id="legend"></div>
+<div class="board" id="board">
+<h2>The Forecast Board</h2>
+<p class="lede">The timeline of the questions. Each circle is a day an answer is published. The arrows show who leaks first: an early question that partly answers a later one. Hover a circle to see its chain of hints. When an answer lands, mark it in the table below — the board colors it and updates the lean of everything that depends on it. The lean is a count of hints already answered, not a forecast and not a recommendation.</p>
+<div class="bleg"><span><i class="f"></i>confirmed date</span><span><i></i>expected date</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>leaker → question</span></div>
+<div class="bwrap" id="bwrap"><div class="btip" id="btip"></div></div>
+<div class="hints" id="hints"></div>
+</div>
+<div class="watch" id="watch">
+<h2>Questions with a date</h2>
+<p class="lede">Each row is a question that gets answered on a known day. Not "what to buy" — what to have a view on before the answer is public, and who gains or loses if it is yes. "Confirmed" — a published date. "Expected" — last year's cycle, until the company confirms. After the event, mark what came out: it is saved on the page.</p>
+<div class="wf" id="wf"></div>
+<div id="wlist"></div>
+</div>
+<div class="foot" id="foot"></div>
+
+<script>
+const LIVE = __LIVE__;
+</script>
+<script>
+(function(){
+let D = LIVE;
+const C = getComputedStyle(document.documentElement); const tok=n=>C.getPropertyValue(n).trim();
+const LCOL = {logic:tok('--logic'),memory:tok('--memory'),packaging:tok('--packaging'),network:tok('--network'),power:tok('--power'),cloud:tok('--cloud')};
+const LHE = {logic:'logic',memory:'memory',packaging:'packaging',network:'network',power:'power',cloud:'cloud'};
+const LAYER_HE = {L1:'materials',L2:'equipment',L3:'design',L4:'chip designers',L5:'fab & packaging',L6:'systems',L7:'cloud',L9:'power'};
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
+let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, sats=[], satT=0, t0=performance.now();
+const pct=v=>v==null?'—':((v>0?'+':'')+(v*100).toFixed(1)+'%');
+const cls=v=>v==null?'':(v<0?'neg':'pos');
+
+function build(){
+  nodes = D.nodes.map(n=>Object.assign({}, n)); byId={}; nodes.forEach(n=>byId[n.id]=n);
+  edges = D.edges.filter(e=>byId[e.from]&&byId[e.to]);
+  D.cps.forEach(c=>{ c.holders.forEach(h=>{ const n=byId[h.id]; if(!n) return; n.cp=n.cp||[]; n.cp.push(c); }); });
+}
+function layout(){
+  const cols=['L1','L2','L3','L4','L5','L6','L7'];
+  const padR=110, padL=70, colW=(W-padR-padL)/(cols.length-1);
+  const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);
+  const order=['logic','memory','packaging','network','cloud','power'];
+  const groups={};
+  nodes.forEach(n=>{ const L=n.layer==='L9'?'L9':n.layer; (groups[L]=groups[L]||[]).push(n); });
+  const top=70, bottom=H-80;
+  cols.forEach(L=>{
+    const g=(groups[L]||[]).sort((a,b)=>order.indexOf(a.line)-order.indexOf(b.line)||(b.cap||0)-(a.cap||0));
+    const n=g.length; const span=Math.min(bottom-top, n*52);
+    const y0=top+(bottom-top-span)/2;
+    g.forEach((nd,i)=>{ nd.x=xOf[L]; nd.y=n===1?(top+bottom)/2:y0+i*(span/(n-1||1)); });
+  });
+  // L9 energy: bottom band under L6/L7
+  const g9=(groups['L9']||[]); const xs=[xOf['L7'],xOf['L6']];
+  g9.forEach((nd,i)=>{ nd.x=xOf['L7']+ (i/(g9.length-1||1))*(xOf['L6']-xOf['L7']); nd.y=H-34; });
+  nodes.forEach(n=>{ n.r = n.cap? Math.max(7, Math.min(24, 6+18*Math.sqrt(n.cap/5516))) : 7; });
+}
+function resize(){
+  DPR=Math.min(2,devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
+}
+function edgePath(e){ const a=byId[e.from], b=byId[e.to]; const mx=(a.x+b.x)/2; return {a,b,c1:{x:mx,y:a.y},c2:{x:mx,y:b.y}}; }
+function bez(p,t){ const {a,b,c1,c2}=p; const u=1-t; return {x:u*u*u*a.x+3*u*u*t*c1.x+3*u*t*t*c2.x+t*t*t*b.x, y:u*u*u*a.y+3*u*u*t*c1.y+3*u*t*t*c2.y+t*t*t*b.y}; }
+function seedParticles(){
+  particles=[]; edges.forEach((e,i)=>{ const n=e.crit==='high'?4:2; for(let k=0;k<n;k++) particles.push({e:i,t:Math.random(),v:0.0018+Math.random()*0.0012}); });
+}
+function pulseOf(n){ // returns {col, period, kind}
+  if(!n.cp||!n.cp.length) return null;
+  const ps=n.cp.map(c=>c.pressure).filter(v=>v!=null);
+  if(!ps.length) return {col:tok('--amber'),period:2600,kind:'a'};
+  const p=ps.reduce((a,b)=>a+b,0)/ps.length; const mag=Math.min(1,Math.abs(p)/0.25);
+  return {col:p>0?tok('--tight'):tok('--erode'), period:2200-1400*mag, kind:p>0?'t':'e', p};
+}
+function draw(now){
+  const T=now-t0;
+  ctx.clearRect(0,0,W,H);
+  // column labels
+  ctx.font='13px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink3'); ctx.textAlign='center';
+  const seen={}; nodes.forEach(n=>{ const L=n.layer; if(seen[L]||L==='L9') return; seen[L]=1; ctx.fillText(L+' · '+(LAYER_HE[L]||''), n.x, 22); });
+  ctx.fillText('L9 · '+LAYER_HE.L9, (byId.gev.x+byId.ceg.x)/2, H-52);
+  // edges
+  const focus = selected||hover;
+  edges.forEach((e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); ctx.beginPath(); ctx.moveTo(p.a.x,p.a.y); ctx.bezierCurveTo(p.c1.x,p.c1.y,p.c2.x,p.c2.y,p.b.x,p.b.y); ctx.strokeStyle=rel?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=rel?1.8:1; ctx.stroke(); e._p=p; });
+  // particles
+  if(!REDUCED){ particles.forEach(q=>{ q.t+=q.v; if(q.t>1) q.t-=1; const e=edges[q.e]; const pt=bez(e._p,q.t); const rel=focus&&(e.from===focus.id||e.to===focus.id); ctx.beginPath(); ctx.arc(pt.x,pt.y,rel?2.4:1.6,0,7); ctx.fillStyle=LCOL[e._p.a.line]; ctx.globalAlpha=rel?1:.55; ctx.fill(); ctx.globalAlpha=1; }); }
+  // satellites (opened sub-suppliers)
+  if(sats.length){ const k=Math.min(1,(now-satT)/450); sats.forEach(s=>{ const x=selected.x+(s.tx-selected.x)*k, y=selected.y+(s.ty-selected.y)*k; ctx.beginPath(); ctx.moveTo(selected.x,selected.y); ctx.lineTo(x,y); ctx.strokeStyle=s.sole?tok('--tight')+'88':'#ffffff33'; ctx.lineWidth=1; ctx.stroke(); ctx.beginPath(); ctx.arc(x,y,s.tier===1?4.5:3,0,7); ctx.fillStyle=s.sole?tok('--tight'):(s.tier===1?tok('--ink2'):tok('--ink3')); ctx.fill(); s.x=x; s.y=y; if(k>=1){ ctx.font='12px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign=s.tx>=selected.x?'left':'right'; ctx.fillText(s.label, x+(s.tx>=selected.x?8:-8), y+4); } }); }
+  // nodes
+  nodes.forEach(n=>{
+    const pu=pulseOf(n);
+    if(pu&&!REDUCED){ const ph=(T%pu.period)/pu.period; const rr=n.r+4+ph*16; ctx.beginPath(); ctx.arc(n.x,n.y,rr,0,7); ctx.strokeStyle=pu.col; ctx.globalAlpha=(1-ph)*.7; ctx.lineWidth=2; ctx.stroke(); ctx.globalAlpha=1; }
+    if(pu){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r+3,0,7); ctx.strokeStyle=pu.col; ctx.lineWidth=2; ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill(); ctx.lineWidth=(n===selected||n===hover)?3.5:2.2; ctx.strokeStyle=LCOL[n.line]; ctx.stroke();
+    if(n.r>10){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r*.45,0,7); ctx.fillStyle=LCOL[n.line]; ctx.globalAlpha=.6; ctx.fill(); ctx.globalAlpha=1; }
+    // label
+    ctx.font=(n===selected||n===hover?'700 ':'600 ')+'14px "Assistant", sans-serif'; ctx.fillStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink2'); ctx.textAlign='center';
+    const lbl=n.short||n.name.split(' ')[0];
+    ctx.fillText(lbl, n.x, n.y+n.r+16);
+  });
+  requestAnimationFrame(draw);
+}
+function nodeAt(x,y){ let best=null,bd=1e9; nodes.forEach(n=>{ const d=Math.hypot(n.x-x,n.y-y); if(d<n.r+8&&d<bd){bd=d;best=n;} }); return best; }
+cv.addEventListener('mousemove',ev=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(ev.clientX-r.left, ev.clientY-r.top); hover=n; cv.style.cursor=n?'pointer':'crosshair'; if(n){ const px=n.px; tip.innerHTML=`<b>${n.name}${n.ticker?' · '+n.ticker:''}</b>${px?`13 weeks <span dir="ltr">${pct(px.r13w)}</span> · 1 year <span dir="ltr">${pct(px.r52w)}</span>`:'no price line'}${n.cp?'<br>'+n.cp.map(c=>c.he).join(' · '):''}`; tip.style.display='block'; const lx=ev.clientX-r.left, ly=ev.clientY-r.top; tip.style.left=Math.min(lx+14, W-290)+'px'; tip.style.top=(ly+12)+'px'; } else tip.style.display='none'; });
+cv.addEventListener('mouseleave',()=>{hover=null;tip.style.display='none';});
+cv.addEventListener('click',ev=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(ev.clientX-r.left, ev.clientY-r.top); if(n) open(n); else close(); });
+
+function spark(px){ if(!px||!px.spark||px.spark.length<2) return '<p class="role">No price line.</p>'; const s=px.spark, W=340,H=52; const lo=Math.min(...s),hi=Math.max(...s); const y=v=>4+(1-(v-lo)/((hi-lo)||1))*(H-8); const d=s.map((v,i)=>(i?'L':'M')+(i/(s.length-1)*W).toFixed(1)+' '+y(v).toFixed(1)).join(''); const col=s[s.length-1]>=100?tok('--erode'):tok('--tight'); return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr"><path d="${d}" fill="none" stroke="${col}" stroke-width="1.8"/><line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="#ffffff22" stroke-dasharray="3 3"/></svg><div class="r"><span>1w <b class="${cls(px.r1w)}">${pct(px.r1w)}</b></span><span>4w <b class="${cls(px.r4w)}">${pct(px.r4w)}</b></span><span>13w <b class="${cls(px.r13w)}">${pct(px.r13w)}</b></span><span>52w <b class="${cls(px.r52w)}">${pct(px.r52w)}</b></span><span style="color:var(--ink3)">${px.cur} · ${px.last}</span></div></div>`; }
+function stageBar(st){ const lv={research:1,pilot:2,qualified:3,volume:4}[st]||0; const he={research:'research',pilot:'pilot',qualified:'qualified',volume:'volume'}[st]||''; return `<div class="st">${[0,1,2,3].map(i=>`<i class="${i<lv?'on':''}"></i>`).join('')}<em>${he}</em></div>`; }
+function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>From the filings (EDGAR)</h3><table class="ftab"><tr><th>FY</th><th>revenue $B</th><th>YoY</th><th>op margin</th></tr>${f.annual.map(r=>`<tr><td>${r.fy}</td><td>${r.rev}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td class="${r.om<0?'neg':''}">${r.om==null?'—':r.om+'%'}</td></tr>`).join('')}${f.q.length?`<tr><th>quarter</th><th>revenue $B</th><th>YoY</th><th></th></tr>${f.q.map(r=>`<tr><td>${r.pe}</td><td>${r.rev??'—'}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td></td></tr>`).join('')}`:''}</table>`; }
+
+function open(n){
+  selected=n; stage.classList.add('open');
+  const cps=n.cp||[];
+  let h=`<div class="pin"><button class="close" id="pclose">close</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span><p class="role" dir="ltr" style="text-align:start">${n.role||''}</p>${spark(n.px)}`;
+  sats=[];
+  cps.forEach(c=>{
+    const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');
+    const sent = pu==null ? (c.n_chal_priced? 'The holder has no price line.':'No listed challenger. Amber pulse: the market pressure cannot be measured.') : (pu>0? 'The lock is tightening: the holder is outrunning its challengers.' : 'The lock is eroding: challengers are outrunning the holder.');
+    h+=`<div class="cpbox"><span class="cpid">${c.id}</span><span class="cpn">${c.he}</span><p>${c.blurb}</p>
+      <div class="pulse ${kind}"><i></i><div>${sent}<small>13w: holder ${pct(c.hr13)} · challengers ${pct(c.cr13)}${c.n_chal_priced?' ('+c.n_chal_priced+' priced)':''}</small></div></div></div>`;
+    // sub-suppliers
+    const t1=c.subs.filter(s=>s.tier===1), t2=c.subs.filter(s=>s.tier===2);
+    h+=`<h3>Who supplies the holder · ${t1.length} direct, ${t2.length} beneath them</h3>`;
+    const row=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">sole source</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">private</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?(s.src?`<a href="${s.src}" target="_blank" rel="noopener">${s.share}</a>`:s.share):'<span style="color:var(--ink3)">estimate</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}</div></div>`;
+    t1.forEach(s=>{ h+=row(s); t2.filter(x=>x.to===s.id).forEach(x=>h+=row(x)); });
+    t2.filter(x=>!t1.some(s=>s.id===x.to)).forEach(x=>h+=row(x));
+    // satellites layout: tier1 arc on the upstream (right) side
+    const all=[...t1.map(s=>({s,tier:1})),...t2.map(s=>({s,tier:2}))];
+    const dirX = n.x > 220 ? -1 : 1; // open toward the left (upstream) unless at the left edge
+    const tilt = n.y > H-170 ? -0.55 : (n.y < 170 ? 0.55 : 0);
+    all.forEach((o,i)=>{ const tier=o.tier; const arr=tier===1?t1:t2; const idx=arr.indexOf(o.s); const cnt=arr.length; const spread=Math.min(Math.PI*0.9, 0.28*Math.max(cnt-1,1)); const ang=tilt+(-spread/2)+(cnt>1?idx/(cnt-1):0.5)*spread; const R=tier===1?100:165; let tx=n.x+dirX*Math.cos(ang)*R, ty=n.y+Math.sin(ang)*R; ty=Math.max(40,Math.min(H-60,ty)); sats.push({tx, ty, tier, sole:o.s.sole, label:o.s.name.split(' ').slice(0,2).join(' ').slice(0,16)}); });
+    // challengers
+    h+=`<h3>Who is trying to break it · ${c.sigs.length}</h3>`;
+    const pxBy={}; c.chal.forEach(x=>{ if(x.px) pxBy[x.name]=x.px; });
+    c.sigs.forEach(s=>{ const px=pxBy[s.name]; h+=`<div class="ch"><b>${s.name}${px&&px.r13w!=null?`<span class="badge r13">13w ${pct(px.r13w)}</span>`:''}</b>${stageBar(s.stage)}<div class="sig">${s.approach?s.approach+'<br>':''}<span style="color:var(--ink3)">signal:</span> ${s.src?`<a href="${s.src}" target="_blank" rel="noopener">${s.signal}</a>`:s.signal} <small>${s.as_of||''}</small></div></div>`; });
+    // cal rows carry cps (a list) and who/d/days. They deliberately do NOT carry
+    // the question text: the full rows travel in D.watch, and cal is the marker
+    // layer. This read used e.cp and nx.he, neither of which exists, so nx was
+    // always undefined and the line never rendered. The date stands in for the
+    // question -- it is what the reader needs to know here anyway.
+    const nx=(D.cal||[]).filter(e=>(e.cps||[]).includes(c.id)&&e.days>=0).sort((a,b)=>a.days-b.days)[0];
+    if(nx) h+=`<div class="nextcp">Next checkpoint: <b>${nx.who}</b> · ${nx.d} · in ${nx.days} days</div>`;
+  });
+  if(!cps.length){
+    const ins=edges.filter(e=>e.to===n.id), outs=edges.filter(e=>e.from===n.id);
+    if(ins.length) h+=`<h3>Receives from</h3>`+ins.map(e=>`<div class="sub"><div><b>${byId[e.from].name}</b></div><div></div><div class="w">${e.what}</div></div>`).join('');
+    if(outs.length) h+=`<h3>Supplies to</h3>`+outs.map(e=>`<div class="sub"><div><b>${byId[e.to].name}</b></div><div></div><div class="w">${e.what}</div></div>`).join('');
+  }
+  h+=fundTable(n.id);
+  h+='</div>';
+  panel.innerHTML=h; panel.scrollTop=0; satT=performance.now();
+  document.getElementById('pclose').addEventListener('click',close);
+}
+function close(){ selected=null; sats=[]; stage.classList.remove('open'); panel.innerHTML=''; }
+
+function header(){
+  const stale = D.last_price_date;
+  document.getElementById('asof').innerHTML=`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`;
+  const nx=document.getElementById('next'); nx.querySelectorAll('.ev').forEach(e=>e.remove());
+  D.cal.filter(e=>e.days>=-3).sort((a,b)=>a.days-b.days).slice(0,8).forEach(e=>{ const d=document.createElement('div'); d.className='ev'+(e.days<=30?' soon':''); d.innerHTML=`<b>${e.who}</b><span>${e.he}</span><i>${e.days<=0?'today':'in '+e.days+' days'} · ${e.d}</i>`; d.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===e.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h) open(h); }); nx.appendChild(d); });
+  document.getElementById('legend').innerHTML='<span style="color:var(--ink3)">hover a station · click to open · moving dots are the flow</span>'+Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join('')+`<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span><span><i class="pa"></i>no listed challenger</span>`;
+  const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
+  document.getElementById('foot').innerHTML=`<b>The pulse</b> is the market's vote over the last 13 weeks: the holder's return minus its listed challengers' return. Positive — the lock is tightening, red and fast. Negative — eroding, green and slow. Right now: ${nt} tightening, ${ne} eroding, ${na} with no listed challenger. Station size is market cap. Each company in its own currency; Japanese names via US depositary receipts. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone. Every number carries a source; "estimate" means none was found. Prices lag by up to a week.`;
+}
+function boot(){ build(); resize(); header(); requestAnimationFrame(draw); }
+addEventListener('resize',()=>{ resize(); });
+boot();
+
+// ---- forecast board (standalone; watch section feeds it statuses) ----
+const BOARD={statuses:{},render(){}};
+(function(){
+  const W = D.watch||LIVE.watch||[]; if(!W.length) return;
+  const today = new Date(D.as_of+'T00:00:00Z'); const now = new Date(); const ref = now>today?now:today;
+  const days = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
+  const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};
+  const list=document.getElementById('wlist');
+  const BT = {lanes:{hbm:'HBM memory',litho:'lithography',fab:'fab & packaging',mat:'materials',power:'power',cloud:'cloud'}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)'};
+  const STC = {yes:'var(--erode)', no:'var(--tight)', mixed:'var(--amber)', none:'var(--ink3)'};
+  const bwrap=document.getElementById('bwrap'), btip=document.getElementById('btip'), hints=document.getElementById('hints');
+  const byQ={}; W.forEach(w=>byQ[w.id]=w);
+  const outOf={}; W.forEach(w=>(w.leaks||[]).forEach(l=>{ (outOf[l]=outOf[l]||[]).push(w.id); }));
+  const allSt = () => Object.assign({}, D.answers||{}, BOARD.statuses);
+  const stOf = id => { const st=allSt()[id]; return (st&&st.status&&st.status!=='open')?st.status:null; };
+  // Whether that status was written by a machine. Same colour, different
+  // outline: the board never hides an auto mark, it labels it.
+  const autoOf = id => { const st=allSt()[id]; return !!(st&&st.auto&&stOf(id)); };
+  function tally(w){ const t={yes:0,no:0,mixed:0,none:0,open:0,items:[]}; (w.leaks||[]).forEach(l=>{ const s=stOf(l)||'open'; t[s]++; t.items.push({id:l,s,auto:autoOf(l)}); }); return t; }
+  function lean(t){ const n=t.yes+t.no+t.mixed; if(!n) return ['o',BT.leanO]; if(t.yes>t.no&&t.yes>=t.mixed) return ['y',BT.leanY]; if(t.no>t.yes&&t.no>=t.mixed) return ['n',BT.leanN]; return ['m',BT.leanM]; }
+  function board(){
+    const lanes=Object.keys(BT.lanes); const d0=-7, d1=120; const L=170, R=30, colW=1200, dayW=(colW-L-R)/(d1-d0);
+    const x=dd=>L+(Math.max(d0,Math.min(d1,dd))-d0)*dayW;
+    const rows=W.filter(w=>days(w.d)>=d0&&days(w.d)<=d1); const beyond=W.filter(w=>days(w.d)>d1).sort((a,b)=>a.d.localeCompare(b.d));
+    const pos={}; const laneY={}; let y=34; const rowH=28;
+    lanes.forEach(k=>{ const ws=rows.filter(w=>w.lane===k).sort((a,b)=>a.d.localeCompare(b.d)); const slotsEnd=[]; ws.forEach(w=>{ const xx=x(days(w.d)); let s=0; while(s<slotsEnd.length && slotsEnd[s]>xx-120) s++; slotsEnd[s]=xx; pos[w.id]={x:xx,y:y+14+s*rowH,slot:s}; }); const n=Math.max(1,slotsEnd.length); laneY[k]={y0:y,h:n*rowH+10}; y+=n*rowH+10; });
+    const Hh=y+30;
+    let g='';
+    lanes.forEach((k,i)=>{ const l=laneY[k]; g+=`<rect class="lanebg" x="0" y="${l.y0}" width="${colW}" height="${l.h}" fill="${i%2?'var(--bg2)':'none'}"/><text class="lane" x="${L-14}" y="${l.y0+l.h/2+5}" text-anchor="end">${BT.lanes[k]}</text>`; });
+    // ticks: every 14 days
+    const ref0=new Date(Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()));
+    for(let dd=d0+7; dd<=d1; dd+=14){ const dt=new Date(ref0.getTime()+dd*86400000); g+=`<line class="tick" x1="${x(dd)}" y1="20" x2="${x(dd)}" y2="${Hh-26}"/><text class="tickl" x="${x(dd)}" y="${Hh-10}" text-anchor="middle">${dt.getUTCDate()}.${dt.getUTCMonth()+1}</text>`; }
+    g+=`<line class="today" x1="${x(0)}" y1="14" x2="${x(0)}" y2="${Hh-26}"/><text class="todayl" x="${x(0)}" y="11" text-anchor="middle">${BT.today}</text>`;
+    // links
+    let links='';
+    rows.forEach(w=>(w.leaks||[]).forEach(l=>{ const a=pos[l], b=pos[w.id]; if(!a||!b) return; const mx=(a.x+b.x)/2; links+=`<path class="lk" data-a="${l}" data-b="${w.id}" d="M${a.x+7},${a.y} C${mx},${a.y} ${mx},${b.y} ${b.x-8},${b.y}"/>`; }));
+    // nodes
+    let ns='';
+    rows.forEach(w=>{ const p=pos[w.id], dd=days(w.d), s=stOf(w.id); const t=tally(w), n=t.yes+t.no+t.mixed; const col=s?STC[s]:(dd<0?'var(--ink3)':'var(--ink2)'); const fill=w.confirmed||s?col:'var(--bg)';
+      const lbl=w.lbl||w.who;
+      ns+=`<g class="q ${dd<0?'past':''}" data-id="${w.id}"><circle cx="${p.x}" cy="${p.y}" r="7" fill="${fill}" stroke="${col}"/>${n?`<text class="n" x="${p.x}" y="${p.y+3.5}" text-anchor="middle">${n}</text>`:''}<text x="${p.x+11}" y="${p.y+4.5}">${lbl}</text></g>`; });
+    bwrap.querySelectorAll('svg,.beyond').forEach(e=>e.remove());
+    bwrap.insertAdjacentHTML('afterbegin',`<svg viewBox="0 0 ${colW} ${Hh}" xmlns="http://www.w3.org/2000/svg">${g}${links}${ns}</svg>`);
+    const svg=bwrap.querySelector('svg');
+    const lk=[...svg.querySelectorAll('.lk')], qs=[...svg.querySelectorAll('.q')];
+    function focus(id){ if(!id){ lk.forEach(e=>e.classList.remove('on','dim')); qs.forEach(e=>e.classList.remove('dim')); return; } const keep=new Set([id]); lk.forEach(e=>{ const on=e.dataset.a===id||e.dataset.b===id; e.classList.toggle('on',on); e.classList.toggle('dim',!on); if(on){keep.add(e.dataset.a);keep.add(e.dataset.b);} }); qs.forEach(e=>e.classList.toggle('dim',!keep.has(e.dataset.id))); }
+    qs.forEach(el=>{ const id=el.dataset.id, w=byQ[id];
+      el.addEventListener('mouseenter',ev=>{ focus(id); const dd=days(w.d), t=tally(w), s=stOf(w.id); const cpP=w.cps.map(c=>{ const cc=D.cps.find(q=>q.id===c); return cc?`${c} ${pct(cc.pressure)}`:c; }).join(' · ');
+        const inL=(w.leaks||[]).map(l=>`<i class="${stOf(l)||''}">${byQ[l].who}${autoOf(l)?BT.autoSuffix:''}</i>`).join(''); const outL=(outOf[id]||[]).map(o=>`<i>${byQ[o].who}</i>`).join('');
+        btip.innerHTML=`<b>${w.who}</b><span>${w.q}</span><div class="h">${dd<0?BT.past:(dd===0?BT.today:BT.in+' '+dd+' '+BT.days)} · ${w.d} · ${w.confirmed?BT.conf:BT.exp}${s?' · '+STATUS[s]:''}${cpP?' · '+BT.pulse+': '+cpP:''}</div>${inL?`<div class="lk1">${BT.leaksIn} ${inL}<br><b style="font-size:.9rem;display:inline">${lean(t)[1]}</b> (${t.yes+t.no+t.mixed} ${BT.of} ${(w.leaks||[]).length} ${BT.answered})</div>`:`<div class="lk1">${BT.noLeaks}</div>`}${outL?`<div class="lk1">${BT.leaksOut} ${outL}</div>`:''}`;
+        btip.style.display='block'; });
+      el.addEventListener('mousemove',ev=>{ const r=bwrap.getBoundingClientRect(); let px=ev.clientX-r.left+bwrap.scrollLeft+14, py=ev.clientY-r.top+14; if(px+400>r.width+bwrap.scrollLeft) px-=420; btip.style.left=px+'px'; btip.style.top=py+'px'; });
+      el.addEventListener('mouseleave',()=>{ focus(null); btip.style.display='none'; });
+      el.addEventListener('click',()=>{ const row=list&&list.querySelector(`.wrow[data-id="${id}"]`); if(row){ row.scrollIntoView({behavior:'smooth',block:'center'}); row.style.outline='2px solid var(--amber)'; setTimeout(()=>row.style.outline='',1800); } });
+    });
+    if(beyond.length) bwrap.insertAdjacentHTML('beforeend',`<div class="beyond" style="color:var(--ink3);font-size:.9rem;margin:4px 0 0">${BT.later} ${beyond.map(w=>w.who+' '+w.d).join(' · ')}</div>`);
+    // hints: upcoming questions with at least one answered leak
+    const up=W.filter(w=>days(w.d)>=0&&(w.leaks||[]).length).sort((a,b)=>a.d.localeCompare(b.d));
+    const withAns=up.filter(w=>{ const t=tally(w); return t.yes+t.no+t.mixed+t.none>0; });
+    let h=`<h3>${BT.hintsH}</h3>`;
+    if(!withAns.length){ const first=W.filter(w=>days(w.d)>=0&&(outOf[w.id]||[]).length).sort((a,b)=>a.d.localeCompare(b.d))[0]; h+=`<p class="lede">${BT.hintsNone} <b>${first?first.who+' · '+first.d:''}</b></p>`; }
+    withAns.forEach(w=>{ const t=tally(w), [lc,lt]=lean(t); const bar=t.items.map(i=>`<i class="${i.s}${i.auto?' autohint':''}" title="${byQ[i.id].who}${i.auto?BT.autoSuffix:''}"></i>`).join(''); const openL=t.items.filter(i=>i.s==='open').map(i=>byQ[i.id].who).join(' · ');
+      h+=`<div class="hrow"><div class="hd"><b>${w.who}</b>${w.d} · ${BT.in} ${days(w.d)} ${BT.days}</div><div class="hb"><span class="bar">${bar}</span><span class="lean ${lc}">${lt}</span> — ${t.yes+t.no+t.mixed} ${BT.of} ${t.items.length} ${BT.answered}: ${t.items.filter(i=>i.s!=='open').map(i=>byQ[i.id].who+' ('+STATUS[i.s]+')'+(i.auto?BT.autoSuffix:'')).join(' · ')}${openL?`<small>${BT.stillOpen} ${openL}</small>`:''}</div></div>`; });
+    hints.innerHTML=h;
+  }
+  BOARD.render=board; board();
+})();
+
+// ---- dated questions (watchlist) ----
+(function(){
+  const W = D.watch||LIVE.watch||[]; if(!W.length) return;
+  const today = new Date(D.as_of+'T00:00:00Z'); const now = new Date(); const ref = now>today?now:today;
+  const days = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
+  const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};
+  const WT = {auto:'auto'};   // the tag on a row a machine marked
+  let filter='all', statuses={}, dbref=null, dbState='pending';
+  // A row's mark comes from the exported answers first and the page's own
+  // database second, the same merge the board does. Without the fallback the
+  // board colours a row that the table below it still shows as open -- and an
+  // auto mark, which only ever arrives in the export, would never be labelled.
+  const list=document.getElementById('wlist'), wf=document.getElementById('wf');
+  const nameOf = id => (byId[id]&&byId[id].short) || id.toUpperCase();
+  function render(){
+    const rows = W.slice().sort((a,b)=>a.d.localeCompare(b.d)).filter(w=>{ const dd=days(w.d); if(filter==='30') return dd>=0&&dd<=30; if(filter==='past') return dd<0; if(filter==='cp') return w.cps.length>0; return dd>=-14; });
+    list.innerHTML = rows.map(w=>{ const dd=days(w.d); const st=Object.assign({}, (D.answers||{})[w.id]||{}, statuses[w.id]||{}); const s=st.status||'open';
+      return `<div class="wrow ${dd<0?'past':''} ${dd>=0&&dd<=21?'soon':''}" data-id="${w.id}">
+        <div class="wd"><b>${dd<0?'past':(dd===0?'today':'in '+dd+' days')}</b>${w.d}<small>${w.tk}</small><em class="${w.confirmed?'c':''}">${w.confirmed?'confirmed':'expected'}</em></div>
+        <div class="ww"><b>${w.who}</b>${st.auto?'<span class="autotag">'+WT.auto+'</span>':''}${w.cps.map(c=>`<span class="cp" data-cp="${c}">${c}</span>`).join('')}<span class="wl">${w.win.length?'gains if yes: <span dir="ltr">'+w.win.map(nameOf).join(' · ')+'</span>':''}${w.lose.length?' · loses: <span dir="ltr">'+w.lose.map(nameOf).join(' · ')+'</span>':''}</span></div>
+        <div class="wq">${w.q}<span class="lis"><b>Listen for:</b> ${w.listen}</span></div>
+        <div class="ws"><select class="${s==='yes'?'ok':(s==='no'?'no':'')}${st.auto?' auto':''}">${Object.keys(STATUS).map(k=>`<option value="${k}" ${k===s?'selected':''}>${STATUS[k]}</option>`).join('')}</select><input placeholder="short note" value="${(st.note||'').replace(/"/g,'&quot;')}"><div class="saved">${st.updated?('saved '+st.updated.slice(0,10)):(dbState==='off'?'not saved — database unavailable':'')}</div></div>
+      </div>`; }).join('') || '<p class="lede">Nothing in this filter.</p>';
+    list.querySelectorAll('.cp').forEach(el=>el.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===el.dataset.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h){ open(h); document.getElementById('stage').scrollIntoView({behavior:'smooth'}); } }));
+    list.querySelectorAll('.wrow').forEach(row=>{ const id=row.dataset.id; const sel=row.querySelector('select'), inp=row.querySelector('input');
+      const save=async()=>{ const rec={status:sel.value, note:inp.value.slice(0,300), updated:new Date().toISOString(), auto:false}; statuses[id]=rec; sel.className=sel.value==='yes'?'ok':(sel.value==='no'?'no':''); BOARD.statuses=statuses; BOARD.render(); if(!dbref){ row.querySelector('.saved').textContent='not saved — database unavailable'; return; } try{ await dbref.doc(id).set(rec); row.querySelector('.saved').textContent='saved '+rec.updated.slice(0,10); }catch(e){ row.querySelector('.saved').textContent='save failed'; } };
+      sel.addEventListener('change',save); inp.addEventListener('change',save); });
+    BOARD.statuses=statuses; BOARD.render();
+  }
+  const F=[['all','upcoming'],['30','30 days'],['cp','chokepoints only'],['past','already happened']];
+  wf.innerHTML=F.map(([k,l])=>`<button data-f="${k}" aria-pressed="${k===filter}">${l}</button>`).join('');
+  wf.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ filter=b.dataset.f; wf.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); render(); }));
+  render();
+  (async()=>{ try{ if(!window.claude||!claude.use){dbState='off';render();return;} const db=await claude.use('db'); if(!db){dbState='off';render();return;} dbState='on'; dbref=db.collection('watch'); const snap=await dbref.get(); snap.docs.forEach(d=>{ if(d.exists) statuses[d.id]=d.data(); }); render(); }catch(e){} })();
+})();
+
+// live data: newer snapshot from the artifact database, if present
+(async()=>{ try{ if(!window.claude||!claude.use) return; const db=await claude.use('db'); if(!db) return; const snap=await db.doc('live/latest').get(); const doc=snap&&(snap.data?snap.data():snap); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();
+})();
+</script>

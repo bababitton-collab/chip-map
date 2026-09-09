@@ -1,0 +1,910 @@
+[
+ {
+  "id": "orcl_q1",
+  "d": "2026-09-10",
+  "confirmed": true,
+  "who": "Oracle Q1 FY27",
+  "tk": "ORCL",
+  "cps": [],
+  "q": "כמה Oracle קונה: קצב ההשקעות ו־RPO. היא הלקוח הרעב ביותר של אנבידיה ו־AMD אחרי ארבע הגדולות.",
+  "listen": "הנחיית capex ל־FY27 ומספר ה־RPO",
+  "win": [
+   "nvda",
+   "amd",
+   "vrt"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "cloud",
+  "lbl": "Oracle"
+ },
+ {
+  "id": "mu_fq4",
+  "d": "2026-09-30",
+  "confirmed": true,
+  "who": "Micron FQ4",
+  "tk": "MU",
+  "cps": [
+   "CP5"
+  ],
+  "q": "האם מיקרון מגיעה ליעד הנתח ב־HBM ומהו קצב הקיבולת ל־HBM4.",
+  "listen": "יעד נתח HBM ל־2027 ו־capex",
+  "win": [
+   "mu"
+  ],
+  "lose": [
+   "skhynix",
+   "samsung"
+  ],
+  "leaks": [],
+  "lane": "hbm",
+  "lbl": "Micron"
+ },
+ {
+  "id": "smsg_pre",
+  "d": "2026-10-08",
+  "confirmed": false,
+  "who": "Samsung Q3 (מקדים)",
+  "tk": "005930",
+  "cps": [
+   "CP5",
+   "CP3"
+  ],
+  "q": "האם רווחי הזיכרון מאשרים ש־HBM4 של סמסונג נכנס לאנבידיה בכמויות.",
+  "listen": "רווח תפעולי של חטיבת הזיכרון מול הרבעון הקודם",
+  "win": [
+   "samsung"
+  ],
+  "lose": [
+   "skhynix"
+  ],
+  "leaks": [
+   "mu_fq4"
+  ],
+  "lane": "hbm",
+  "lbl": "Samsung (מקדים)"
+ },
+ {
+  "id": "asml_q3",
+  "d": "2026-10-14",
+  "confirmed": true,
+  "who": "ASML Q3",
+  "tk": "ASML",
+  "cps": [
+   "CP1",
+   "CP2"
+  ],
+  "q": "כמה מכונות EUV הוזמנו, כמה High-NA, ומה חלק סין. זו התקרה על כל מה שמתחת.",
+  "listen": "הזמנות EUV ברבעון, יחידות High-NA, ותחזית 2027",
+  "win": [
+   "asml"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "litho",
+  "lbl": "ASML"
+ },
+ {
+  "id": "tsm_q3",
+  "d": "2026-10-15",
+  "confirmed": true,
+  "who": "TSMC Q3",
+  "tk": "TSM",
+  "cps": [
+   "CP3",
+   "CP4"
+  ],
+  "q": "קיבולת CoWoS בפועל, קצב 2 ננומטר, והאם תתחייב ל־High-NA ל־A14 או תדחה שוב.",
+  "listen": "מספר קיבולת CoWoS לסוף 2026 ו־capex 2027",
+  "win": [
+   "tsmc",
+   "asml"
+  ],
+  "lose": [
+   "intc",
+   "samsung"
+  ],
+  "leaks": [
+   "asml_q3"
+  ],
+  "lane": "fab",
+  "lbl": "TSMC"
+ },
+ {
+  "id": "clf_q3",
+  "d": "2026-10-19",
+  "confirmed": true,
+  "who": "Cleveland-Cliffs Q3",
+  "tk": "CLF",
+  "cps": [
+   "CP11"
+  ],
+  "q": "היצרן האמריקאי היחיד של פלדה חשמלית: האם השדרוג בבאטלר בזמן ומה הביקוש משנאים.",
+  "listen": "עדכון על השדרוג ($195M) ותמחור GOES",
+  "win": [
+   "clf"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "power",
+  "lbl": "Cleveland-Cliffs"
+ },
+ {
+  "id": "intc_q3",
+  "d": "2026-10-22",
+  "confirmed": true,
+  "who": "Intel Q3",
+  "tk": "INTC",
+  "cps": [
+   "CP3"
+  ],
+  "q": "האם יש לקוח חיצוני מחויב ל־14A. המנכ\"ל אמר שההחלטות ייפלו במחצית השנייה. הבדיקה החדה ביותר ברשימה.",
+  "listen": "שם לקוח, או \"החלטות נדחו\"",
+  "win": [
+   "intc"
+  ],
+  "lose": [
+   "tsmc"
+  ],
+  "leaks": [],
+  "lane": "fab",
+  "lbl": "Intel"
+ },
+ {
+  "id": "shecy_h1",
+  "d": "2026-10-23",
+  "confirmed": true,
+  "who": "Shin-Etsu H1",
+  "tk": "SHECY",
+  "cps": [
+   "CP6",
+   "CP7"
+  ],
+  "q": "ביקוש לפרוסות סיליקון ורזיסט EUV. ירדה 19% ברבעון — האם המספרים מסבירים למה.",
+  "listen": "משלוחי פרוסות 300mm ותחזית H2",
+  "win": [
+   "shinetsu"
+  ],
+  "lose": [
+   "globalwafers"
+  ],
+  "leaks": [
+   "asml_q3",
+   "tsm_q3"
+  ],
+  "lane": "litho",
+  "lbl": "Shin-Etsu"
+ },
+ {
+  "id": "skh_q3",
+  "d": "2026-10-23",
+  "confirmed": false,
+  "who": "SK hynix Q3",
+  "tk": "000660",
+  "cps": [
+   "CP5"
+  ],
+  "q": "נתח HBM, מחיר HBM4, והאם שבב הבסיס ב־TSMC פוגע במרווח.",
+  "listen": "נתח HBM ותמחור HBM4 מול HBM3E",
+  "win": [
+   "skhynix"
+  ],
+  "lose": [
+   "mu",
+   "samsung"
+  ],
+  "leaks": [
+   "mu_fq4",
+   "smsg_pre"
+  ],
+  "lane": "hbm",
+  "lbl": "SK hynix"
+ },
+ {
+  "id": "amkr_q3",
+  "d": "2026-10-26",
+  "confirmed": true,
+  "who": "Amkor Q3",
+  "tk": "AMKR",
+  "cps": [
+   "CP4"
+  ],
+  "q": "האם יש לקוח עוגן למפעל בפיאוריה, אריזונה. זה מה שהופך אריזה מתקדמת מטייוואנית לאמריקאית.",
+  "listen": "שם לקוח לאריזונה",
+  "win": [
+   "amkr"
+  ],
+  "lose": [
+   "tsmc"
+  ],
+  "leaks": [
+   "tsm_q3",
+   "intc_q3"
+  ],
+  "lane": "fab",
+  "lbl": "Amkor"
+ },
+ {
+  "id": "cdns_q3",
+  "d": "2026-10-26",
+  "confirmed": true,
+  "who": "Cadence Q3",
+  "tk": "CDNS",
+  "cps": [
+   "CP14"
+  ],
+  "q": "הכנסות מסין אחרי הסרת ההגבלות, וכמה מהצמיחה מגיע מכלי AI.",
+  "listen": "חלק סין מההכנסות",
+  "win": [
+   "cdns"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "cloud",
+  "lbl": "Cadence"
+ },
+ {
+  "id": "ter_q3",
+  "d": "2026-10-27",
+  "confirmed": true,
+  "who": "Teradyne Q3",
+  "tk": "TER",
+  "cps": [
+   "CP13"
+  ],
+  "q": "האם Teradyne נוגסת ב־Advantest בבדיקת HBM ו־GPU. הרמז: \"merchant GPU\" בלי שם לקוח.",
+  "listen": "הזמנות בדיקת HBM/GPU ושם לקוח",
+  "win": [
+   "ter"
+  ],
+  "lose": [
+   "advantest"
+  ],
+  "leaks": [
+   "mu_fq4",
+   "tsm_q3"
+  ],
+  "lane": "fab",
+  "lbl": "Teradyne"
+ },
+ {
+  "id": "gev_q3",
+  "d": "2026-10-28",
+  "confirmed": true,
+  "who": "GE Vernova Q3",
+  "tk": "GEV",
+  "cps": [
+   "CP11"
+  ],
+  "q": "כמה משבצות טורבינה נשארו ל־2029–2030, ומה זמן האספקה של שנאים.",
+  "listen": "GW חתומים ושמורים, זמן אספקה LPT",
+  "win": [
+   "gev"
+  ],
+  "lose": [
+   "msft",
+   "amzn",
+   "googl"
+  ],
+  "leaks": [
+   "clf_q3"
+  ],
+  "lane": "power",
+  "lbl": "GE Vernova"
+ },
+ {
+  "id": "lrcx_q1",
+  "d": "2026-10-28",
+  "confirmed": true,
+  "who": "Lam Research FQ1",
+  "tk": "LRCX",
+  "cps": [
+   "CP3",
+   "CP5"
+  ],
+  "q": "תמהיל לקוחות: סמסונג 16%, TSMC 15%, hynix 12%, מיקרון 12%. שינוי בסדר = שינוי במי בונה.",
+  "listen": "לקוחות מעל 10% ותחזית WFE",
+  "win": [
+   "lrcx"
+  ],
+  "lose": [],
+  "leaks": [
+   "mu_fq4",
+   "asml_q3",
+   "tsm_q3",
+   "smsg_pre"
+  ],
+  "lane": "hbm",
+  "lbl": "Lam Research"
+ },
+ {
+  "id": "teck_q3",
+  "d": "2026-10-28",
+  "confirmed": true,
+  "who": "Teck Q3",
+  "tk": "TECK",
+  "cps": [
+   "CP12"
+  ],
+  "q": "הכפלת הגרמניום בטרייל — האם היא בזמן לפני פקיעת ההשעיה הסינית.",
+  "listen": "תפוקת גרמניום ולוח זמנים",
+  "win": [
+   "teck"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "mat",
+  "lbl": "Teck"
+ },
+ {
+  "id": "googl_q3",
+  "d": "2026-10-28",
+  "confirmed": true,
+  "who": "Alphabet Q3",
+  "tk": "GOOGL",
+  "cps": [],
+  "q": "capex 2026 ו־2027. ארבע הגדולות הן 730 מיליארד — כל שינוי כאן מזיז את כל המפה.",
+  "listen": "הנחיית capex",
+  "win": [
+   "nvda",
+   "avgo",
+   "tsmc"
+  ],
+  "lose": [],
+  "leaks": [
+   "orcl_q1"
+  ],
+  "lane": "cloud",
+  "lbl": "Alphabet"
+ },
+ {
+  "id": "adv_h1",
+  "d": "2026-10-28",
+  "confirmed": false,
+  "who": "Advantest H1",
+  "tk": "6857",
+  "cps": [
+   "CP13"
+  ],
+  "q": "נתח בדיקת SoC (66%) ומה קורה עם הבודקים הקוריאניים אצל SK hynix.",
+  "listen": "נתח SoC ותחזית שנתית",
+  "win": [
+   "advantest"
+  ],
+  "lose": [
+   "ter"
+  ],
+  "leaks": [
+   "skh_q3",
+   "ter_q3"
+  ],
+  "lane": "fab",
+  "lbl": "Advantest"
+ },
+ {
+  "id": "smsg_q3",
+  "d": "2026-10-28",
+  "confirmed": false,
+  "who": "Samsung Q3 (מלא)",
+  "tk": "005930",
+  "cps": [
+   "CP5",
+   "CP3"
+  ],
+  "q": "פירוט HBM4: כמה לאנבידיה, ומה קורה ב־2 ננומטר של הפאונדרי.",
+  "listen": "נתח HBM ותפוקת SF2",
+  "win": [
+   "samsung"
+  ],
+  "lose": [
+   "skhynix",
+   "tsmc"
+  ],
+  "leaks": [
+   "mu_fq4",
+   "smsg_pre",
+   "skh_q3"
+  ],
+  "lane": "hbm",
+  "lbl": "Samsung (מלא)"
+ },
+ {
+  "id": "hanmi_q3",
+  "d": "2026-10-29",
+  "confirmed": false,
+  "who": "Hanmi Semiconductor Q3",
+  "tk": "042700",
+  "cps": [
+   "CP4",
+   "CP5"
+  ],
+  "q": "הספק שאיבד חצי מהזמנות מדביקי HBM4 ל־ASMPT. האם הדימום נעצר.",
+  "listen": "הזמנות TC bonder ושם לקוח",
+  "win": [
+   "hanmi"
+  ],
+  "lose": [
+   "asmpt"
+  ],
+  "leaks": [
+   "smsg_pre",
+   "skh_q3",
+   "smsg_q3"
+  ],
+  "lane": "hbm",
+  "lbl": "Hanmi"
+ },
+ {
+  "id": "asx_q3",
+  "d": "2026-10-29",
+  "confirmed": true,
+  "who": "ASE Q3",
+  "tk": "ASX",
+  "cps": [
+   "CP4"
+  ],
+  "q": "האם ASE תנקוב בקיבולת CoWoS־שוות־ערך שלה. זה מה שמדלל את הריכוז ב־TSMC.",
+  "listen": "מספר קיבולת אריזה מתקדמת",
+  "win": [
+   "ase"
+  ],
+  "lose": [
+   "tsmc"
+  ],
+  "leaks": [
+   "tsm_q3",
+   "amkr_q3"
+  ],
+  "lane": "fab",
+  "lbl": "ASE"
+ },
+ {
+  "id": "axti_q3",
+  "d": "2026-10-29",
+  "confirmed": true,
+  "who": "AXT Q3",
+  "tk": "AXTI",
+  "cps": [
+   "CP10"
+  ],
+  "q": "מצעי InP — כולם מיוצרים בסין ברישיון. מחיר עלה 250%. האם הרישיונות ממשיכים.",
+  "listen": "הכנסות InP וסטטוס רישיונות MOFCOM",
+  "win": [
+   "axti"
+  ],
+  "lose": [
+   "lite",
+   "cohr"
+  ],
+  "leaks": [],
+  "lane": "mat",
+  "lbl": "AXT"
+ },
+ {
+  "id": "entg_q3",
+  "d": "2026-10-29",
+  "confirmed": true,
+  "who": "Entegris Q3",
+  "tk": "ENTG",
+  "cps": [
+   "CP3"
+  ],
+  "q": "TSMC היא 16% מההכנסות. שינוי כאן הוא מד לקצב הבנייה ב־2 ננומטר.",
+  "listen": "חלק TSMC ותחזית",
+  "win": [
+   "entegris"
+  ],
+  "lose": [],
+  "leaks": [
+   "tsm_q3",
+   "lrcx_q1"
+  ],
+  "lane": "fab",
+  "lbl": "Entegris"
+ },
+ {
+  "id": "amzn_q3",
+  "d": "2026-10-29",
+  "confirmed": true,
+  "who": "Amazon Q3",
+  "tk": "AMZN",
+  "cps": [],
+  "q": "capex ו־Trainium: כמה מהמחשוב עובר לשבבים עצמיים במקום אנבידיה.",
+  "listen": "הנחיית capex ואזכור Trainium",
+  "win": [
+   "alab",
+   "crdo",
+   "mrvl"
+  ],
+  "lose": [
+   "nvda"
+  ],
+  "leaks": [
+   "orcl_q1",
+   "googl_q3"
+  ],
+  "lane": "cloud",
+  "lbl": "Amazon"
+ },
+ {
+  "id": "hwm_q3",
+  "d": "2026-10-29",
+  "confirmed": true,
+  "who": "Howmet Q3",
+  "tk": "HWM",
+  "cps": [
+   "CP11"
+  ],
+  "q": "יציקות להבים לטורבינות — 60–90 שבועות לאצווה. האם הקיבולת גדלה.",
+  "listen": "הזמנות IGT",
+  "win": [
+   "hwm"
+  ],
+  "lose": [],
+  "leaks": [
+   "gev_q3"
+  ],
+  "lane": "power",
+  "lbl": "Howmet"
+ },
+ {
+  "id": "mpwr_q3",
+  "d": "2026-10-29",
+  "confirmed": true,
+  "who": "Monolithic Power Q3",
+  "tk": "MPWR",
+  "cps": [
+   "CP3"
+  ],
+  "q": "תכולת הכוח ב־Blackwell ו־Rubin. ספק שקט שכל שבב עובר דרכו.",
+  "listen": "הכנסות datacenter",
+  "win": [
+   "mpwr"
+  ],
+  "lose": [],
+  "leaks": [
+   "tsm_q3"
+  ],
+  "lane": "fab",
+  "lbl": "Monolithic Power"
+ },
+ {
+  "id": "hoya_h1",
+  "d": "2026-10-30",
+  "confirmed": false,
+  "who": "HOYA H1",
+  "tk": "7741",
+  "cps": [
+   "CP9"
+  ],
+  "q": "מסכות EUV: האם המפעל השלישי בסינגפור בזמן, ומה חלק AGC.",
+  "listen": "הכנסות מסכות ותחזית",
+  "win": [
+   "hoya"
+  ],
+  "lose": [],
+  "leaks": [
+   "asml_q3",
+   "tsm_q3"
+  ],
+  "lane": "litho",
+  "lbl": "HOYA"
+ },
+ {
+  "id": "cohr_q1",
+  "d": "2026-11-05",
+  "confirmed": false,
+  "who": "Coherent FQ1",
+  "tk": "COHR",
+  "cps": [
+   "CP10"
+  ],
+  "q": "ירדה 30% ברבעון. האם 1.6T ממריא והאם ה־FCC באמת מגביל את הסינים.",
+  "listen": "הזמנות 1.6T והתייחסות ל־FCC",
+  "win": [
+   "cohr",
+   "fn"
+  ],
+  "lose": [],
+  "leaks": [
+   "axti_q3",
+   "amzn_q3",
+   "googl_q3"
+  ],
+  "lane": "mat",
+  "lbl": "Coherent"
+ },
+ {
+  "id": "ajin_h1",
+  "d": "2026-11-05",
+  "confirmed": false,
+  "who": "Ajinomoto H1",
+  "tk": "2802",
+  "cps": [
+   "CP8"
+  ],
+  "q": "סרט ABF: כמויות ומחירים אחרי העלאה של 30%. מרווח תפעולי מעל 50%.",
+  "listen": "הכנסות חומרים אלקטרוניים ומרווח",
+  "win": [
+   "ajinomoto"
+  ],
+  "lose": [],
+  "leaks": [
+   "tsm_q3",
+   "asx_q3"
+  ],
+  "lane": "fab",
+  "lbl": "Ajinomoto"
+ },
+ {
+  "id": "sumco_q3",
+  "d": "2026-11-06",
+  "confirmed": false,
+  "who": "SUMCO Q3",
+  "tk": "3436",
+  "cps": [
+   "CP6"
+  ],
+  "q": "משלוחי פרוסות 300mm. NSIG הסינית מתקרבת ל־1.2 מיליון בחודש.",
+  "listen": "תחזית משלוחים",
+  "win": [
+   "sumco"
+  ],
+  "lose": [],
+  "leaks": [
+   "tsm_q3",
+   "shecy_h1"
+  ],
+  "lane": "mat",
+  "lbl": "SUMCO"
+ },
+ {
+  "id": "mofcom_re",
+  "d": "2026-11-10",
+  "confirmed": true,
+  "who": "סין — פקיעת ההשעיה על מתכות נדירות",
+  "tk": "MOFCOM",
+  "cps": [
+   "CP12"
+  ],
+  "q": "תאריך קשיח. אם ההשעיה לא מוארכת, הפיקוח על מגנטים חוזר.",
+  "listen": "הודעה רשמית: הארכה או פקיעה",
+  "win": [
+   "mp"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "mat",
+  "lbl": "סין: מתכות נדירות"
+ },
+ {
+  "id": "tel_q2",
+  "d": "2026-11-10",
+  "confirmed": false,
+  "who": "Tokyo Electron Q2",
+  "tk": "8035",
+  "cps": [
+   "CP3"
+  ],
+  "q": "ספק יחיד של מכונות ציפוי לרזיסט EUV. חלק סין מההכנסות.",
+  "listen": "חלק סין ותחזית",
+  "win": [
+   "tel"
+  ],
+  "lose": [],
+  "leaks": [
+   "asml_q3",
+   "tsm_q3",
+   "lrcx_q1"
+  ],
+  "lane": "litho",
+  "lbl": "Tokyo Electron"
+ },
+ {
+  "id": "amat_q4",
+  "d": "2026-11-12",
+  "confirmed": false,
+  "who": "Applied Materials FQ4",
+  "tk": "AMAT",
+  "cps": [
+   "CP3"
+  ],
+  "q": "סין, HBM, ו־2027. AMAT היא מד הבריאות של כל שכבת הציוד.",
+  "listen": "תחזית WFE 2027",
+  "win": [
+   "amat",
+   "lrcx",
+   "klac"
+  ],
+  "lose": [],
+  "leaks": [
+   "asml_q3",
+   "tsm_q3",
+   "lrcx_q1",
+   "tel_q2"
+  ],
+  "lane": "fab",
+  "lbl": "Applied Materials"
+ },
+ {
+  "id": "sie_fy",
+  "d": "2026-11-12",
+  "confirmed": false,
+  "who": "Siemens Energy FY26",
+  "tk": "ENR",
+  "cps": [
+   "CP11"
+  ],
+  "q": "זמני אספקה של שנאים. ירידה מתחת לשלוש שנים = המגבלה משתחררת.",
+  "listen": "lead time LPT ו־backlog",
+  "win": [
+   "siemensenergy"
+  ],
+  "lose": [
+   "gev"
+  ],
+  "leaks": [
+   "clf_q3",
+   "gev_q3",
+   "hwm_q3"
+  ],
+  "lane": "power",
+  "lbl": "Siemens Energy"
+ },
+ {
+  "id": "nvda_q3",
+  "d": "2026-11-19",
+  "confirmed": false,
+  "who": "NVIDIA Q3 FY27",
+  "tk": "NVDA",
+  "cps": [
+   "CP5",
+   "CP3",
+   "CP4"
+  ],
+  "q": "הכול: תמהיל ספקי HBM, Rubin, ו־NVHBM שמזיז את שבב הבסיס פנימה.",
+  "listen": "אזכור ספקי זיכרון ותחזית Q4",
+  "win": [
+   "tsmc",
+   "skhynix",
+   "mu"
+  ],
+  "lose": [],
+  "leaks": [
+   "mu_fq4",
+   "smsg_pre",
+   "tsm_q3",
+   "skh_q3",
+   "smsg_q3",
+   "amkr_q3",
+   "asx_q3",
+   "mpwr_q3",
+   "hanmi_q3"
+  ],
+  "lane": "hbm",
+  "lbl": "NVIDIA"
+ },
+ {
+  "id": "mofcom_ga",
+  "d": "2026-11-27",
+  "confirmed": true,
+  "who": "סין — פקיעת ההשעיה על גליום וגרמניום",
+  "tk": "MOFCOM",
+  "cps": [
+   "CP12"
+  ],
+  "q": "תאריך קשיח. 98% מהגליום. הארכה או חזרה לאיסור.",
+  "listen": "הודעה רשמית",
+  "win": [
+   "aa",
+   "teck",
+   "mtln"
+  ],
+  "lose": [],
+  "leaks": [
+   "mofcom_re"
+  ],
+  "lane": "mat",
+  "lbl": "סין: גליום"
+ },
+ {
+  "id": "semi_smg",
+  "d": "2026-12-10",
+  "confirmed": false,
+  "who": "SEMI — משלוחי סיליקון Q3",
+  "tk": "SEMI",
+  "cps": [
+   "CP6"
+  ],
+  "q": "הנתון הרבעוני של התעשייה. האם הסינים לוקחים נתח.",
+  "listen": "MSI משלוחים ושינוי שנתי",
+  "win": [
+   "globalwafers"
+  ],
+  "lose": [
+   "shinetsu",
+   "sumco"
+  ],
+  "leaks": [
+   "shecy_h1",
+   "sumco_q3"
+  ],
+  "lane": "mat",
+  "lbl": "SEMI"
+ },
+ {
+  "id": "absolics",
+  "d": "2026-12-31",
+  "confirmed": false,
+  "who": "Absolics — מצע זכוכית",
+  "tk": "SKC",
+  "cps": [
+   "CP8",
+   "CP4"
+  ],
+  "q": "תוצאות ברמת מארז או שם לקוח. הבדיקה הבינארית הנקייה ביותר בחומרים.",
+  "listen": "הודעה על לקוח או תוצאות אמינות",
+  "win": [
+   "skc"
+  ],
+  "lose": [
+   "ajinomoto",
+   "ibiden"
+  ],
+  "leaks": [
+   "intc_q3",
+   "ajin_h1"
+  ],
+  "lane": "fab",
+  "lbl": "Absolics"
+ },
+ {
+  "id": "lsrc_q2",
+  "d": "2027-01-27",
+  "confirmed": false,
+  "who": "Lasertec Q2",
+  "tk": "6920",
+  "cps": [
+   "CP9"
+  ],
+  "q": "ספק יחיד לבדיקת מסכות EUV. הזמנות High-NA.",
+  "listen": "הזמנות ותחזית",
+  "win": [
+   "lasertec"
+  ],
+  "lose": [],
+  "leaks": [
+   "asml_q3",
+   "hoya_h1"
+  ],
+  "lane": "litho",
+  "lbl": "Lasertec"
+ },
+ {
+  "id": "spie",
+  "d": "2027-02-22",
+  "confirmed": false,
+  "who": "SPIE Advanced Lithography",
+  "tk": "—",
+  "cps": [
+   "CP7",
+   "CP1"
+  ],
+  "q": "רזיסט מתכתי בייצור, וכל רמז לספק אופטיקה שני ל־ASML.",
+  "listen": "הרצאות של TSMC/Intel על רזיסט יבש",
+  "win": [
+   "lrcx"
+  ],
+  "lose": [
+   "tok",
+   "shinetsu"
+  ],
+  "leaks": [
+   "asml_q3",
+   "shecy_h1",
+   "lsrc_q2"
+  ],
+  "lane": "litho",
+  "lbl": "SPIE"
+ }
+]

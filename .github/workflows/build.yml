@@ -1,0 +1,83 @@
+name: build
+
+# Saturday 05:00 UTC, and on demand. The map is a weekly object: prices are
+# weekly closes and the dated questions move on a calendar of quarters, so a
+# daily build would spend a vendor quota to redraw the same picture.
+on:
+  schedule:
+    - cron: "0 5 * * 6"
+  workflow_dispatch:
+
+# What deploy-pages needs, and nothing else. No contents: write anywhere here:
+# this workflow publishes a site, it never commits to the repository.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. A manual run started while the scheduled one is still
+# going would otherwise race it to the same Pages deployment.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # The price cache. Restoring it is what makes the run incremental: with
+      # it, each series is a tail fetch; without it, 138 full histories.
+      #
+      # The key carries the map version, so adding a company to the map starts
+      # a fresh cache rather than silently leaving the new symbol unpriced --
+      # its parquet would be missing and only the full path creates one. The
+      # date suffix rotates the cache weekly; restore-keys means a new week
+      # still starts from last week's data rather than from nothing.
+      - name: map version
+        id: map
+        run: |
+          echo "v=$(python -c 'import json;print(json.load(open("data/semi_chain_v2.json"))["version"])')" >> "$GITHUB_OUTPUT"
+          echo "week=$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: out/prices
+          key: prices-${{ steps.map.outputs.v }}-${{ steps.map.outputs.week }}
+          restore-keys: |
+            prices-${{ steps.map.outputs.v }}-
+
+      # Before the build, not after. A broken build that still deploys is
+      # worse than one that fails.
+      - name: tests
+        run: python -m pytest tests/ -q
+
+      - name: build
+        env:
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+          ANSWERS_URL: ${{ vars.ANSWERS_URL }}
+        run: python -m chains.build_all
+
+      # Assembles site/ and runs the no-Hebrew gate on what will be served.
+      - name: publish
+        run: python -m chains.publish_site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

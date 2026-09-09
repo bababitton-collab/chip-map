@@ -1,0 +1,13 @@
+# Everything this build produces. Regenerable by definition, large, and a
+# commit of it would turn the history into a log of vendor responses.
+/out/
+/site/
+
+# Local runs
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Never
+.env

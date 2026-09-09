@@ -1,0 +1,5 @@
+# The curated map and the two watch lists are tracked by content hash in their
+# own provenance notes, and git's autocrlf would rewrite every line of them on
+# a Windows checkout -- producing different bytes, and a different hash, from
+# the copy that was reviewed. Pin them.
+*.json -text

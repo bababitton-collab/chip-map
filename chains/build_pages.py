@@ -115,6 +115,9 @@ PUB = {
 # Every pair MUST match. A reworded Hebrew string silently stops matching, and
 # a silent no-op here is a Hebrew sentence on the English page.
 TRANSLATIONS = [
+ ('    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`\n    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;',
+  '    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`\n    + `<span><i class="pa"></i>cannot be measured</span></div>`;'),
+    ("רחף על תחנה לדופק שלה · רחף על קו למה שהוא נושא ולחלק שלו אצל הקונה.", "Hover a station for its pulse · hover a line for what it carries and its share at the buyer."),
     ("מבחן קדימה →", "Forward test →"),
  ('html{direction:rtl}', 'html{direction:ltr}'),
  ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
@@ -168,8 +171,6 @@ TRANSLATIONS = [
  # legend, and the peer panel's section titles.
  ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',\n  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?'};",
   "const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',\n  buys:'Buys from', sells:'Sells to', peers:'Others in this layer',\n  via:'Challenges through', against:'against', sells1:'sells', to:'to ',\n  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?'};"),
- ('    `<span class="hint">רחף על תחנה או על קו · לחץ לפתיחה · החץ מצביע על הקונה</span>`\n    + `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`\n    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;',
-  '    `<span class="hint">hover a station or a line · click to open · the arrow points at the buyer</span>`\n    + `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`\n    + `<span><i class="pa"></i>cannot be measured</span></div>`;'),
  ('    h+=`<h3>מי מספק למי ש${WORDS.holder} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;',
   '    h+=`<h3>Who supplies the company that ${WORDS.holder} · ${t1.length} direct, ${t2.length} beneath them</h3>`;'),
  ('    h+=`<h3>מי ${WORDS.challenger} · ${c.sigs.length}</h3>`;',

@@ -1,39 +1,45 @@
-"""The forward test, as a page: what was said would move, and what moved.
+"""The forward test, as a page: every dated question, before and after it moves.
 
-WHAT THIS IS
-------------
-The ledger scores forecasts at fixed horizons. This is the same forecasts seen
-day by day: the two baskets and the equal-weight map, indexed to zero at the
-entry close, one point per session, plus the members that make them up.
+WHAT CHANGED IN v2
+------------------
+The first cut of this page listed forecasts. With nothing marked yet that was
+an empty page under five dashes, which said the opposite of what the page is
+for: the claims are registered NOW, in git, before the event. So the unit is
+the dated question, not the forecast, and every one of the thirty-nine gets a
+card the day it enters the watch list.
 
-It adds no measurement. The horizons come out of the ledger untouched -- the
-numbers on this page and the numbers on the board are the same numbers, because
-they are the same objects. What this module computes is the shape between the
-checkpoints, and it computes it from closes and nothing else.
+A card moves through states without moving on the page:
 
-THE ONE PLACE THE SIGN IS DECIDED
----------------------------------
-A forecast has a direction. "Yes, and the win basket outruns the lose basket"
-is +1; a "no" mark that points the other way is -1. Every difference on the
-page is sign-adjusted ONCE, in ``spread()``, by swapping the baskets before
-subtracting. Nowhere else in this module or in the template is a sign applied,
-because a second application would silently undo the first and the page would
-report the opposite of what was claimed.
+  upcoming  the date has not come and nothing is marked. The baskets are
+            already fixed, so they are already listed -- that is the whole
+            claim, made in public before the answer exists.
+  none      the date passed and the answer was ambiguous, undisclosed or still
+            open. No direction, so no forecast and no spreads, and the card
+            says so rather than quietly vanishing.
+  marked    an answer was marked but no session has closed since. Entry is the
+            close AFTER the mark, so there is nothing to measure yet.
+  tracking  entered, inside forty sessions.
+  closed    every checkpoint scored.
+
+REPORT-DAY CLOSE
+----------------
+The close on the session the question was answered on, or the last one before
+it. It is the number a reader wants when asking "where was this when the news
+landed". It stays absent until that day has arrived -- a report-day close for a
+future date would be today's price wearing a future date.
+
+THE SIGN IS DECIDED IN ONE PLACE
+--------------------------------
+A "no" mark says the win basket falls. Every difference goes through
+``spread()``, which swaps the baskets before subtracting; nothing downstream
+applies a direction again, because a second application would silently undo the
+first and the page would report a correct forecast as a wrong one.
+``expected_dir`` on a member row is the same rule applied to one station.
 
 ORDERS ARE NOT POOLED
 ---------------------
-Order 1 is the registered basket; order 2 is its second ring, derived from the
-map's supply edges. One record carries both -- they are the same claim at two
-removes -- but every number is kept apart, and the summary averages within an
-order and never across.
-
-WHAT IS SHOWN BUT NOT SCORED
-----------------------------
-A forecast marked after the last close has no entry yet. Its record is built,
-listed and dated, with no series and no numbers: the entry rule is the close of
-the first session AFTER the mark, and until that session prints there is
-nothing to measure. Dropping it would hide a registered claim; scoring it would
-invent one.
+Order 1 is the registered basket; order 2 is its second ring, read off the
+map's supply edges. One card carries both, and every number is kept apart.
 """
 from __future__ import annotations
 
@@ -41,32 +47,25 @@ import datetime as dt
 import json
 import statistics
 
-from chains import forecast, mapfile
-from chains.answers import DEFAULT_ORDER, HORIZONS_R2, R2_SUFFIX
+from chains import forecast, mapfile, rings
+from chains.answers import DEFAULT_ORDER, HORIZONS_R2, R2_SUFFIX, twin_id
 
-# Every checkpoint either order can have. A direct forecast has no 40.
 CHECKPOINTS = HORIZONS_R2
-
-# A member whose last close is older than this is carried forward and said to
-# be carried forward. Three sessions is a long weekend plus a holiday; beyond
-# that the line is somebody's data problem and the reader should know.
 STALE_AFTER = 3
-
-# The chart runs from entry. Every horizon has locked by 40 sessions, so a
-# series longer than this is history rather than the forward test, and it costs
-# bytes in a file with a hard ceiling.
 MAX_POINTS = 90
+CLOSED_AFTER = 40
 
 GROUPS = ("win", "lose", "win2", "lose2")
+STATES = ("tracking", "marked", "upcoming", "none", "closed")
+
+# A mark that points nowhere: the question was answered and the answer supports
+# no claim about which basket outruns which.
+UNDIRECTED = frozenset({"none", "mixed", "open"})
 
 
 # ------------------------------------------------------------------ the sign
-def flip(direction: int, a: list | None, b: list | None) -> tuple:
-    """The two baskets in the order the claim puts them.
-
-    Direction -1 means the claim is that ``b`` outruns ``a``. Swapping here,
-    once, is what lets every subtraction downstream be a plain subtraction.
-    """
+def flip(direction: int, a, b) -> tuple:
+    """The two baskets in the order the claim puts them."""
     return (a, b) if direction >= 0 else (b, a)
 
 
@@ -79,8 +78,14 @@ def spread(direction: int, up: float | None, down: float | None) -> float | None
     return (up - down) if direction >= 0 else (down - up)
 
 
+def expected_dir(group: str, direction: int) -> int:
+    """+1 if the row is expected to rise under the claim, -1 if to fall."""
+    base = 1 if group in ("win", "win2") else -1
+    return base if direction >= 0 else -base
+
+
 # ------------------------------------------------------------------ helpers
-def _round(v, n=6):
+def _round(v, n=4):
     return None if v is None else round(v, n)
 
 
@@ -89,7 +94,6 @@ def _pct(v, n=4):
 
 
 def symbols_for(doc: dict) -> tuple[dict[str, str], list[str]]:
-    """id -> price symbol, and the symbols EW_MAP is the mean of."""
     symbol_of = {r["id"]: r["price_symbol"]
                  for coll in ("nodes", "subnodes") for r in doc.get(coll, [])
                  if r.get("price_symbol")}
@@ -99,163 +103,217 @@ def symbols_for(doc: dict) -> tuple[dict[str, str], list[str]]:
     return symbol_of, node_symbols
 
 
-def label_of(doc: dict, nid: str) -> str:
+def _node(doc: dict, nid: str) -> dict:
     for coll in ("nodes", "subnodes"):
         for n in doc.get(coll, []):
             if n["id"] == nid:
-                return (n.get("short")
-                        or (n.get("ticker") or n["name"]).split(".")[0][:10])
-    return nid.upper()
+                return n
+    return {}
+
+
+def label_of(doc: dict, nid: str) -> str:
+    n = _node(doc, nid)
+    if not n:
+        return nid.upper()
+    return n.get("short") or (n.get("ticker") or n["name"]).split(".")[0][:10]
 
 
 def ticker_of(doc: dict, nid: str) -> str:
-    for coll in ("nodes", "subnodes"):
-        for n in doc.get(coll, []):
-            if n["id"] == nid:
-                return n.get("ticker") or nid.upper()
-    return nid.upper()
+    return _node(doc, nid).get("ticker") or nid.upper()
 
 
-def _stale(book, sym: str, window: list[dt.date]) -> int:
-    """Sessions between the member's last real close and the last session."""
+def _stale(book, sym: str, upto: dt.date, cal: list[dt.date]) -> int:
+    """Sessions between the member's last real close and ``upto``."""
     days = book.days.get(sym) or []
     if not days:
         return 0
-    last = days[-1]
-    return sum(1 for d in window if d > last)
+    return sum(1 for d in cal if days[-1] < d <= upto)
+
+
+def report_close(book, sym: str, d: str | None,
+                 today: dt.date) -> float | None:
+    """The close on the day the question is answered, or the last before it."""
+    if not d:
+        return None
+    try:
+        day = dt.date.fromisoformat(d)
+    except ValueError:
+        return None
+    if day > today:
+        return None
+    return book.at(sym, day)
+
+
+# ------------------------------------------------------------------ members
+def members_for(legs: dict, direction: int, doc: dict, book, symbol_of: dict,
+                d: str | None, today: dt.date, entry: dt.date | None,
+                window: list[dt.date], cal: list[dt.date]) -> list[dict]:
+    """One row per basket leg, the same columns in every state.
+
+    A number that does not exist yet is absent. None becomes an em dash in the
+    page and never a zero: a zero is a measurement.
+    """
+    out = []
+    last_day = window[-1] if window else (cal[-1] if cal else today)
+    prev_day = (window[-2] if len(window) > 1
+                else (cal[-2] if len(cal) > 1 else None))
+    for g in GROUPS:
+        for i in legs.get(g) or []:
+            sym = symbol_of.get(i)
+            if not sym or not book.has(sym):
+                continue
+            base = book.at(sym, entry) if entry else None
+            last = book.at(sym, last_day)
+            prev = book.at(sym, prev_day) if prev_day else None
+            old = _stale(book, sym, last_day, cal)
+            out.append({
+                "id": i, "tk": ticker_of(doc, i), "label": label_of(doc, i),
+                "group": g, "expected_dir": expected_dir(g, direction),
+                "report_close": _round(report_close(book, sym, d, today)),
+                "entry_close": _round(base),
+                "last": _round(last),
+                "day_pct": _pct(None if not prev or last is None
+                                else last / prev - 1.0),
+                "since_pct": _pct(None if not base or last is None
+                                  else last / base - 1.0),
+                "stale": old if old > STALE_AFTER else 0,
+            })
+    return out
+
+
+def _from_ledger(row: dict | None) -> dict:
+    """The ledger's horizons, in this page's units and otherwise untouched."""
+    if not row:
+        return {}
+    return {h: (None if not got else {"spread": _pct(got["excess"]),
+                                      "hit": got["hit"], "date": got["date"]})
+            for h, got in (row.get("horizons") or {}).items()}
 
 
 # --------------------------------------------------------------- one record
-def record(f: dict, twin: dict | None, row: dict | None, row2: dict | None,
-           book, cal: list[dt.date], doc: dict, watch: dict,
-           symbol_of: dict, node_symbols: list[str],
-           marks: dict | None = None) -> dict:
-    """One forecast, with its second ring folded in."""
-    w = watch.get(f["qid"], {})
-    direction = f["direction"]
-    entry = forecast.entry_session(f["marked_at"], cal)
+def state_of(f: dict | None, entry: dt.date | None, day_index: int | None,
+             status: str | None, past: bool) -> str:
+    """Which of the five a card is in. One function, so the page cannot
+    disagree with the tests about what it is looking at."""
+    if entry is not None:
+        return "closed" if day_index >= CLOSED_AFTER else "tracking"
+    if f is not None:
+        return "marked"
+    if status in UNDIRECTED:
+        return "none"
+    return "none" if past else "upcoming"
+
+
+def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
+           row2: dict | None, mark: dict | None, book, cal: list[dt.date],
+           doc: dict, symbol_of: dict, node_symbols: list[str],
+           today: dt.date, ring2: dict) -> dict:
+    """One dated question, in whatever state it is in."""
+    status = (mark or {}).get("status")
+    direction = f["direction"] if f else 1
+    entry = forecast.entry_session(f["marked_at"], cal) if f else None
+    d = w.get("d")
+    past = bool(d and dt.date.fromisoformat(d) < today)
 
     out = {
-        "id": f["id"], "qid": f["qid"],
-        "who": w.get("who") or f["qid"],
-        "tk": w.get("tk"),
-        "status": f["status"], "direction": direction,
-        "marked_at": f["marked_at"],
-        "auto": bool((marks or {}).get(f["qid"], {}).get("auto", False)),
+        "qid": w["id"], "id": (f or {}).get("id") or w["id"],
+        "who": w.get("who") or w["id"], "tk": w.get("tk"), "d": d,
+        "confirmed": bool(w.get("confirmed")),
+        "status": status, "direction": direction,
+        "auto": bool((mark or {}).get("auto", False)),
+        "marked_at": (f or {}).get("marked_at") or (mark or {}).get("updated"),
         "entry_date": entry.isoformat() if entry else None,
-        "has_r2": twin is not None,
+        "win": list(w.get("win") or []), "lose": list(w.get("lose") or []),
+        "win2": list(ring2.get("win2") or []),
+        "lose2": list(ring2.get("lose2") or []),
+        "ring2_edges": list(ring2.get("ring2_edges") or []),
     }
-    # The question text is the product boundary. It rides along only where the
-    # row is already open; on a locked row the field is absent, not blank --
-    # an empty string is still a field somebody can learn the shape of.
+    out["has_r2"] = bool(out["win2"] or out["lose2"])
+    # The question text is the product boundary: present only where the row is
+    # already open, and absent rather than empty on a locked one.
     if w.get("q"):
         out["q"] = w["q"]
 
-    if entry is None:
-        out.update({"day_index": None, "next_checkpoint": None,
-                    "sessions_to": None, "series": None, "members": [],
-                    "today": {}, "horizons": {}, "horizons2": {}})
-        return out
+    legs = {g: out[g] for g in GROUPS}
+    window = ([x for x in cal if x >= entry][:MAX_POINTS + 1]
+              if entry else [])
 
-    window = [d for d in cal if d >= entry][:MAX_POINTS + 1]
-    out["day_index"] = len(window) - 1
-    nxt = next((h for h in CHECKPOINTS if h > out["day_index"]), None)
-    out["next_checkpoint"] = nxt
-    out["sessions_to"] = None if nxt is None else nxt - out["day_index"]
+    if entry is not None:
+        out["day_index"] = len(window) - 1
+        nxt = next((h for h in CHECKPOINTS if h > out["day_index"]), None)
+        out["next_checkpoint"] = nxt
+        out["sessions_to"] = None if nxt is None else nxt - out["day_index"]
+    else:
+        out["day_index"] = None
+        out["next_checkpoint"] = None
+        out["sessions_to"] = None
+    out["state"] = state_of(f, entry, out["day_index"], status, past)
+
+    out["members"] = members_for(legs, direction, doc, book, symbol_of,
+                                 d, today, entry, window, cal)
+
+    if entry is None:
+        out.update({"series": None, "today": {}, "horizons": {},
+                    "horizons2": {}})
+        return out
 
     def syms(ids):
         return [symbol_of[i] for i in ids
                 if i in symbol_of and book.has(symbol_of[i])]
 
-    legs = {"win": list(f["win"]), "lose": list(f["lose"]),
-            "win2": list(twin["win"]) if twin else [],
-            "lose2": list(twin["lose"]) if twin else []}
-
-    series = {g: forecast.basket_returns(book, syms(legs[g]), entry, window)
-              if legs[g] else None for g in GROUPS}
+    ser = {g: (forecast.basket_returns(book, syms(legs[g]), entry, window)
+               if legs[g] else None) for g in GROUPS}
     ew = forecast.ew_map(book, node_symbols, entry, window)
-
     out["series"] = {
-        "dates": [d.isoformat() for d in window],
-        "win": [_pct(v) for v in series["win"]] if series["win"] else None,
-        "lose": [_pct(v) for v in series["lose"]] if series["lose"] else None,
+        "dates": [x.isoformat() for x in window],
         "ew": [_pct(v) for v in ew],
-        "win2": [_pct(v) for v in series["win2"]] if series["win2"] else None,
-        "lose2": [_pct(v) for v in series["lose2"]] if series["lose2"] else None,
+        **{g: ([_pct(v) for v in ser[g]] if ser[g] else None) for g in GROUPS},
     }
-
-    members = []
-    for g in GROUPS:
-        for i in legs[g]:
-            sym = symbol_of.get(i)
-            if not sym or not book.has(sym):
-                continue
-            base = book.at(sym, entry)
-            last = book.at(sym, window[-1])
-            prev = book.at(sym, window[-2]) if len(window) > 1 else base
-            old = _stale(book, sym, window)
-            members.append({
-                "id": i, "tk": ticker_of(doc, i), "label": label_of(doc, i),
-                "group": g,
-                "entry": _round(base, 4), "last": _round(last, 4),
-                "day": _pct(None if not prev or last is None
-                            else last / prev - 1.0),
-                "since": _pct(None if not base or last is None
-                              else last / base - 1.0),
-                "stale": old if old > STALE_AFTER else 0,
-            })
-    out["members"] = members
 
     def last(name):
         s = out["series"][name]
         return s[-1] if s else None
 
+    ew_now = out["series"]["ew"][-1]
     up, down = flip(direction, last("win"), last("lose"))
     up2, down2 = flip(direction, last("win2"), last("lose2"))
-    ew_now = out["series"]["ew"][-1]
-    # Four differences, every one of them through spread(). The map is passed
-    # as the down side of the pair, because "win minus map" is the same claim
-    # about direction that "win minus lose" is.
     out["today"] = {
-        "win_lose": _round(spread(direction, last("win"), last("lose")), 4),
-        "win_ew": _round(spread(direction, last("win"), ew_now), 4),
-        "win2_lose2": _round(spread(direction, last("win2"), last("lose2")), 4),
-        "win2_ew": _round(spread(direction, last("win2"), ew_now), 4),
-        "up": _round(up, 4), "down": _round(down, 4),
-        "up2": _round(up2, 4), "down2": _round(down2, 4),
-        "ew": _round(ew_now, 4),
+        "win_lose": _round(spread(direction, last("win"), last("lose"))),
+        "win_ew": _round(spread(direction, last("win"), ew_now)),
+        "win2_lose2": _round(spread(direction, last("win2"), last("lose2"))),
+        "win2_ew": _round(spread(direction, last("win2"), ew_now)),
+        "up": _round(up), "down": _round(down),
+        "up2": _round(up2), "down2": _round(down2), "ew": _round(ew_now),
     }
-
-    # The horizons are the ledger's. Not recomputed, not rounded again: the
-    # board and this page must not be able to disagree.
     out["horizons"] = _from_ledger(row)
     out["horizons2"] = _from_ledger(row2)
     return out
 
 
-def _from_ledger(row: dict | None) -> dict:
-    """The ledger's horizons, in this page's units.
-
-    The ledger stores fractions; everything here is a percentage, because a
-    page that mixes the two is a page where a number is eventually read in the
-    wrong one. The conversion is the only thing done to them -- the hit, the
-    date and the ordering are the ledger's, so the board and this page cannot
-    disagree about whether a checkpoint was met.
-    """
-    if not row:
-        return {}
-    out = {}
-    for h, got in (row.get("horizons") or {}).items():
-        out[h] = None if not got else {"spread": _pct(got["excess"]),
-                                       "hit": got["hit"],
-                                       "date": got["date"]}
-    return out
-
-
 # ---------------------------------------------------------------- the build
+BANDS = {"tracking": 0, "marked": 1, "upcoming": 2, "none": 3, "closed": 4}
+
+
+def _desc(v: str | None) -> str:
+    """A key that sorts descending under an ascending sort."""
+    return "".join(chr(0x10FFFC - ord(c)) for c in (v or ""))
+
+
+def sort_key(r: dict):
+    """Tracking first, newest entry first; then marked, newest first; then
+    upcoming by date; then answered-but-undirected; then closed, at the
+    bottom. A card never moves band without its state changing."""
+    band = BANDS.get(r["state"], 9)
+    if r["state"] == "tracking":
+        return (band, _desc(r.get("entry_date")), r["qid"])
+    if r["state"] in ("upcoming", "none"):
+        return (band, r.get("d") or "9999-12-31", r["qid"])
+    return (band, _desc(r.get("marked_at") or r.get("d")), r["qid"])
+
+
 def summarise(records: list[dict]) -> dict:
-    """Five numbers, each with the N behind it, pooled within an order only."""
     scored = [r for r in records if r.get("entry_date")]
+    upcoming = [r for r in records if r["state"] == "upcoming"]
 
     def at(key, h, want):
         vals = [r[key].get(str(h)) for r in scored if r.get(key, {}).get(str(h))]
@@ -269,10 +327,15 @@ def summarise(records: list[dict]) -> dict:
         return {"n": len(vals),
                 "value": round(statistics.fmean(v["spread"] for v in vals), 4)}
 
+    nxt = min(upcoming, key=lambda r: r.get("d") or "9999", default=None)
     return {
-        "n_forecasts": len(records),
-        "n_open": sum(1 for r in records if not r.get("entry_date")),
+        "n_cards": len(records),
+        "n_forecasts": sum(1 for r in records if r.get("entry_date")
+                           or r["state"] == "marked"),
+        "n_open": sum(1 for r in records if r["state"] == "marked"),
         "n_scored": len(scored),
+        "n_upcoming": len(upcoming),
+        "next_up": None if not nxt else {"d": nxt.get("d"), "who": nxt["who"]},
         "direct_hit_5": at("horizons", 5, "hit"),
         "direct_spread_5": at("horizons", 5, "mean"),
         "direct_spread_20": at("horizons", 20, "mean"),
@@ -281,27 +344,33 @@ def summarise(records: list[dict]) -> dict:
     }
 
 
-def build(forecasts: list[dict], ledger: dict | None = None,
+def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
           watch: list[dict] | None = None, doc: dict | None = None,
           marks: dict | None = None, book=None,
-          cal: list[dt.date] | None = None) -> dict:
-    """``{summary, forecasts}``. Empty and valid when nothing is marked."""
+          cal: list[dt.date] | None = None,
+          today: dt.date | None = None) -> dict:
+    """``{summary, forecasts}`` -- one record per dated question."""
     doc = doc or mapfile.load()
+    forecasts = forecasts or []
     ledger = ledger or {"rows": []}
+    watch = watch or []
+    marks = marks or {}
+    today = today or dt.date.today()
     rows = {r["id"]: r for r in ledger.get("rows", [])}
-    by_watch = {w["id"]: w for w in (watch or [])}
 
-    direct = [f for f in forecasts if f.get("order", DEFAULT_ORDER) == 1]
+    direct = {f["qid"]: f for f in forecasts
+              if f.get("order", DEFAULT_ORDER) == 1}
     twins = {f["id"]: f for f in forecasts
              if f.get("order", DEFAULT_ORDER) == 2}
-    if not direct:
-        return {"summary": summarise([]), "forecasts": []}
 
     symbol_of, node_symbols = symbols_for(doc)
+    by_ticker = {str(n.get("ticker", "")).upper(): n["id"]
+                 for n in doc.get("nodes", []) if n.get("ticker")}
+
     if book is None or cal is None:
         wanted = set(node_symbols)
-        for f in forecasts:
-            for i in list(f["win"]) + list(f["lose"]):
+        for w in watch:
+            for i in list(w.get("win") or []) + list(w.get("lose") or []):
                 if i in symbol_of:
                     wanted.add(symbol_of[i])
         book = book or forecast.Book(sorted(wanted))
@@ -309,16 +378,38 @@ def build(forecasts: list[dict], ledger: dict | None = None,
             [s for s in node_symbols if s.endswith(".US")])
 
     out = []
-    for f in direct:
-        from chains.answers import twin_id
-        tid = twin_id(f["qid"], f["marked_at"])
-        twin = twins.get(tid)
-        out.append(record(f, twin, rows.get(f["id"]),
+    for w in watch:
+        if not w.get("d"):
+            continue
+        r2 = rings.second_ring(doc, w.get("win") or [], w.get("lose") or [],
+                               by_ticker.get(str(w.get("tk") or "").upper()))
+        f = direct.get(w["id"])
+        tid = twin_id(w["id"], f["marked_at"]) if f else None
+        twin = twins.get(tid) if tid else None
+        out.append(record(w, f, twin, rows.get(f["id"]) if f else None,
                           rows.get(tid) if twin else None,
-                          book, cal, doc, by_watch, symbol_of, node_symbols,
-                          marks))
-    out.sort(key=lambda r: (r["marked_at"], r["id"]), reverse=True)
-    return {"summary": summarise(out), "forecasts": out}
+                          marks.get(w["id"]), book, cal, doc, symbol_of,
+                          node_symbols, today, r2))
+    out.sort(key=sort_key)
+    return {"summary": summarise(out), "forecasts": out,
+            "as_of": today.isoformat()}
+
+
+# ------------------------------------------------------------------- slimming
+# What live.json carries. The full record set is 42 KB of members and series
+# for thirty-nine questions, and live.json has a hard 250 KB ceiling it was
+# already close to. The page builds its own full copy; live.json carries only
+# what the brief and the map read, which is the summary and one line per card.
+SLIM_FIELDS = ("qid", "who", "tk", "d", "state", "status", "auto",
+               "marked_at", "entry_date", "day_index", "next_checkpoint",
+               "sessions_to", "has_r2", "today", "confirmed")
+
+
+def slim(data: dict) -> dict:
+    """The same object with the heavy halves dropped."""
+    return {"summary": data["summary"], "as_of": data.get("as_of"),
+            "forecasts": [{k: r[k] for k in SLIM_FIELDS if k in r}
+                          for r in data["forecasts"]]}
 
 
 # ------------------------------------------------------------------ the page
@@ -329,8 +420,8 @@ def render(data: dict, template: str | None = None) -> str:
     """The page, with its data inlined.
 
     One substitution, and it is checked: a template whose placeholder has been
-    renamed would otherwise publish a page that fetches nothing and renders an
-    empty shell, which looks like "no forecasts yet" and is not.
+    renamed would publish a page that renders an empty shell, which reads as
+    "nothing registered yet" and is the opposite of true.
     """
     from chains.paths import templates_dir
     t = template if template is not None else (
@@ -338,30 +429,45 @@ def render(data: dict, template: str | None = None) -> str:
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "
-            f"page would render an empty shell and read as 'no forecasts'.")
+            f"page would render an empty shell and read as 'nothing yet'.")
     return t.replace(PLACEHOLDER, json.dumps(data, ensure_ascii=False))
 
 
 def main() -> int:
-    """Write out/<domain>/track.json and out/<domain>/track.html."""
+    """Build the FULL record set and write the page beside its data.
+
+    live.json carries a slimmed copy, so this rebuilds rather than reads: the
+    watch rows, the answers and the ledger come out of live_en.json -- already
+    merged, already in English, already scored -- and only the members and the
+    series are computed again here.
+    """
+    from chains import answers as answers_mod
     from chains.paths import out_dir
     live = json.loads((out_dir() / "live_en.json").read_text(encoding="utf-8"))
-    data = live.get("track") or {"summary": summarise([]), "forecasts": []}
+    _a, forecasts, _p = answers_mod.read()
+    data = build(forecasts, live.get("ledger"), live.get("watch"),
+                 marks=live.get("answers"),
+                 today=dt.date.fromisoformat(live["as_of"]))
     out_dir().mkdir(parents=True, exist_ok=True)
     j = out_dir() / "track.json"
     j.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n",
                  encoding="utf-8", newline="\n")
     h = out_dir() / "track.html"
     h.write_text(render(data), encoding="utf-8", newline="\n")
-    n = len(data["forecasts"])
+    by: dict[str, int] = {}
+    for r in data["forecasts"]:
+        by[r["state"]] = by.get(r["state"], 0) + 1
     print(f"wrote {j}  ({j.stat().st_size:,} bytes)")
-    print(f"wrote {h}  ({h.stat().st_size:,} bytes, {n} forecast"
-          f"{'' if n == 1 else 's'})")
+    print(f"wrote {h}  ({h.stat().st_size:,} bytes)")
+    print("  " + (" · ".join(f"{k} {v}" for k, v in sorted(by.items()))
+                  or "no dated questions"))
     return 0
 
 
-__all__ = ["build", "record", "spread", "flip", "summarise", "render", "main",
-           "CHECKPOINTS", "STALE_AFTER", "MAX_POINTS", "R2_SUFFIX"]
+__all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
+           "render", "main", "slim", "sort_key", "state_of", "members_for",
+           "report_close", "CHECKPOINTS", "STALE_AFTER", "MAX_POINTS",
+           "CLOSED_AFTER", "STATES", "UNDIRECTED", "R2_SUFFIX"]
 
 
 if __name__ == "__main__":                                # pragma: no cover

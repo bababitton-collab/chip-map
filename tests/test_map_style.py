@@ -302,3 +302,57 @@ def test_the_countdown_ring_gets_an_inner_disc_to_be_inset():
 def test_the_english_page_carries_the_same_filter():
     assert bp.hebrew_runs(EN[EN.index("<filter"):EN.index("</defs>")]) == []
     assert 'filter="url(#inset)"' in EN
+
+
+# -- the hover hint ----------------------------------------------------------
+
+def test_the_hint_is_not_painted_on_the_canvas():
+    """It never was -- it was a span inside the legend, which sits under the
+    map, and the 280px station tooltip overflows the canvas and landed on it.
+    Either way nothing the canvas writes says it, and this keeps it that way.
+
+    Checked on the fillText calls rather than on draw()'s whole text, because
+    ``hover`` is also the name of the variable holding the hovered station.
+    """
+    calls = re.findall(r"fillText\(([^;]*?)\)", TPL)
+    assert calls, "expected some canvas text"
+    for c in calls:
+        for word in ("hover", "Hover", "רחף"):
+            assert word not in c, (word, c[:80])
+
+
+def test_the_hint_is_its_own_element_under_the_map():
+    assert '<div class="maphint" id="maphint">' in TPL
+    # between the map strip and the legend, in that order
+    assert TPL.index('id="maphint"') > TPL.index('<canvas id="map">')
+    assert TPL.index('id="maphint"') < TPL.index('<div class="legend"')
+
+
+def test_the_hint_is_ink3_mono_and_small():
+    i = TPL.index(".maphint{")
+    css = TPL[i:TPL.index("}", i)]
+    assert 'font-family:"IBM Plex Mono",monospace' in css
+    assert "font-size:.68rem" in css and "color:var(--ink3)" in css
+    assert "text-align:start" in css
+
+
+def test_the_legend_no_longer_carries_it():
+    i = TPL.index("document.getElementById('legend').innerHTML=")
+    assert 'class="hint"' not in TPL[i:i + 700]
+
+
+def test_the_hint_goes_on_the_first_hover_of_anything():
+    """A station or a line -- either one means the reader has found the
+    interaction the sentence was describing."""
+    assert "let hoverEdge=null, hintGone=false;" in TPL
+    assert "if(!hintGone && (n||hoverEdge)){ hintGone=true;" in TPL
+    assert "h.classList.add('gone')" in TPL
+    assert ".maphint.gone{display:none}" in TPL
+
+
+def test_it_says_both_halves_in_both_languages():
+    he = "רחף על תחנה לדופק שלה"
+    en = "Hover a station for its pulse · hover a line for what it carries"
+    assert he in TPL
+    assert en in EN and "its share at the buyer" in EN
+    assert bp.hebrew_runs(EN[EN.index("maphint"):EN.index("maphint") + 400]) == []

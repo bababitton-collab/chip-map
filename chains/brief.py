@@ -163,7 +163,9 @@ def render(live: dict, watch: list, statuses: dict) -> str:
     # and the page must not be able to disagree.
     tr = live.get("track") or {}
     ts, tf = tr.get("summary") or {}, tr.get("forecasts") or []
-    if ts.get("n_forecasts"):
+    tf = [r for r in tf
+          if r.get("entry_date") or r.get("state") == "marked"]
+    if ts.get("n_scored") or tf:
         out.append("## Forward test")
         out.append("")
         hit5, r2hit = ts.get("direct_hit_5"), ts.get("ring2_hit_5")

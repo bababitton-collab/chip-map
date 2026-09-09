@@ -430,7 +430,10 @@ def build(today: dt.date | None = None, lang: str = "he",
         # The same forecasts, day by day. The horizons inside it are the
         # ledger's own objects, so the board and the tracking page cannot
         # disagree about a checkpoint.
-        "track": track.build(forecasts, ledger, watch, m, answers),
+        # Slimmed: the full record set is 42 KB and this file has a hard
+        # ceiling. chains/track.py builds the full copy for its own page.
+        "track": track.slim(track.build(forecasts, ledger, watch, m, answers,
+                                        today=today)),
         "domain": paths.domain(),
         "signup": signup_url(),
         "n_open": sum(1 for r in watch if r["open"]),

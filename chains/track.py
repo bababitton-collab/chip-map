@@ -464,6 +464,25 @@ PUBLIC_CARD = ("qid", "who", "tk", "d", "confirmed", "state", "status",
                "marked_at", "entry_date", "day_index", "auto")
 
 
+def _terms_on(gl: dict, texts: list[str]) -> dict:
+    """The subset of ``gl`` the given text actually uses.
+
+    A definition explains a word that is on the page, and a word that is not
+    on the page needs no explaining. The free file carries the free text, so
+    it carries the terms of the free text -- otherwise forty-seven definitions
+    ride along for questions the free reader cannot see, and the teaser ends
+    up larger than the thing it is teasing.
+    """
+    from chains import glossary as _gl
+    terms = [{"id": k, "match": v.get("match") or []} for k, v in gl.items()]
+    keep: list[str] = []
+    for t in texts:
+        for tid in _gl.find(t or "", terms, limit=_gl.MAX_PER_CARD):
+            if tid not in keep:
+                keep.append(tid)
+    return {k: gl[k] for k in keep if k in gl}
+
+
 def public(data: dict) -> dict:
     """The free half: finished forecasts in full, everything else as a count.
 
@@ -494,7 +513,12 @@ def public(data: dict) -> dict:
     scored = [r for r in rows]
     return {
         "as_of": data.get("as_of"),
-        "glossary": data.get("glossary") or {},
+        # Narrowed to the free text: see _terms_on. The sealed payload keeps
+        # the whole glossary, because behind the key every card is readable.
+        "glossary": _terms_on(
+            data.get("glossary") or {},
+            [r.get("q") for r in rows] + [r.get("who") for r in rows]
+            + [u.get("who") for u in upcoming]),
         "closed": rows,
         "n_active": active,
         "n_upcoming": len(upcoming),

@@ -1,0 +1,544 @@
+{
+ "version": 1,
+ "as_of": "2026-09-10",
+ "terms": [
+  {
+   "id": "fy",
+   "label": "FY",
+   "match": [
+    "fiscal year",
+    "FY",
+    "FY26",
+    "FY27",
+    "FY28"
+   ],
+   "en": "A company's fiscal year; Oracle's FY27 runs June 2026 to May 2027, so its quarters do not match the calendar.",
+   "he": "שנת הכספים של החברה. אצל אורקל FY27 היא יוני 2026 עד מאי 2027, ולכן הרבעונים שלה לא תואמים ללוח השנה."
+  },
+  {
+   "id": "capex",
+   "label": "Capex",
+   "match": [
+    "capex",
+    "Capex",
+    "capital expenditure"
+   ],
+   "en": "Capital expenditure: what a company spends on buildings, chips and equipment rather than on running costs. For a cloud company, mostly data centers and GPUs.",
+   "he": "הוצאות הון: מה שחברה מוציאה על מבנים, שבבים וציוד, לא על תפעול שוטף. אצל חברת ענן — בעיקר מרכזי נתונים ומעבדים."
+  },
+  {
+   "id": "guidance",
+   "label": "Guidance",
+   "match": [
+    "guidance",
+    "Guidance",
+    "guide",
+    "guided"
+   ],
+   "en": "The company's own forecast for the coming quarter or year, given with its results. \"Raised\" or \"cut\" guidance moves stocks more than the results themselves.",
+   "he": "התחזית שהחברה עצמה נותנת לרבעון או לשנה הבאים. \"העלתה\" או \"הורידה\" תחזית מזיז מניות יותר מהתוצאות עצמן."
+  },
+  {
+   "id": "rpo",
+   "label": "RPO",
+   "match": [
+    "remaining performance obligations",
+    "RPO"
+   ],
+   "en": "Remaining performance obligations: contracts customers have signed that the company has not yet delivered or billed. The order book.",
+   "he": "התחייבויות ביצוע שנותרו: חוזים שלקוחות חתמו והחברה עדיין לא סיפקה או חייבה. ספר ההזמנות."
+  },
+  {
+   "id": "bookings",
+   "label": "Bookings",
+   "match": [
+    "Bookings",
+    "bookings",
+    "orders"
+   ],
+   "en": "New orders received in the quarter, as opposed to revenue, which is what was delivered. Bookings say what next year looks like.",
+   "he": "הזמנות חדשות שהתקבלו ברבעון, להבדיל מהכנסות, שהן מה שסופק. ההזמנות אומרות איך תיראה השנה הבאה."
+  },
+  {
+   "id": "backlog",
+   "label": "Backlog",
+   "match": [
+    "backlog",
+    "Backlog"
+   ],
+   "en": "Orders received but not yet delivered. A growing backlog means demand is outrunning capacity.",
+   "he": "הזמנות שהתקבלו ועדיין לא סופקו. צבר גדל אומר שהביקוש עוקף את הקיבולת."
+  },
+  {
+   "id": "lead_time",
+   "label": "Lead time",
+   "match": [
+    "Lead time",
+    "lead time",
+    "lead times"
+   ],
+   "en": "How long a customer waits between ordering and receiving. Lengthening lead times are the clearest sign of a bottleneck.",
+   "he": "כמה זמן לקוח מחכה מההזמנה עד הקבלה. זמני אספקה שמתארכים הם הסימן הברור ביותר לצוואר בקבוק."
+  },
+  {
+   "id": "operating_profit",
+   "label": "Operating profit",
+   "match": [
+    "gross margin",
+    "margin",
+    "operating margin",
+    "Operating profit",
+    "operating profit"
+   ],
+   "en": "Profit from the core business before interest and tax; margin is that profit as a share of revenue. A rising margin means pricing power.",
+   "he": "הרווח מהפעילות העיקרית לפני ריבית ומס; המרווח הוא הרווח הזה כאחוז מההכנסות. מרווח שעולה = כוח תמחור."
+  },
+  {
+   "id": "sequentially",
+   "label": "Sequentially",
+   "match": [
+    "q/q",
+    "quarter on quarter",
+    "Sequentially",
+    "sequentially"
+   ],
+   "en": "Compared with the previous quarter, not with the same quarter last year. The faster signal.",
+   "he": "בהשוואה לרבעון הקודם, לא לאותו רבעון בשנה שעברה. האות המהיר יותר."
+  },
+  {
+   "id": "h2",
+   "label": "H2",
+   "match": [
+    "H2",
+    "half-year"
+   ],
+   "en": "The second half of the fiscal year.",
+   "he": "המחצית השנייה של שנת הכספים."
+  },
+  {
+   "id": "consensus",
+   "label": "Consensus",
+   "match": [
+    "consensus",
+    "Consensus"
+   ],
+   "en": "The average of analysts' forecasts. \"Above consensus\" means the company beat what the market expected.",
+   "he": "ממוצע תחזיות האנליסטים. \"מעל הקונצנזוס\" = החברה עקפה את מה שהשוק ציפה."
+  },
+  {
+   "id": "preliminary_numbers",
+   "label": "Preliminary numbers",
+   "match": [
+    "preliminary",
+    "preliminary numbers",
+    "Preliminary numbers"
+   ],
+   "en": "Samsung publishes rough quarterly figures about three weeks before the full report. The first hard signal of the quarter.",
+   "he": "סמסונג מפרסמת מספרים רבעוניים גסים כשלושה שבועות לפני הדוח המלא. האות הקשה הראשון של הרבעון."
+  },
+  {
+   "id": "customer_mix",
+   "label": "Customer mix",
+   "match": [
+    "customer mix",
+    "Customer mix",
+    "supplier mix"
+   ],
+   "en": "Which customers make up a supplier's revenue, and in what order. A change in the order is a change in who is building.",
+   "he": "אילו לקוחות מרכיבים את ההכנסות של ספק, ובאיזה סדר. שינוי בסדר = שינוי במי שבונה."
+  },
+  {
+   "id": "anchor_customer",
+   "label": "Anchor customer",
+   "match": [
+    "Anchor customer",
+    "anchor customer"
+   ],
+   "en": "The first big customer who commits to a new plant, making the rest of the investment safe.",
+   "he": "הלקוח הגדול הראשון שמתחייב למפעל חדש, ובכך מבטיח את שאר ההשקעה."
+  },
+  {
+   "id": "second_source",
+   "label": "Second source",
+   "match": [
+    "Second source",
+    "second source",
+    "second-source"
+   ],
+   "en": "A second supplier for the same part, kept so no single supplier can hold the customer. Most of this map has none.",
+   "he": "ספק שני לאותו רכיב, שמחזיקים כדי שאף ספק יחיד לא יוכל להחזיק את הלקוח. לרוב המפה אין כזה."
+  },
+  {
+   "id": "wafer",
+   "label": "Wafer",
+   "match": [
+    "300mm",
+    "wafer",
+    "Wafer",
+    "wafers"
+   ],
+   "en": "The round silicon disc chips are built on; 300mm is the standard size. Wafer shipments are the rawest measure of how busy the fabs are.",
+   "he": "דיסק הסיליקון העגול שעליו בונים שבבים; 300 מ\"מ הוא הגודל הסטנדרטי. משלוחי פרוסות הם המדד הגולמי ביותר לעומס במפעלים."
+  },
+  {
+   "id": "msi",
+   "label": "MSI",
+   "match": [
+    "MSI"
+   ],
+   "en": "Millions of square inches: the industry's quarterly count of silicon wafer area shipped worldwide.",
+   "he": "מיליוני אינץ' רבוע: הספירה הרבעונית של הענף לשטח פרוסות הסיליקון שנשלח בעולם."
+  },
+  {
+   "id": "fab",
+   "label": "Fab",
+   "match": [
+    "Fab",
+    "fab",
+    "fabs"
+   ],
+   "en": "A chip factory. Building one takes two to three years and tens of billions of dollars.",
+   "he": "מפעל שבבים. בנייה שלו לוקחת שנתיים־שלוש ועשרות מיליארדי דולרים."
+  },
+  {
+   "id": "foundry",
+   "label": "Foundry",
+   "match": [
+    "foundries",
+    "Foundry",
+    "foundry"
+   ],
+   "en": "A company that manufactures chips designed by others. TSMC is the largest; \"a US foundry alternative\" means someone else who can do it.",
+   "he": "חברה שמייצרת שבבים שאחרים תכננו. TSMC היא הגדולה; \"חלופה אמריקאית\" = מישהו אחר שמסוגל."
+  },
+  {
+   "id": "process_node",
+   "label": "Process node",
+   "match": [
+    "14A",
+    "2nm",
+    "A14",
+    "node",
+    "process node",
+    "Process node",
+    "SF2"
+   ],
+   "en": "A generation of chip manufacturing; smaller numbers are newer and denser. 2nm and A14 (TSMC) and 14A (Intel) are the next ones.",
+   "he": "דור של ייצור שבבים; מספר קטן יותר = חדש וצפוף יותר. 2nm ו־A14 (TSMC) ו־14A (אינטל) הם הדורות הבאים."
+  },
+  {
+   "id": "yield",
+   "label": "Yield",
+   "match": [
+    "yield",
+    "Yield",
+    "yields"
+   ],
+   "en": "The share of chips on a wafer that work. Low yield on a new process is why a foundry loses money on it at first.",
+   "he": "אחוז השבבים על הפרוסה שעובדים. תפוקה נמוכה בתהליך חדש היא הסיבה שמפעל מפסיד עליו בהתחלה."
+  },
+  {
+   "id": "wfe",
+   "label": "WFE",
+   "match": [
+    "wafer-fab equipment",
+    "WFE"
+   ],
+   "en": "Wafer-fab equipment: the machines inside a fab. WFE spending is the health check of the whole equipment layer.",
+   "he": "ציוד לייצור פרוסות: המכונות שבתוך המפעל. ההוצאה עליו היא בדיקת הבריאות של כל שכבת הציוד."
+  },
+  {
+   "id": "euv",
+   "label": "EUV",
+   "match": [
+    "EUV"
+   ],
+   "en": "Extreme-ultraviolet lithography: the light used to print the smallest chip features. ASML is the only maker of the machines.",
+   "he": "ליתוגרפיה באור אולטרה־סגול קיצוני: האור שבו מדפיסים את המבנים הקטנים ביותר בשבב. ASML היא היצרנית היחידה של המכונות."
+  },
+  {
+   "id": "high_na",
+   "label": "High-NA",
+   "match": [
+    "High-NA"
+   ],
+   "en": "The next generation of EUV machines, larger optics for even finer printing. A count of units is a count of who is building the next node.",
+   "he": "הדור הבא של מכונות EUV, אופטיקה גדולה יותר להדפסה עדינה עוד יותר. ספירת יחידות = ספירה של מי בונה את הדור הבא."
+  },
+  {
+   "id": "photoresist",
+   "label": "Photoresist",
+   "match": [
+    "dry resist",
+    "EUV resist",
+    "photoresist",
+    "Photoresist",
+    "resist"
+   ],
+   "en": "The light-sensitive coating that EUV prints into. Three Japanese companies make almost all of it; \"dry resist\" is a new kind that would change who controls it.",
+   "he": "הציפוי הרגיש לאור שעליו EUV מדפיס. שלוש חברות יפניות מייצרות כמעט את כולו; \"רזיסט יבש\" הוא סוג חדש שישנה מי שולט בו."
+  },
+  {
+   "id": "coater",
+   "label": "Coater",
+   "match": [
+    "coater",
+    "Coater",
+    "coaters",
+    "track"
+   ],
+   "en": "The machine that applies resist to a wafer before EUV printing. Tokyo Electron is the sole supplier for EUV.",
+   "he": "המכונה שמורחת רזיסט על הפרוסה לפני ההדפסה. Tokyo Electron היא הספק היחיד ל־EUV."
+  },
+  {
+   "id": "mask",
+   "label": "Mask",
+   "match": [
+    "mask",
+    "Mask",
+    "mask blank",
+    "mask blanks",
+    "mask-blank",
+    "mask-inspection",
+    "masks"
+   ],
+   "en": "The stencil EUV prints from; the blank is the polished plate it is made on. Two companies in the world make EUV blanks; one company can inspect the finished mask.",
+   "he": "השבלונה שממנה EUV מדפיס; הבלנק הוא הלוח המלוטש שממנו היא נעשית. שתי חברות בעולם מייצרות בלנקים ל־EUV; חברה אחת יכולה לבדוק מסכה מוגמרת."
+  },
+  {
+   "id": "advanced_packaging",
+   "label": "Advanced packaging",
+   "match": [
+    "Advanced packaging",
+    "advanced packaging",
+    "CoWoS",
+    "CoWoS-L",
+    "packaging"
+   ],
+   "en": "Stacking a GPU and its memory on one base inside the package. CoWoS is TSMC's version, and every AI accelerator passes through it.",
+   "he": "הרכבת מעבד והזיכרון שלו על בסיס אחד בתוך האריזה. CoWoS היא הגרסה של TSMC, וכל מאיץ בינה מלאכותית עובר דרכה."
+  },
+  {
+   "id": "osat",
+   "label": "OSAT",
+   "match": [
+    "OSAT"
+   ],
+   "en": "Outsourced assembly and test: companies that package and test chips for others. ASE and Amkor are the largest.",
+   "he": "הרכבה ובדיקה במיקור חוץ: חברות שאורזות ובודקות שבבים עבור אחרים. ASE ו־Amkor הן הגדולות."
+  },
+  {
+   "id": "substrate",
+   "label": "Substrate",
+   "match": [
+    "ABF",
+    "FC-BGA",
+    "glass substrate",
+    "Substrate",
+    "substrate",
+    "substrates"
+   ],
+   "en": "The board a chip sits on inside its package. ABF is the insulating film in almost all of them (one maker: Ajinomoto); glass is the candidate to replace it.",
+   "he": "הלוח שהשבב יושב עליו בתוך האריזה. ABF הוא סרט הבידוד כמעט בכולם (יצרן אחד: Ajinomoto); זכוכית היא המועמדת להחליף אותו."
+  },
+  {
+   "id": "hbm",
+   "label": "HBM",
+   "match": [
+    "HBM",
+    "HBM3E",
+    "HBM4",
+    "high-bandwidth memory"
+   ],
+   "en": "High-bandwidth memory: stacks of memory chips bonded next to the GPU. HBM4 is the next generation; whoever supplies NVIDIA's HBM holds the memory chokepoint.",
+   "he": "זיכרון ברוחב פס גבוה: ערימות של שבבי זיכרון מודבקות ליד המעבד. HBM4 הוא הדור הבא; מי שמספק את ה־HBM של NVIDIA מחזיק את צוואר הבקבוק בזיכרון."
+  },
+  {
+   "id": "tc_bonder",
+   "label": "TC bonder",
+   "match": [
+    "bonder",
+    "bonders",
+    "TC bonder"
+   ],
+   "en": "The machine that stacks HBM layers with heat and pressure. Hanmi and ASMPT are the two makers.",
+   "he": "המכונה שמערימה שכבות HBM בחום ולחץ. Hanmi ו־ASMPT הן שתי היצרניות."
+  },
+  {
+   "id": "base_die",
+   "label": "Base die",
+   "match": [
+    "base die",
+    "Base die"
+   ],
+   "en": "The bottom logic chip in an HBM4 stack, now made at TSMC rather than by the memory maker — which is why margins are in question.",
+   "he": "שבב הלוגיקה התחתון בערימת HBM4, שמיוצר עכשיו ב־TSMC ולא אצל יצרן הזיכרון — ולכן המרווחים בסימן שאלה."
+  },
+  {
+   "id": "soc_test",
+   "label": "SoC test",
+   "match": [
+    "ATE",
+    "semi-test",
+    "SoC test",
+    "SoC testing",
+    "test"
+   ],
+   "en": "Testing finished chips on automated test equipment. Advantest tests about two of every three advanced chips.",
+   "he": "בדיקת שבבים מוגמרים בציוד בדיקה אוטומטי. Advantest בודקת בערך שניים מכל שלושה שבבים מתקדמים."
+  },
+  {
+   "id": "blackwell",
+   "label": "Blackwell",
+   "match": [
+    "Blackwell",
+    "Rubin",
+    "Vera Rubin"
+   ],
+   "en": "NVIDIA's current and next GPU generations. \"Rubin on schedule\" is the question every supplier's 2027 depends on.",
+   "he": "דורות המעבדים הנוכחי והבא של NVIDIA. \"Rubin בזמן\" היא השאלה ש־2027 של כל ספק תלויה בה."
+  },
+  {
+   "id": "trainium",
+   "label": "Trainium",
+   "match": [
+    "Trainium"
+   ],
+   "en": "Amazon's in-house AI chip, its alternative to buying from NVIDIA.",
+   "he": "שבב הבינה המלאכותית של אמזון עצמה, החלופה שלה לקנייה מ־NVIDIA."
+  },
+  {
+   "id": "datacenter_revenue",
+   "label": "Datacenter revenue",
+   "match": [
+    "data center revenue",
+    "datacenter revenue",
+    "Datacenter revenue"
+   ],
+   "en": "The part of a supplier's sales that goes into AI servers, reported separately so investors can see the AI line.",
+   "he": "החלק ממכירות הספק שהולך לשרתי בינה מלאכותית, מדווח בנפרד כדי שאפשר יהיה לראות את קו הבינה המלאכותית."
+  },
+  {
+   "id": "transceiver",
+   "label": "Transceiver",
+   "match": [
+    "1.6T",
+    "800G",
+    "Transceiver",
+    "transceiver",
+    "transceivers"
+   ],
+   "en": "The optical module that links servers with light; 1.6T is the next speed. Coherent is the largest Western maker.",
+   "he": "המודול האופטי שמחבר שרתים באור; 1.6T היא המהירות הבאה. Coherent היא היצרנית המערבית הגדולה."
+  },
+  {
+   "id": "inp_indium_phosphide",
+   "label": "InP (indium phosphide)",
+   "match": [
+    "indium phosphide",
+    "indium-phosphide",
+    "InP",
+    "InP (indium phosphide)"
+   ],
+   "en": "The material inside the lasers of every fast optical link. Almost all of the substrate is made in China; the export license is the chokepoint.",
+   "he": "החומר שבתוך הלייזרים של כל קישור אופטי מהיר. כמעט כל המצע מיוצר בסין; רישיון הייצוא הוא צוואר הבקבוק."
+  },
+  {
+   "id": "germanium",
+   "label": "Germanium",
+   "match": [
+    "gallium",
+    "Germanium",
+    "germanium"
+   ],
+   "en": "Metals inside optics and power chips; China supplies most of the world's and has used export bans as leverage.",
+   "he": "מתכות שבתוך אופטיקה ושבבי הספק; סין מספקת את רוב העולם והשתמשה באיסורי ייצוא כמנוף."
+  },
+  {
+   "id": "rare_earth_magnets",
+   "label": "Rare-earth magnets",
+   "match": [
+    "magnets",
+    "rare earth",
+    "rare-earth",
+    "Rare-earth magnets"
+   ],
+   "en": "Magnets in every motor, drive and actuator; China controls the supply and can require licenses to export them.",
+   "he": "מגנטים בכל מנוע, כונן ומפעיל; סין שולטת באספקה ויכולה לדרוש רישיונות לייצוא."
+  },
+  {
+   "id": "export_license",
+   "label": "Export license",
+   "match": [
+    "export ban",
+    "export controls",
+    "export license",
+    "Export license",
+    "export licenses",
+    "export suspension"
+   ],
+   "en": "Government permission to ship a restricted material or tool abroad. When licenses stop, the supply stops.",
+   "he": "אישור ממשלתי לשלוח חומר או כלי מוגבל לחו\"ל. כשהרישיונות נעצרים, האספקה נעצרת."
+  },
+  {
+   "id": "goes_electrical_steel",
+   "label": "GOES (electrical steel)",
+   "match": [
+    "electrical steel",
+    "electrical-steel",
+    "GOES",
+    "GOES (electrical steel)"
+   ],
+   "en": "Grain-oriented electrical steel: the special steel inside power transformers. One US plant makes it.",
+   "he": "פלדה חשמלית מכוונת־גרעין: הפלדה המיוחדת שבתוך שנאי הספק. מפעל אמריקאי אחד מייצר אותה."
+  },
+  {
+   "id": "lpt_large_power_transformer",
+   "label": "LPT (large power transformer)",
+   "match": [
+    "large power transformer",
+    "LPT",
+    "LPT (large power transformer)",
+    "transformer",
+    "transformers"
+   ],
+   "en": "The transformer that connects a data center to the grid. Lead times are currently around three years.",
+   "he": "השנאי שמחבר מרכז נתונים לרשת החשמל. זמני האספקה כיום כשלוש שנים."
+  },
+  {
+   "id": "gas_turbine",
+   "label": "Gas turbine",
+   "match": [
+    "aeroderivative",
+    "gas turbine",
+    "Gas turbine",
+    "gas-turbine",
+    "IGT",
+    "slots"
+   ],
+   "en": "Turbines that generate power on site for data centers; \"slots\" are the delivery positions in the maker's queue, now reserved years ahead. IGT = industrial gas turbine.",
+   "he": "טורבינות שמייצרות חשמל במקום למרכזי נתונים; \"משבצות\" הן מקומות האספקה בתור של היצרן, שמורות שנים קדימה."
+  },
+  {
+   "id": "blade_castings",
+   "label": "Blade castings",
+   "match": [
+    "blade castings",
+    "Blade castings",
+    "blades",
+    "castings"
+   ],
+   "en": "The cast metal blades inside a gas turbine. Two companies can make them; the queue is 60–90 weeks.",
+   "he": "להבי המתכת היצוקים שבתוך טורבינת גז. שתי חברות מסוגלות לייצר אותם; התור 60–90 שבועות."
+  },
+  {
+   "id": "spie",
+   "label": "SPIE",
+   "match": [
+    "SPIE"
+   ],
+   "en": "The annual lithography conference where TSMC, Intel and the equipment makers publish their next-generation results.",
+   "he": "כנס הליתוגרפיה השנתי שבו TSMC, אינטל ויצרניות הציוד מפרסמות את תוצאות הדור הבא."
+  }
+ ]
+}

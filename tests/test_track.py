@@ -15,7 +15,7 @@ import json
 
 import pytest
 
-from chains import forecast, prices, track
+from chains import forecast, glossary, prices, track
 
 # Sixty weekday sessions, so a card can be forty past its entry.
 CAL = []
@@ -747,6 +747,48 @@ def test_the_public_payload_names_the_next_date_and_who(book):
         q("a", "2026-06-02", ["up"], []), q("b", "2026-06-01", ["down"], [])]))
     assert pub["next_up"] == {"d": "2026-06-01", "who": "B", "confirmed": True}
     assert pub["n_upcoming"] == 2
+
+
+# -- the free half carries the free half of the glossary ---------------------
+
+TWO_TERMS = [
+    {"id": "hbm", "label": "HBM", "match": ["HBM"],
+     "en": "Stacked memory sold beside the accelerator.", "he": "-"},
+    {"id": "euv", "label": "EUV", "match": ["EUV"],
+     "en": "The lithography step nobody else can do.", "he": "-"},
+]
+
+
+def test_the_free_glossary_defines_only_words_the_free_text_shows(
+        book, monkeypatch):
+    """A definition explains a word that is on the page.
+
+    The free file shows finished cards and a count. Shipping all forty-seven
+    definitions would put the whole glossary in the teaser -- most of it for
+    questions the free reader cannot see, and enough of it to make the free
+    file larger than the thing it is teasing.
+    """
+    monkeypatch.setattr(glossary, "load", lambda *a, **k: TWO_TERMS)
+    watch = [q("c", "2026-01-06", ["up"], ["down"], q="Does HBM demand hold?"),
+             q("u", (TODAY + dt.timedelta(days=9)).isoformat(), ["up"], [],
+               q="Does EUV shipment guidance move?")]
+    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
+    full = built(book, watch, fs, {"c": {"status": "yes"}})
+    pub = track.public(full)
+    assert list(pub["glossary"]) == ["hbm"]
+    assert "euv" not in json.dumps(pub)
+
+
+def test_the_sealed_payload_still_carries_every_definition(book, monkeypatch):
+    """Behind the key every card is readable, so every card's terms ride."""
+    monkeypatch.setattr(glossary, "load", lambda *a, **k: TWO_TERMS)
+    watch = [q("c", "2026-01-06", ["up"], ["down"], q="Does HBM demand hold?"),
+             q("u", (TODAY + dt.timedelta(days=9)).isoformat(), ["up"], [],
+               q="Does EUV shipment guidance move?")]
+    full = built(book, watch, [fc("f", "c", ["up"], ["down"],
+                                  CAL[0].isoformat())],
+                 {"c": {"status": "yes"}})
+    assert sorted(full["glossary"]) == ["euv", "hbm"]
 
 
 def test_the_public_payload_is_small(book):

@@ -207,6 +207,26 @@
     return `<div class="tw"><table class="mem">${cols}${rows}</table></div>`;
   }
 
+  // The four sentences, in the order the question cards use them. Only the
+  // sealed payload carries these; a card built from a public payload has none
+  // and simply does not draw the block. A part the source has nothing for is
+  // omitted rather than printed empty -- a v1 questions file has no "no"
+  // sentence, and inventing one would be inventing the product.
+  function question(r){
+    if(!r.q && !r.yes && !r.no && !r.why) return '';
+    // One column when only one side has a sentence. A v1 questions file has
+    // no "no" sentence, and a half-width column beside an empty one wraps
+    // three words to a line for no reason.
+    const both = !!(r.yes && r.no);
+    const yn = (r.yes || r.no) ? `<div class="yn${both?'':' one'}">`
+      + (r.yes?`<div class="y"><b>Yes looks like</b>${esc(r.yes)}</div>`:'')
+      + (r.no?`<div class="no"><b>No looks like</b>${esc(r.no)}</div>`:'')
+      + `</div>` : '';
+    return (r.q?`<p class="q">${esc(r.q)}</p>`:'')
+      + yn
+      + (r.why?`<p class="why"><b>Why it matters.</b> ${esc(r.why)}</p>`:'');
+  }
+
   function head(r, today){
     const m = word(r);
     const daysTo = d => Math.round((Date.parse(d+'T00:00:00Z')
@@ -244,7 +264,7 @@
       ${badge}
       <div class="who" style="margin-top:12px">${esc(r.who)}${r.tk?' · '+esc(r.tk):''}</div>
       <div class="dt">${esc(when)}</div>
-      ${r.q?`<p class="q">${esc(r.q)}</p>`:''}
+      ${question(r)}
       ${line}${nums}
     </div>`;
   }

@@ -229,9 +229,10 @@ def merge(rows: list[dict], text: dict[str, dict], lang: str,
     """
     fields = LANG_FIELDS[lang]
     unlocked = open_ids(rows, today)
-    # The paid mail is the one place every row carries its text. The flag is
-    # explicit and it is never set by anything that writes a published file:
-    # grep for unlock_all and every hit is a brief.
+    # Two places set this, and both are paid: the mail, and the tracking
+    # payload that is encrypted before it is published. The flag is explicit
+    # and nothing that writes a PLAINTEXT published file sets it -- grep for
+    # unlock_all and every hit is a brief or the sealed payload.
     open_flags = {r["id"]: r["id"] in unlocked for r in rows}
     if unlock_all:
         unlocked = {r["id"] for r in rows}

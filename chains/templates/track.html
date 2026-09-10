@@ -68,6 +68,15 @@ table.sb td:first-child{color:var(--ink2)}
 .fc .who{font-family:"IBM Plex Mono",monospace;font-size:.95rem;color:var(--ink);font-weight:500}
 .fc .dt{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.06em;color:var(--ink3);margin-top:5px;line-height:1.6}
 .fc .q{font-family:"Source Serif 4",serif;font-size:1rem;line-height:1.4;color:var(--ink2);margin:12px 0 0}
+/* the question block, only ever drawn from a payload a key opened */
+.fc .yn{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0 0}
+.fc .yn.one{grid-template-columns:1fr}
+.fc .yn div{border-top:2px solid;padding-top:8px;font-size:.9rem;color:var(--ink2);line-height:1.45}
+.fc .yn .y{border-color:var(--erode)}.fc .yn .no{border-color:var(--tight)}
+.fc .yn b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.fc .yn .y b{color:var(--erode)}.fc .yn .no b{color:var(--tight)}
+.fc .why{font-size:.9rem;color:var(--ink3);line-height:1.45;margin:12px 0 0}
+.fc .why b{color:var(--ink2);font-weight:600}
 .fc .pre{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:14px;line-height:1.6}
 .fc .pill{margin-top:12px;font-size:.66rem;padding:3px 9px}
 .pill.grey{color:var(--ink3);border-color:var(--rule)}

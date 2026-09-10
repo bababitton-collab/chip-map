@@ -263,10 +263,14 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
                                   + list(w.get("lose") or [])[:3])],
     }
     out["has_r2"] = bool(out["win2"] or out["lose2"])
-    # The question text is the product boundary: present only where the row is
-    # already open, and absent rather than empty on a locked one.
-    if w.get("q"):
-        out["q"] = w["q"]
+    # The four sentences. In the SEALED payload every card carries them --
+    # that file is the paid view and the whole point of paying for it. In any
+    # plaintext output only an open row has them, because only an open row was
+    # handed them: the tier is decided upstream, by what merge() attached, and
+    # this copies whatever is there rather than deciding again.
+    for part in ("q", "yes", "no", "why"):
+        if w.get(part):
+            out[part] = w[part]
 
     legs = {g: out[g] for g in GROUPS}
     window = ([x for x in cal if x >= entry][:MAX_POINTS + 1]
@@ -634,10 +638,14 @@ def build_files(plain: bool = False) -> dict:
     # that file now strips them off every locked row, which is the point. The
     # question TEXT still comes from live, where only an open row carries it.
     rows = json.loads(watch_en_path().read_text(encoding="utf-8"))
-    text = {w["id"]: w.get("q") for w in (live.get("watch") or []) if w.get("q")}
-    for r in rows:
-        if text.get(r["id"]):
-            r["q"] = text[r["id"]]
+    # Every row gets its text. This file is encrypted before it is published
+    # and the plaintext never leaves the runner, so the paywall here is the
+    # key, not the absence of the sentence -- and a subscriber who cannot see
+    # the question a forecast was made from cannot check the forecast.
+    from chains import questions
+    rows = questions.merge(rows, questions.fetch(), "en",
+                           dt.date.fromisoformat(live["as_of"]),
+                           unlock_all=True)
     data = build(forecasts, live.get("ledger"), rows,
                  marks=live.get("answers"),
                  today=dt.date.fromisoformat(live["as_of"]))

@@ -812,3 +812,125 @@ def test_the_renderer_does_not_fetch_or_decrypt_anything():
     js = (templates_dir() / "track-cards.js").read_text(encoding="utf-8")
     for word in ("fetch(", "crypto.subtle", "localStorage", "track.enc"):
         assert word not in js, word
+
+
+# -- the sealed payload carries every question -------------------------------
+#
+# The tier rule -- nearest question only -- is a rule about PLAINTEXT. This
+# file is encrypted before it is published and the plaintext never leaves the
+# runner, so the paywall here is the key. A subscriber who cannot see the
+# question a forecast was made from cannot check the forecast, which is the
+# whole thing they are paying for.
+
+def test_a_record_carries_whatever_text_it_was_handed(book):
+    """The tier is decided upstream by what merge() attached. record() copies;
+    it does not decide again -- one place deciding is the point of
+    chains/access.py."""
+    w = q("a", "2026-06-01", ["up"], [], q="Is it shipping?",
+          yes="Units up", no="Units flat", why="It sets the floor.")
+    r = one(book, [w])
+    assert (r["q"], r["yes"], r["no"], r["why"]) == (
+        "Is it shipping?", "Units up", "Units flat", "It sets the floor.")
+
+
+def test_a_record_omits_a_part_it_was_not_handed(book):
+    """A v1 questions file has no "no" sentence. The field is absent, not
+    empty: inventing one would be inventing the product."""
+    r = one(book, [q("a", "2026-06-01", ["up"], [], q="Is it shipping?",
+                     yes="Units up")])
+    assert r["q"] and r["yes"]
+    assert "no" not in r and "why" not in r
+
+
+def test_a_record_with_no_text_has_none_of_the_four(book):
+    r = one(book, [q("a", "2026-06-01", ["up"], [])])
+    for part in ("q", "yes", "no", "why"):
+        assert part not in r
+
+
+def test_the_public_half_never_carries_the_three_extra_parts(book):
+    """Only the question itself, and only on a finished forecast, whose answer
+    is already public. yes/no/why stay behind the key."""
+    watch = [q("c", "2026-01-06", ["up"], ["down"], q="Q?", yes="Y", no="N",
+               why="W")]
+    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
+    pub = track.public(built(book, watch, fs, {"c": {"status": "yes"}}))
+    row = pub["closed"][0]
+    assert row["q"] == "Q?"
+    for part in ("yes", "no", "why"):
+        assert part not in row
+    blob = json.dumps(pub)
+    assert '"Y"' not in blob and '"N"' not in blob and '"W"' not in blob
+
+
+def test_the_slim_copy_carries_no_text_at_all(book):
+    """live.json is published as plaintext. Nothing of the four goes in it."""
+    watch = [q("a", "2026-06-01", ["up"], [], q="Q?", yes="Y", no="N", why="W")]
+    thin = track.slim(built(book, watch))
+    for part in ("q", "yes", "no", "why"):
+        assert part not in thin["forecasts"][0]
+    assert "Q?" not in json.dumps(thin)
+
+
+def test_the_text_is_unreadable_once_sealed(book):
+    """The obvious property, asserted anyway: it is the one that makes putting
+    every question in this file safe."""
+    watch = [q("a", "2026-06-01", ["up"], [],
+               q="A sentence nobody has paid for yet.")]
+    data = built(book, watch)
+    k = key()
+    blob = json.dumps(track.encrypt(data, k))
+    assert "A sentence nobody has paid for yet." not in blob
+    assert track.decrypt(json.loads(blob), k)["forecasts"][0]["q"] == \
+        "A sentence nobody has paid for yet."
+
+
+def test_only_paid_outputs_unlock_every_row():
+    """The flag is explicit and every caller is a paid output: the two letters,
+    which pass ``not free``, and the sealed payload, which passes True outright
+    because that file is encrypted before it is published.
+
+    Nothing that writes a plaintext published file sets it, and this is the
+    check that says so -- grep, as a test, because the property is "no fourth
+    caller appeared" and nothing else can assert that.
+    """
+    import pathlib
+    hits = {p.name for p in sorted(pathlib.Path("chains").glob("*.py"))
+            if "unlock_all=" in p.read_text(encoding="utf-8")}
+    assert hits == {"brief.py", "brief_he.py", "track.py"}, hits
+    # and the one that unlocks unconditionally is the encrypted one
+    src = pathlib.Path("chains/track.py").read_text(encoding="utf-8")
+    assert "unlock_all=True" in src
+    for name in ("brief.py", "brief_he.py"):
+        assert "unlock_all=not free" in pathlib.Path(
+            "chains", name).read_text(encoding="utf-8")
+
+
+# -- the renderer draws it ---------------------------------------------------
+
+def test_the_renderer_draws_the_question_block():
+    body = cards_source()
+    assert "function question(r){" in body
+    assert "Yes looks like" in body and "No looks like" in body
+    assert "Why it matters." in body
+
+
+def test_the_renderer_omits_a_part_that_is_not_there():
+    body = cards_source()
+    assert "if(!r.q && !r.yes && !r.no && !r.why) return '';" in body
+    assert "r.no?" in body and "r.why?" in body
+
+
+def test_the_block_goes_to_one_column_with_only_one_side():
+    """A v1 file has no "no" sentence, and a half-width column beside an empty
+    one wraps three words to a line for no reason."""
+    assert "const both = !!(r.yes && r.no);" in cards_source()
+    assert ".fc .yn.one{grid-template-columns:1fr}" in template()
+
+
+def test_both_pages_style_the_block():
+    """The renderer is shared, so the classes have to exist on both."""
+    from chains.paths import templates_dir
+    priv = (templates_dir() / "live-map.html").read_text(encoding="utf-8")
+    for css in (template(), priv):
+        assert ".yn" in css and ".why" in css

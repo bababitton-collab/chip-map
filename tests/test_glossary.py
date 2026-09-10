@@ -331,3 +331,51 @@ def test_both_letters_close_with_the_terms_they_used():
         src = inspect.getsource(mod)
         assert "glossary.find(" in src
         assert "sent.append(w)" in src, "only rows the letter actually printed"
+
+
+# -- the inspection command --------------------------------------------------
+
+def test_the_command_says_where_it_looked(capsys):
+    """An absent file is not an error anywhere in the build, which is right --
+    but it means a file saved to the wrong place looks exactly like no file at
+    all. This is the one command that tells them apart."""
+    assert g.main() == 0
+    out = capsys.readouterr().out
+    assert "looking for" in out and str(g.path_for()) in out
+    if not g.path_for().exists():
+        assert "belongs at the path above" in out
+
+
+def test_the_command_fails_on_an_unsourced_figure(tmp_path, monkeypatch,
+                                                  capsys):
+    """The gate, through the command a person actually runs."""
+    d = tmp_path / "semi"
+    d.mkdir()
+    (d / "glossary.json").write_text(json.dumps({"terms": [
+        {"id": "x", "label": "x", "match": ["x"],
+         "en": "Roughly 91% of the market.", "he": "טקסט."}]}),
+        encoding="utf-8")
+    import shutil
+    from chains.paths import map_path
+    shutil.copy(map_path(), d / "map.json")
+    monkeypatch.setenv("CHIP_MAP_DATA", str(tmp_path))
+    monkeypatch.delenv("QUESTIONS_URL", raising=False)
+    assert g.main() == 1
+    out = capsys.readouterr().out
+    assert "x (en)" in out and "91" in out
+
+
+def test_the_command_passes_a_clean_glossary(tmp_path, monkeypatch, capsys):
+    d = tmp_path / "semi"
+    d.mkdir()
+    (d / "glossary.json").write_text(json.dumps({"terms": [
+        {"id": "x", "label": "x", "match": ["x"],
+         "en": "Memory stacked beside the processor.", "he": "טקסט."}]}),
+        encoding="utf-8")
+    import shutil
+    from chains.paths import map_path
+    shutil.copy(map_path(), d / "map.json")
+    monkeypatch.setenv("CHIP_MAP_DATA", str(tmp_path))
+    monkeypatch.delenv("QUESTIONS_URL", raising=False)
+    assert g.main() == 0
+    assert "every figure has a source" in capsys.readouterr().out

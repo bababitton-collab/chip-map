@@ -261,6 +261,54 @@ def numbers_without_a_source(terms: list[dict], doc: dict | None = None,
     return bad
 
 
-__all__ = ["load", "validate", "find", "mark", "pairs", "for_page",
+# ------------------------------------------------------------- by hand
+def main() -> int:
+    """Say what the loader sees, and run the number gate over it.
+
+        python -m chains.glossary
+
+    An absent file is not an error anywhere in the build, which is right --
+    a glossary is an addition to a map, not a requirement of one -- but it
+    does mean a file saved to the wrong place looks exactly like no file at
+    all. This is the one command that tells them apart.
+    """
+    from chains import mapfile
+    p = path_for()
+    print(f"looking for : {p}")
+    print(f"exists      : {p.exists()}")
+    if not p.exists():
+        print("\nNo glossary in this domain. Cards will show no terms, which "
+              "is not an error -- but if you meant to add one, it belongs at "
+              "the path above.")
+        return 0
+    try:
+        terms = load()
+    except GlossaryError as e:
+        print(f"\nREFUSED: {e}")
+        return 1
+    print(f"terms       : {len(terms)}")
+    try:
+        from chains import questions
+        qs = questions.fetch()
+    except Exception:
+        qs = {}
+        print("questions   : not fetched (QUESTIONS_URL unset) -- a figure "
+              "sourced only from a question will be reported below")
+    bad = numbers_without_a_source(terms, mapfile.load(), qs)
+    if bad:
+        print(f"\n{len(bad)} figure(s) appear in a definition and nowhere "
+              f"else:")
+        for tid, lang, n in bad:
+            print(f"   {tid} ({lang}): {n}")
+        return 1
+    print("numbers     : every figure has a source")
+    return 0
+
+
+__all__ = ["load", "validate", "find", "mark", "pairs", "for_page", "main",
            "numbers_in", "numbers_without_a_source", "path_for",
            "GlossaryError", "MAX_PER_CARD", "FILENAME"]
+
+
+if __name__ == "__main__":                                # pragma: no cover
+    raise SystemExit(main())

@@ -83,7 +83,7 @@ import json
 from pathlib import Path
 
 from chains import answers as answers_mod
-from chains import forecast, mapfile, prices, questions, rings, track
+from chains import forecast, glossary, mapfile, prices, questions, rings, track
 from chains import paths
 from chains.paths import out_dir, signup_url, watch_en_path, watch_path
 
@@ -420,6 +420,19 @@ def build(today: dt.date | None = None, lang: str = "he",
         if r.get("locked"):
             for k in ("win", "lose", "win2", "lose2", "ring2_edges"):
                 r.pop(k, None)
+
+    # Which terms a card shows is decided HERE, once, and shipped. The page
+    # places them and the letter lists them, and neither decides -- so a chip
+    # and a letter entry cannot disagree about what a card is explaining.
+    # A locked row has no text, so it has no terms and gets no Terms line:
+    # nothing to reveal and nothing to leak.
+    gl = glossary.load()
+    for r in watch:
+        found = glossary.find(
+            " ".join(str(r.get(p) or "") for p in ("q", "yes", "no", "why")),
+            gl)
+        if found:
+            r["terms"] = found
     cal = calendar_from(watch, today)
     if answers is None:
         answers = answers_mod.load(ids={r["id"] for r in watch})
@@ -441,6 +454,12 @@ def build(today: dt.date | None = None, lang: str = "he",
         "track": track.slim(track.build(forecasts, ledger, watch, m, answers,
                                         today=today)),
         "domain": paths.domain(),
+        # label, definition in THIS page's language, and the match strings the
+        # page needs to place them. Free tier: a definition explains a word
+        # that is already on the page and never adds a fact of its own.
+        "glossary": {t["id"]: {"label": t["label"], "def": t[lang],
+                               "match": list(t["match"])}
+                     for t in glossary.load()},
         "signup": signup_url(),
         "n_open": sum(1 for r in watch if r["open"]),
         "last_price_date": max((p["last"] for p in cache.values() if p),

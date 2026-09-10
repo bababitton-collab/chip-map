@@ -77,6 +77,13 @@ table.sb td:first-child{color:var(--ink2)}
 .fc .yn .y b{color:var(--erode)}.fc .yn .no b{color:var(--tight)}
 .fc .why{font-size:.9rem;color:var(--ink3);line-height:1.45;margin:12px 0 0}
 .fc .why b{color:var(--ink2);font-weight:600}
+abbr.gl{text-decoration:underline dotted var(--ink3);text-underline-offset:3px;cursor:help;border:0}
+.terms{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.terms b{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin-inline-end:2px}
+.terms .gchip{font-size:.64rem;letter-spacing:.06em;padding:2px 8px;border:1px solid var(--rule);border-radius:4px;color:var(--ink3);cursor:help;text-transform:none}
+.terms .gchip:hover{border-color:var(--ink3);color:var(--ink2)}
+.gltip{position:absolute;z-index:9;max-width:34ch;background:#0d1118;border:1px solid var(--rule);border-radius:8px;padding:9px 12px;font-size:.86rem;line-height:1.45;color:var(--ink2);box-shadow:0 10px 30px rgba(0,0,0,.5);pointer-events:none}
+.gltip b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;font-weight:400}
 .fc .pre{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:14px;line-height:1.6}
 .fc .pill{margin-top:12px;font-size:.66rem;padding:3px 9px}
 .pill.grey{color:var(--ink3);border-color:var(--rule)}
@@ -158,6 +165,9 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
 // count is all it is -- the detail lives in track.enc.json, sealed, and is
 // opened in the reader's own browser by a key that never leaves it.
 const PUBLIC = __TRACK__;
+</script>
+<script>
+__GLOSSARY_JS__
 </script>
 <script>
 __CARDS_JS__

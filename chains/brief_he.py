@@ -19,7 +19,7 @@ import json
 import sys
 from pathlib import Path
 
-from chains import answers, questions, rings
+from chains import answers, glossary, questions, rings
 
 
 USAGE = "usage: python -m chains.brief_he <live.json> <watch.json> [answers.json] [out.md] [--free]"
@@ -42,6 +42,7 @@ def render(live: dict, watch: list, statuses: dict, free: bool = False) -> str:
     days = lambda d: (dt.date.fromisoformat(d) - T).days
 
     out = []
+    sent: list[dict] = []
     out.append(f"# השאלות של השבוע · {T.strftime('%d.%m.%Y')}")
     out.append("")
     out.append("מפת שרשרת השבבים: מי מחזיק במה, מי מנסה לפרוץ, ומה מתברר השבוע. לא המלצות. כל מספר עם מקור, ומה שאין לו מקור מסומן אומדן.")
@@ -150,6 +151,9 @@ def render(live: dict, watch: list, statuses: dict, free: bool = False) -> str:
         # A locked row reaches the free letter with no text
         # at all; it gets the lock line instead of a blank.
         out.append(w["q"] if w.get("q") else "_השאלה, ואיך נשמעת תשובה חיובית ושלילית, במייל השבועי._")
+        # what this letter actually put in front of the reader
+        if w.get("q"):
+            sent.append(w)
         out.append("")
         # The four parts, in the order the card shows them. A part the
         # question has nothing for is omitted rather than printed
@@ -210,6 +214,28 @@ def render(live: dict, watch: list, statuses: dict, free: bool = False) -> str:
     if brand.get("footer"):
         out.append("")
         out.append(brand["footer"])
+    # -- מונחים שבשימוש בגיליון הזה -------------------------------------------
+    gl = glossary.load()
+    if gl:
+        seen: list[str] = []
+        for w in sent:
+            for tid in glossary.find(" ".join(
+                    str(w.get(p) or "") for p in ("q", "yes", "no", "why")),
+                    gl, limit=glossary.MAX_PER_CARD):
+                if tid not in seen:
+                    seen.append(tid)
+        by_id = {t["id"]: t for t in gl}
+        if seen:
+            out.append("## \u05de\u05d5\u05e0\u05d7\u05d9\u05dd "
+                       "\u05e9\u05d1\u05e9\u05d9\u05de\u05d5\u05e9 "
+                       "\u05d1\u05d2\u05d9\u05dc\u05d9\u05d5\u05df "
+                       "\u05d4\u05d6\u05d4")
+            out.append("")
+            for tid in seen:
+                t = by_id[tid]
+                out.append(f"- **{t['label']}** \u2014 {t['he']}")
+            out.append("")
+
     return '\n'.join(out)
 
 

@@ -750,8 +750,14 @@ def test_the_public_payload_names_the_next_date_and_who(book):
 
 
 def test_the_public_payload_is_small(book):
-    """It is the free half of a paid product; it should not be most of it."""
-    full = built(book, [q("a", "2026-06-01", ["up"], ["down"])])
+    """It is the free half of a paid product; it should not be most of it.
+
+    Measured on several cards, because with one the full payload is small
+    enough that a fixed overhead -- the glossary, the counts -- swamps the
+    ratio and the test stops describing anything.
+    """
+    watch = [q(f"q{i}", f"2026-06-0{i+1}", ["up"], ["down"]) for i in range(5)]
+    full = built(book, watch)
     assert len(json.dumps(track.public(full))) < len(json.dumps(full)) / 10
 
 

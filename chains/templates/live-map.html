@@ -210,6 +210,16 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .lock div{background:rgba(20,25,34,.85);border:1px solid var(--rule);padding:12px 18px;border-radius:10px;font-size:.95rem;color:var(--ink2);backdrop-filter:blur(2px)}
 .lock div b{color:var(--amber);font-weight:600}
 .blur{filter:blur(6px);opacity:.55;user-select:none}
+/* A term the reader may not know, underlined where it stands. The
+   definition is free: it explains a word already on the page and never adds
+   a fact the map does not carry. */
+abbr.gl{text-decoration:underline dotted var(--ink3);text-underline-offset:3px;cursor:help;border:0}
+.terms{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.terms b{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin-inline-end:2px}
+.terms .gchip{font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.06em;padding:2px 8px;border:1px solid var(--rule);border-radius:4px;color:var(--ink3);cursor:help}
+.terms .gchip:hover{border-color:var(--ink3);color:var(--ink2)}
+.gltip{position:absolute;z-index:9;max-width:34ch;background:#0d1118;border:1px solid var(--rule);border-radius:8px;padding:9px 12px;font-size:.86rem;line-height:1.45;color:var(--ink2);box-shadow:0 10px 30px rgba(0,0,0,.5);pointer-events:none}
+.gltip b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;font-weight:400}
 .evid{font-size:.9rem;color:var(--ink2);line-height:1.45;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--rule)}
 .evid b{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-inline-end:6px}
 .answered summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:8px 0 14px}
@@ -323,6 +333,10 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
     <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
   </radialGradient>
 </defs></svg>
+
+<script>
+__GLOSSARY_JS__
+</script>
 
 <script>
 __CARDS_JS__
@@ -652,7 +666,7 @@ function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>מה
 function open(n){
   selected=n; stage.classList.add('open');
   const cps=n.cp||[];
-  let h=`<div class="pin"><button class="close" id="pclose">סגור</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span><p class="role" dir="ltr" style="text-align:start">${n.role||''}</p>${spark(n.px)}`;
+  let h=`<div class="pin"><button class="close" id="pclose">סגור</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span><p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):esc(n.role||'')}</p>${spark(n.px)}`;
   sats=[];
   cps.forEach(c=>{
     const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');
@@ -736,7 +750,8 @@ function header(){
   const BR = (D.labels||{}).brand||{};
   document.getElementById('foot').innerHTML=`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`+`<span class="brandline">${BR.footer||''}</span>`;
 }
-function boot(){ build(); resize(); header(); requestAnimationFrame(draw); }
+function boot(){ if(window.GL) GL.use(D.glossary||{});
+  build(); resize(); header(); requestAnimationFrame(draw); }
 addEventListener('resize',()=>{ resize(); });
 boot();
 
@@ -922,6 +937,7 @@ function lockedHTML(){
     day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',
     up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',
     answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',
+    terms:'מונחים',
     marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',
            open:'לא ברור'},
   };
@@ -1167,12 +1183,17 @@ function lockedHTML(){
   // --- one card ---------------------------------------------------------
   function midOpen(w){
     const q=f(w,'q'), yes=f(w,'yes'), no=f(w,'no'), why=f(w,'why');
-    let h = q?`<p class="q">${esc(q)}</p>`:'';
+    // Terms are chosen in Python and shipped per row; this only places them.
+    const M = t => (window.GL ? GL.mark(t, w.terms) : esc(t));
+    let h = q?`<p class="q">${M(q)}</p>`:'';
     if(yes||no) h+=`<div class="yn">`
-      + (yes?`<div class="y"><b>${T.yes}</b>${esc(yes)}</div>`:'')
-      + (no?`<div class="no"><b>${T.no}</b>${esc(no)}</div>`:'')
+      + (yes?`<div class="y"><b>${T.yes}</b>${M(yes)}</div>`:'')
+      + (no?`<div class="no"><b>${T.no}</b>${M(no)}</div>`:'')
       + `</div>`;
-    if(why) h+=`<p class="why"><b>${T.why}</b> ${esc(why)}</p>`;
+    if(why) h+=`<p class="why"><b>${T.why}</b> ${M(why)}</p>`;
+    // Under "why it matters", where a reader who did not follow the
+    // sentence is standing. A locked card has no text, so no terms and no line.
+    if(window.GL) h+=GL.chips(w.terms, T.terms);
     return h;
   }
   function midLocked(){

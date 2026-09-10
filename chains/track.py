@@ -430,8 +430,14 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
                           node_symbols, today, r2,
                           by_ticker.get(str(w.get("tk") or "").upper())))
     out.sort(key=sort_key)
+    from chains import glossary as _gl
     return {"summary": summarise(out), "forecasts": out,
-            "as_of": today.isoformat()}
+            "as_of": today.isoformat(),
+            # Free tier, and it rides with the cards it explains so a
+            # decrypted payload needs nothing else to render.
+            "glossary": {t["id"]: {"label": t["label"], "def": t["en"],
+                                   "match": list(t["match"])}
+                         for t in _gl.load()}}
 
 
 # ------------------------------------------------------------------- slimming
@@ -488,6 +494,7 @@ def public(data: dict) -> dict:
     scored = [r for r in rows]
     return {
         "as_of": data.get("as_of"),
+        "glossary": data.get("glossary") or {},
         "closed": rows,
         "n_active": active,
         "n_upcoming": len(upcoming),
@@ -587,6 +594,13 @@ def decrypt(blob: dict, key: bytes) -> dict:
 # ------------------------------------------------------------------ the page
 PLACEHOLDER = "__TRACK__"
 CARDS_PLACEHOLDER = "__CARDS_JS__"
+GLOSSARY_PLACEHOLDER = "__GLOSSARY_JS__"
+
+
+def glossary_js() -> str:
+    """The shared term matcher and tooltip, read once."""
+    from chains.paths import templates_dir
+    return (templates_dir() / "glossary.js").read_text(encoding="utf-8")
 
 
 def cards_js() -> str:
@@ -606,10 +620,12 @@ def render(data: dict, template: str | None = None) -> str:
     from chains.paths import templates_dir
     t = template if template is not None else (
         (templates_dir() / "track.html").read_text(encoding="utf-8"))
-    # The card renderer is one file, inlined into this page and into the
-    # private map, so the unlocked view and the private view cannot drift.
+    # The shared files, inlined into this page and into the private map so the
+    # unlocked view and the private view cannot drift.
     if CARDS_PLACEHOLDER in t:
         t = t.replace(CARDS_PLACEHOLDER, cards_js())
+    if GLOSSARY_PLACEHOLDER in t:
+        t = t.replace(GLOSSARY_PLACEHOLDER, glossary_js())
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "
@@ -721,7 +737,7 @@ def main(argv: list[str] | None = None) -> int:
 
 __all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
            "public", "PUBLIC_CARD", "build_files", "cards_js",
-           "CARDS_PLACEHOLDER",
+           "CARDS_PLACEHOLDER", "GLOSSARY_PLACEHOLDER", "glossary_js",
            "encrypt", "decrypt", "load_key", "TrackKeyError", "KEY_ENV",
            "render", "main", "slim", "sort_key", "state_of", "members_for",
            "reason_for", "MAX_REASON",

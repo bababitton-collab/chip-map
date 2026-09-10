@@ -217,14 +217,16 @@
     // One column when only one side has a sentence. A v1 questions file has
     // no "no" sentence, and a half-width column beside an empty one wraps
     // three words to a line for no reason.
+    const M = t => (window.GL ? GL.mark(t, r.terms) : esc(t));
     const both = !!(r.yes && r.no);
     const yn = (r.yes || r.no) ? `<div class="yn${both?'':' one'}">`
-      + (r.yes?`<div class="y"><b>Yes looks like</b>${esc(r.yes)}</div>`:'')
-      + (r.no?`<div class="no"><b>No looks like</b>${esc(r.no)}</div>`:'')
+      + (r.yes?`<div class="y"><b>Yes looks like</b>${M(r.yes)}</div>`:'')
+      + (r.no?`<div class="no"><b>No looks like</b>${M(r.no)}</div>`:'')
       + `</div>` : '';
-    return (r.q?`<p class="q">${esc(r.q)}</p>`:'')
+    return (r.q?`<p class="q">${M(r.q)}</p>`:'')
       + yn
-      + (r.why?`<p class="why"><b>Why it matters.</b> ${esc(r.why)}</p>`:'');
+      + (r.why?`<p class="why"><b>Why it matters.</b> ${M(r.why)}</p>`:'')
+      + (window.GL ? GL.chips(r.terms, 'Terms') : '');
   }
 
   function head(r, today){
@@ -308,6 +310,9 @@
   }
 
   window.renderTrack = function(root, data){
+    // The payload carries its own glossary, so a card drawn from a decrypted
+    // file underlines the same words as one drawn from live.json.
+    if(window.GL) GL.use((data && data.glossary) || {});
     const F = (data && data.forecasts) || [], S = (data && data.summary) || {};
     const today = data && data.as_of ? new Date(data.as_of+'T00:00:00Z')
                                      : new Date();

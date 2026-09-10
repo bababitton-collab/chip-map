@@ -40,7 +40,7 @@ import json
 import sys
 from pathlib import Path
 
-from chains import answers, questions, rings
+from chains import answers, glossary, questions, rings
 
 
 USAGE = "usage: python -m chains.brief <live.json> <watch.json> [answers.json] [out.md] [--free]"
@@ -63,6 +63,7 @@ def render(live: dict, watch: list, statuses: dict, free: bool = False) -> str:
     days = lambda d: (dt.date.fromisoformat(d) - T).days
 
     out = []
+    sent: list[dict] = []
     out.append(f"# This week's questions · {T.strftime('%B %d, %Y')}")
     out.append("")
     out.append("The chip-chain map: who holds what, who is trying to break it, and what gets answered this week. No picks. Every number has a source; anything without one is marked estimate.")
@@ -130,6 +131,9 @@ def render(live: dict, watch: list, statuses: dict, free: bool = False) -> str:
         # A locked row reaches the free letter with no text
         # at all; it gets the lock line instead of a blank.
         out.append(w["q"] if w.get("q") else "_The question, and what yes and no sound like, are in the weekly mail._")
+        # what this letter actually put in front of the reader
+        if w.get("q"):
+            sent.append(w)
         out.append("")
         # The four parts, in the order the card shows them. A part the
         # question has nothing for is omitted rather than printed
@@ -237,6 +241,30 @@ def render(live: dict, watch: list, statuses: dict, free: bool = False) -> str:
     if brand.get("footer"):
         out.append("")
         out.append(brand["footer"])
+    # -- terms used in this issue --------------------------------------------
+    # The union of what the questions in THIS letter use, defined once at the
+    # end rather than in parentheses beside every acronym. The free letter
+    # carries only the terms its own free content uses: a definition explains
+    # a word that is on the page, and a word that is not on the page needs no
+    # explaining.
+    gl = glossary.load()
+    if gl:
+        seen: list[str] = []
+        for w in sent:
+            for tid in glossary.find(" ".join(
+                    str(w.get(p) or "") for p in ("q", "yes", "no", "why")),
+                    gl, limit=glossary.MAX_PER_CARD):
+                if tid not in seen:
+                    seen.append(tid)
+        by_id = {t["id"]: t for t in gl}
+        if seen:
+            out.append("## Terms used in this issue")
+            out.append("")
+            for tid in seen:
+                t = by_id[tid]
+                out.append(f"- **{t['label']}** \u2014 {t['en']}")
+            out.append("")
+
     return '\n'.join(out)
 
 

@@ -216,8 +216,8 @@ TRANSLATIONS = [
   '<div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div>'),
  # The question cards. The placeholder below is fixed text in both
  # languages and is never the real sentence.
- ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, איך נשמעת תשובה חיובית ושלילית, ומי זז — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
-  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, what yes and no sound like, and who moves — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
+ ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, איך נשמעת תשובה חיובית ושלילית, ומי זז — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    terms:'מונחים',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
+  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, what yes and no sound like, and who moves — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    terms:'Terms',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
  ("  const PH = {q:'איזה מספר בשיחת התוצאות מכריע את השאלה שכולם כאן כבר מתווכחים עליה',\n    yes:'החברה נוקבת במספר מעל הטווח שעליו הנחתה ברבעון שעבר, ואומרת שהמגבלה זזה.',\n    no:'המספר נוחת בתוך הטווח הישן והשפה על הקיבולת לא משתנה מהפעם הקודמת.',\n    why:'זה קובע איזו משתי החברות מחזיקה את החלק הנדיר בעוד שנה.'};",
   "  const PH = {q:'Which number on the call settles the question that everyone in this room is already arguing about',\n    yes:'The company names a figure above the range it guided to last quarter, and says the constraint has moved.',\n    no:'The number lands inside the old range and the language about capacity is unchanged from last time.',\n    why:'It decides which of two companies is holding the scarce part twelve months from now.'};"),
  ('<div class="eyebrow">04 · שאלות עם תאריך</div>',
@@ -300,8 +300,13 @@ def _inline_cards(text: str) -> str:
     tracking page's unlocked view. Inlined rather than fetched so the private
     page keeps working from a database with no network of its own.
     """
-    from chains.track import CARDS_PLACEHOLDER, cards_js
-    return text.replace(CARDS_PLACEHOLDER, cards_js())         if CARDS_PLACEHOLDER in text else text
+    from chains.track import (CARDS_PLACEHOLDER, GLOSSARY_PLACEHOLDER,
+                              cards_js, glossary_js)
+    for token, fill in ((CARDS_PLACEHOLDER, cards_js),
+                        (GLOSSARY_PLACEHOLDER, glossary_js)):
+        if token in text:
+            text = text.replace(token, fill())
+    return text
 
 
 def build_en_template(src=None, dst=None) -> object:

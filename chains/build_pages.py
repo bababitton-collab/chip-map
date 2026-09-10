@@ -372,6 +372,44 @@ def public_page(template: str, live: str, cfg: dict) -> str:
     return doc.replace("__LIVE__", live)
 
 
+def private_page(template: str, live: str) -> str:
+    """The Hebrew page for the artifact, with its database reads intact.
+
+    The mirror of public_page(): everything that function takes OUT is what
+    makes this one what it is. Both database reads stay -- live/latest for a
+    fresher snapshot than the one baked in, and track/latest for the forward
+    test the 07:00 task decrypts -- and the footer keeps its private wording.
+
+    It is built here rather than by hand so that the private page and the
+    public one cannot drift: the same template, the same snapshot, the same
+    card renderer, and one function each deciding what to remove.
+    """
+    h = _inline_cards(template)
+    assert DB_READ in h, "the live/latest read is missing from the template"
+    assert TRACK_DB_READ in h, "the track/latest read is missing"
+    head = ('<!doctype html>\n<html lang="he" dir="rtl">\n<head>\n'
+            '<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width,'
+            'initial-scale=1">\n')
+    k = h.index("</style>") + len("</style>")
+    doc = (head + h[:k] + "\n</head>\n<body>\n" + h[k:]
+           + "\n</body>\n</html>\n")
+    return doc.replace("__LIVE__", live)
+
+
+def build_private(template=None, live=None, out=None):
+    """Write out/<domain>/live-map.built.html -- the file Michael attaches."""
+    from chains.paths import out_dir
+    template = template or (templates_dir() / TEMPLATE_HE)
+    live = live or (out_dir() / LIVE_HE)
+    out = out or (out_dir() / "live-map.built.html")
+    doc = private_page(template.read_text(encoding="utf-8"),
+                       live.read_text(encoding="utf-8"))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(doc, encoding="utf-8", newline="\n")
+    return out, len(doc.encode("utf-8"))
+
+
 def _build_public(lang: str, template=None, live=None, out=None,
                   teaser=None):
     cfg = PUB[lang]
@@ -411,6 +449,9 @@ def main() -> int:
     for fn in (build_public_he, build_public_en):
         p, size = fn()
         print(f"wrote {p}  ({size:,} bytes, {size / 1024:.0f} KB)")
+    # The artifact copy: same template, database reads intact.
+    p, size = build_private()
+    print(f"wrote {p}  ({size:,} bytes, {size / 1024:.0f} KB)  private")
     return 0
 
 

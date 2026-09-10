@@ -323,3 +323,47 @@ def test_the_english_page_shows_the_brand_and_no_hebrew(tmp_path):
     page = out.read_text(encoding="utf-8")
     assert "Linchpin Signal" in page
     assert bp.hebrew_runs(page) == []
+
+
+# -- the artifact copy -------------------------------------------------------
+
+def test_the_private_page_keeps_both_database_reads():
+    """The mirror of the public build: everything that one takes out is what
+    this one is. live/latest for a fresher snapshot than the baked-in one,
+    track/latest for the forward test the 07:00 task decrypts."""
+    tpl = (bp.templates_dir() / bp.TEMPLATE_HE).read_text(encoding="utf-8")
+    live = '{"as_of":"2026-01-01","nodes":[],"watch":[]}'
+    page = bp.private_page(tpl, live)
+    assert "live/latest" in page
+    assert "track/latest" in page
+    assert "__LIVE__" not in page
+
+
+def test_the_private_page_inlines_the_shared_renderer():
+    """The Forward test section draws with the same code the unlocked public
+    page uses; a second copy would drift, and the private view is the one
+    nobody would check."""
+    tpl = (bp.templates_dir() / bp.TEMPLATE_HE).read_text(encoding="utf-8")
+    page = bp.private_page(tpl, '{"as_of":"2026-01-01","nodes":[]}')
+    assert "window.renderTrack" in page
+    assert bp._inline_cards.__name__  # the one path that fills it
+    from chains.track import CARDS_PLACEHOLDER
+    assert CARDS_PLACEHOLDER not in page
+
+
+def test_the_private_page_is_a_whole_document():
+    tpl = (bp.templates_dir() / bp.TEMPLATE_HE).read_text(encoding="utf-8")
+    page = bp.private_page(tpl, '{"as_of":"2026-01-01","nodes":[]}')
+    assert page.startswith("<!doctype html>")
+    assert '<html lang="he" dir="rtl">' in page
+    assert page.rstrip().endswith("</html>")
+
+
+def test_the_public_page_is_the_one_that_loses_them():
+    """Stated here as a pair, so the difference between the two builds is one
+    assertion and not an inference across two modules."""
+    tpl = (bp.templates_dir() / bp.TEMPLATE_HE).read_text(encoding="utf-8")
+    pub = bp.public_page(tpl, '{"as_of":"2026-01-01","nodes":[]}', bp.PUB["he"])
+    assert "live/latest" not in pub
+    assert "track/latest" not in pub
+    assert "fetch('live.json'" in pub

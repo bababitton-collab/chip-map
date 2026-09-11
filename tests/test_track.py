@@ -1165,13 +1165,17 @@ def test_a_mixed_answer_with_an_observation_still_moves_no_tile(book):
         assert only[k] == both[k], k
 
 
-def test_no_observation_until_a_session_closes_after_the_report(book):
-    """A report with no close after it has nothing to observe. A one-point
-    chart is a flat line at zero, which reads as a measurement and is the
-    absence of one."""
+def test_one_session_is_still_an_observation(book):
+    """A report with no close after it yet keeps its block, with a single
+    point on the baseline. The page draws a dot at zero and says the first
+    move prints after the next close -- an empty column would read as a chart
+    that failed rather than one with a day in it."""
     late = CAL[-1].isoformat()          # the last session in the store
     r = one(book, [q("a", late, ["up"], ["down"])], [],
             {"a": {"status": "mixed", "note": "auto: mixed — x. Reuters "
                                               + late}})
     assert r["state"] == "reported"
-    assert "observed" not in r or r["observed"] is None
+    o = r["observed"]
+    assert o is not None
+    assert len(o["dates"]) == 1 and o["sessions"] == 0
+    assert o["up"] == 0.0 and o["up_ew"] == 0.0

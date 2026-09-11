@@ -225,7 +225,22 @@
   // it.
   function observedChart(r){
     const o = r.observed;
-    if(!o || !o.dates || o.dates.length < 2) return '';
+    if(!o || !o.dates || !o.dates.length) return '';
+    if(o.dates.length < 2){
+      // The report's own close and nothing after it yet. A dot on the zero
+      // line, and a sentence saying so -- an empty column would leave the
+      // reader wondering whether the chart had failed.
+      const cx = CW/2, cy = CH/2;
+      return `<div class="chart obschart">
+        <span class="obsband">Observation · no position</span>
+        <svg viewBox="0 0 ${CW} ${CH}">
+          <line x1="8" x2="${CW-8}" y1="${cy}" y2="${cy}" stroke="#ffffff22" stroke-width="1"/>
+          <circle cx="${cx}" cy="${cy}" r="4" fill="${UP}"/>
+          <text x="${cx+9}" y="${cy+4}" font-family="IBM Plex Mono,monospace" font-size="10" fill="${UP}">0.00%</text>
+        </svg></div>
+        <p class="obsfoot">First move prints after the next close · `
+        + `baselined on ${esc(o.from)}</p>`;
+    }
     const keys = [['ew', MAP, 1, ' stroke-dasharray="3 3"'],
                   ['lose', DN, 1.6, ''], ['win2', UP, 1, ''],
                   ['win', UP, 1.9, '']];
@@ -334,8 +349,16 @@
   // What the report said, in the marking task's own words. The build writes
   // none of this: an empty field renders nothing rather than a heading over a
   // blank.
+  // The stored note opens "auto: mixed — ...", which is how the marking task
+  // writes it and how it stays in the file. On the card both halves are
+  // already said by the pill beside it -- MIXED, AUTO -- so printing them
+  // again is the sentence apologising for itself before it starts. Stripped
+  // for display and nowhere else: marks.json keeps every character.
+  const AUTO_PREFIX = /^\s*auto:\s*(?:(?:mixed|none|yes|no)\s*[—–-]\s*)?/i;
+  const sayClean = t => String(t || '').trim().replace(AUTO_PREFIX, '').trim();
+
   function findings(r){
-    const said = String(r.note || r.evidence || '').trim();
+    const said = sayClean(r.note || r.evidence);
     const read = String(r.read || '').trim();
     if(!said && !read) return '';
     let out = '';

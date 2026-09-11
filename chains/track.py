@@ -226,11 +226,12 @@ def _observed(legs: dict, doc: dict, book, symbol_of: dict,
     if base is None:
         return None
     window = [x for x in cal if x >= base][:MAX_POINTS + 1]
-    # One point is not an observation. Until a session closes AFTER the report
-    # there is nothing to have observed, and a chart of a single day would be
-    # a flat line at zero with a headline of 0.00% -- which reads as a
-    # measurement and is the absence of one.
-    if len(window) < 2:
+    # One point is allowed and says so on the page: a single dot on the zero
+    # line, and a sentence that the first move prints after the next close.
+    # The earlier version suppressed the whole block here, which left a card
+    # with an empty middle column and no explanation of why -- worse than a
+    # chart that admits it has one day in it.
+    if not window:
         return None
 
     def syms(ids):

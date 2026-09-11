@@ -1,0 +1,107 @@
+name: mark
+
+# 03:00 UTC Tuesday to Saturday: after each US session and its calls, and two
+# and a half hours before the 05:30 build, so the build of the same morning
+# already has the marks. Never on a Sunday or a Monday, because nothing was
+# said on the day before them.
+#
+# This job runs here rather than in the scheduled cloud task it replaces for
+# one reason: that task could reason but could not commit. GitHub is
+# unreachable from those sessions and there is no connector with write access,
+# so a mark it made had no hash, no diff and no author. The commit IS the
+# record, so the job has to run where the write is.
+on:
+  schedule:
+    - cron: "0 3 * * 2-6"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Decide and print, write nothing"
+        type: boolean
+        default: true
+      today:
+        description: "Pretend it is this date (YYYY-MM-DD)"
+        type: string
+        required: false
+      only:
+        description: "One question id"
+        type: string
+        required: false
+
+# The one thing this job does that the build does not: commit to main.
+permissions:
+  contents: write
+
+# Marks are appended to a single file. Two runs at once would race the same
+# write, and the loser's mark would be lost behind the winner's rebase.
+concurrency:
+  group: marks
+  cancel-in-progress: false
+
+jobs:
+  mark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Named before anything runs, so a missing key fails on a sentence a
+      # person can act on rather than inside an HTTP error.
+      - name: the API key has to be here
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "${ANTHROPIC_API_KEY}" ]; then
+            echo "::error::ANTHROPIC_API_KEY is not set. Add it as a repository secret (Settings -> Secrets and variables -> Actions). The job reads sources with it and cannot mark anything without it."
+            exit 1
+          fi
+          echo "key present"
+
+      - name: mark
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
+          QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          args=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then args="$args --dry-run"; fi
+          if [ -n "${{ inputs.today }}" ]; then args="$args --today ${{ inputs.today }}"; fi
+          if [ -n "${{ inputs.only }}" ]; then args="$args --only ${{ inputs.only }}"; fi
+          python -m chains.mark $args
+
+      # Only when the file actually moved, and never on a dry run. Rebase then
+      # push, up to three times: the build may have pushed to main in between,
+      # and a mark is an append that rebases cleanly.
+      - name: commit the marks
+        if: ${{ inputs.dry_run != true }}
+        env:
+          TODAY: ${{ inputs.today }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/*/marks.json; then
+            echo "marks.json unchanged; nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          day="${TODAY:-$(date -u +%Y-%m-%d)}"
+          git add data/*/marks.json
+          git commit -m "marks: auto ${day}"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            echo "push attempt $i failed; retrying"
+            sleep 5
+          done
+          echo "::error::could not push the marks after three attempts"
+          exit 1

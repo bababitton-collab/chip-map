@@ -73,15 +73,19 @@ jobs:
       - name: tests
         run: python -m pytest tests/ tools/probes/test_adr.py -q
 
-      # QUESTIONS_URL and ANSWERS_URL are secrets, not variables: a repository
-      # variable is readable by anyone who can read the repository, and these
-      # two links are the product. SIGNUP_URL is a variable because it is a
-      # public page anyway.
+      # QUESTIONS_URL is a secret, not a variable: a repository variable is
+      # readable by anyone who can read the repository, and that link is the
+      # product. SIGNUP_URL is a variable because it is a public page anyway.
+      #
+      # ANSWERS_URL is gone. The marks now come from data/<domain>/marks.json,
+      # written and committed by the mark workflow, and that file is the only
+      # source. It was already the one that won every conflict; leaving the
+      # link attached would have let a stale export in the Drive file add rows
+      # nobody committed.
       - name: build
         env:
           EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
           QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
-          ANSWERS_URL: ${{ secrets.ANSWERS_URL }}
           SIGNUP_URL: ${{ vars.SIGNUP_URL }}
           # The tracking payload is published sealed. chains/track.py refuses
           # to write a plaintext file when this is missing, so an unset secret

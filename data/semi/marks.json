@@ -1,4 +1,13 @@
 {
- "answers": {},
- "forecasts": []
+  "answers": {
+    "orcl_q1": {
+      "status": "mixed",
+      "basis": "unclear",
+      "auto": true,
+      "updated": "2026-09-11T03:06:33Z",
+      "evidence": "Benzinga Q1 FY27 call transcript 2026-09-10: capex \"continue to anticipate $90 to $95 billion\"; RPO \"increased $26 billion from Q4\".",
+      "note": "auto: mixed — FY27 capex guidance held at $90–95B (not raised), but RPO up $26B QoQ to $664B — Benzinga call transcript & Investing.com, 2026-09-10"
+    }
+  },
+  "forecasts": []
 }

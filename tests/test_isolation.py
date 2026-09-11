@@ -299,7 +299,11 @@ def test_no_module_reads_an_environment_variable_that_is_not_documented():
     documented = {"CHIP_MAP_DATA", "CHIP_MAP_OUT", "CHIP_MAP_SITE",
                   "CHIP_MAP_PRICES", "CHIP_MAP_PATH", "CHIP_MAP_DOMAIN",
                   "EODHD_API_TOKEN", "ANSWERS_URL", "QUESTIONS_URL",
-                  "SIGNUP_URL"}
+                  "SIGNUP_URL",
+                  # chains/mark.py: the key it reads sources with, the model
+                  # to use, and the file Actions wants its run summary in.
+                  "ANTHROPIC_API_KEY", "ANTHROPIC_MODEL",
+                  "GITHUB_STEP_SUMMARY", "TRACK_KEY"}
     seen: set[str] = set()
     for path in modules():
         tree = ast.parse(path.read_text(encoding="utf-8"))

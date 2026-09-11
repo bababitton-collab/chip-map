@@ -270,6 +270,21 @@ def locked_text_in_site(site: Path) -> list[str]:
         for f in FIELDS_CHECKED if r["id"] in text)
     blobs = {n: (site / n).read_text(encoding="utf-8")
              for n in PAYWALLED if (site / n).exists()}
+    # marks.json is not served, but it IS committed to a public repository by
+    # the mark workflow, and an evidence line or a note that quoted the
+    # question back would put a locked sentence in git for good. Same scan,
+    # same sentences, one more file.
+    from chains.paths import REPO_ROOT, marks_path
+    mp = marks_path()
+    if mp.exists():
+        # Keyed by a repo-relative name: the hit is reported as "<name>", and
+        # an absolute Windows path inside a message that already says "site/"
+        # reads as nonsense.
+        try:
+            label = str(mp.relative_to(REPO_ROOT)).replace("\\", "/")
+        except ValueError:
+            label = mp.name
+        blobs["../" + label] = mp.read_text(encoding="utf-8")
     hits = []
     for qid in locked:
         for field in FIELDS_CHECKED:

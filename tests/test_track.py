@@ -110,16 +110,38 @@ def test_a_forecast_past_forty_sessions_is_closed(book):
     assert r["day_index"] >= track.CLOSED_AFTER
 
 
-@pytest.mark.parametrize("status", sorted(track.UNDIRECTED))
+@pytest.mark.parametrize("status", sorted(track.UNSCORED))
 def test_an_answer_that_points_nowhere_gets_no_forecast(status, book):
-    """"mixed", "none" and "open" are real answers and none of them is a
-    direction. The card stays, says which one it was, and is never scored."""
+    """"mixed" and "none" are real answers and neither is a direction.
+
+    The card stays and says what was reported -- it does NOT fall back to the
+    pre-registered layout, which said "no forecast" on a card that still
+    looked like a question waiting to happen. Nothing about it is scored.
+    """
     r = one(book, [q("a", (TODAY - dt.timedelta(days=3)).isoformat(),
                      ["up"], ["down"])], [], {"a": {"status": status}})
-    assert r["state"] == "none"
+    assert r["state"] == "reported"
     assert r["status"] == status
     assert r["today"] == {} and r["horizons"] == {}
     assert r["series"] is None
+    assert r["entry_date"] is None
+    assert r["report_date"] == r["d"]
+
+
+def test_an_open_mark_is_not_an_answer(book):
+    """"open" means the mark could not settle it -- a question still waiting,
+    not a question answered, so it does not become a report."""
+    r = one(book, [q("a", (TODAY - dt.timedelta(days=3)).isoformat(),
+                     ["up"], ["down"])], [], {"a": {"status": "open"}})
+    assert r["state"] == "none"
+
+
+def test_an_answered_question_never_renders_as_pre_registered(book):
+    """Whatever it said, the card is a report once the date has passed."""
+    for status in ("yes", "no", "mixed", "none"):
+        r = one(book, [q("a", (TODAY - dt.timedelta(days=3)).isoformat(),
+                         ["up"], ["down"])], [], {"a": {"status": status}})
+        assert r["state"] == "reported", status
 
 
 def test_a_date_that_passed_with_no_mark_at_all_is_not_upcoming(book):
@@ -146,7 +168,7 @@ def test_a_question_with_no_date_is_not_a_card(book):
 
 # -- the order they appear in ------------------------------------------------
 
-def test_the_bands_are_tracking_marked_upcoming_none_closed(book):
+def test_the_bands_are_tracking_reported_marked_upcoming_closed(book):
     late = (TODAY + dt.timedelta(days=1)).isoformat()
     watch = [q("track1", "2026-01-06", ["up"], ["down"]),
              q("mark1", TODAY.isoformat(), ["up"], ["down"]),
@@ -159,7 +181,7 @@ def test_the_bands_are_tracking_marked_upcoming_none_closed(book):
     marks = {"track1": {"status": "yes"}, "mark1": {"status": "yes"},
              "closed1": {"status": "yes"}, "none1": {"status": "mixed"}}
     got = [r["state"] for r in built(book, watch, fs, marks)["forecasts"]]
-    assert got == ["tracking", "marked", "upcoming", "none", "closed"]
+    assert got == ["tracking", "reported", "marked", "upcoming", "closed"]
 
 
 def test_upcoming_cards_are_ordered_by_date(book):
@@ -184,7 +206,8 @@ def test_tracking_cards_are_newest_entry_first(book):
 def test_the_same_columns_exist_in_every_state(book):
     """A blank is a blank, and the shape of the row does not change with it."""
     fields = {"id", "tk", "label", "group", "expected_dir", "report_close",
-              "entry_close", "last", "day_pct", "since_pct", "stale"}
+              "entry_close", "last", "day_pct", "since_pct", "since_report",
+              "stale"}
     for r in built(book,
                    [q("u", (TODAY + dt.timedelta(days=9)).isoformat(),
                       ["up"], ["down"]),
@@ -982,3 +1005,173 @@ def test_both_pages_style_the_block():
     priv = (templates_dir() / "live-map.html").read_text(encoding="utf-8")
     for css in (template(), priv):
         assert ".yn" in css and ".why" in css
+
+
+# -- the reported card: what it says and what it must never claim ------------
+def reported(book, status="mixed", mark_extra=None):
+    m = {"status": status, "auto": True,
+         "note": "auto: mixed — guidance held, RPO up. Reuters 2026-01-05.",
+         "evidence": "Reuters 2026-01-05: RPO up $26B."}
+    m.update(mark_extra or {})
+    return one(book, [q("a", "2026-01-06", ["up"], ["down"])], [], {"a": m})
+
+
+def test_a_reported_card_carries_the_findings_verbatim(book):
+    """The build writes none of this -- it is the marking task's sentence."""
+    r = reported(book)
+    assert r["note"].startswith("auto: mixed")
+    assert r["evidence"].startswith("Reuters")
+    assert r["report_date"] == "2026-01-06"
+
+
+def test_a_reported_card_has_no_entry_and_no_spread(book):
+    """It was never entered, so there is nothing to score and nothing to plot."""
+    r = reported(book)
+    assert r["entry_date"] is None
+    assert r["horizons"] == {} and r["horizons2"] == {}
+    assert r["today"] == {}
+    assert r["series"] is None
+
+
+def test_a_reported_member_measures_from_the_report_not_an_entry(book):
+    r = reported(book)
+    assert r["members"], "a reported card still lists its baskets"
+    for m in r["members"]:
+        assert m["entry_close"] is None
+        assert "since_report" in m
+
+
+def test_a_mixed_answer_moves_no_scored_number(book):
+    """The hit rate counts clean yes/no with a pre-registered basket. A mixed
+    answer is a card on the page and nothing else."""
+    watch = [q("c", "2026-01-06", ["up"], ["down"]),
+             q("m", "2026-01-06", ["up"], ["down"])]
+    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
+    only = built(book, watch[:1], fs, {"c": {"status": "yes"}})["summary"]
+    both = built(book, watch, fs,
+                 {"c": {"status": "yes"}, "m": {"status": "mixed"}})["summary"]
+    for k in ("n_scored", "direct_hit_5", "direct_spread_5",
+              "direct_spread_20", "ring2_hit_5"):
+        assert only[k] == both[k], k
+    assert both["n_unscored"] == 1
+    assert both["n_answered"] == 2
+
+
+def test_the_counts_under_the_tile(book):
+    watch = [q("c", "2026-01-06", ["up"], ["down"]),
+             q("m", "2026-01-06", ["up"], []),
+             q("u", (TODAY + dt.timedelta(days=9)).isoformat(), ["up"], [])]
+    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
+    s = built(book, watch, fs,
+              {"c": {"status": "yes"}, "m": {"status": "none"}})["summary"]
+    assert (s["n_answered"], s["n_scored"], s["n_unscored"]) == (2, 1, 1)
+
+
+# -- the read line ----------------------------------------------------------
+def test_a_read_rides_along_when_the_mark_carries_one(book):
+    r = reported(book, mark_extra={"read": "The gap is in packaging, not in "
+                                           "demand."})
+    assert r["read"] == "The gap is in packaging, not in demand."
+
+
+def test_no_read_means_no_field(book):
+    assert "read" not in reported(book)
+
+
+@pytest.mark.parametrize("bad", [
+    "Buy the dip here.", "We sold into the print.",
+    "Worth BUYING before October.", "Nobody is selling this yet.",
+])
+def test_a_read_that_reads_as_advice_is_dropped(book, bad):
+    """The page measures; it does not counsel. A line that tells anyone to do
+    something never reaches it."""
+    r = reported(book, mark_extra={"read": bad})
+    assert "read" not in r
+    assert r["read_dropped"] == "reads as advice"
+
+
+def test_a_read_may_mention_a_company_whose_name_contains_a_word(book):
+    """Whole words only -- "Broadcom" is not "broad", and a substring match
+    would quietly drop legitimate commentary."""
+    r = reported(book, mark_extra={"read": "Rebought capacity is not the "
+                                           "issue; oversold is not either."})
+    assert r["read"], "a substring match would have eaten this"
+
+
+# -- the observation chart --------------------------------------------------
+def test_a_reported_card_carries_a_report_baselined_series(book):
+    r = reported(book)
+    o = r["observed"]
+    assert o["from"] <= r["report_date"], "baselined on or before the report"
+    assert len(o["dates"]) >= 2
+    assert o["dates"][0] == o["from"]
+    assert o["win"] and len(o["win"]) == len(o["dates"])
+    assert o["ew"] and len(o["ew"]) == len(o["dates"])
+
+
+def test_the_observation_series_starts_at_zero(book):
+    """It is baselined on the report's own close, so day zero is zero -- the
+    same close the member table calls report-day close."""
+    o = reported(book)["observed"]
+    assert o["win"][0] == 0.0
+    assert o["ew"][0] == 0.0
+
+
+def test_the_observation_headline_is_up_and_up_minus_map(book):
+    o = reported(book)["observed"]
+    assert o["up"] == o["win"][-1]
+    assert o["ew_now"] == o["ew"][-1]
+    assert abs(o["up_ew"] - (o["win"][-1] - o["ew"][-1])) < 1e-6
+
+
+def test_the_observation_is_not_a_spread_and_not_a_horizon(book):
+    """Whatever it is called, it must not be anywhere the hit rate looks."""
+    r = reported(book)
+    assert r["horizons"] == {} and r["horizons2"] == {}
+    assert r["series"] is None
+    assert r["today"] == {}
+    assert "spread" not in json.dumps(r["observed"])
+
+
+def test_a_scored_card_gets_no_observation_block(book):
+    """It has an entry, so it has a real series; two charts would be two
+    baselines for one card."""
+    watch = [q("c", "2026-01-06", ["up"], ["down"])]
+    # marked recently enough that it is still inside the 40-session window
+    fs = [fc("f", "c", ["up"], ["down"], CAL[-8].isoformat())]
+    r = built(book, watch, fs, {"c": {"status": "yes"}})["forecasts"][0]
+    assert r["state"] == "tracking"
+    assert "observed" not in r
+    assert r["series"] is not None
+
+
+def test_an_upcoming_card_gets_no_observation_block(book):
+    r = one(book, [q("a", (TODAY + dt.timedelta(days=9)).isoformat(),
+                     ["up"], ["down"])])
+    assert r["state"] == "upcoming"
+    assert "observed" not in r
+
+
+def test_a_mixed_answer_with_an_observation_still_moves_no_tile(book):
+    """The chart exists; the hit rate does not notice it."""
+    watch = [q("c", "2026-01-06", ["up"], ["down"]),
+             q("m", "2026-01-06", ["up"], ["down"])]
+    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
+    only = built(book, watch[:1], fs, {"c": {"status": "yes"}})["summary"]
+    both = built(book, watch, fs,
+                 {"c": {"status": "yes"}, "m": {"status": "mixed"}})["summary"]
+    for k in ("n_scored", "direct_hit_5", "direct_spread_5",
+              "direct_spread_20", "ring2_hit_5"):
+        assert only[k] == both[k], k
+
+
+def test_no_observation_until_a_session_closes_after_the_report(book):
+    """A report with no close after it has nothing to observe. A one-point
+    chart is a flat line at zero, which reads as a measurement and is the
+    absence of one."""
+    late = CAL[-1].isoformat()          # the last session in the store
+    r = one(book, [q("a", late, ["up"], ["down"])], [],
+            {"a": {"status": "mixed", "note": "auto: mixed — x. Reuters "
+                                              + late}})
+    assert r["state"] == "reported"
+    assert "observed" not in r or r["observed"] is None

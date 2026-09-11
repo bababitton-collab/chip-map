@@ -20,7 +20,17 @@
     : (Math.abs(v) >= 10000 ? Math.round(v).toLocaleString('en-US')
                             : v.toFixed(2));
   const sgn = v => v==null ? 'flat' : (v>0?'pos':(v<0?'neg':'flat'));
-  const word = r => r.status==='no' ? 'no' : 'yes';
+  // Four marks, four words. "none" is not "no": no means the report said the
+  // opposite of the question, none means the report did not address it.
+  const word = r => ['yes','no','mixed','none'].indexOf(r.status)>=0
+    ? r.status : 'yes';
+  const MARK_LABEL = {yes:'yes', no:'no', mixed:'mixed',
+                      none:'no clear signal'};
+  // A basket is always defined as "up if yes" -- that is how the question was
+  // written, before anyone knew the answer. The legend and the column head
+  // name that, not the mark: "up if mixed" describes nothing.
+  const leg = r => r.status==='no' ? 'no' : 'yes';
+  const ANSWERED = r => ['yes','no','mixed','none'].indexOf(r.status)>=0;
 
   const VBW=420, VBH=230, CX=100, CY=115, R1X=230, R2X=345, R2R=8, GAP=18, R2MAX=8;
   // Cut for the drawing, whole in the <title>: the same rule the map's cards
@@ -103,7 +113,7 @@
     });
     if(hidden>0) g2+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="${MAP}">+${hidden}</text>`;
 
-    const m = word(r);
+    const m = leg(r);
     return `<div class="cons"><svg viewBox="0 0 ${VBW} ${VBH}">
       <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
       ${g2}${g}
@@ -162,7 +172,7 @@
           g+=`<text x="${(x+6).toFixed(1)}" y="${(y+3).toFixed(1)}" font-family="IBM Plex Mono,monospace" font-size="9" fill="${st.c}">${p2(o.v[li])}</text>`; }
       }
     }
-    const m=word(r);
+    const m=leg(r);
     return `<div class="chart"><svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
       <div class="cap">
         <span><i style="border-color:${UP}"></i>up if ${m}</span>
@@ -172,8 +182,100 @@
       </div>`;
   }
 
-  function table(r){
+  // The same rows as a scored card, measured from the report instead of from
+  // an entry, and captioned so nobody reads it as a position.
+  function observed(r){
     const m = word(r);
+    const heads = {win:['up if yes','up'], lose:['down if yes','dn'],
+      win2:['up if yes · second ring','up'],
+      lose2:['down if yes · second ring','dn']};
+    const cols = `<tr><th>Station</th><th>Expected if yes</th>`
+      + `<th>Report-day close</th><th>Last</th><th>Since report</th></tr>`;
+    const ms = r.members||[];
+    const cap = `<p class="obs">No position taken — this question resolved `
+      + `${esc(MARK_LABEL[m]||m)}. Shown for observation; not part of the `
+      + `record.</p>`;
+    if(!ms.length) return `${cap}<div class="tw"><table class="mem">${cols}
+      <tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table></div>`;
+    const worst = Math.max(1, ...ms.map(x=>Math.abs(x.since_report||0)));
+    let rows='';
+    for(const g of ['win','lose','win2','lose2']){
+      const inGroup = ms.filter(x=>x.group===g);
+      if(!inGroup.length) continue;
+      rows += `<tr class="grp"><td colspan="5"><span class="gchip ${heads[g][1]}">${esc(heads[g][0])}</span></td></tr>`;
+      for(const x of inGroup){
+        const w = Math.round(Math.min(40, Math.abs(x.since_report||0)/worst*40));
+        const col = (x.since_report||0) >= 0 ? UP : DN;
+        const bar = x.since_report==null ? ''
+          : `<span class="bar" style="width:${w}px;background:${col}"></span>`;
+        rows += `<tr><td>${esc(x.label)}${x.stale?` <span class="stale" title="last close ${x.stale} sessions old">·</span>`:''}</td>
+          <td class="arrow">${x.expected_dir>0?'▲':'▼'}</td>
+          <td>${n2(x.report_close)}</td>
+          <td>${n2(x.last)}</td>
+          <td class="${sgn(x.since_report)}">${p2(x.since_report)}${bar}</td></tr>`;
+      }
+    }
+    return `${cap}<div class="tw"><table class="mem">${cols}${rows}</table></div>`;
+  }
+
+  // The same chart a scored card draws, from the report's close instead of an
+  // entry's, and stamped so it can never be read as a result. The band is on
+  // the chart itself rather than in a caption underneath: a chart travels --
+  // into a screenshot, into a slide -- and the disclaimer has to travel with
+  // it.
+  function observedChart(r){
+    const o = r.observed;
+    if(!o || !o.dates || o.dates.length < 2) return '';
+    const keys = [['ew', MAP, 1, ' stroke-dasharray="3 3"'],
+                  ['lose', DN, 1.6, ''], ['win2', UP, 1, ''],
+                  ['win', UP, 1.9, '']];
+    let lo = 0, hi = 0;
+    keys.forEach(([k]) => (o[k]||[]).forEach(v => {
+      if(v==null) return; lo = Math.min(lo, v); hi = Math.max(hi, v); }));
+    const pad = Math.max(0.6, (hi - lo) * 0.18);
+    lo -= pad; hi += pad;
+    const n = o.dates.length;
+    const X = i => 8 + (i/(n-1||1)) * (CW-16);
+    const Y = v => CH-14 - ((v-lo)/((hi-lo)||1)) * (CH-30);
+    let g = '';
+    // the zero line: the report's own close
+    g += `<line x1="8" x2="${CW-8}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="#ffffff22" stroke-width="1"/>`;
+    for(const [k, col, w, dash] of keys){
+      const v = o[k]; if(!v) continue;
+      let d = '', started = false;
+      v.forEach((y,i)=>{ if(y==null) return;
+        d += (started?'L':'M') + X(i).toFixed(1) + ' ' + Y(y).toFixed(1) + ' ';
+        started = true; });
+      if(!d) continue;
+      g += `<path d="${d.trim()}" fill="none" stroke="${col}" stroke-width="${w}"${dash} opacity="${k==='win'?1:.7}" stroke-linejoin="round"/>`;
+      const li = v.reduce((a,y,i)=>y==null?a:i,-1);
+      if(li>=0 && (k==='win'||k==='ew')){
+        g += `<circle cx="${X(li).toFixed(1)}" cy="${Y(v[li]).toFixed(1)}" r="3" fill="${col}"/>`;
+        g += `<text x="${(X(li)-4).toFixed(1)}" y="${(Y(v[li])-6).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="${col}">${p2(v[li])}</text>`;
+      }
+    }
+    return `<div class="chart obschart">
+      <span class="obsband">Observation · no position</span>
+      <svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
+      <div class="cap">
+        <span><i style="border-color:${UP}"></i>up if yes</span>
+        ${o.lose?`<span><i style="border-color:${DN}"></i>down if yes</span>`:''}
+        <span><i style="border-color:${MAP};border-top-style:dashed"></i>equal-weight map</span>
+      </div>
+      <div class="obsnums">
+        <div><b class="${sgn(o.up)}">${p2(o.up)}</b><span>up basket since the report</span></div>
+        <div><b class="${sgn(o.up_ew)}">${p2(o.up_ew)}</b><span>up − map since the report</span></div>
+      </div>
+      <p class="obsfoot">${o.sessions} session${o.sessions===1?'':'s'} since ${esc(o.from)} · not scored, not in the hit rate</p>`;
+  }
+
+  function table(r){
+    // A reported question has no entry, so it has no since-entry. What it has
+    // is a price move since the day of the report, which is an observation and
+    // is labelled as one -- nothing here is a position and nothing here is
+    // scored.
+    if(r.state==='reported') return observed(r);
+    const m = leg(r);
     const heads = {win:['up if '+m,'up'], lose:['down if '+m,'dn'],
       win2:['up if '+m+' · second ring','up'],
       lose2:['down if '+m+' · second ring','dn']};
@@ -229,6 +331,23 @@
       + (window.GL ? GL.chips(r.terms, 'Terms') : '');
   }
 
+  // What the report said, in the marking task's own words. The build writes
+  // none of this: an empty field renders nothing rather than a heading over a
+  // blank.
+  function findings(r){
+    const said = String(r.note || r.evidence || '').trim();
+    const read = String(r.read || '').trim();
+    if(!said && !read) return '';
+    let out = '';
+    if(said) out += `<div class="found"><b>What the report said</b>`
+      + `<p>${esc(said)}</p></div>`;
+    // Commentary, and labelled as commentary. It is not in any number on this
+    // page and the label says so on the line itself, not in a footnote.
+    if(read) out += `<div class="read"><b>Read · not scored</b>`
+      + `<p>${esc(read)}</p></div>`;
+    return out;
+  }
+
   function head(r, today){
     const m = word(r);
     const daysTo = d => Math.round((Date.parse(d+'T00:00:00Z')
@@ -238,16 +357,25 @@
       ? `marked ${String(r.marked_at||'').slice(0,10)} · entry close ${r.entry_date}`
       : (r.state==='marked'
           ? `marked ${String(r.marked_at||'').slice(0,10)} · entry at next close`
-          : `${esc(r.d)} · ${r.confirmed?'confirmed':'expected'}`);
+          : (r.state==='reported'
+              ? `Reported ${esc(r.report_date||r.d)}`
+              : `${esc(r.d)} · ${r.confirmed?'confirmed':'expected'}`));
     let badge='', line='';
     if(r.state==='upcoming'){
       badge = ringSVG(daysTo(r.d));
       line = `<div class="pre">Pre-registered · ${nStations} stations · entry at the close after the mark</div>`;
+    } else if(r.state==='reported'){
+      // The ring counted down to a date that has arrived, so it is gone. What
+      // replaces it is the mark itself, and under it what was reported.
+      badge = `<span class="pill ${m}">${esc(MARK_LABEL[m]||m)}`
+        + `<span class="how">${r.auto?'auto':'manual'}</span></span>`;
+      line = `<div class="day">No forecast — not in the hit rate</div>`;
     } else if(r.state==='none'){
       badge = ringSVG(daysTo(r.d));
       line = `<span class="pill grey">no forecast — ${esc(r.status||'not marked')}</span>`;
     } else {
-      badge = `<span class="pill ${m}">${m}<span class="how">${r.auto?'auto':'manual'}</span></span>`;
+      badge = `<span class="pill ${m}">${esc(MARK_LABEL[m]||m)}`
+        + `<span class="how">${r.auto?'auto':'manual'}</span></span>`;
       line = r.entry_date
         ? `<div class="day">Day ${r.day_index} of 40`
           + (r.next_checkpoint ? ` · next checkpoint ${r.next_checkpoint}d in ${r.sessions_to} session${r.sessions_to===1?'':'s'}` : ' · every checkpoint scored')
@@ -267,13 +395,19 @@
       <div class="who" style="margin-top:12px">${esc(r.who)}${r.tk?' · '+esc(r.tk):''}</div>
       <div class="dt">${esc(when)}</div>
       ${question(r)}
+      ${findings(r)}
       ${line}${nums}
     </div>`;
   }
 
   function card(r, today){
+    // A reported card plots from the report's close. It has no forecast
+    // series -- it was never entered -- so it cannot use chart(), and the
+    // constellation it used to show said nothing about what happened after.
     const mid = (r.state==='tracking'||r.state==='closed'||r.state==='marked')
-      ? chart(r) : constellation(r);
+      ? chart(r)
+      : (r.state==='reported' && r.observed ? observedChart(r)
+                                            : constellation(r));
     return `<article class="fc ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
       ${head(r, today)}<div>${mid}</div><div>${table(r)}</div></article>`;
   }
@@ -296,7 +430,9 @@
     const cap = (s,txt) => (s && s.n) ? txt+' (n='+s.n+')'
                                       : 'no scored forecasts yet';
     const nu = S.next_up||null;
-    return `<div class="tiles">
+    const counts = `<p class="tcap">${S.n_answered||0} answered · `
+      + `${S.n_scored||0} scored · ${S.n_unscored||0} no forecast</p>`;
+    return counts + `<div class="tiles">
       ${tile(`${S.n_scored||0} / ${S.n_cards||0}`,'tracking / all questions')}
       ${tile(rate(S.direct_hit_5), cap(S.direct_hit_5,'direct hit rate 5d'))}
       ${tile(mean(S.direct_spread_5), cap(S.direct_spread_5,'direct avg spread 5d'),

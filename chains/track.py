@@ -47,6 +47,7 @@ import base64
 import binascii
 import datetime as dt
 import json
+import re
 import os
 import statistics
 
@@ -69,6 +70,17 @@ STATES = ("tracking", "marked", "upcoming", "none", "closed")
 # A mark that points nowhere: the question was answered and the answer supports
 # no claim about which basket outruns which.
 UNDIRECTED = frozenset({"none", "mixed", "open"})
+# A question is ANSWERED once the report happened and the mark says what it
+# said. "open" is not in here: open means the mark could not settle it, which
+# is a question still waiting, not a question answered.
+ANSWERED = frozenset({"yes", "no", "mixed", "none"})
+# Answered, but nothing was pre-registered against it, so nothing is scored.
+# The card exists and says what was reported; no number on this page moves.
+UNSCORED = frozenset({"mixed", "none"})
+# Words that turn an observation into advice. A "read" carrying one of these
+# is dropped rather than published: the page measures, it does not counsel.
+NOT_ADVICE = ("buy", "buys", "buying", "bought",
+              "sell", "sells", "selling", "sold")
 
 
 # ------------------------------------------------------------------ the sign
@@ -184,8 +196,65 @@ def members_for(legs: dict, direction: int, doc: dict, book, symbol_of: dict,
                                 else last / prev - 1.0),
                 "since_pct": _pct(None if not base or last is None
                                   else last / base - 1.0),
+                # Since the day of the report rather than since an entry --
+                # there was no entry. An observation, and the page says so.
+                "since_report": _pct(
+                    None if last is None
+                    else (lambda rc: None if not rc else last / rc - 1.0)(
+                        report_close(book, sym, d, today))),
                 "stale": old if old > STALE_AFTER else 0,
             })
+    return out
+
+
+def _observed(legs: dict, doc: dict, book, symbol_of: dict,
+              node_symbols: list[str], d: str,
+              cal: list[dt.date]) -> dict | None:
+    """The baskets since the day of the report. An observation, not a result.
+
+    The same arithmetic a scored card uses, with the report's close as the
+    baseline instead of an entry's. It is deliberately NOT called a spread and
+    deliberately not in ``horizons``: nothing here reaches the hit rate, and
+    the only number that could be mistaken for one is the up-minus-map line,
+    which the page labels as an observation on the chart itself.
+    """
+    try:
+        day = dt.date.fromisoformat(d)
+    except (TypeError, ValueError):
+        return None
+    base = max((x for x in cal if x <= day), default=None)
+    if base is None:
+        return None
+    window = [x for x in cal if x >= base][:MAX_POINTS + 1]
+    # One point is not an observation. Until a session closes AFTER the report
+    # there is nothing to have observed, and a chart of a single day would be
+    # a flat line at zero with a headline of 0.00% -- which reads as a
+    # measurement and is the absence of one.
+    if len(window) < 2:
+        return None
+
+    def syms(ids):
+        return [symbol_of[i] for i in ids
+                if i in symbol_of and book.has(symbol_of[i])]
+
+    ser = {g: (forecast.basket_returns(book, syms(legs[g]), base, window)
+               if legs[g] else None) for g in GROUPS}
+    ew = forecast.ew_map(book, node_symbols, base, window)
+    out = {
+        "from": base.isoformat(),
+        "sessions": len(window) - 1,
+        "dates": [x.isoformat() for x in window],
+        "ew": [_pct(v) for v in ew],
+        **{g: ([_pct(v) for v in ser[g]] if ser[g] else None)
+           for g in GROUPS},
+    }
+    tail = lambda k: (out[k][-1] if out.get(k) else None)   # noqa: E731
+    up, ew_now = tail("win"), tail("ew")
+    out["up"] = _round(up)
+    out["ew_now"] = _round(ew_now)
+    out["up_ew"] = _round(None if up is None or ew_now is None
+                          else up - ew_now)
+    out["down"] = _round(tail("lose"))
     return out
 
 
@@ -229,8 +298,13 @@ def state_of(f: dict | None, entry: dt.date | None, day_index: int | None,
         return "closed" if day_index >= CLOSED_AFTER else "tracking"
     if f is not None:
         return "marked"
-    if status in UNDIRECTED:
-        return "none"
+    # Answered with nothing pre-registered against it. It used to fall back to
+    # the upcoming layout with a grey pill, which said "no forecast" on a card
+    # that still looked like a question waiting to happen -- so a mixed answer
+    # read as though nothing had been reported at all. It is a report now, and
+    # it keeps saying so.
+    if status in ANSWERED:
+        return "reported"
     return "none" if past else "upcoming"
 
 
@@ -263,6 +337,25 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
                                   + list(w.get("lose") or [])[:3])],
     }
     out["has_r2"] = bool(out["win2"] or out["lose2"])
+
+    # The findings, verbatim from the mark. The build never writes a word of
+    # this: it is the sentence the marking task recorded with its source and
+    # its date, and if the mark carries nothing the card shows nothing.
+    for part in ("note", "evidence"):
+        v = str((mark or {}).get(part) or "").strip()
+        if v:
+            out[part] = v
+    if status in ANSWERED:
+        out["report_date"] = d
+    # An optional one-line read. Commentary, never a recommendation, and never
+    # part of a number -- so it is checked before it can reach the page at all.
+    read = str((mark or {}).get("read") or "").strip()
+    if read:
+        low = read.lower()
+        if any(re.search(r"\b" + w + r"\b", low) for w in NOT_ADVICE):
+            out["read_dropped"] = "reads as advice"
+        else:
+            out["read"] = read
     # The four sentences. In the SEALED payload every card carries them --
     # that file is the paid view and the whole point of paying for it. In any
     # plaintext output only an open row has them, because only an open row was
@@ -293,6 +386,15 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
     if entry is None:
         out.update({"series": None, "today": {}, "horizons": {},
                     "horizons2": {}})
+        # A reported question was never entered, so it has no forecast series
+        # and never will. What it does have is a price history since the day
+        # of the report, and that is worth showing -- as long as it is shown
+        # as an observation and not as a result. Baselined on the same close
+        # the member table calls "report-day close", so the chart and the
+        # table cannot tell different stories about the same day.
+        if out["state"] == "reported" and d:
+            out["observed"] = _observed(legs, doc, book, symbol_of,
+                                        node_symbols, d, cal)
         return out
 
     def syms(ids):
@@ -329,7 +431,8 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
 
 
 # ---------------------------------------------------------------- the build
-BANDS = {"tracking": 0, "marked": 1, "upcoming": 2, "none": 3, "closed": 4}
+BANDS = {"tracking": 0, "reported": 1, "marked": 2, "upcoming": 3,
+         "none": 4, "closed": 5}
 
 
 def _desc(v: str | None) -> str:
@@ -344,6 +447,10 @@ def sort_key(r: dict):
     band = BANDS.get(r["state"], 9)
     if r["state"] == "tracking":
         return (band, _desc(r.get("entry_date")), r["qid"])
+    if r["state"] == "reported":
+        # Newest report first: what was said yesterday matters more than what
+        # was said a month ago.
+        return (band, _desc(r.get("report_date") or r.get("d")), r["qid"])
     if r["state"] in ("upcoming", "none"):
         return (band, r.get("d") or "9999-12-31", r["qid"])
     return (band, _desc(r.get("marked_at") or r.get("d")), r["qid"])
@@ -372,6 +479,13 @@ def summarise(records: list[dict]) -> dict:
                            or r["state"] == "marked"),
         "n_open": sum(1 for r in records if r["state"] == "marked"),
         "n_scored": len(scored),
+        # The caption under the forecasts tile. Answered is every question the
+        # report has happened for; scored is the subset a basket was
+        # registered against; the rest are reports with no forecast and no
+        # bearing on any number here.
+        "n_answered": sum(1 for r in records
+                          if r.get("status") in ANSWERED),
+        "n_unscored": sum(1 for r in records if r["state"] == "reported"),
         "n_upcoming": len(upcoming),
         "next_up": None if not nxt else {"d": nxt.get("d"), "who": nxt["who"]},
         "direct_hit_5": at("horizons", 5, "hit"),
@@ -766,7 +880,8 @@ __all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
            "render", "main", "slim", "sort_key", "state_of", "members_for",
            "reason_for", "MAX_REASON",
            "report_close", "CHECKPOINTS", "STALE_AFTER", "MAX_POINTS",
-           "CLOSED_AFTER", "STATES", "UNDIRECTED", "R2_SUFFIX"]
+           "CLOSED_AFTER", "STATES", "UNDIRECTED", "ANSWERED", "UNSCORED",
+           "NOT_ADVICE", "R2_SUFFIX"]
 
 
 if __name__ == "__main__":                                # pragma: no cover

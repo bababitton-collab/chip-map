@@ -80,7 +80,7 @@ HEBREW = re.compile(r"[֐-׿]")
 # strip, and one rule is better than two that can disagree about the same row.
 # See chains/questions.py.
 
-DB_READ = """(async()=>{ try{ if(!window.claude||!claude.use) return; const db=await claude.use('db'); if(!db) return; const snap=await db.doc('live/latest').get(); const doc=snap&&(snap.data?snap.data():snap); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
+DB_READ = """(async()=>{ try{ if(!window.claude||!claude.use) return; const db=await claude.use('db'); if(!db) return; const snap=await db.doc('live/latest').get(); let doc=snap&&(snap.data?snap.data():snap); if(doc&&doc.enc==='gzip+b64'&&doc.z){ const b=Uint8Array.from(atob(doc.z),c=>c.charCodeAt(0)); const s=new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip')); doc=JSON.parse(await new Response(s).text()); } if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
 
 # The private page reads the decrypted tracking payload out of the artifact
 # database. The public build removes that block outright rather than pointing

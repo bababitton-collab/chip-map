@@ -2,7 +2,7 @@
 
     python -m chains.build_all [--domain semi] [--skip-prices]
 
-    prices -> repair -> page -> fundamentals -> live -> pages
+    prices -> repair -> page -> fundamentals -> preregister -> live -> pages
           -> brief, brief_free -> brief_he, brief_he_free
 
 NOTHING DOWNSTREAM RUNS ON STALE UPSTREAM
@@ -59,6 +59,9 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
         ("repair", ["chains/scripts/repair_prices.py"]),
         ("page", ["chains/scripts/build_page_json.py"]),
         ("fundamentals", ["chains/scripts/build_fundamentals.py"]),
+        # Before anything is published: a question with no commitment, or
+        # whose contract no longer hashes to the committed value, stops here.
+        ("preregister", ["-m", "chains.preregister", "--check"]),
         ("live", ["-m", "chains.live_snapshot"]),
         ("pages", ["-m", "chains.build_pages"]),
         # The forward test reads live_en.json, so it follows the snapshot.
@@ -82,7 +85,8 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
 
 
 def outputs(today: date) -> list[str]:
-    return ["live.json", "live_en.json", "public-map.html",
+    return ["commitments.json", "live.json", "live_en.json",
+            "public-map.html",
             "public-map-en.html", "track.json", "track.html",
             f"brief-{today.isoformat()}.md",
             f"brief-free-{today.isoformat()}.md",

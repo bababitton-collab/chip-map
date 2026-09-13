@@ -79,6 +79,9 @@ COPIES = [
     ("public-map.html", "he.html"),
     ("live_en.json", "live_en.json"),
     ("live.json", "live.json"),
+    # Free and never paywalled: the hash of every question's scoring contract,
+    # published before its answer date. Hashes and dates only, no sentence.
+    ("commitments.json", "commitments.json"),
 ]
 
 BRIEFS = [("brief-free-*.md", "brief.md"),

@@ -903,8 +903,13 @@ def test_the_renderer_does_not_fetch_or_decrypt_anything():
     job and it has no way to do it."""
     from chains.paths import templates_dir
     js = (templates_dir() / "track-cards.js").read_text(encoding="utf-8")
-    for word in ("fetch(", "crypto.subtle", "localStorage", "track.enc"):
+    for word in ("fetch(", "localStorage", "track.enc", "subtle.decrypt",
+                 "subtle.importKey", "subtle.deriveKey", "subtle.unwrapKey"):
         assert word not in js, word
+    # Its one use of WebCrypto is a hash: recomputing a preregistration
+    # commitment in the reader's browser. A digest opens nothing.
+    import re
+    assert set(re.findall(r"crypto\.subtle\.(\w+)", js)) == {"digest"}
 
 
 # -- the sealed payload carries every question -------------------------------
@@ -1369,3 +1374,88 @@ def test_both_charts_draw_only_their_lines_each_traced_to_a_number(tmp_path):
     assert st["ew"][1:] == ("1.4", "4 3")
     assert st["sox"] == ("#f2b632", "1.4", "1 3")
     assert len({(c, dash) for c, _w, dash in st.values()}) == 3
+
+
+# -- pre-registration on the cards --------------------------------------------
+
+def test_only_a_resolved_card_reveals_its_contract(book):
+    later = (TODAY + dt.timedelta(days=9)).isoformat()
+    watch = [q("a", "2026-01-06", ["up"], ["down"]),
+             q("b", later, ["up"], [])]
+    p = {"sha256": "0" * 64, "committed_at": "2026-01-01",
+         "answer_date": "2026-01-06", "valid_preregistration": True,
+         "primary_horizon": 20, "contract": "{}"}
+    out = track.build([], forecast.build([], DOC, [], CAL), watch, DOC,
+                      {"a": {"status": "mixed"}}, book, CAL, TODAY,
+                      prereg={"a": p, "b": dict(p, answer_date=later)})
+    by = {r["qid"]: r for r in out["forecasts"]}
+    assert by["a"]["prereg"] == p
+    assert "prereg" not in by["b"], "unanswered: its wording is still paid"
+    assert "prereg" not in json.dumps(track.slim(out)), "never in live.json"
+
+
+def test_the_verify_control_recomputes_the_committed_hash_in_the_browser(
+        tmp_path):
+    """Rendered by the real renderer and verified by node's WebCrypto: the
+    bytes on the card are the bytes the build hashed, through HTML escaping
+    and non-ascii text alike."""
+    import shutil
+    import subprocess
+    from chains import preregister
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    row = {"id": "mu_fq4", "d": "2026-09-30", "win": ["skhynix", "mu"],
+           "lose": ["samsung"], "kind": "share"}
+    text = {"yes_en": "Guidance raised above range — “HBM sold out”.",
+            "no_en": "Guidance <held> & \"unchanged\"."}
+    contract = preregister.canonical(row, text).decode("utf-8")
+    sha = preregister.digest(row, text)
+
+    def card(qid, **over):
+        p = {"sha256": sha, "committed_at": "2026-09-13",
+             "answer_date": "2026-09-30", "valid_preregistration": True,
+             "primary_horizon": 20, "contract": contract}
+        p.update(over)
+        return {"qid": qid, "who": qid.upper(), "state": "reported",
+                "status": "yes", "d": "2026-09-30",
+                "report_date": "2026-09-30", "members": [], "prereg": p}
+
+    payload = {"as_of": "2026-10-01", "summary": {}, "forecasts": [
+        card("good"),
+        card("late", committed_at="2026-10-02", valid_preregistration=False),
+        card("tampered", contract=contract.replace("samsung", "intc")),
+        dict(card("open"), state="upcoming", status=None, d="2026-11-01"),
+    ]}
+    js = tmp_path / "verify.js"
+    js.write_text(
+        "globalThis.window = {};\n" + cards_source() + "\n"
+        "const root = {};\n"
+        f"window.renderTrack(root, {json.dumps(payload)});\n"
+        "const html = root.innerHTML;\n"
+        "const un = s => s.replace(/&quot;/g,'\"').replace(/&lt;/g,'<')"
+        ".replace(/&gt;/g,'>').replace(/&amp;/g,'&');\n"
+        "const re = /<div class=\"prereg\" data-prereg=\"([^\"]*)\" "
+        "data-sha=\"([^\"]*)\" data-valid=\"([01])\" data-committed=\"([^\"]*)\" "
+        "data-answer=\"([^\"]*)\" data-contract=\"([^\"]*)\"/g;\n"
+        "(async () => {\n"
+        "  const out = {boxes: {}, buttons: (html.match(/data-verify/g)||[]).length,\n"
+        "               label: html.includes('>Verify preregistration<')};\n"
+        "  for (const m of html.matchAll(re)) {\n"
+        "    const r = await window.verifyPrereg(un(m[6]), m[2], m[3]==='1', m[4], m[5]);\n"
+        "    out.boxes[m[1]] = {state: r.state, hex: r.hex, text: r.text,\n"
+        "                       contract: un(m[6])};\n"
+        "  }\n"
+        "  process.stdout.write(JSON.stringify(out));\n"
+        "})();\n", encoding="utf-8")
+    got = json.loads(subprocess.run(["node", str(js)], capture_output=True,
+                                    check=True).stdout.decode("utf-8"))
+    b = got["boxes"]
+    assert set(b) == {"good", "late", "tampered"}, "an open question has none"
+    assert got["buttons"] == 3 and got["label"]
+    assert b["good"]["contract"] == contract, "revealed bytes == hashed bytes"
+    assert b["good"]["hex"] == sha, "the browser and the build agree"
+    assert b["good"]["state"] == "verified"
+    assert b["good"]["text"] == "Verified — committed before the answer date"
+    assert b["late"]["state"] == "late"
+    assert "not a valid preregistration" in b["late"]["text"]
+    assert b["tampered"]["state"] == "mismatch"

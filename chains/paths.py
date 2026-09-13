@@ -57,6 +57,7 @@ WATCH_FILENAME = "watch.json"
 WATCH_EN_FILENAME = "watch_en.json"
 ANSWERS_FILENAME = "answers.json"
 MARKS_FILENAME = "marks.json"
+COMMITMENTS_FILENAME = "commitments.json"
 
 DOMAIN_ENV = "CHIP_MAP_DOMAIN"
 DEFAULT_DOMAIN = "semi"
@@ -162,6 +163,16 @@ def marks_path(dom: str | None = None) -> Path:
     event; the marks belong in the same place for the same reason.
     """
     return data_dir(dom) / MARKS_FILENAME
+
+
+def commitments_path(dom: str | None = None) -> Path:
+    """The public pre-registration: one SHA-256 per question's contract.
+
+    Curated input, tracked beside the map. Written by a person with
+    ``python -m chains.preregister --write`` and committed -- the commit is
+    the timestamp. The build only checks it and copies it out to publish.
+    """
+    return data_dir(dom) / COMMITMENTS_FILENAME
 
 
 def answers_path() -> Path:

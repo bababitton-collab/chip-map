@@ -468,6 +468,44 @@
     </div>`;
   }
 
+  // Pre-registration. A resolved question carries the contract it was scored
+  // under -- the exact bytes that were hashed -- and the SHA-256 that was
+  // published before its answer date. The reader's browser recomputes the
+  // hash, so nothing here has to be taken on trust. The contract is revealed
+  // only once the answer is in, which is when its yes/no wording stops being
+  // paid. Hashing is the only WebCrypto call in this file; it opens nothing.
+  const PREREG_TEXT = {
+    verified: 'Verified — committed before the answer date',
+    late: (c,a) => `Hash matches, but not a valid preregistration — committed ${c}, not before the answer date ${a}`,
+    mismatch: (h,s) => `Mismatch — the revealed contract hashes to ${h.slice(0,16)}…, not the committed ${s.slice(0,16)}…`,
+    unavailable: 'This browser cannot compute SHA-256 on this page (it needs a secure https page)',
+  };
+  async function verifyPrereg(contract, sha, valid, committed, answer){
+    const c = globalThis.crypto;
+    if(!(c && c.subtle && globalThis.TextEncoder))
+      return {state:'unavailable', text:PREREG_TEXT.unavailable};
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(contract));
+    const hex = Array.from(new Uint8Array(buf), b=>b.toString(16).padStart(2,'0')).join('');
+    if(hex !== String(sha).toLowerCase())
+      return {state:'mismatch', hex:hex, text:PREREG_TEXT.mismatch(hex, String(sha))};
+    if(!valid) return {state:'late', hex:hex, text:PREREG_TEXT.late(committed, answer)};
+    return {state:'verified', hex:hex, text:PREREG_TEXT.verified};
+  }
+  window.verifyPrereg = verifyPrereg;
+
+  function prereg(r){
+    const p = r.prereg;
+    if(!p || !p.contract || !ANSWERED(r)) return '';
+    const ok = !!p.valid_preregistration;
+    return `<div class="prereg" data-prereg="${esc(r.qid)}" data-sha="${esc(p.sha256)}" data-valid="${ok?'1':'0'}" data-committed="${esc(p.committed_at)}" data-answer="${esc(p.answer_date)}" data-contract="${esc(p.contract)}" style="margin-top:12px;padding:10px 12px;border:1px solid #222a36;border-radius:6px;font-family:IBM Plex Mono,monospace;font-size:.7rem;color:#b3bccb">
+      <div>Pre-registered ${esc(p.committed_at)} · answer date ${esc(p.answer_date)} · primary horizon ${esc(p.primary_horizon)} sessions${ok?'':' · <b style="color:#f2b632">not a valid preregistration</b>'}</div>
+      <div style="word-break:break-all;margin:6px 0;color:#7d8797">SHA-256 ${esc(p.sha256)}</div>
+      <button type="button" data-verify style="font:inherit;color:#e8ecf2;background:#141922;border:1px solid #31405a;border-radius:4px;padding:4px 10px;cursor:pointer">Verify preregistration</button>
+      <span class="pr-result" role="status" style="margin-left:8px"></span>
+      <details style="margin-top:6px"><summary>Scoring contract — the exact bytes that were hashed</summary><pre style="white-space:pre-wrap;word-break:break-all">${esc(p.contract)}</pre></details>
+    </div>`;
+  }
+
   function card(r, today){
     // A reported card plots from the report's close. It has no forecast
     // series -- it was never entered -- so it cannot use chart(), and the
@@ -477,7 +515,7 @@
       : (r.state==='reported' && r.observed ? observedChart(r)
                                             : constellation(r));
     return `<article class="fc ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
-      ${head(r, today)}<div>${mid}</div><div>${table(r)}</div></article>`;
+      ${head(r, today)}<div>${mid}</div><div>${table(r)}${prereg(r)}</div></article>`;
   }
 
   function closedRow(r, today){
@@ -526,6 +564,20 @@
       + open.map(r=>card(r, today)).join('')
       + (shut.length ? `<div class="sect">Closed · every checkpoint scored</div>`
           + shut.map(r=>closedRow(r, today)).join('') : '');
+    // One listener per root, however many times the cards are redrawn.
+    if(root.addEventListener && !root.__preregWired){
+      root.__preregWired = true;
+      root.addEventListener('click', ev=>{
+        const b = ev.target && ev.target.closest ? ev.target.closest('[data-verify]') : null;
+        if(!b) return;
+        const box = b.closest('[data-prereg]'), out = box.querySelector('.pr-result');
+        out.textContent = 'Checking…';
+        verifyPrereg(box.dataset.contract, box.dataset.sha, box.dataset.valid==='1',
+                     box.dataset.committed, box.dataset.answer)
+          .then(res=>{ out.textContent = res.text; box.dataset.state = res.state; })
+          .catch(()=>{ out.textContent = PREREG_TEXT.unavailable; });
+      });
+    }
     return F.length;
   };
 })();

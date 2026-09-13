@@ -320,7 +320,8 @@ def state_of(f: dict | None, entry: dt.date | None, day_index: int | None,
 def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
            row2: dict | None, mark: dict | None, book, cal: list[dt.date],
            doc: dict, symbol_of: dict, node_symbols: list[str],
-           today: dt.date, ring2: dict, centre: str | None = None) -> dict:
+           today: dt.date, ring2: dict, centre: str | None = None,
+           prereg: dict | None = None) -> dict:
     """One dated question, in whatever state it is in."""
     status = (mark or {}).get("status")
     direction = f["direction"] if f else 1
@@ -359,6 +360,10 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
             out[part] = v
     if status in ANSWERED:
         out["report_date"] = d
+        # The scoring contract, revealed now that the answer is in, beside
+        # the hash published before it. The page recomputes the hash.
+        if prereg:
+            out["prereg"] = dict(prereg)
     # An optional one-line read. Commentary, never a recommendation, and never
     # part of a number -- so it is checked before it can reach the page at all.
     read = str((mark or {}).get("read") or "").strip()
@@ -517,8 +522,13 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
           watch: list[dict] | None = None, doc: dict | None = None,
           marks: dict | None = None, book=None,
           cal: list[dt.date] | None = None,
-          today: dt.date | None = None) -> dict:
-    """``{summary, forecasts}`` -- one record per dated question."""
+          today: dt.date | None = None,
+          prereg: dict | None = None) -> dict:
+    """``{summary, forecasts}`` -- one record per dated question.
+
+    ``prereg`` maps a question id to its revealed commitment, from
+    chains/preregister.py. Only a resolved card carries it.
+    """
     doc = doc or mapfile.load()
     forecasts = forecasts or []
     ledger = ledger or {"rows": []}
@@ -559,7 +569,8 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
                           rows.get(tid) if twin else None,
                           marks.get(w["id"]), book, cal, doc, symbol_of,
                           node_symbols, today, r2,
-                          by_ticker.get(str(w.get("tk") or "").upper())))
+                          by_ticker.get(str(w.get("tk") or "").upper()),
+                          (prereg or {}).get(w["id"])))
     out.sort(key=sort_key)
     from chains import glossary as _gl
     return {"summary": summarise(out), "forecasts": out,
@@ -802,7 +813,7 @@ def build_files(plain: bool = False) -> dict:
       track.html      the page, with the FREE half inlined and nothing else.
     """
     from chains import answers as answers_mod
-    from chains.paths import out_dir, watch_en_path
+    from chains.paths import out_dir, watch_en_path, watch_path
     live = json.loads((out_dir() / "live_en.json").read_text(encoding="utf-8"))
     _a, forecasts, _p = answers_mod.read()
     # The baskets come from the tracked watch file, not from live_en.json:
@@ -813,13 +824,21 @@ def build_files(plain: bool = False) -> dict:
     # and the plaintext never leaves the runner, so the paywall here is the
     # key, not the absence of the sentence -- and a subscriber who cannot see
     # the question a forecast was made from cannot check the forecast.
-    from chains import questions
-    rows = questions.merge(rows, questions.fetch(), "en",
+    from chains import preregister, questions
+    text = questions.fetch()
+    rows = questions.merge(rows, text, "en",
                            dt.date.fromisoformat(live["as_of"]),
                            unlock_all=True)
+    # The contracts are rebuilt from the language-neutral watch file and the
+    # English wording -- the same inputs the committed hashes came from --
+    # and only a resolved card carries its copy.
+    prereg = preregister.reveals(
+        json.loads(watch_path().read_text(encoding="utf-8")), text,
+        preregister.load())
     data = build(forecasts, live.get("ledger"), rows,
                  marks=live.get("answers"),
-                 today=dt.date.fromisoformat(live["as_of"]))
+                 today=dt.date.fromisoformat(live["as_of"]),
+                 prereg=prereg)
     out_dir().mkdir(parents=True, exist_ok=True)
     wrote = {}
 

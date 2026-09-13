@@ -1,0 +1,314 @@
+[
+ {
+  "qid": "orcl_q1",
+  "answer_date": "2026-09-10",
+  "committed_at": "2026-09-13",
+  "sha256": "6a02cce2d486f5eb97cae644ada9b56edb8b84422fd1900567aef6e141277d2e",
+  "primary_horizon": 20,
+  "valid_preregistration": false
+ },
+ {
+  "qid": "mu_fq4",
+  "answer_date": "2026-09-30",
+  "committed_at": "2026-09-13",
+  "sha256": "1caadaa2e0db4f1eee653bc7ee25db5b87a4c73c2e5e95e89131c8e51739690b",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "smsg_pre",
+  "answer_date": "2026-10-08",
+  "committed_at": "2026-09-13",
+  "sha256": "70d69183fc6fde63b72a1cbf37831aa81f56239b2d905bef8bbcf2ea7d0edfa5",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "asml_q3",
+  "answer_date": "2026-10-14",
+  "committed_at": "2026-09-13",
+  "sha256": "fa90dc7c1fdc549d84b92df14d86104258bf827acd36fc1415dc6180c19d643e",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "tsm_q3",
+  "answer_date": "2026-10-15",
+  "committed_at": "2026-09-13",
+  "sha256": "24a1602b68279707d99121b5b728ed4437317601c5750df50972f7fb0081cfb2",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "clf_q3",
+  "answer_date": "2026-10-19",
+  "committed_at": "2026-09-13",
+  "sha256": "b49ff84406b62cb073f46e9eb47cfe3fc384d671611d388753189910ddddb37d",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "intc_q3",
+  "answer_date": "2026-10-22",
+  "committed_at": "2026-09-13",
+  "sha256": "ba89c4c49b432aef3fe56eb08bbfae30b910e833e42724dd30a4cc59c4d77891",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "shecy_h1",
+  "answer_date": "2026-10-23",
+  "committed_at": "2026-09-13",
+  "sha256": "f1d751037f4436856be1ad6520a46a7d2bbab06ebc9960299d769d30b9bfed2d",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "skh_q3",
+  "answer_date": "2026-10-23",
+  "committed_at": "2026-09-13",
+  "sha256": "8f8d5b742a28bc4013fd4749eef00d020b06aabe0f19c476a7bf08ec10484c16",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "amkr_q3",
+  "answer_date": "2026-10-26",
+  "committed_at": "2026-09-13",
+  "sha256": "80187461160ac835a5ac343c329624b8ea0b2287f14207f53efc2e73647815f6",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "cdns_q3",
+  "answer_date": "2026-10-26",
+  "committed_at": "2026-09-13",
+  "sha256": "ceabaef009670c3ea380dafc78408264da352b4d2a7b05197966f38a3adc414a",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "ter_q3",
+  "answer_date": "2026-10-27",
+  "committed_at": "2026-09-13",
+  "sha256": "6a9cc9373447608620f6408844ca293160c2ce6e64ce7c3440cc995261a72802",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "gev_q3",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-13",
+  "sha256": "373c4817910f2ac4d126ae77c6a41dc0dbe9a3802a03c88824fda670cc59c0a6",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "lrcx_q1",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-13",
+  "sha256": "f01523f02f1ffc9112b6e596761625fbec6c3004b91cfeced8b39e579f31d266",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "teck_q3",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-13",
+  "sha256": "56320111654da9793049a7e244ba0e9e8c413081396b2c486bfcb8fc5614077c",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "googl_q3",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-13",
+  "sha256": "1e754ed112174e449497bdf5ac4cdaeac071d6d401d5c61313e71817bd7f546a",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "adv_h1",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-13",
+  "sha256": "c1762c70f397ba7d0ff7005b1c62434977d71479584b2a070ccccb340eb374dd",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "smsg_q3",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-13",
+  "sha256": "d4e430dfea0cc12352ab981661793a1038c58a37d618a5a1e9fe73cebff01cf3",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "hanmi_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-13",
+  "sha256": "73b9dfdee156c483efda686249eea17c5c7d2eeba67da7a7aab8d2de381ae796",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "asx_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-13",
+  "sha256": "9f5a0c7df4b0ef7bdd94937b7c2466940a1a8ba3eb3b5dda9dbbf0d27f05ca66",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "axti_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-13",
+  "sha256": "036d4e8cd22b22b199d86c6743cd24a35a43b04d57640cf6b26ab5e6b09189b8",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "entg_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-13",
+  "sha256": "0d1f13c3424a999f89cbadd617ebf58ac37cfd05b9481434c23bbee19fe92f5f",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "amzn_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-13",
+  "sha256": "ea6d8280cfde5debaf2b914258d3c2fcce5152c8c11b1cbb64047b31cb3eead7",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "hwm_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-13",
+  "sha256": "eac130d57dfb0bbd3a9a5be9b9ead315f5405951e4b18ab26c365533fdf5486d",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "mpwr_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-13",
+  "sha256": "aeeb3d4852f636c010f8e16dd05ede434c27114a66b55350a55070f3966d136c",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "hoya_h1",
+  "answer_date": "2026-10-30",
+  "committed_at": "2026-09-13",
+  "sha256": "83fea0cb945358d5d86e6e65f58f2fcd5842be4e4c1c5e5474f15314926a8771",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "cohr_q1",
+  "answer_date": "2026-11-05",
+  "committed_at": "2026-09-13",
+  "sha256": "64b8a87dd1f8efec9aac64ee0a9de5e8096663ff0387cf98251716290d2dba7d",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "ajin_h1",
+  "answer_date": "2026-11-05",
+  "committed_at": "2026-09-13",
+  "sha256": "251084ae2cfe8e336012963c2f6de312f8e08b40e855e86222cbdb8f42e2ba4a",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "sumco_q3",
+  "answer_date": "2026-11-06",
+  "committed_at": "2026-09-13",
+  "sha256": "867f32d0ab090c48a78c7c8b786a41de239d68abfe0520d957949e905d8473e0",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "mofcom_re",
+  "answer_date": "2026-11-10",
+  "committed_at": "2026-09-13",
+  "sha256": "18d5c9af43e4088e5fb9b651436f1dfb8e8a6f0f53141a3b43cb0d4b1ff287e1",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "tel_q2",
+  "answer_date": "2026-11-10",
+  "committed_at": "2026-09-13",
+  "sha256": "2c2ccc1133065a6ff5c59f57f3d88675fd626584d4b96f02142aa871d2730a66",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "amat_q4",
+  "answer_date": "2026-11-12",
+  "committed_at": "2026-09-13",
+  "sha256": "896056aa0391f6f04da9378202ef0b849cfac19a0f9744bca94450428773d670",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "sie_fy",
+  "answer_date": "2026-11-12",
+  "committed_at": "2026-09-13",
+  "sha256": "791684665c43de3e7e7d749ba6bb721795cbba62bd5e32fe3be568634bd1f62b",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "nvda_q3",
+  "answer_date": "2026-11-19",
+  "committed_at": "2026-09-13",
+  "sha256": "c69e935cb9f43efe2ee84546a58f2e00219bc70ba1bc877515be31fc53b67c16",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "mofcom_ga",
+  "answer_date": "2026-11-27",
+  "committed_at": "2026-09-13",
+  "sha256": "1845fbf9d44a7f0bb032baa77bbd23ff2eb0766010568d444f8e5dc0e5cbcda3",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "semi_smg",
+  "answer_date": "2026-12-10",
+  "committed_at": "2026-09-13",
+  "sha256": "0f8168690664f04f8b973aabc1c53515eeec687a7648117db22ddde07e166848",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "absolics",
+  "answer_date": "2026-12-31",
+  "committed_at": "2026-09-13",
+  "sha256": "85d353f814e1d4c65923405512153fdd804b801953307c7f4c78131b53c6359f",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "lsrc_q2",
+  "answer_date": "2027-01-27",
+  "committed_at": "2026-09-13",
+  "sha256": "2f2d52249417125c7b93acb2d5f1b387d8799e38dabe554d1038ba8ba049f032",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ },
+ {
+  "qid": "spie",
+  "answer_date": "2027-02-22",
+  "committed_at": "2026-09-13",
+  "sha256": "2c0eaf0c4c2d300baca282fe38323a65a8b999ac7bb0b44557e3f092aa4407c3",
+  "primary_horizon": 20,
+  "valid_preregistration": true
+ }
+]

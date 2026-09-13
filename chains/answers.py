@@ -111,6 +111,13 @@ HORIZONS = (5, 10, 20)
 # horizons they share.
 HORIZONS_R2 = (5, 10, 20, 40)
 ORDERS = {1: HORIZONS, 2: HORIZONS_R2}
+
+# The one horizon that is the headline, frozen before the first scored
+# forecast and written into every question's pre-registered contract. The
+# others are secondary -- read beside it, never a second chance to be right.
+# The official N counts questions, never horizons: one event is one
+# observation however many sessions it is read at.
+PRIMARY_HORIZON = 20
 DEFAULT_ORDER = 1
 R2_SUFFIX = "-r2"
 

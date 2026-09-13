@@ -52,7 +52,16 @@
     </svg><div class="n"><b>${esc(num)}</b><small>${esc(unit)}</small></div></div>`;
   }
 
+  // A policy date bets no basket: the answer is recorded and nothing is
+  // forecast on it. The column says so, rather than drawing a centre with no
+  // legs.
+  const POLICY_STATE = 'Policy event · binary outcome · no forecast';
+  function policyState(){
+    return `<div class="cons policy"><div class="pband">${POLICY_STATE}</div></div>`;
+  }
+
   function constellation(r){
+    if(r.observe_only) return policyState();
     const lab = {};
     (r.members||[]).forEach(m=>{ lab[m.id]=m.label; });
     const nameOf = i => lab[i] || String(i).toUpperCase();
@@ -269,6 +278,11 @@
         g += `<text x="${(X(li)-4).toFixed(1)}" y="${(Y(v[li])-6).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="${col}">${p2(v[li])}</text>`;
       }
     }
+    // The second ring is drawn above as the thin green line; the legend and the
+    // number read the same point it ends at, and only when it has one to draw.
+    const w2 = o.win2 || [];
+    const li2 = w2.reduce((a,y,i)=>y==null?a:i,-1);
+    const up2 = li2>=0 ? w2[li2] : null;
     return `<div class="chart obschart">
       <span class="obsband">Observation · no position</span>
       <svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
@@ -276,10 +290,12 @@
         <span><i style="border-color:${UP}"></i>up if yes</span>
         ${o.lose?`<span><i style="border-color:${DN}"></i>down if yes</span>`:''}
         <span><i style="border-color:${MAP};border-top-style:dashed"></i>equal-weight map</span>
+        ${up2!=null?`<span><i style="border-color:${UP};opacity:.55"></i>second ring</span>`:''}
       </div>
       <div class="obsnums">
         <div><b class="${sgn(o.up)}">${p2(o.up)}</b><span>up basket since the report</span></div>
         <div><b class="${sgn(o.up_ew)}">${p2(o.up_ew)}</b><span>up − map since the report</span></div>
+        ${up2!=null?`<div><b class="${sgn(up2)}">${p2(up2)}</b><span>up · second ring since the report</span></div>`:''}
       </div>
       <p class="obsfoot">${o.sessions} session${o.sessions===1?'':'s'} since ${esc(o.from)} · not scored, not in the hit rate</p>`;
   }

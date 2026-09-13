@@ -329,6 +329,9 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
         "marked_at": (f or {}).get("marked_at") or (mark or {}).get("updated"),
         "entry_date": entry.isoformat() if entry else None,
         "win": list(w.get("win") or []), "lose": list(w.get("lose") or []),
+        # A policy date with no basket. The card draws a labelled state for it
+        # instead of a constellation with nothing in it.
+        "observe_only": bool(w.get("observe_only")),
         "win2": list(ring2.get("win2") or []),
         "lose2": list(ring2.get("lose2") or []),
         "ring2_edges": list(ring2.get("ring2_edges") or []),

@@ -205,6 +205,8 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .cons .cap span{white-space:nowrap}
 .cons .cap i{display:inline-block;width:18px;border-top:2px solid;vertical-align:middle;margin-right:6px}
 .cons .cap i.ln{border-top-width:1px;opacity:.7}
+.cons.policy{display:flex;align-items:center;justify-content:center;min-height:208px}
+.cons .pband{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);border:1px solid var(--rule);border-radius:3px;padding:10px 14px;text-align:center}
 .mid{position:relative}
 .lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .lock div{background:rgba(20,25,34,.85);border:1px solid var(--rule);padding:12px 18px;border-radius:10px;font-size:.95rem;color:var(--ink2);backdrop-filter:blur(2px)}
@@ -1118,7 +1120,16 @@ function lockedHTML(){
     </svg></div>`;
   }
 
+  // A policy date bets no basket: the answer is recorded and nothing is
+  // forecast on it. The column says so, rather than drawing a centre with no
+  // legs -- or, locked, the ghost of legs that do not exist.
+  const POLICY_STATE = 'Policy event · binary outcome · no forecast';
+  function policyState(){
+    return `<div class="cons policy"><div class="pband">${POLICY_STATE}</div></div>`;
+  }
+
   function constellation(w){
+    if(w.observe_only) return policyState();
     const centre = byTicker[String(w.tk||'').toUpperCase()];
     const centreId = centre?centre.id:null;
     const wins=(w.win||[]).slice(0,3), loses=(w.lose||[]).slice(0,3);
@@ -1216,7 +1227,7 @@ function lockedHTML(){
           <div class="d">${esc(f(w,'d'))}${w.tk?' · '+esc(w.tk):''}</div>${tag}</div>
       </div>
       <div class="mid">${w.locked?midLocked():midOpen(w)}${opts.evidence?`<p class="evid"><b>${T.evidence}</b> ${esc(opts.evidence)}</p>`:''}</div>
-      ${w.locked?ghostCons():constellation(w)}
+      ${w.locked&&!w.observe_only?ghostCons():constellation(w)}
     </article>`;
   }
 

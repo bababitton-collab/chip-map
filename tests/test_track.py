@@ -635,6 +635,26 @@ def test_the_second_ring_keeps_its_own_words_on_hover():
     assert "(k.labels||[]).filter(Boolean).join(' · ')" in body
 
 
+def test_the_observation_chart_names_and_numbers_its_second_ring():
+    """It draws the second ring as a thin green line; a line with no legend
+    entry and no number cannot be read."""
+    body = cards_source()
+    i = body.index("function observedChart(")
+    chart = body[i:body.index("function table(", i)]
+    assert "['win2', UP, 1, '']" in chart, "the line this legend describes"
+    assert ("<span><i style=\"border-color:${UP};opacity:.55\"></i>"
+            "second ring</span>") in chart
+    assert "up · second ring since the report" in chart
+    assert "w2.reduce((a,y,i)=>y==null?a:i,-1)" in chart, "the line's last point"
+
+
+def test_a_record_says_whether_its_row_is_observe_only(book):
+    later = (TODAY + dt.timedelta(days=9)).isoformat()
+    r = one(book, [q("m", later, [], [], observe_only=True)])
+    assert r["observe_only"] is True
+    assert one(book, [q("a", later, ["up"], ["down"])])["observe_only"] is False
+
+
 # -- the sealed payload ------------------------------------------------------
 
 def key() -> bytes:

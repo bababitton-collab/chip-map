@@ -197,14 +197,63 @@ def test_the_reason_label_comes_from_a_map_edge_or_from_nothing():
     assert "return '';" in body
 
 
-def test_every_question_has_a_basket_to_draw():
-    """An empty basket would draw a lone centre node and say nothing.
+POLICY_STATE = "Policy event · binary outcome · no forecast"
+# Every renderer that draws a question card's middle column, and the name its
+# constellation gives the row.
+RENDERERS = [("live-map.html", "w"), ("live-map-en.html", "w"),
+             ("track-cards.js", "r")]
 
-    A row marked observe_only is the one exception: it is asked for the record
-    and deliberately bets no basket, and test_leaks holds it to empty legs."""
+
+def _src(name: str) -> str:
+    return (templates_dir() / name).read_text(encoding="utf-8")
+
+
+def _policy_js(src: str) -> str:
+    i = src.index("const POLICY_STATE")
+    return src[i:src.index("function constellation(", i)]
+
+
+def test_every_question_has_a_basket_to_draw():
+    """An empty basket would draw a centre with no legs and say nothing.
+
+    A row marked observe_only is the one exception -- asked for the record,
+    betting no basket, held to empty legs by test_leaks -- and it does not get
+    a pass: it has to render the labelled policy-event state instead."""
     empty = [w["id"] for w in WATCH
              if not (w.get("win") or w.get("lose")) and not w.get("observe_only")]
     assert empty == []
+
+
+@pytest.mark.parametrize("name,row", RENDERERS, ids=[n for n, _ in RENDERERS])
+def test_an_observe_only_row_is_routed_to_the_policy_state(name, row):
+    """Checked on the source, so it holds on a machine with no JavaScript."""
+    assert [w["id"] for w in WATCH if w.get("observe_only")], \
+        "no observe_only row in the watch list -- the rule would be untested"
+    src = _src(name)
+    assert f"const POLICY_STATE = '{POLICY_STATE}';" in src
+    i = src.index("function constellation(")
+    assert src[i:i + 80].split("\n")[1].strip() == (
+        f"if({row}.observe_only) return policyState();")
+    if name.endswith(".html"):
+        # Locked, it must not fall back to the ghost of legs that do not exist.
+        assert "${w.locked&&!w.observe_only?ghostCons():constellation(w)}" in src
+
+
+@pytest.mark.parametrize("name", [n for n, _ in RENDERERS])
+def test_the_policy_state_renders_its_label(name, tmp_path):
+    """The label is actually produced, and nothing else is drawn with it."""
+    import shutil
+    import subprocess
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    js = tmp_path / "policy.js"
+    js.write_text(_policy_js(_src(name)) + "\nprocess.stdout.write(policyState());\n",
+                  encoding="utf-8")
+    out = subprocess.run(["node", str(js)], capture_output=True, check=True
+                         ).stdout.decode("utf-8")
+    assert POLICY_STATE in out
+    assert 'class="cons policy"' in out
+    assert "<svg" not in out and "<circle" not in out
 
 
 def test_every_basket_id_can_be_labelled():

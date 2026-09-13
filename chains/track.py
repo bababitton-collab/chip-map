@@ -972,6 +972,9 @@ def decrypt(blob: dict, key: bytes) -> dict:
 PLACEHOLDER = "__TRACK__"
 CARDS_PLACEHOLDER = "__CARDS_JS__"
 GLOSSARY_PLACEHOLDER = "__GLOSSARY_JS__"
+# The site nav, shared with the landing page and the map (chains/sitenav.py).
+NAV_PLACEHOLDER = "__SITE_NAV__"
+NAV_CSS_PLACEHOLDER = "__SITE_NAV_CSS__"
 
 
 def glossary_js() -> str:
@@ -1003,6 +1006,11 @@ def render(data: dict, template: str | None = None) -> str:
         t = t.replace(CARDS_PLACEHOLDER, cards_js())
     if GLOSSARY_PLACEHOLDER in t:
         t = t.replace(GLOSSARY_PLACEHOLDER, glossary_js())
+    if NAV_PLACEHOLDER in t:
+        from chains import sitenav
+        from chains.paths import domain
+        t = t.replace(NAV_CSS_PLACEHOLDER, sitenav.CSS)
+        t = t.replace(NAV_PLACEHOLDER, sitenav.html(domain(), "track"))
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "

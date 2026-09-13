@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{brand}} — AI supply chain map, semiconductor chokepoints and forward-tested questions</title>
+<meta name="description" content="A semiconductor supply chain map of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--IF:prereg--> Each question's scoring rules are published as a dated SHA-256 commitment.<!--END:prereg--> No backtests.">
+<link rel="canonical" href="{{site_url}}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
+<script type="application/ld+json">{{jsonld}}</script>
+<style>
+:root{
+  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#7d8797; --rule:#222a36;
+  --amber:#f2b632;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 26px 70px}
+a{color:var(--amber)}
+{{site_nav_css}}
+.hero{padding:44px 0 34px;border-bottom:1px solid var(--rule)}
+.hero h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.8rem;line-height:1.12;margin:0 0 16px;max-width:22ch}
+.hero .sub{color:var(--ink2);font-size:1.2rem;max-width:62ch;margin:0 0 26px}
+.proof{list-style:none;padding:0;margin:0 0 28px;display:flex;flex-wrap:wrap;gap:12px}
+.proof li{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px 16px;font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.proof b{font-size:1.25rem;font-weight:500;color:var(--ink);margin-inline-end:6px;letter-spacing:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.cta a{font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:8px;padding:12px 20px}
+.cta .primary{background:var(--amber);color:#0b0e14;border:1px solid var(--amber)}
+.cta .secondary{color:var(--amber);border:1px solid #3a3320;background:var(--panel)}
+.cta .secondary:hover{border-color:var(--amber)}
+main section{padding:34px 0 8px;border-bottom:1px solid var(--rule)}
+main h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:1.8rem;line-height:1.2;margin:0 0 18px}
+main h3{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:26px 0 8px}
+main p{color:var(--ink2);max-width:74ch;margin:0 0 14px}
+#faq h3{font-family:Inter,system-ui,sans-serif;font-size:1.05rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
+footer{margin-top:34px;color:var(--ink3);font-size:.85rem}
+footer a{color:var(--ink2)}
+@media (max-width:760px){
+  .wrap{padding:10px 14px 50px}
+  .hero h1{font-size:2rem}
+  .hero .sub{font-size:1.05rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+{{site_nav}}
+
+<header class="hero">
+  <h1>The physical supply chain behind AI — mapped.</h1>
+  <p class="sub">See who supplies whom, where the chokepoints are, and which dated questions come next.<!--IF:prereg--> Every scored forecast is defined before the answer is known.<!--END:prereg--> No backtests.</p>
+  <ul class="proof" aria-label="At a glance">
+    <li><b>{{companies}}</b> companies</li>
+    <li><b>{{chokepoints}}</b> chokepoints</li>
+    <li><b>{{questions}}</b> dated questions</li>
+    <li><b>No backtests</b></li>
+  </ul>
+  <div class="cta">
+    <a class="primary" href="{{map_href}}">Explore the map</a>
+    <a class="secondary" href="{{track_href}}">See the live record</a>
+  </div>
+</header>
+
+<main>
+<section id="how">
+  <h2>How it works: a semiconductor supply chain map with dated questions</h2>
+
+  <h3>The chain, in layers</h3>
+  <p>{{brand}} maps the physical AI supply chain in {{n_layers}} layers: {{layers}}. It covers {{companies}} listed companies and who supplies whom among them — the AI infrastructure behind the models, from raw materials to data centers and the power that runs them.</p>
+
+  <h3>Semiconductor chokepoints</h3>
+  <p>{{chokepoints}} chokepoints are marked on the map: highly concentrated dependencies with few viable alternatives, such as EUV lithography, HBM memory and advanced packaging. Where a listed challenger exists, a pulse compares the holder's 13-week return with the challengers'.</p>
+
+  <h3>Dated questions</h3>
+  <p>The map is paired with {{questions}} dated questions across the chain — questions tied to upcoming reports, policy decisions and industry events. Each comes with pre-written yes/no criteria, and each scored question names an impact basket: the companies its answer bears on.<!--IF:observe--> Observation-only questions ({{observe_only}} today) carry no basket and are not scored.<!--END:observe--></p>
+
+  <h3>Scored forward against the market</h3>
+  <p>When a yes or no answer lands, the basket is measured from the close of the next trading session against an equal-weight benchmark of every priced company on the map (EW_MAP), with the PHLX Semiconductor Sector Index (SOX), tracked through {{sox}}, shown alongside it. The official score is the basket's excess over EW_MAP at a primary horizon of {{primary_horizon}} trading sessions; {{diagnostic_horizons}} sessions are kept as diagnostics. Mixed or unclear answers are recorded as observations and are not scored.</p>
+<!--IF:prereg-->
+  <h3>Pre-registered and verifiable</h3>
+  <p>Each question's scoring contract — its baskets, yes/no criteria, horizons and benchmarks — is hashed with SHA-256 and published, with the date it was committed, in <a href="{{commitments_href}}">commitments.json</a>. {{n_valid}} of the {{n_committed}} questions committed so far were committed before their answer date, and commitments.json marks any that were not. Once a question resolves, its full card is published free in <a href="{{track_public_href}}">track_public.json</a> with the exact contract text, and a Verify button on the Track Record recomputes the hash in your browser and compares it with the published commitment.</p>
+<!--END:prereg-->
+  <h3>Forward testing, no backtests</h3>
+  <p>Nothing here is backtested. Every forecast is scored forward from the day its question is marked, and the record — resolved questions, and the hit rate and excess returns with their sample size — is on the <a href="{{track_href}}">Track Record</a>.</p>
+</section>
+
+<section id="faq">
+  <h2>Questions</h2>
+
+  <h3>What is Linchpin Signal?</h3>
+  <p>{{brand}} is a map of the physical supply chain behind AI — {{companies}} companies in {{n_layers}} layers, with {{chokepoints}} semiconductor chokepoints marked — paired with {{questions}} dated questions whose answers are measured forward against the market and published once they resolve.</p>
+<!--IF:prereg-->
+  <h3>How are forecasts registered?</h3>
+  <p>Each question's scoring contract is serialised canonically and hashed with SHA-256, and the hash is published with its commit date in <a href="{{commitments_href}}">commitments.json</a>. The build stops if a committed contract no longer matches its hash. When a question resolves, the exact contract text is published with its card, and the Verify button recomputes the SHA-256 in your browser with the Web Crypto API and compares it with the published hash. A commitment made on or after the answer date is marked as not a valid preregistration.</p>
+<!--END:prereg-->
+  <h3>What's free and what's paid?</h3>
+  <p>Free: the map with every company and chokepoint, the calendar of dated questions, the next question on the calendar as a worked example, and every resolved question in full — its question and yes/no criteria, its basket and how it moved against the benchmarks, and whether it counted toward the score<!--IF:prereg-->, with its pre-registration contract and the Verify button<!--END:prereg-->. Paid: the questions still ahead — their wording, their baskets and the prices behind them — which subscribers open on the Track Record with a key.</p>
+
+  <h3>Is this investment advice?</h3>
+  <p>No. {{brand}} publishes questions and measurements, not recommendations. It is not investment advice.</p>
+</section>
+</main>
+
+<footer>{{brand}} · not investment advice · <a href="{{map_href}}">Map</a> · <a href="{{track_href}}">Track Record</a></footer>
+</div>
+</body>
+</html>

@@ -8,16 +8,17 @@
     out/<domain>/live.json           ->  site/<domain>/live.json
     out/<domain>/brief-free-<date>.md    ->  site/<domain>/brief.md
     out/<domain>/brief-he-free-<date>.md ->  site/<domain>/brief-he.md
-                                         site/index.html  (redirect)
+                                         site/index.html  (landing page)
                                          site/CNAME
                                          site/.nojekyll
 
 EVERY DOMAIN GETS A DIRECTORY
 -----------------------------
-A map lives at /<domain>/, and site/index.html is a redirect to the one that is
-the product today. That costs one hop and buys the thing that matters: adding a
-second map never moves the first one's URL, and every link anybody has already
-shared keeps working.
+A map lives at /<domain>/, and site/index.html is a landing page that leads to
+the one that is the product today. Adding a second map never moves the first
+one's URL, and every link anybody has already shared keeps working. Every
+number and capability on the landing page is read from the files published
+beside it -- see chains/landing.py -- so it is written after they are copied.
 
 WHY THE ENGLISH PAGE IS index.html
 ----------------------------------
@@ -102,12 +103,14 @@ TRACK_FILES = [("track.html", "index.html"),
                ("track.enc.json", "track.enc.json")]
 TRACK_PLAINTEXT = "track.json"
 
-GATED = ("index.html", "live_en.json", "track_public.json")
+GATED = ("index.html", "live_en.json", "track_public.json",
+         # the landing page, at the site root
+         "../index.html")
 
 # Checked for locked question text rather than for Hebrew: these are the files
 # that could carry a sentence somebody is meant to pay for.
 PAYWALLED = ("index.html", "he.html", "live.json", "live_en.json",
-             "track_public.json",
+             "track_public.json", "../index.html",
              "brief.md", "brief-he.md",
              # The forward test names the question behind every mark, so it is
              # scanned on the same terms as the map and the letter. The sealed
@@ -145,25 +148,17 @@ DEFAULT_DOMAIN_FOR_ROOT = "semi"
 CUSTOM_DOMAIN = "linchpinsignal.com"
 
 
-def write_root_redirect(dom: str | None = None) -> Path:
-    """site/index.html -> /<domain>/.
+def write_landing(src: Path, dom: str) -> Path:
+    """site/index.html: the front door, built from the files in ``src``.
 
-    A meta refresh and a link, not a server rule: Pages serves static files and
-    there is nowhere to put a redirect except in a document. The link matters --
-    it is what a reader sees if the refresh is blocked, and what a crawler
-    follows.
+    Called after they are copied, so every number on it and every capability it
+    describes is read from what is actually about to be served.
     """
-    dom = dom or DEFAULT_DOMAIN_FOR_ROOT
+    from chains import landing
     p = site_root() / "index.html"
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(
-        "<!doctype html>\n<html lang=\"en\">\n<head>\n"
-        "<meta charset=\"utf-8\">\n"
-        f"<meta http-equiv=\"refresh\" content=\"0; url=./{dom}/\">\n"
-        f"<link rel=\"canonical\" href=\"./{dom}/\">\n"
-        "<title>The Living Chip Map</title>\n</head>\n<body>\n"
-        f"<p><a href=\"./{dom}/\">The Living Chip Map</a></p>\n"
-        "</body>\n</html>\n", encoding="utf-8", newline="\n")
+    p.write_text(landing.render(src, dom, f"https://{CUSTOM_DOMAIN}/"),
+                 encoding="utf-8", newline="\n")
     return p
 
 
@@ -208,8 +203,10 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
                                        encoding="utf-8",
                                        newline="\n")
     written.append("../CNAME")
-    write_root_redirect()
-    written.append("../index.html  (redirect)")
+    # The front door, read from the files just copied beside it.
+    if site.name == DEFAULT_DOMAIN_FOR_ROOT:
+        write_landing(site, site.name)
+        written.append("../index.html  (landing page)")
 
     # Nothing unsealed, ever. Checked on the directory about to be served
     # rather than inferred from the copy list above.

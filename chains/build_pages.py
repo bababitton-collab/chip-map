@@ -121,15 +121,18 @@ PUB = {
     "he": {
         "template": TEMPLATE_HE, "live": LIVE_HE,
         "out": PUBLIC_HE, "lang": "he", "dir": "rtl",
-        "desc": ("מפה חיה של שרשרת האספקה של שבבי הבינה המלאכותית: 49 תחנות, "
-                 "14 צווארי בקבוק שדופקים לפי השוק, ושאלות עם תאריך."),
+        "desc": ("מפה חיה של שרשרת האספקה של שבבי הבינה המלאכותית: {nodes} תחנות, "
+                 "{cps} צווארי בקבוק שדופקים לפי השוק, ושאלות עם תאריך."),
     },
     "en": {
         "template": TEMPLATE_EN, "live": LIVE_EN,
         "out": PUBLIC_EN, "lang": "en", "dir": "ltr",
-        "desc": ("A living map of the AI chip supply chain: 49 stations, 14 "
-                 "chokepoints pulsing with the market, a forecast board and "
-                 "questions with a date."),
+        # The counts are read from the snapshot at build time: a number
+        # typed here was true on the day it was typed, and this one said 49
+        # for a map that had grown to 58.
+        "desc": ("A living map of the AI chip supply chain: {nodes} stations, "
+                 "{cps} chokepoints pulsing with the market, a forecast board "
+                 "and questions with a date."),
     },
 }
 
@@ -348,6 +351,48 @@ def _must_replace(h: str, a: str, b: str, what: str) -> str:
     return h.replace(a, b)
 
 
+# The English map's first screen. It leads with what the site is and where to go
+# next -- the value line and the two calls -- and the how-to-read line moves
+# beneath them. Spliced at build time, so the templates are not rewritten.
+EN_TOP_FROM = (
+    '<div class="top">\n'
+    '  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div>'
+    '<div class="story" id="story"></div><div class="sub">Raw materials on the '
+    'left, data centers on the right. A pulsing station is a chokepoint. Click '
+    'it.</div></div>\n'
+    '  <div class="asof" id="asof"></div>\n'
+    '  <a class="fwd" href="track/">Forward test →</a>\n'
+    '</div>')
+EN_VALUE = ("The physical supply chain behind AI — who supplies whom, where the "
+            "chokepoints are, and which dated questions come next.")
+EN_TOP_CSS = (
+    ".top .value{font-family:'Source Serif 4',serif;font-size:1.25rem;"
+    "line-height:1.35;color:var(--ink);max-width:62ch;margin:6px 0 10px}"
+    ".top .valuecta{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 12px}"
+    ".top .valuecta a{font-family:'IBM Plex Mono',monospace;font-size:.72rem;"
+    "letter-spacing:.1em;text-transform:uppercase;text-decoration:none;"
+    "border-radius:6px;padding:8px 14px}"
+    ".top .valuecta .cta1{background:var(--amber);color:#0b0e14;"
+    "border:1px solid var(--amber)}"
+    ".top .valuecta .cta2{color:var(--amber);border:1px solid #3a3320;"
+    "background:var(--panel)}")
+
+
+def en_top(dom: str) -> str:
+    from chains import sitenav
+    return (sitenav.html(dom, "map") + "\n"
+            '<div class="top">\n'
+            '  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div>\n'
+            f'  <p class="value">{EN_VALUE}</p>\n'
+            '  <div class="valuecta"><a class="cta1" href="#stage">Explore the map</a>'
+            f'<a class="cta2" href="/{dom}/track/">See the live record</a></div>\n'
+            '  <div class="story" id="story"></div><div class="sub">Raw materials on '
+            'the left, data centers on the right. A pulsing station is a chokepoint. '
+            'Click it.</div></div>\n'
+            '  <div class="asof" id="asof"></div>\n'
+            '</div>')
+
+
 def public_page(template: str, live: str, cfg: dict) -> str:
     """A template plus a snapshot, wired for a page with no database.
 
@@ -357,6 +402,13 @@ def public_page(template: str, live: str, cfg: dict) -> str:
     is nothing left to swap, and no public-only variant that could be built
     wrong and leak.
     """
+    import json as _json
+    try:
+        snap = _json.loads(live)
+    except ValueError:
+        snap = {}
+    desc = cfg["desc"].format(nodes=len(snap.get("nodes") or []),
+                              cps=len(snap.get("cps") or []))
     h = template
 
     # 1. the artifact database is not reachable from a public page
@@ -367,13 +419,22 @@ def public_page(template: str, live: str, cfg: dict) -> str:
     if cfg["lang"] == "he":
         h = _must_replace(h, HE_FOOT_FROM, HE_FOOT_TO, "footer disclaimer")
 
+    extra_head = ""
+    if cfg["lang"] == "en":
+        from chains import sitenav
+        from chains.paths import domain
+        h = _must_replace(h, EN_TOP_FROM, en_top(domain()),
+                          "map first screen")
+        extra_head = f"<style>{sitenav.CSS}{EN_TOP_CSS}</style>\n"
+
     head = (f'<!doctype html>\n<html lang="{cfg["lang"]}" '
             f'dir="{cfg["dir"]}">\n<head>\n<meta charset="utf-8">\n'
             f'<meta name="viewport" content="width=device-width,'
             f'initial-scale=1">\n'
-            f'<meta name="description" content="{cfg["desc"]}">\n')
+            f'<meta name="description" content="{desc}">\n')
     k = h.index("</style>") + len("</style>")
-    doc = head + h[:k] + "\n</head>\n<body>\n" + h[k:] + "\n</body>\n</html>\n"
+    doc = (head + h[:k] + "\n" + extra_head + "</head>\n<body>\n" + h[k:]
+           + "\n</body>\n</html>\n")
     return doc.replace("__LIVE__", live)
 
 

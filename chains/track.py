@@ -241,11 +241,13 @@ def _observed(legs: dict, doc: dict, book, symbol_of: dict,
     ser = {g: (forecast.basket_returns(book, syms(legs[g]), base, window)
                if legs[g] else None) for g in GROUPS}
     ew = forecast.ew_map(book, node_symbols, base, window)
+    sox = forecast.basket_returns(book, [forecast.SOX_SYMBOL], base, window)
     out = {
         "from": base.isoformat(),
         "sessions": len(window) - 1,
         "dates": [x.isoformat() for x in window],
         "ew": [_pct(v) for v in ew],
+        "sox": [_pct(v) for v in sox],
         **{g: ([_pct(v) for v in ser[g]] if ser[g] else None)
            for g in GROUPS},
     }
@@ -255,6 +257,11 @@ def _observed(legs: dict, doc: dict, book, symbol_of: dict,
     out["ew_now"] = _round(ew_now)
     out["up_ew"] = _round(None if up is None or ew_now is None
                           else up - ew_now)
+    # The second benchmark, beside the first and never pooled with it.
+    sox_now = tail("sox")
+    out["sox_now"] = _round(sox_now)
+    out["up_sox"] = _round(None if up is None or sox_now is None
+                           else up - sox_now)
     out["down"] = _round(tail("lose"))
     return out
 
@@ -286,6 +293,7 @@ def _from_ledger(row: dict | None) -> dict:
     if not row:
         return {}
     return {h: (None if not got else {"spread": _pct(got["excess"]),
+                                      "spread_sox": _pct(got.get("excess_sox")),
                                       "hit": got["hit"], "date": got["date"]})
             for h, got in (row.get("horizons") or {}).items()}
 
@@ -408,9 +416,11 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
     ser = {g: (forecast.basket_returns(book, syms(legs[g]), entry, window)
                if legs[g] else None) for g in GROUPS}
     ew = forecast.ew_map(book, node_symbols, entry, window)
+    sox = forecast.basket_returns(book, [forecast.SOX_SYMBOL], entry, window)
     out["series"] = {
         "dates": [x.isoformat() for x in window],
         "ew": [_pct(v) for v in ew],
+        "sox": [_pct(v) for v in sox],
         **{g: ([_pct(v) for v in ser[g]] if ser[g] else None) for g in GROUPS},
     }
 
@@ -419,15 +429,18 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
         return s[-1] if s else None
 
     ew_now = out["series"]["ew"][-1]
+    sox_now = out["series"]["sox"][-1]
     up, down = flip(direction, last("win"), last("lose"))
     up2, down2 = flip(direction, last("win2"), last("lose2"))
     out["today"] = {
         "win_lose": _round(spread(direction, last("win"), last("lose"))),
         "win_ew": _round(spread(direction, last("win"), ew_now)),
+        "win_sox": _round(spread(direction, last("win"), sox_now)),
         "win2_lose2": _round(spread(direction, last("win2"), last("lose2"))),
         "win2_ew": _round(spread(direction, last("win2"), ew_now)),
         "up": _round(up), "down": _round(down),
         "up2": _round(up2), "down2": _round(down2), "ew": _round(ew_now),
+        "sox": _round(sox_now),
     }
     out["horizons"] = _from_ledger(row)
     out["horizons2"] = _from_ledger(row2)
@@ -524,7 +537,7 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
                  for n in doc.get("nodes", []) if n.get("ticker")}
 
     if book is None or cal is None:
-        wanted = set(node_symbols)
+        wanted = set(node_symbols) | {forecast.SOX_SYMBOL}
         for w in watch:
             for i in list(w.get("win") or []) + list(w.get("lose") or []):
                 if i in symbol_of:

@@ -298,3 +298,49 @@ def test_dropping_the_symbol_series_keeps_the_basket_one(book, monkeypatch,
     forecast.drop_symbol_series(led)
     assert all("series" not in s for s in led["rows"][0]["symbols"])
     assert led["rows"][0]["series"], "the basket series must survive"
+
+
+# -- the second benchmark ----------------------------------------------------
+
+def _sox(monkeypatch, tmp_path):
+    """SOX rises half a point a session on a 100 base."""
+    write(monkeypatch, tmp_path, forecast.SOX_SYMBOL,
+          {d: 100.0 + 0.5 * i for i, d in enumerate(CAL)})
+
+
+def test_each_horizon_carries_the_sox_excess_beside_the_map_one(
+        book, monkeypatch, tmp_path):
+    """Win-only, so the benchmark does not cancel. Entry is 03-03 (UP 101, SOX
+    100.5); five sessions on is 03-10 (UP 106, SOX 103)."""
+    _sox(monkeypatch, tmp_path)
+    led = forecast.build([fc("f", "q", "2026-03-02", 1, ["up"], [])], DOC,
+                         [], CAL)
+    h5 = led["rows"][0]["horizons"]["5"]
+    assert h5["bench_sox"] == pytest.approx(103 / 100.5 - 1, abs=2e-6)
+    assert h5["excess_sox"] == pytest.approx(
+        (106 / 101 - 1) - (103 / 100.5 - 1), abs=2e-6)
+    assert h5["excess"] != h5["excess_sox"], "two lines, not one"
+
+
+def test_adding_sox_leaves_the_map_benchmark_and_the_hit_untouched(
+        book, monkeypatch, tmp_path):
+    """EW_MAP stays primary: the same forecast scores identically with and
+    without a SOX line in the store."""
+    f = [fc("f", "q", "2026-03-02", 1, ["up"], [])]
+    before = forecast.build(f, DOC, [], CAL)
+    _sox(monkeypatch, tmp_path)
+    after = forecast.build(f, DOC, [], CAL)
+    for h in ("5", "10"):
+        a, b = before["rows"][0]["horizons"][h], after["rows"][0]["horizons"][h]
+        assert (a["excess"], a["bench"], a["hit"]) == (b["excess"], b["bench"],
+                                                       b["hit"])
+    assert before["summary"] == after["summary"]
+    assert after["summary"]["benchmark"] == "EW_MAP"
+
+
+def test_no_sox_line_is_an_empty_number_not_a_zero(book):
+    led = forecast.build([fc("f", "q", "2026-03-02", 1, ["up"], [])], DOC,
+                         [], CAL)
+    h5 = led["rows"][0]["horizons"]["5"]
+    assert "excess_sox" in h5 and h5["excess_sox"] is None
+    assert h5["bench_sox"] is None

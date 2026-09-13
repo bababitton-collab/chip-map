@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from chains import exchanges, mapfile, prices                 # noqa: E402
+from chains import exchanges, forecast, mapfile, prices       # noqa: E402
 from chains.paths import api_token                            # noqa: E402
 from chains.providers.eodhd import EODHDClient                  # noqa: E402
 
@@ -45,6 +45,9 @@ def main() -> int:
     node_syms = prices.symbols_in_map(doc)
     chal_syms = prices.challenger_symbols(doc, resolve_challenger)
     symbols = node_syms + [s for s in chal_syms if s not in node_syms]
+    # The second benchmark is not a station on the map, so it is named here.
+    if forecast.SOX_SYMBOL not in symbols:
+        symbols.append(forecast.SOX_SYMBOL)
     print(f"map v{doc.get('version')}: {len(node_syms)} node/subnode symbols, "
           f"{len(chal_syms)} challenger symbols, {len(symbols)} distinct\n")
 

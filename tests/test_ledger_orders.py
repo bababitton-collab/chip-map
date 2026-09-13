@@ -71,7 +71,8 @@ def test_forty_is_scored_the_same_way_as_the_others(book):
     r = led(book, [fc("r2", "mu_fq4", ["s1"], ["s2"], order=2)])["rows"][0]
     for h in ("5", "10", "20", "40"):
         got = r["horizons"][h]
-        assert set(got) == {"excess", "win", "lose", "bench", "date", "hit"}
+        assert set(got) == {"excess", "win", "lose", "bench", "date", "hit",
+                            "excess_sox", "bench_sox"}
         # every field is stored rounded to 6 places
         assert got["excess"] == pytest.approx(got["win"] - got["lose"],
                                               abs=2e-6)

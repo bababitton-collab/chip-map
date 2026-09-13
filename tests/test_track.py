@@ -1199,3 +1199,67 @@ def test_one_session_is_still_an_observation(book):
     assert o is not None
     assert len(o["dates"]) == 1 and o["sessions"] == 0
     assert o["up"] == 0.0 and o["up_ew"] == 0.0
+
+
+# -- the second benchmark ----------------------------------------------------
+
+def _with_sox():
+    """A book that also carries SOX, rising a quarter point a session."""
+    prices.store(forecast.SOX_SYMBOL,
+                 [{"date": c.isoformat(), "adjusted_close": 100.0 + 0.25 * k}
+                  for k, c in enumerate(CAL)])
+    return forecast.Book([n["price_symbol"] for n in DOC["nodes"]]
+                         + [forecast.SOX_SYMBOL])
+
+
+def test_the_observation_carries_both_benchmarks_apart(book):
+    plain = reported(book)["observed"]
+    o = reported(_with_sox())["observed"]
+    assert len(o["ew"]) == len(o["sox"]) == len(o["dates"])
+    assert o["sox"][0] == 0.0
+    assert o["sox_now"] == o["sox"][-1]
+    assert abs(o["up_sox"] - (o["win"][-1] - o["sox"][-1])) < 1e-6
+    assert abs(o["up_ew"] - (o["win"][-1] - o["ew"][-1])) < 1e-6
+    assert o["up_sox"] != o["up_ew"], "two numbers, not one"
+    # EW_MAP is untouched by the second line being there.
+    assert (o["ew"], o["ew_now"], o["up_ew"]) == (plain["ew"], plain["ew_now"],
+                                                 plain["up_ew"])
+
+
+def test_with_no_sox_line_the_keys_are_emitted_empty(book):
+    """The price step fetches SOX in CI. Locally, with no bars, the keys are
+    still there and empty -- never a zero somebody could read as flat."""
+    o = reported(book)["observed"]
+    assert "sox" in o and all(v is None for v in o["sox"])
+    assert "up_sox" in o and o["up_sox"] is None
+
+
+def test_a_scored_card_carries_both_benchmarks_apart(book):
+    watch = [q("a", "2026-01-06", ["up"], ["down"])]
+    fs = [fc("f", "a", ["up"], ["down"], CAL[-8].isoformat())]
+    marks = {"a": {"status": "yes"}}
+    plain = built(book, watch, fs, marks)["forecasts"][0]
+    r = built(_with_sox(), watch, fs, marks)["forecasts"][0]
+    assert r["series"]["ew"][0] == 0.0 and r["series"]["sox"][0] == 0.0
+    assert r["today"]["win_sox"] == pytest.approx(
+        r["series"]["win"][-1] - r["series"]["sox"][-1], abs=1e-3)
+    assert r["today"]["win_sox"] != r["today"]["win_ew"]
+    h5 = r["horizons"]["5"]
+    assert set(h5) >= {"spread", "spread_sox", "hit"}
+    # Both sides are present, so the benchmark cancels out of the spread.
+    assert h5["spread_sox"] == pytest.approx(h5["spread"], abs=1e-3)
+    assert r["series"]["ew"] == plain["series"]["ew"]
+    assert r["today"]["win_ew"] == plain["today"]["win_ew"]
+    assert h5["spread"] == plain["horizons"]["5"]["spread"]
+    assert h5["hit"] is plain["horizons"]["5"]["hit"]
+
+
+def test_the_cards_draw_sox_second_and_differently_from_the_map():
+    body = cards_source()
+    assert "['win','lose','ew','sox','win2','lose2']" in body, "map first"
+    assert "sox:{c:SOX,w:1.6,o:1,d:SOX_DASH}" in body
+    assert "['sox', SOX, 1.2, SOX_DASH]" in body
+    assert 'stroke-dasharray="1 3"' in body and 'stroke-dasharray="4 3"' in body
+    assert body.count("border-top-style:dotted\"></i>SOX</span>") == 2
+    assert "<span>vs SOX</span>" in body
+    assert "<span>up − SOX since the report</span>" in body

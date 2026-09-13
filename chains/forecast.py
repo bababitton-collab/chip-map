@@ -76,6 +76,21 @@ MAX_SERIES = 60
 MIN_N_FOR_CAPITAL = 30
 CAPITAL_RULE = f"no capital decision below N={MIN_N_FOR_CAPITAL}"
 
+# The second benchmark. EW_MAP stays the one every hit and every summary
+# is scored against; this is a separate market line reported beside it and
+# never pooled with it.
+#
+# SOXQ.US is the SOX benchmark: the Invesco PHLX Semiconductor ETF, which
+# tracks the PHLX Semiconductor Sector Index -- an investable,
+# dividend-adjusted SOX line, used because SOX.INDX could not be verified on
+# EODHD. (SOXX.US was not used: since 2021-06-21 it tracks the ICE
+# Semiconductor Index, not SOX.)
+#
+# as_of 2026-09-13 -- added before the first scored forecast, so no
+# registered claim was ever measured without it.
+SOX_SYMBOL = "SOXQ.US"
+SOX_AS_OF = "2026-09-13"
+
 
 # ----------------------------------------------------------------- calendar
 def sessions(symbols: list[str] | None = None,
@@ -263,6 +278,11 @@ def score_one(f: dict, book: Book, cal: list[dt.date],
         if lose_syms else []
     b = ew_map(book, node_symbols, entry, window)
     exc = excess(w, l, b)
+    # The same claim against SOX. Reported, never scored: the hit stays on
+    # EW_MAP. With both sides present the benchmark cancels, so this equals
+    # the EW_MAP excess; it differs only for a basket with no lose side.
+    sx = basket_returns(book, [SOX_SYMBOL], entry, window)
+    exc_sox = excess(w, l, sx)
 
     rows = []
     for side, legs in (("win", win_syms), ("lose", lose_syms)):
@@ -291,6 +311,10 @@ def score_one(f: dict, book: Book, cal: list[dt.date],
                           "lose": None if not l or l[h] is None
                                   else round(l[h], 6),
                           "bench": None if b[h] is None else round(b[h], 6),
+                          "excess_sox": None if exc_sox[h] is None
+                                        else round(exc_sox[h], 6),
+                          "bench_sox": None if sx[h] is None
+                                       else round(sx[h], 6),
                           "date": window[h].isoformat(),
                           "hit": bool(e) and (e > 0) == (f["direction"] > 0)}
         else:
@@ -363,7 +387,7 @@ def build(forecasts: list[dict], doc: dict | None = None,
     if not forecasts:
         return {"summary": _summaries([]), "rows": []}
 
-    wanted = set(node_symbols)
+    wanted = set(node_symbols) | {SOX_SYMBOL}
     for f in forecasts:
         for i in list(f["win"]) + list(f["lose"]):
             if i in symbol_of:

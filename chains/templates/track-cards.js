@@ -12,6 +12,10 @@
   const esc = v => String(v==null?'':v).replace(/[&<>"]/g, c=>(
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const UP='#3fd18b', DN='#ff5a3c', MAP='#7d8797';
+  // SOX, the second benchmark: amber and dotted, so it never reads as the
+  // dashed equal-weight map it sits beside. The map stays first.
+  const SOX='#f2b632', SOX_DASH=' stroke-dasharray="1 3" stroke-linecap="round"';
+  const hasPoints = v => (v||[]).some(x=>x!=null);
 
   // Percent in, percent out. chains/track.py converts the ledger's fractions
   // once, at the boundary, so nothing here multiplies anything by a hundred.
@@ -142,7 +146,7 @@
       <line x1="${PADL}" x2="${CW-PADR}" y1="${CH/2}" y2="${CH/2}" stroke="#222a36"/>
       <circle cx="${PADL}" cy="${CH/2}" r="3.4" fill="${MAP}"/>
       </svg></div><p class="pending">first print after the next close</p>`;
-    const lines=['win','lose','ew','win2','lose2'].map(k=>({k:k,v:s[k]}))
+    const lines=['win','lose','ew','sox','win2','lose2'].map(k=>({k:k,v:s[k]}))
       .filter(o=>o.v&&o.v.length);
     let hi=0; lines.forEach(o=>o.v.forEach(v=>{ if(v!=null) hi=Math.max(hi,Math.abs(v)); }));
     let T=8; for(const t of [2,4,8,16,32]) if(hi<=t){ T=t; break; }
@@ -167,6 +171,7 @@
     g+=`<text x="${xt.toFixed(1)}" y="${PADT-4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="${MAP}">today</text>`;
     const style={win:{c:UP,w:2.2,o:1,d:''},lose:{c:DN,w:2,o:1,d:''},
       ew:{c:MAP,w:1.6,o:1,d:' stroke-dasharray="4 3"'},
+      sox:{c:SOX,w:1.6,o:1,d:SOX_DASH},
       win2:{c:UP,w:1.4,o:.55,d:''},lose2:{c:DN,w:1.4,o:.55,d:''}};
     for(const o of lines){
       const st=style[o.k]; let d='', started=false;
@@ -174,7 +179,7 @@
         d+=(started?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)+' '; started=true; });
       if(!d) continue;
       g+=`<path d="${d.trim()}" fill="none" stroke="${st.c}" stroke-width="${st.w}" opacity="${st.o}"${st.d} stroke-linejoin="round"/>`;
-      if(['win','lose','ew'].includes(o.k)){
+      if(['win','lose','ew','sox'].includes(o.k)){
         const li=o.v.reduce((a,v,i)=>v==null?a:i,-1);
         if(li>=0){ const x=X(li), y=Y(o.v[li]);
           g+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${st.c}"/>`;
@@ -187,6 +192,7 @@
         <span><i style="border-color:${UP}"></i>up if ${m}</span>
         <span><i style="border-color:${DN}"></i>down if ${m}</span>
         <span><i style="border-color:${MAP};border-top-style:dashed"></i>equal-weight map</span>
+        ${hasPoints(s.sox)?`<span><i style="border-color:${SOX};border-top-style:dotted"></i>SOX</span>`:''}
         ${r.has_r2?`<span><i style="border-color:${UP};opacity:.55"></i>second ring</span>`:''}
       </div>`;
   }
@@ -251,6 +257,7 @@
         + `baselined on ${esc(o.from)}</p>`;
     }
     const keys = [['ew', MAP, 1, ' stroke-dasharray="3 3"'],
+                  ['sox', SOX, 1.2, SOX_DASH],
                   ['lose', DN, 1.6, ''], ['win2', UP, 1, ''],
                   ['win', UP, 1.9, '']];
     let lo = 0, hi = 0;
@@ -273,7 +280,7 @@
       if(!d) continue;
       g += `<path d="${d.trim()}" fill="none" stroke="${col}" stroke-width="${w}"${dash} opacity="${k==='win'?1:.7}" stroke-linejoin="round"/>`;
       const li = v.reduce((a,y,i)=>y==null?a:i,-1);
-      if(li>=0 && (k==='win'||k==='ew')){
+      if(li>=0 && (k==='win'||k==='ew'||k==='sox')){
         g += `<circle cx="${X(li).toFixed(1)}" cy="${Y(v[li]).toFixed(1)}" r="3" fill="${col}"/>`;
         g += `<text x="${(X(li)-4).toFixed(1)}" y="${(Y(v[li])-6).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="${col}">${p2(v[li])}</text>`;
       }
@@ -290,11 +297,13 @@
         <span><i style="border-color:${UP}"></i>up if yes</span>
         ${o.lose?`<span><i style="border-color:${DN}"></i>down if yes</span>`:''}
         <span><i style="border-color:${MAP};border-top-style:dashed"></i>equal-weight map</span>
+        ${hasPoints(o.sox)?`<span><i style="border-color:${SOX};border-top-style:dotted"></i>SOX</span>`:''}
         ${up2!=null?`<span><i style="border-color:${UP};opacity:.55"></i>second ring</span>`:''}
       </div>
       <div class="obsnums">
         <div><b class="${sgn(o.up)}">${p2(o.up)}</b><span>up basket since the report</span></div>
         <div><b class="${sgn(o.up_ew)}">${p2(o.up_ew)}</b><span>up − map since the report</span></div>
+        <div><b class="${sgn(o.up_sox)}">${p2(o.up_sox)}</b><span>up − SOX since the report</span></div>
         ${up2!=null?`<div><b class="${sgn(up2)}">${p2(up2)}</b><span>up · second ring since the report</span></div>`:''}
       </div>
       <p class="obsfoot">${o.sessions} session${o.sessions===1?'':'s'} since ${esc(o.from)} · not scored, not in the hit rate</p>`;
@@ -425,6 +434,7 @@
     const nums = r.entry_date ? `<div class="big">
         <div><b class="${sgn(t.win_lose)}">${p2(t.win_lose)}</b><span>up − down today</span></div>
         <div><b class="${sgn(t.win_ew)}">${p2(t.win_ew)}</b><span>up − map today</span></div>
+        <div><b class="${sgn(t.win_sox)}">${p2(t.win_sox)}</b><span>vs SOX</span></div>
       </div>` + (r.has_r2?`<div class="small">
         <div><b class="${sgn(t.win2_lose2)}">${p2(t.win2_lose2)}</b><span>ring 2 up − down</span></div>
         <div><b class="${sgn(t.win2_ew)}">${p2(t.win2_ew)}</b><span>ring 2 up − map</span></div>

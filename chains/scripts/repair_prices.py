@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from chains import mapfile, prices, repair                    # noqa: E402
+from chains import forecast, mapfile, prices, repair          # noqa: E402
 from chains.scripts.build_prices import resolve_challenger    # noqa: E402
 
 
@@ -29,6 +29,7 @@ def main() -> int:
     syms = sorted({s for s in
                    prices.symbols_in_map(doc)
                    + prices.challenger_symbols(doc, resolve_challenger)
+                   + [forecast.SOX_SYMBOL]
                    if prices.path_for(s).exists()})
     found = repair.scan_all(syms)
     print(f"scanned {len(syms)} series, found {found.height} impossible prints")

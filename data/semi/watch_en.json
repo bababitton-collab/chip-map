@@ -120,7 +120,10 @@
    "CP11"
   ],
   "win": [
-   "clf"
+   "clf",
+   "siemensenergy",
+   "gev",
+   "etn"
   ],
   "lose": [],
   "leaks": [],
@@ -323,7 +326,9 @@
    "CP12"
   ],
   "win": [
-   "teck"
+   "teck",
+   "cohr",
+   "lite"
   ],
   "lose": [],
   "leaks": [],
@@ -460,16 +465,15 @@
    "CP10"
   ],
   "win": [
-   "axti"
-  ],
-  "lose": [
+   "axti",
    "lite",
    "cohr"
   ],
+  "lose": [],
   "leaks": [],
   "lane": "mat",
   "lbl": "AXT",
-  "kind": "share"
+  "kind": "tide"
  },
  {
   "id": "entg_q3",
@@ -526,7 +530,8 @@
    "CP11"
   ],
   "win": [
-   "hwm"
+   "hwm",
+   "gev"
   ],
   "lose": [],
   "leaks": [
@@ -656,14 +661,13 @@
   "cps": [
    "CP12"
   ],
-  "win": [
-   "mp"
-  ],
+  "win": [],
   "lose": [],
   "leaks": [],
   "lane": "mat",
   "lbl": "China: rare earths",
-  "kind": "tide"
+  "kind": "tide",
+  "observe_only": true
  },
  {
   "id": "tel_q2",
@@ -779,18 +783,15 @@
   "cps": [
    "CP12"
   ],
-  "win": [
-   "aa",
-   "teck",
-   "mtln"
-  ],
+  "win": [],
   "lose": [],
   "leaks": [
    "mofcom_re"
   ],
   "lane": "mat",
   "lbl": "China: gallium",
-  "kind": "tide"
+  "kind": "tide",
+  "observe_only": true
  },
  {
   "id": "semi_smg",
@@ -851,7 +852,8 @@
    "CP9"
   ],
   "win": [
-   "lasertec"
+   "lasertec",
+   "hoya"
   ],
   "lose": [],
   "leaks": [

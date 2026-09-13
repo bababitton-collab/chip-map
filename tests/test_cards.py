@@ -198,8 +198,12 @@ def test_the_reason_label_comes_from_a_map_edge_or_from_nothing():
 
 
 def test_every_question_has_a_basket_to_draw():
-    """An empty basket would draw a lone centre node and say nothing."""
-    empty = [w["id"] for w in WATCH if not (w.get("win") or w.get("lose"))]
+    """An empty basket would draw a lone centre node and say nothing.
+
+    A row marked observe_only is the one exception: it is asked for the record
+    and deliberately bets no basket, and test_leaks holds it to empty legs."""
+    empty = [w["id"] for w in WATCH
+             if not (w.get("win") or w.get("lose")) and not w.get("observe_only")]
     assert empty == []
 
 

@@ -296,6 +296,19 @@ def forecast_for(row: dict, status: str, when: str, today: str) -> dict:
             "benchmark": BENCHMARK, "horizons": list(HORIZONS)}
 
 
+def registers_forecast(row: dict) -> bool:
+    """Whether a settled answer on this row registers a forecast at all.
+
+    A row marked ``observe_only`` is asked so its answer is on the record, not
+    to bet a basket on it; a row with nothing in win or lose says the same
+    thing without the flag. Either way a forecast would score nothing against
+    the benchmark and still count as a call.
+    """
+    if row.get("observe_only"):
+        return False
+    return bool(list(row.get("win") or []) + list(row.get("lose") or []))
+
+
 # ------------------------------------------------------------------- guard
 def check_no_question_text(blob: str, questions: dict) -> list[str]:
     """Any question's own sentence appearing where it must not.
@@ -371,7 +384,7 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
         # A forecast is registered once, when a row first settles one way or
         # the other. Never rewritten, never removed: an entry that can be
         # edited after the fact is not a record of anything.
-        if rec["status"] in ("yes", "no"):
+        if rec["status"] in ("yes", "no") and registers_forecast(row):
             if not any(f.get("qid") == row["id"]
                        for f in marks.get("forecasts", [])):
                 f = forecast_for(row, rec["status"], when, day)

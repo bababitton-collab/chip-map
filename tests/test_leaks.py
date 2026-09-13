@@ -180,13 +180,37 @@ def test_every_row_is_tagged_tide_or_share():
     assert bad == [], f"rows with no usable kind: {bad}"
 
 
+# A leg is measured by its price, so it has to be a station the map prices.
+PRICED_LEG = {n["id"] for n in NODES if n.get("ticker") or n.get("price_symbol")}
+
+
+def test_every_basket_leg_resolves_to_a_priced_node():
+    """A leg that is a subnode, a raw ticker or a typo does not fail loudly
+    downstream -- it drops out of the basket, and the forecast scored is not
+    the one registered. A row marked observe_only registers nothing, so it has
+    to say so with empty baskets rather than carry legs nobody scores."""
+    bad = []
+    for r in WATCH:
+        legs = list(r.get("win") or []) + list(r.get("lose") or [])
+        if r.get("observe_only"):
+            if legs:
+                bad.append("%s is observe_only but carries %s" % (r["id"], legs))
+            continue
+        loose = [x for x in legs if x not in PRICED_LEG]
+        if loose:
+            bad.append("%s: %s" % (r["id"], loose))
+    assert bad == [], ("basket legs that are not priced nodes:" + chr(10)
+                       + chr(10).join(bad))
+
+
 # -- the two languages stay in step -----------------------------------------
 
 def test_the_two_watch_lists_carry_the_same_questions_in_the_same_order():
     assert [r["id"] for r in WATCH] == [r["id"] for r in WATCH_EN]
 
 
-MACHINE_FIELDS = ("d", "confirmed", "leaks", "lane", "win", "lose", "kind")
+MACHINE_FIELDS = ("d", "confirmed", "leaks", "lane", "win", "lose", "kind",
+                  "observe_only")
 
 
 def test_the_two_watch_lists_agree_on_dates_and_edges():

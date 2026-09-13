@@ -1776,6 +1776,224 @@
    "price_symbol_kind": "primary",
    "line": "power",
    "short": "CEG"
+  },
+  {
+   "id": "clf",
+   "name": "Cleveland-Cliffs",
+   "ticker": "CLF",
+   "exchange": "NYSE",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L9",
+   "role": "Sole US producer of grain-oriented electrical steel (GOES) for power transformers — Butler Works, PA",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "Only domestic GOES producer in the US (Butler Works); building a $150M transformer plant at Weirton, WV",
+    "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works",
+    "as_of": "2026"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "CLF.US",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "CLF"
+  },
+  {
+   "id": "hwm",
+   "name": "Howmet Aerospace",
+   "ticker": "HWM",
+   "exchange": "NYSE",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L9",
+   "role": "Investment-cast superalloy blades for industrial gas turbines and aero engines — one of two at scale",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "One of two makers of cast IGT blades at scale; SpaceX announced plans to build its own castings (2026)",
+    "source": "https://finance.yahoo.com/markets/stocks/articles/howmet-aerospace-hwm-facing-competition-141108207.html",
+    "as_of": "2026"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "HWM.US",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "HWM"
+  },
+  {
+   "id": "axti",
+   "name": "AXT Inc",
+   "ticker": "AXTI",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L1",
+   "role": "InP and GaAs substrates for high-speed optical links; China export-license gated",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "InP substrate maker; revenue swings on Chinese export-license timing (Q3-2025 granted, Q4-2025 delayed)",
+    "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml",
+    "as_of": "2025-11"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "AXTI.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "AXTI"
+  },
+  {
+   "id": "lite",
+   "name": "Lumentum",
+   "ticker": "LITE",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L6",
+   "role": "InP lasers and transceivers for AI data-center optics; building US InP capacity",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "Leading Western InP laser maker; CEO: InP supply ~30% below need, 'worse than memory'",
+    "source": "https://www.tomshardware.com/tech-industry/semiconductors/lumentum-ceo-says-the-indium-phosphide-shortage-will-become-worse-than-memory",
+    "as_of": "2026"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "LITE.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "LITE"
+  },
+  {
+   "id": "teck",
+   "name": "Teck Resources",
+   "ticker": "TECK",
+   "exchange": "NYSE",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L1",
+   "role": "Germanium (and gallium/antimony) from Trail, BC — the Western alternative to Chinese supply",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "Expanding germanium output at Trail (~C$400M federal support) as a non-China source",
+    "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/",
+    "as_of": "2026"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "TECK.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "TECK"
+  },
+  {
+   "id": "skc",
+   "name": "SKC (Absolics)",
+   "ticker": "011790.KS",
+   "exchange": "KRX",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L5",
+   "role": "Glass substrates (via Absolics) — the challenger to Ajinomoto ABF film in advanced packaging",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "Absolics ramping glass-substrate mass production (expected year-end); samples to a US customer",
+    "source": "https://www.trendforce.com/news/2025/07/07/news-absolics-reportedly-ramps-up-glass-substrate-production-mass-production-expected-by-year-end/",
+    "as_of": "2025-07"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "011790.KO",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "SKC"
+  },
+  {
+   "id": "lasertec",
+   "name": "Lasertec",
+   "ticker": "6920.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": true,
+   "layer": "L2",
+   "role": "Sole supplier of actinic EUV mask/blank inspection (ABICS/ACTIS)",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "Only commercial actinic EUV mask/blank inspection supplier",
+    "source": "https://semiconductorx.com/semiconductor-euv-mask-blanks.html",
+    "as_of": "2026-01-01"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "LSRCY.US",
+   "price_symbol_kind": "adr",
+   "price_note": "US line for Lasertec Corporation; home listing 6920.T is not on EODHD",
+   "line": "logic",
+   "short": "Lasertec"
+  },
+  {
+   "id": "hanmi",
+   "name": "Hanmi Semiconductor",
+   "ticker": "042700.KS",
+   "exchange": "KRX",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L2",
+   "role": "TC bonders for HBM stacking (HBM3E/HBM4)",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "~45% of SK hynix HBM TC-bonder volume (2025), three-way with ASMPT and Hanwha",
+    "source": "https://www.trendforce.com/news/2026/06/09/news-sk-hynix-reportedly-places-44-2bn-won-tc-bonder-order-with-hanmi-accelerating-hbm4-ramp-up/",
+    "as_of": "2026-06"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "042700.KO",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Hanmi"
+  },
+  {
+   "id": "asmpt",
+   "name": "ASMPT",
+   "ticker": "0522.HK",
+   "exchange": "HKEX",
+   "us_listed": false,
+   "adr": true,
+   "layer": "L2",
+   "role": "TCB bonders for HBM4 and OSAT advanced packaging",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "~half of SK hynix's ~50 HBM4 TC bonders (Dec-2025)",
+    "source": "https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/",
+    "as_of": "2025-12"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [],
+   "notes": "",
+   "price_symbol": "ASMVY.US",
+   "price_symbol_kind": "adr",
+   "price_note": "US line for Asm Pacific Technology Ltd ADR; home listing 0522.HK is not on EODHD -- VENDOR NAME DIFFERS, taken from your list as a rename",
+   "line": "packaging",
+   "short": "ASMPT"
   }
  ],
  "edges": [
@@ -2500,6 +2718,110 @@
    "criticality": "high",
    "source": "https://s205.q4cdn.com/133937190/files/doc_financials/2025/q4/CoreWeave-Inc-FY25-10-K-7.pdf",
    "as_of": "2026-02-26"
+  },
+  {
+   "from": "clf",
+   "to": "siemensenergy",
+   "type": "supplies",
+   "what": "grain-oriented electrical steel for power transformers",
+   "criticality": "high",
+   "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works"
+  },
+  {
+   "from": "clf",
+   "to": "gev",
+   "type": "supplies",
+   "what": "grain-oriented electrical steel for power transformers",
+   "criticality": "high",
+   "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works"
+  },
+  {
+   "from": "clf",
+   "to": "etn",
+   "type": "supplies",
+   "what": "grain-oriented electrical steel for power transformers",
+   "criticality": "high",
+   "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works"
+  },
+  {
+   "from": "hwm",
+   "to": "gev",
+   "type": "supplies",
+   "what": "cast superalloy blades for industrial gas turbines",
+   "criticality": "high",
+   "source": "https://finance.yahoo.com/markets/stocks/articles/howmet-aerospace-hwm-facing-competition-141108207.html"
+  },
+  {
+   "from": "axti",
+   "to": "lite",
+   "type": "supplies",
+   "what": "InP substrates for lasers/transceivers",
+   "criticality": "high",
+   "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml"
+  },
+  {
+   "from": "axti",
+   "to": "cohr",
+   "type": "supplies",
+   "what": "InP substrates for lasers/transceivers",
+   "criticality": "high",
+   "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml"
+  },
+  {
+   "from": "teck",
+   "to": "cohr",
+   "type": "supplies",
+   "what": "germanium for optical components",
+   "criticality": "medium",
+   "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/"
+  },
+  {
+   "from": "teck",
+   "to": "lite",
+   "type": "supplies",
+   "what": "germanium for optical components",
+   "criticality": "medium",
+   "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/"
+  },
+  {
+   "from": "lite",
+   "to": "anet",
+   "type": "supplies",
+   "what": "optical transceivers/lasers for data-center networking",
+   "criticality": "medium",
+   "source": "https://www.tomshardware.com/tech-industry/semiconductors/lumentum-ceo-says-the-indium-phosphide-shortage-will-become-worse-than-memory"
+  },
+  {
+   "from": "skc",
+   "to": "unimicron",
+   "type": "supplies",
+   "what": "glass substrate (ABF alternative)",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2025/07/07/news-absolics-reportedly-ramps-up-glass-substrate-production-mass-production-expected-by-year-end/"
+  },
+  {
+   "from": "lasertec",
+   "to": "hoya",
+   "type": "supplies",
+   "what": "actinic inspection for EUV mask blanks",
+   "criticality": "high",
+   "source": "https://semiconductorx.com/semiconductor-euv-mask-blanks.html"
+  },
+  {
+   "from": "hanmi",
+   "to": "skhynix",
+   "type": "supplies",
+   "what": "TC bonders for HBM stacking",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2026/06/09/news-sk-hynix-reportedly-places-44-2bn-won-tc-bonder-order-with-hanmi-accelerating-hbm4-ramp-up/"
+  },
+  {
+   "from": "asmpt",
+   "to": "ase",
+   "type": "supplies",
+   "what": "TCB bonders for advanced packaging",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/"
   }
  ],
  "chokepoints": [

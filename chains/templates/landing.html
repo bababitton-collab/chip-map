@@ -31,6 +31,12 @@ a{color:var(--amber)}
 .cta .secondary{color:var(--amber);border:1px solid #3a3320;background:var(--panel)}
 .cta .secondary:hover{border-color:var(--amber)}
 main section{padding:34px 0 8px;border-bottom:1px solid var(--rule)}
+main section.steps{padding:28px 0 28px}
+.steps ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.steps li{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:16px 18px}
+.steps .n{display:block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.14em;color:var(--amber);margin-bottom:6px}
+.steps h3{margin:0 0 6px;font-family:"Source Serif 4",serif;font-size:1.3rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
+.steps p{margin:0;color:var(--ink2);font-size:.98rem;line-height:1.5}
 main h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:1.8rem;line-height:1.2;margin:0 0 18px}
 main h3{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:26px 0 8px}
 main p{color:var(--ink2);max-width:74ch;margin:0 0 14px}
@@ -41,6 +47,7 @@ footer a{color:var(--ink2)}
   .wrap{padding:10px 14px 50px}
   .hero h1{font-size:2rem}
   .hero .sub{font-size:1.05rem}
+  .steps ol{grid-template-columns:minmax(0,1fr)}
 }
 </style>
 </head>
@@ -50,7 +57,7 @@ footer a{color:var(--ink2)}
 
 <header class="hero">
   <h1>The physical supply chain behind AI — mapped.</h1>
-  <p class="sub">See who supplies whom, where the chokepoints are, and which dated questions come next.<!--IF:prereg--> Every scored forecast is defined before the answer is known.<!--END:prereg--> No backtests.</p>
+  <p class="sub">See who supplies whom — and where it breaks.<!--IF:prereg--> Every forecast's scoring rules are set before the answer.<!--END:prereg--> No backtests.</p>
   <ul class="proof" aria-label="At a glance">
     <li><b>{{companies}}</b> companies</li>
     <li><b>{{chokepoints}}</b> chokepoints</li>
@@ -59,11 +66,19 @@ footer a{color:var(--ink2)}
   </ul>
   <div class="cta">
     <a class="primary" href="{{map_href}}">Explore the map</a>
-    <a class="secondary" href="{{track_href}}">See the live record</a>
+    <a class="secondary" href="{{track_href}}">See the track record</a>
   </div>
 </header>
 
 <main>
+<section id="steps" class="steps" aria-label="How it works in three steps">
+  <ol>
+    <li><span class="n">01</span><h3>Map</h3><p>Who supplies whom across the AI supply chain, and where the chokepoints are.</p></li>
+    <li><span class="n">02</span><h3>Question</h3><p>Dated questions across the chain, each with yes/no criteria set before the answer.</p></li>
+    <li><span class="n">03</span><h3>Score</h3><p>When the answer lands, the forecast is measured against the market<!--IF:prereg--> — pre-registered, so anyone can verify it<!--END:prereg-->.</p></li>
+  </ol>
+</section>
+
 <section id="how">
   <h2>How it works: a semiconductor supply chain map with dated questions</h2>
 

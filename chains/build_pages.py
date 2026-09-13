@@ -363,6 +363,8 @@ EN_TOP_FROM = (
     '  <div class="asof" id="asof"></div>\n'
     '  <a class="fwd" href="track/">Forward test →</a>\n'
     '</div>')
+EN_FWD_LINK_FROM = '<a class="fwd inline" href="track/">Forward test →</a>'
+EN_FWD_H2_FROM = '<h2>Forward test</h2>'
 EN_VALUE = ("The physical supply chain behind AI — who supplies whom, where the "
             "chokepoints are, and which dated questions come next.")
 EN_TOP_CSS = (
@@ -425,6 +427,16 @@ def public_page(template: str, live: str, cfg: dict) -> str:
         from chains.paths import domain
         h = _must_replace(h, EN_TOP_FROM, en_top(domain()),
                           "map first screen")
+        # One name for the track record on the public map: the nav, the
+        # in-section link and the (hidden) section heading all read the
+        # same. The track page keeps its own <title>.
+        h = _must_replace(h, EN_FWD_LINK_FROM,
+                          f'<a class="fwd inline" href="track/">'
+                          f"{sitenav.TRACK_RECORD} →</a>",
+                          "in-section track record link")
+        h = _must_replace(h, EN_FWD_H2_FROM,
+                          f"<h2>{sitenav.TRACK_RECORD}</h2>",
+                          "track record section heading")
         extra_head = f"<style>{sitenav.CSS}{EN_TOP_CSS}</style>\n"
 
     head = (f'<!doctype html>\n<html lang="{cfg["lang"]}" '

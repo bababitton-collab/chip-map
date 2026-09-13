@@ -60,8 +60,46 @@ def test_the_hero_leads_with_the_value_and_both_calls(tmp_path):
     html = _page(tmp_path)
     assert "<h1>The physical supply chain behind AI — mapped.</h1>" in html
     assert '<a class="primary" href="/semi/">Explore the map</a>' in html
-    assert '<a class="secondary" href="/semi/track/">See the live record</a>' in html
+    assert '<a class="secondary" href="/semi/track/">See the track record</a>' in html
+    assert "See the live record" not in html
     assert html.index("<h1>") < html.index('class="proof"') < html.index('class="cta"')
+
+
+def test_the_hero_sub_is_the_short_one(tmp_path):
+    html = _page(tmp_path)
+    i = html.index('<p class="sub">')
+    sub = _text(html[i:html.index("</p>", i)])
+    assert sub == ("See who supplies whom — and where it breaks. Every forecast's "
+                   "scoring rules are set before the answer. No backtests.")
+    bare = _text(_page(tmp_path / "bare", commitments=False))
+    assert "See who supplies whom — and where it breaks. No backtests." in bare
+
+
+def test_the_three_steps_sit_above_the_full_explanation(tmp_path):
+    html = _page(tmp_path)
+    assert html.index('<section id="steps"') < html.index('<section id="how">')
+    i = html.index('<section id="steps"')
+    strip = _text(html[i:html.index("</section>", i)])
+    assert strip == (
+        "01 Map Who supplies whom across the AI supply chain, and where the "
+        "chokepoints are. "
+        "02 Question Dated questions across the chain, each with yes/no criteria "
+        "set before the answer. "
+        "03 Score When the answer lands, the forecast is measured against the "
+        "market — pre-registered, so anyone can verify it.")
+    # The detailed prose is still all there, beneath it.
+    for h in ("The chain, in layers", "Semiconductor chokepoints",
+              "Dated questions", "Scored forward against the market",
+              "Pre-registered and verifiable", "Forward testing, no backtests"):
+        assert f"<h3>{h}</h3>" in html, h
+
+
+def test_the_score_step_only_claims_verification_with_its_proof(tmp_path):
+    html = _page(tmp_path, track_public=False)
+    i = html.index('<section id="steps"')
+    strip = _text(html[i:html.index("</section>", i)])
+    assert strip.endswith("the forecast is measured against the market.")
+    assert "verify" not in strip.lower()
 
 
 def test_the_proof_strip_is_read_from_the_published_data(tmp_path):
@@ -150,7 +188,8 @@ def test_the_scoring_sentence_is_the_scoring_code(tmp_path):
 # -- capabilities appear only with their proof ------------------------------------
 
 PREREG_WORDS = ("SHA-256", "commitments.json", "track_public.json", "Verify",
-                "defined before the answer is known", "pre-registration")
+                "scoring rules are set before the answer", "pre-registration",
+                "anyone can verify it")
 
 
 def test_with_both_files_the_preregistration_is_described(tmp_path):
@@ -299,6 +338,21 @@ def test_the_map_leads_with_the_value_and_the_calls_above_the_instructions():
     assert 'href="#stage">Explore the map</a>' in page
     assert 'href="/semi/track/">See the live record</a>' in page
     assert '<a class="fwd" href="track/">Forward test →</a>' not in page
+
+
+def test_the_map_names_the_track_record_one_way():
+    """The nav says Track Record, so the link inside the page does too, and no
+    "Forward test" label is left on the public map -- including in the cards
+    the build inlines into it."""
+    page = build_pages._inline_cards(_map_page())
+    assert '<a class="fwd inline" href="track/">Track Record →</a>' in page
+    assert "<h2>Track Record</h2>" in page
+    assert "Forward test" not in page
+
+
+def test_the_track_page_keeps_its_own_title():
+    page = track.render(track.public({"summary": {}, "forecasts": []}))
+    assert "<title>Forward test" in page
 
 
 def test_the_map_description_counts_come_from_the_snapshot():

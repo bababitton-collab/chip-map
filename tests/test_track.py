@@ -635,17 +635,19 @@ def test_the_second_ring_keeps_its_own_words_on_hover():
     assert "(k.labels||[]).filter(Boolean).join(' · ')" in body
 
 
-def test_the_observation_chart_names_and_numbers_its_second_ring():
-    """It draws the second ring as a thin green line; a line with no legend
-    entry and no number cannot be read."""
+def test_the_second_ring_is_a_number_under_the_chart_not_a_line():
+    """Two greens over a handful of sessions could not be told apart, so the
+    second ring left the chart. It is a number under it, read at the last point
+    its basket reached, and the legend notes it only when that number shows."""
     body = cards_source()
+    drawn = body[body.index("const DRAWN"):body.index("const R2_NOTE")]
+    assert "const DRAWN = ['win','lose','ew','sox'];" in drawn
+    assert "win2" not in drawn and "lose2" not in drawn
     i = body.index("function observedChart(")
     chart = body[i:body.index("function table(", i)]
-    assert "['win2', UP, 1, '']" in chart, "the line this legend describes"
-    assert ("<span><i style=\"border-color:${UP};opacity:.55\"></i>"
-            "second ring</span>") in chart
     assert "up · second ring since the report" in chart
-    assert "w2.reduce((a,y,i)=>y==null?a:i,-1)" in chart, "the line's last point"
+    assert "w2.reduce((a,y,i)=>y==null?a:i,-1)" in chart, "its last point"
+    assert "legend(lines, 'yes', up2!=null)" in chart, "note only with the number"
 
 
 def test_a_record_says_whether_its_row_is_observe_only(book):
@@ -1254,12 +1256,116 @@ def test_a_scored_card_carries_both_benchmarks_apart(book):
     assert h5["hit"] is plain["horizons"]["5"]["hit"]
 
 
-def test_the_cards_draw_sox_second_and_differently_from_the_map():
+def test_the_three_line_styles_cannot_be_confused():
+    """Green solid, grey dashed, amber dotted -- and the map before SOX."""
     body = cards_source()
-    assert "['win','lose','ew','sox','win2','lose2']" in body, "map first"
-    assert "sox:{c:SOX,w:1.6,o:1,d:SOX_DASH}" in body
-    assert "['sox', SOX, 1.2, SOX_DASH]" in body
-    assert 'stroke-dasharray="1 3"' in body and 'stroke-dasharray="4 3"' in body
-    assert body.count("border-top-style:dotted\"></i>SOX</span>") == 2
+    assert "const DRAWN = ['win','lose','ew','sox'];" in body, "map before SOX"
+    assert "win: {c:UP,  w:2,   d:''" in body
+    assert "ew:  {c:EW,  w:1.4, d:' stroke-dasharray=\"4 3\"'" in body
+    assert "sox: {c:SOX, w:1.4, d:SOX_DASH" in body
+    assert ("SOX_DASH=' stroke-dasharray=\"1 3\" stroke-linecap=\"round\"'"
+            in body)
     assert "<span>vs SOX</span>" in body
     assert "<span>up − SOX since the report</span>" in body
+
+
+# -- the charts as a browser would draw them ---------------------------------
+#
+# Run through node against the real renderer, so what is asserted is the SVG a
+# reader gets rather than the source that is supposed to produce it.
+
+SES = ["2026-09-01", "2026-09-02", "2026-09-03"]
+
+
+def _obs(qid, win2):
+    return {"qid": qid, "who": qid.upper(), "state": "reported",
+            "status": "mixed", "report_date": SES[0], "members": [],
+            "observed": {"from": SES[0], "sessions": 2, "dates": SES,
+                         "win": [0.0, 1.2, 2.5], "lose": None,
+                         "ew": [0.0, 0.4, 0.6], "sox": [0.0, 0.8, 1.1],
+                         "win2": win2, "lose2": None,
+                         "up": 2.5, "up_ew": 1.9, "up_sox": 1.4}}
+
+
+def _scored(qid, lose, win2, has_r2):
+    return {"qid": qid, "who": qid.upper(), "state": "tracking",
+            "status": "yes", "entry_date": SES[0], "marked_at": SES[0],
+            "day_index": 2, "next_checkpoint": 5, "sessions_to": 3,
+            "has_r2": has_r2, "members": [],
+            "today": {"win_lose": 3.0, "win_ew": 2.0, "win_sox": 1.5},
+            "series": {"dates": SES, "win": [0.0, 1.0, 2.0], "lose": lose,
+                       "ew": [0.0, 0.1, 0.0], "sox": [0.0, 0.3, 0.5],
+                       "win2": win2, "lose2": None}}
+
+
+def _render(payload, tmp_path):
+    import re
+    import shutil
+    import subprocess
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    js = tmp_path / "render.js"
+    js.write_text("globalThis.window = {};\n" + cards_source()
+                  + "\nconst root = {};\nwindow.renderTrack(root, "
+                  + json.dumps(payload) + ");\n"
+                  + "process.stdout.write(root.innerHTML);\n",
+                  encoding="utf-8")
+    html = subprocess.run(["node", str(js)], capture_output=True, check=True
+                          ).stdout.decode("utf-8")
+    cards = {}
+    for part in html.split('<article class="fc ')[1:]:
+        qid = re.search(r'data-id="([^"]+)"', part).group(1)
+        i = part.index('<div class="chart')
+        chart = part[i:part.index('<div class="tw">', i)]
+        cards[qid] = {
+            "chart": chart,
+            "lines": {k: (c, w, dash) for k, c, w, dash in re.findall(
+                r'<path data-line="(\w+)" d="[^"]*" fill="none" '
+                r'stroke="([^"]+)" stroke-width="([^"]+)"'
+                r'(?: stroke-dasharray="([^"]+)")?', chart)},
+            "dots": {k: c for k, c in re.findall(
+                r'<circle data-end="(\w+)"[^>]*fill="([^"]+)"', chart)},
+            "labels": dict(re.findall(
+                r'<text data-end="(\w+)"[^>]*>([^<]*)</text>', chart)),
+            "legend": re.findall(r'data-legend="(\w+)"', chart),
+        }
+    return cards
+
+
+def test_both_charts_draw_only_their_lines_each_traced_to_a_number(tmp_path):
+    cards = _render({"as_of": SES[-1], "summary": {}, "forecasts": [
+        _obs("obs", [0.0, 1.0, 2.2]),
+        _obs("obs-no-r2", None),
+        _scored("scored", [0.0, -0.5, -1.0], [0.0, 0.9, 1.8], True),
+        _scored("scored-win-only", None, None, False),
+    ]}, tmp_path)
+    want = {"obs": ["win", "ew", "sox"], "obs-no-r2": ["win", "ew", "sox"],
+            "scored": ["win", "lose", "ew", "sox"],
+            "scored-win-only": ["win", "ew", "sox"]}
+    for qid, lines in want.items():
+        c = cards[qid]
+        assert set(c["lines"]) == set(lines), (qid, "drawn")
+        # every drawn line ends in a dot of its own colour, with its value
+        assert c["dots"] == {k: c["lines"][k][0] for k in lines}, (qid, "dots")
+        assert set(c["labels"]) == set(lines), (qid, "labels")
+        # the legend lists exactly what is drawn, in order, and nothing else
+        assert [k for k in c["legend"] if k != "r2"] == lines, (qid, "legend")
+
+    # The observation: second ring as a number and a note, never a line.
+    assert cards["obs"]["legend"][-1] == "r2"
+    assert "up · second ring since the report" in cards["obs"]["chart"]
+    assert "r2" not in cards["obs-no-r2"]["legend"]
+    assert "second ring" not in cards["obs-no-r2"]["chart"]
+    assert cards["obs"]["labels"] == {"win": "+2.50%", "ew": "+0.60%",
+                                      "sox": "+1.10%"}
+    # The scored card: the lose basket is drawn because there is one.
+    assert cards["scored"]["legend"][-1] == "r2"
+    assert "r2" not in cards["scored-win-only"]["legend"]
+    assert cards["scored"]["labels"]["lose"] == "-1.00%"
+
+    # Three styles a reader cannot confuse.
+    st = cards["obs"]["lines"]
+    assert st["win"] == ("#3fd18b", "2", "")
+    assert st["ew"][1:] == ("1.4", "4 3")
+    assert st["sox"] == ("#f2b632", "1.4", "1 3")
+    assert len({(c, dash) for c, _w, dash in st.values()}) == 3

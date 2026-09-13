@@ -139,6 +139,68 @@
     </div></div>`;
   }
 
+  // What a chart draws: the direct basket, the equal-weight map and SOX, and
+  // the lose basket only when there is one. The second ring is a number under
+  // the chart and never a line -- two greens over a handful of sessions could
+  // not be told apart. Three styles that cannot be confused on the dark
+  // ground: green solid, grey dashed, amber dotted. The map's grey is lighter
+  // than the axis grey so the dashes read over the grid.
+  const EW = '#9aa4b2';
+  const DRAWN = ['win','lose','ew','sox'];
+  const LINE = {
+    win: {c:UP,  w:2,   d:'', label:m=>`up if ${m}`,
+          swatch:`border-color:${UP}`},
+    lose:{c:DN,  w:2,   d:'', label:m=>`down if ${m}`,
+          swatch:`border-color:${DN}`},
+    ew:  {c:EW,  w:1.4, d:' stroke-dasharray="4 3"', label:()=>'equal-weight map',
+          swatch:`border-color:${EW};border-top-style:dashed`},
+    sox: {c:SOX, w:1.4, d:SOX_DASH, label:()=>'SOX',
+          swatch:`border-color:${SOX};border-top-style:dotted`},
+  };
+  const R2_NOTE = 'second ring · shown as a number';
+  const drawnLines = s => DRAWN.filter(k=>hasPoints(s[k])).map(k=>({k:k, v:s[k]}));
+
+  // Every drawn line, then a filled dot where it ends with its value beside
+  // it, so each line can be traced to a number. Painted map-first so the
+  // basket sits on top. When lines end close together the labels are pushed
+  // apart and the dots stay where the lines end; a dark outline keeps a label
+  // readable over a line running under it.
+  const LABEL_GAP = 11;
+  function plot(lines, X, Y, top, bottom, side){
+    let g = '';
+    const ends = [];
+    for(const ln of [...lines].reverse()){
+      const st = LINE[ln.k];
+      let d = '', started = false;
+      ln.v.forEach((v,i)=>{ if(v==null) return;
+        d += (started?'L':'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1) + ' ';
+        started = true; });
+      if(!d) continue;
+      g += `<path data-line="${ln.k}" d="${d.trim()}" fill="none" stroke="${st.c}" stroke-width="${st.w}"${st.d} stroke-linejoin="round"/>`;
+      const li = ln.v.reduce((a,v,i)=>v==null?a:i,-1);
+      ends.push({k:ln.k, x:X(li), y:Y(ln.v[li]), v:ln.v[li], c:st.c});
+    }
+    ends.sort((a,b)=>a.y-b.y);
+    let prev = -1e9;
+    ends.forEach(e=>{ e.ly = Math.max(e.y, prev + LABEL_GAP); prev = e.ly; });
+    const over = ends.length ? ends[ends.length-1].ly - bottom : 0;
+    if(over > 0) ends.forEach(e=>{ e.ly = Math.max(top, e.ly - over); });
+    for(const e of ends){
+      g += `<circle data-end="${e.k}" cx="${e.x.toFixed(1)}" cy="${e.y.toFixed(1)}" r="3" fill="${e.c}"/>`;
+      g += `<text data-end="${e.k}" x="${(e.x + 6*side).toFixed(1)}" y="${(e.ly+3).toFixed(1)}"${side<0?' text-anchor="end"':''} font-family="IBM Plex Mono,monospace" font-size="9" font-weight="600" fill="${e.c}" stroke="#0b0e14" stroke-width="3" paint-order="stroke">${p2(e.v)}</text>`;
+    }
+    return g;
+  }
+
+  // Exactly the lines drawn, in the order they matter, and the second ring as
+  // a note with a dot rather than a line swatch -- only when its number shows.
+  function legend(lines, m, ring2){
+    return `<div class="cap">`
+      + lines.map(ln=>`<span data-legend="${ln.k}"><i style="${LINE[ln.k].swatch}"></i>${LINE[ln.k].label(m)}</span>`).join('')
+      + (ring2 ? `<span data-legend="r2"><i style="width:7px;height:7px;border:0;border-radius:50%;vertical-align:middle;background:${UP};opacity:.55"></i>${R2_NOTE}</span>` : '')
+      + `</div>`;
+  }
+
   const CW=560, CH=230, PADL=44, PADR=54, PADT=16, PADB=26;
   function chart(r){
     const s = r.series;
@@ -146,9 +208,8 @@
       <line x1="${PADL}" x2="${CW-PADR}" y1="${CH/2}" y2="${CH/2}" stroke="#222a36"/>
       <circle cx="${PADL}" cy="${CH/2}" r="3.4" fill="${MAP}"/>
       </svg></div><p class="pending">first print after the next close</p>`;
-    const lines=['win','lose','ew','sox','win2','lose2'].map(k=>({k:k,v:s[k]}))
-      .filter(o=>o.v&&o.v.length);
-    let hi=0; lines.forEach(o=>o.v.forEach(v=>{ if(v!=null) hi=Math.max(hi,Math.abs(v)); }));
+    const lines = drawnLines(s);
+    let hi=0; lines.forEach(ln=>ln.v.forEach(v=>{ if(v!=null) hi=Math.max(hi,Math.abs(v)); }));
     let T=8; for(const t of [2,4,8,16,32]) if(hi<=t){ T=t; break; }
     if(hi>32) T=Math.ceil(hi/8)*8;
     const n=s.dates.length, span=Math.max(40,n-1);
@@ -169,32 +230,12 @@
     const xt=X(n-1);
     g+=`<line x1="${xt.toFixed(1)}" x2="${xt.toFixed(1)}" y1="${PADT}" y2="${CH-PADB}" stroke="#3a4658"/>`;
     g+=`<text x="${xt.toFixed(1)}" y="${PADT-4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="${MAP}">today</text>`;
-    const style={win:{c:UP,w:2.2,o:1,d:''},lose:{c:DN,w:2,o:1,d:''},
-      ew:{c:MAP,w:1.6,o:1,d:' stroke-dasharray="4 3"'},
-      sox:{c:SOX,w:1.6,o:1,d:SOX_DASH},
-      win2:{c:UP,w:1.4,o:.55,d:''},lose2:{c:DN,w:1.4,o:.55,d:''}};
-    for(const o of lines){
-      const st=style[o.k]; let d='', started=false;
-      o.v.forEach((v,i)=>{ if(v==null) return;
-        d+=(started?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)+' '; started=true; });
-      if(!d) continue;
-      g+=`<path d="${d.trim()}" fill="none" stroke="${st.c}" stroke-width="${st.w}" opacity="${st.o}"${st.d} stroke-linejoin="round"/>`;
-      if(['win','lose','ew','sox'].includes(o.k)){
-        const li=o.v.reduce((a,v,i)=>v==null?a:i,-1);
-        if(li>=0){ const x=X(li), y=Y(o.v[li]);
-          g+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${st.c}"/>`;
-          g+=`<text x="${(x+6).toFixed(1)}" y="${(y+3).toFixed(1)}" font-family="IBM Plex Mono,monospace" font-size="9" fill="${st.c}">${p2(o.v[li])}</text>`; }
-      }
-    }
+    g += plot(lines, X, Y, PADT+4, CH-PADB-4, 1);
     const m=leg(r);
+    // The second ring's numbers sit beside the card's other numbers; the
+    // note shows exactly when they do.
     return `<div class="chart"><svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
-      <div class="cap">
-        <span><i style="border-color:${UP}"></i>up if ${m}</span>
-        <span><i style="border-color:${DN}"></i>down if ${m}</span>
-        <span><i style="border-color:${MAP};border-top-style:dashed"></i>equal-weight map</span>
-        ${hasPoints(s.sox)?`<span><i style="border-color:${SOX};border-top-style:dotted"></i>SOX</span>`:''}
-        ${r.has_r2?`<span><i style="border-color:${UP};opacity:.55"></i>second ring</span>`:''}
-      </div>`;
+      ${legend(lines, m, r.has_r2)}`;
   }
 
   // The same rows as a scored card, measured from the report instead of from
@@ -256,12 +297,9 @@
         <p class="obsfoot">First move prints after the next close · `
         + `baselined on ${esc(o.from)}</p>`;
     }
-    const keys = [['ew', MAP, 1, ' stroke-dasharray="3 3"'],
-                  ['sox', SOX, 1.2, SOX_DASH],
-                  ['lose', DN, 1.6, ''], ['win2', UP, 1, ''],
-                  ['win', UP, 1.9, '']];
+    const lines = drawnLines(o);
     let lo = 0, hi = 0;
-    keys.forEach(([k]) => (o[k]||[]).forEach(v => {
+    lines.forEach(ln => ln.v.forEach(v => {
       if(v==null) return; lo = Math.min(lo, v); hi = Math.max(hi, v); }));
     const pad = Math.max(0.6, (hi - lo) * 0.18);
     lo -= pad; hi += pad;
@@ -271,35 +309,16 @@
     let g = '';
     // the zero line: the report's own close
     g += `<line x1="8" x2="${CW-8}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="#ffffff22" stroke-width="1"/>`;
-    for(const [k, col, w, dash] of keys){
-      const v = o[k]; if(!v) continue;
-      let d = '', started = false;
-      v.forEach((y,i)=>{ if(y==null) return;
-        d += (started?'L':'M') + X(i).toFixed(1) + ' ' + Y(y).toFixed(1) + ' ';
-        started = true; });
-      if(!d) continue;
-      g += `<path d="${d.trim()}" fill="none" stroke="${col}" stroke-width="${w}"${dash} opacity="${k==='win'?1:.7}" stroke-linejoin="round"/>`;
-      const li = v.reduce((a,y,i)=>y==null?a:i,-1);
-      if(li>=0 && (k==='win'||k==='ew'||k==='sox')){
-        g += `<circle cx="${X(li).toFixed(1)}" cy="${Y(v[li]).toFixed(1)}" r="3" fill="${col}"/>`;
-        g += `<text x="${(X(li)-4).toFixed(1)}" y="${(Y(v[li])-6).toFixed(1)}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="${col}">${p2(v[li])}</text>`;
-      }
-    }
-    // The second ring is drawn above as the thin green line; the legend and the
-    // number read the same point it ends at, and only when it has one to draw.
+    g += plot(lines, X, Y, 12, CH-10, -1);
+    // The second ring is not drawn. It is this number, read at the last point
+    // its basket reached, and the legend notes it only when it is shown.
     const w2 = o.win2 || [];
     const li2 = w2.reduce((a,y,i)=>y==null?a:i,-1);
     const up2 = li2>=0 ? w2[li2] : null;
     return `<div class="chart obschart">
       <span class="obsband">Observation · no position</span>
       <svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
-      <div class="cap">
-        <span><i style="border-color:${UP}"></i>up if yes</span>
-        ${o.lose?`<span><i style="border-color:${DN}"></i>down if yes</span>`:''}
-        <span><i style="border-color:${MAP};border-top-style:dashed"></i>equal-weight map</span>
-        ${hasPoints(o.sox)?`<span><i style="border-color:${SOX};border-top-style:dotted"></i>SOX</span>`:''}
-        ${up2!=null?`<span><i style="border-color:${UP};opacity:.55"></i>second ring</span>`:''}
-      </div>
+      ${legend(lines, 'yes', up2!=null)}
       <div class="obsnums">
         <div><b class="${sgn(o.up)}">${p2(o.up)}</b><span>up basket since the report</span></div>
         <div><b class="${sgn(o.up_ew)}">${p2(o.up_ew)}</b><span>up − map since the report</span></div>

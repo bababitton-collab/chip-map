@@ -47,6 +47,7 @@ import base64
 import binascii
 import datetime as dt
 import json
+import math
 import re
 import os
 import statistics
@@ -482,6 +483,123 @@ def sort_key(r: dict):
     return (band, _desc(r.get("marked_at") or r.get("d")), r["qid"])
 
 
+# ------------------------------------------------------------------ the record
+# Below this many scored questions no interval is printed at all. A 95% range
+# drawn from three or four events is either absurdly wide or, worse, absurdly
+# tight, and either one reads as a finding. Below it the record says so.
+MIN_N_FOR_INTERVAL = 8
+Z95 = 1.959964
+# Two-sided 95% Student t critical values. Between listed degrees of freedom
+# the next LOWER df is used, which widens an interval and never narrows one.
+T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365,
+       8: 2.306, 9: 2.262, 10: 2.228, 11: 2.201, 12: 2.179, 13: 2.160,
+       14: 2.145, 15: 2.131, 16: 2.120, 17: 2.110, 18: 2.101, 19: 2.093,
+       20: 2.086, 21: 2.080, 22: 2.074, 23: 2.069, 24: 2.064, 25: 2.060,
+       26: 2.056, 27: 2.052, 28: 2.048, 29: 2.045, 30: 2.042, 40: 2.021,
+       60: 2.000, 120: 1.980}
+DIAGNOSTIC_HORIZONS = ("5", "10", "40")
+
+
+def t95(df: int) -> float:
+    """The two-sided 95% t critical value for ``df`` degrees of freedom."""
+    if df > 120:
+        return Z95
+    return T95[max(k for k in T95 if k <= df)]
+
+
+def wilson(k: int, n: int, z: float = Z95) -> tuple[float, float]:
+    """The Wilson score interval for k hits in n. Honest at small n and at
+    k=0 or k=n, where the raw proportion's normal interval collapses to a
+    point and claims a certainty nobody has."""
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return max(0.0, c - h), min(1.0, c + h)
+
+
+def t_interval(vals: list[float]) -> tuple[float, float]:
+    """A t-based 95% interval for the mean."""
+    n = len(vals)
+    m = statistics.fmean(vals)
+    h = t95(n - 1) * statistics.stdev(vals) / math.sqrt(n)
+    return m - h, m + h
+
+
+def _signed(r: dict, h: str, key: str = "spread") -> float | None:
+    """A horizon's excess, signed toward the prediction.
+
+    The ledger stores win minus lose, and a "no" answer predicts that spread
+    falls. Averaging raw excesses across yes and no answers would cancel right
+    calls against each other, so a "no" whose basket fell counts as positive --
+    the same sign the hit is judged by.
+    """
+    got = (r.get("horizons") or {}).get(h) or {}
+    v = got.get(key)
+    if v is None:
+        return None
+    return -v if r.get("direction", 1) < 0 else v
+
+
+def record_stats(records: list[dict]) -> dict:
+    """The official record, one row per scored QUESTION at the primary horizon.
+
+    N counts questions whose PRIMARY_HORIZON result has locked -- events, never
+    horizons, and never the second ring. The hit is the ledger's: the EW_MAP
+    excess had the predicted sign. SOX and the other horizons are diagnostics,
+    computed the same way and kept apart; none of them is the hit-rate basis.
+    """
+    ph = str(PRIMARY_HORIZON)
+    seen: set[str] = set()
+    events = []
+    for r in records:
+        got = (r.get("horizons") or {}).get(ph)
+        if not got or got.get("spread") is None or r["qid"] in seen:
+            continue
+        seen.add(r["qid"])
+        events.append(r)
+    n = len(events)
+    out = {"primary_horizon": PRIMARY_HORIZON, "benchmark": "EW_MAP", "n": n,
+           "min_n_for_interval": MIN_N_FOR_INTERVAL}
+    if n == 0:
+        out.update({"hits": 0, "hit_rate": None, "hit_rate_interval": None,
+                    "mean_excess": None, "median_excess": None,
+                    "mean_excess_interval": None,
+                    "note": f"No forecast has completed its {PRIMARY_HORIZON}"
+                            f"-session window yet"})
+    else:
+        k = sum(1 for r in events if r["horizons"][ph]["hit"])
+        xs = [_signed(r, ph) for r in events]
+        wide = n >= MIN_N_FOR_INTERVAL
+        out.update({
+            "hits": k, "hit_rate": round(k / n, 4),
+            "hit_rate_interval": ([round(v, 4) for v in wilson(k, n)]
+                                  if wide else None),
+            "mean_excess": round(statistics.fmean(xs), 4),
+            "median_excess": round(statistics.median(xs), 4),
+            "mean_excess_interval": ([round(v, 4) for v in t_interval(xs)]
+                                     if wide else None),
+            "note": None if wide else f"N={n} — too few to estimate a range"})
+
+    sox = [v for v in (_signed(r, ph, "spread_sox") for r in events)
+           if v is not None]
+    out["sox"] = {"diagnostic": True, "horizon": PRIMARY_HORIZON,
+                  "n": len(sox),
+                  "mean_excess": round(statistics.fmean(sox), 4) if sox else None,
+                  "median_excess": (round(statistics.median(sox), 4)
+                                    if sox else None)}
+    diag = {}
+    for h in DIAGNOSTIC_HORIZONS:
+        rows = [r for r in records if (r.get("horizons") or {}).get(h)]
+        vals = [v for v in (_signed(r, h) for r in rows) if v is not None]
+        diag[h] = {"diagnostic": True, "n": len(rows),
+                   "hits": sum(1 for r in rows if r["horizons"][h]["hit"]),
+                   "mean_excess": (round(statistics.fmean(vals), 4)
+                                   if vals else None)}
+    out["diagnostic"] = diag
+    return out
+
+
 def summarise(records: list[dict]) -> dict:
     scored = [r for r in records if r.get("entry_date")]
     upcoming = [r for r in records if r["state"] == "upcoming"]
@@ -519,6 +637,9 @@ def summarise(records: list[dict]) -> dict:
         "direct_spread_20": at("horizons", 20, "mean"),
         "ring2_hit_5": at("horizons2", 5, "hit"),
         "ring2_spread_5": at("horizons2", 5, "mean"),
+        # The official record: the primary horizon, events not horizons,
+        # every number with its N and no range below MIN_N_FOR_INTERVAL.
+        "record": record_stats(records),
     }
 
 
@@ -601,7 +722,10 @@ SLIM_FIELDS = ("qid", "who", "tk", "d", "state", "status", "auto",
 
 def slim(data: dict) -> dict:
     """The same object with the heavy halves dropped."""
-    return {"summary": data["summary"], "as_of": data.get("as_of"),
+    # The record's detail belongs to the track page. live.json sits at its
+    # size ceiling and nothing that reads it reads the record.
+    summary = {k: v for k, v in data["summary"].items() if k != "record"}
+    return {"summary": summary, "as_of": data.get("as_of"),
             "forecasts": [{k: r[k] for k in SLIM_FIELDS if k in r}
                           for r in data["forecasts"]]}
 
@@ -1013,6 +1137,7 @@ def main(argv: list[str] | None = None) -> int:
 
 __all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
            "public", "public_leaks", "is_resolved", "official",
+           "record_stats", "wilson", "t_interval", "MIN_N_FOR_INTERVAL",
            "build_files", "cards_js",
            "CARDS_PLACEHOLDER", "GLOSSARY_PLACEHOLDER", "glossary_js",
            "encrypt", "decrypt", "load_key", "TrackKeyError", "KEY_ENV",

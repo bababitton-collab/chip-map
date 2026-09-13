@@ -561,27 +561,70 @@
       ${card(r, today)}</details>`;
   }
 
+  // The record. It leads with the official score -- the excess over the
+  // equal-weight map at the primary horizon -- and every number carries its N.
+  // N counts scored QUESTIONS, never horizons. Below the interval threshold no
+  // range is drawn at all: the record says how few there are instead. The
+  // other horizons, SOX and the second ring sit beneath, labelled for what they
+  // are.
   function tiles(S){
-    const tile = (v,label,cls) =>
-      `<div class="tile ${cls||''}"><b>${v}</b><span>${esc(label)}</span></div>`;
+    const tile = (v,label,cls,attr) =>
+      `<div class="tile ${cls||''}"${attr||''}><b>${v}</b><span>${esc(label)}</span></div>`;
     const rate = s => (s && s.value!=null) ? Math.round(s.value*100)+'%' : '0 / 0';
-    const mean = s => (s && s.value!=null) ? p2(s.value) : '0 / 0';
     const cap = (s,txt) => (s && s.n) ? txt+' (n='+s.n+')'
                                       : 'no scored forecasts yet';
+    const pct = v => v==null ? '—' : Math.round(v*100)+'%';
+    const R = S.record || null;
+    const PH = (R && R.primary_horizon) || 20;
+    const N = R ? (R.n||0) : 0;
+    const lbl = t => `<div class="rlbl" style="font-family:IBM Plex Mono,monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#b3bccb;margin:0 0 8px">${t}</div>`;
     const nu = S.next_up||null;
+    const flight = Math.max(0, (S.n_forecasts||0) - N);
     const counts = `<p class="tcap">${S.n_answered||0} answered · `
-      + `${S.n_scored||0} scored · ${S.n_unscored||0} no forecast</p>`;
-    return counts + `<div class="tiles">
-      ${tile(`${S.n_scored||0} / ${S.n_cards||0}`,'tracking / all questions')}
-      ${tile(rate(S.direct_hit_5), cap(S.direct_hit_5,'direct hit rate 5d'))}
-      ${tile(mean(S.direct_spread_5), cap(S.direct_spread_5,'direct avg spread 5d'),
-             S.direct_spread_5&&S.direct_spread_5.n?sgn(S.direct_spread_5.value):'')}
-      ${tile(mean(S.direct_spread_20), cap(S.direct_spread_20,'direct vs map 20d'),
-             S.direct_spread_20&&S.direct_spread_20.n?sgn(S.direct_spread_20.value):'')}
-      ${tile(rate(S.ring2_hit_5), cap(S.ring2_hit_5,'second ring hit 5d'))}
-      ${tile(S.n_upcoming||0, nu ? 'pre-registered · next '+nu.d+' '+nu.who
-                                 : 'pre-registered')}
+      + `${N} scored at ${PH} sessions · ${flight} in flight · `
+      + `${S.n_unscored||0} no forecast</p>`;
+
+    let head;
+    if(!N){
+      head = `<div class="record" data-record-n="0">
+        ${lbl(`Official score · ${PH}-session excess vs EW_MAP`)}
+        <p class="empty" data-record-empty>No forecast has completed its ${PH}-session window yet.</p>
+      </div>`;
+    } else {
+      const few = N < (R.min_n_for_interval||8);
+      const tooFew = `N=${N} — too few to estimate a range`;
+      const band = (iv, fmt) => iv ? `95% range ${fmt(iv[0])} to ${fmt(iv[1])}` : tooFew;
+      head = `<div class="record" data-record-n="${N}">
+        ${lbl(`Official score · ${PH}-session excess vs EW_MAP · N = ${N} scored question${N===1?'':'s'}`)}
+        <div class="tiles">
+          ${tile(N, `N · questions scored at ${PH} sessions`, '', ' data-stat="n"')}
+          ${tile(`${R.hits}/${N}`, `hit rate ${pct(R.hit_rate)} · ${few ? tooFew : band(R.hit_rate_interval, pct)}`, '', ' data-stat="hit"')}
+          ${tile(p2(R.mean_excess), `mean excess, signed to the call · ${few ? tooFew : band(R.mean_excess_interval, p2)}`, sgn(R.mean_excess), ' data-stat="mean"')}
+          ${tile(p2(R.median_excess), `median excess, signed to the call (N=${N})`, sgn(R.median_excess), ' data-stat="median"')}
+        </div>
+      </div>`;
+    }
+
+    const D = (R && R.diagnostic) || {};
+    const X = (R && R.sox) || {};
+    const dtiles = ['5','10','40']
+      .filter(h => D[h] && (h !== '40' || D[h].n))
+      .map(h => tile(D[h].n ? `${D[h].hits}/${D[h].n}` : '0 / 0',
+                     D[h].n ? `hit at ${h}d (n=${D[h].n})` : 'no scored forecasts yet')
+              + tile(D[h].n && D[h].mean_excess!=null ? p2(D[h].mean_excess) : '0 / 0',
+                     D[h].n ? `mean excess at ${h}d (n=${D[h].n})` : 'no scored forecasts yet'))
+      .join('');
+    const diag = `<div class="diag" data-diagnostic-row style="margin-top:6px">
+      ${lbl('Diagnostic, not the score')}
+      <div class="tiles">
+        ${dtiles}
+        ${tile(X.n ? p2(X.mean_excess) : '0 / 0', X.n ? `excess vs SOX at ${PH}d (n=${X.n})` : 'no scored forecasts yet', '', ' data-stat="sox"')}
+        ${tile(rate(S.ring2_hit_5), cap(S.ring2_hit_5,'second ring hit 5d'))}
+        ${tile(S.n_upcoming||0, nu ? 'pre-registered · next '+nu.d+' '+nu.who
+                                   : 'pre-registered')}
+      </div>
     </div>`;
+    return counts + head + diag;
   }
 
   window.renderTrack = function(root, data, opts){

@@ -448,7 +448,10 @@ def test_live_json_carries_a_slimmed_copy(book):
     questions, and live.json has a hard ceiling it was already close to."""
     full = built(book, [q("a", "2026-06-01", ["up"], ["down"])])
     thin = track.slim(full)
-    assert thin["summary"] == full["summary"]
+    # Everything but the record's detail, which belongs to the track page.
+    assert thin["summary"] == {k: v for k, v in full["summary"].items()
+                               if k != "record"}
+    assert "record" in full["summary"] and "record" not in thin["summary"]
     r = thin["forecasts"][0]
     assert "members" not in r and "series" not in r and "ring2_edges" not in r
     assert r["state"] == "upcoming" and r["who"] == "A"
@@ -1607,7 +1610,7 @@ def test_a_resolved_card_renders_free_verifies_and_heads_with_twenty(book,
         "    boxes[m[1]] = {state: r.state, hex: r.hex};\n"
         "  }\n"
         "  const off = /data-official=\"(\\d+)\" data-official-state=\"(\\w+)\"[\\s\\S]*?<b data-official-value[^>]*>([^<]*)<\\/b>/.exec(html);\n"
-        "  const diag = /data-diagnostic[^>]*>([^<]*)</.exec(html);\n"
+        "  const diag = /<div data-diagnostic style=\"[^\"]*\">([^<]*)</.exec(html);\n"
         "  process.stdout.write(JSON.stringify({n, boxes,\n"
         "    official: off && {h: off[1], state: off[2], value: off[3]},\n"
         "    diag: diag && diag[1], upcoming: html.includes('data-id=\"u\"')}));\n"
@@ -1621,3 +1624,148 @@ def test_a_resolved_card_renders_free_verifies_and_heads_with_twenty(book,
                                "value": f"{'+' if v > 0 else ''}{v:.2f}%"}
     assert got["diag"].startswith("Diagnostic, not the score · 5d ")
     assert " 20d " not in got["diag"], "the official horizon is not a diagnostic"
+
+
+# -- the record: the official horizon, with honest small-N statistics ----------
+
+def _rec(qid, spread, hit, direction=1, sox=None, h="20"):
+    return {"qid": qid, "direction": direction,
+            "horizons": {h: {"spread": spread, "hit": hit,
+                             "spread_sox": sox, "date": "2026-02-01"}}}
+
+
+def test_the_record_counts_questions_scored_at_twenty_not_horizons(book):
+    """Two questions scored at 20 sessions, one still inside its window, and a
+    second-ring forecast: N is 2. The 5- and 10-session results of the same two
+    questions do not add to it, and neither does the second ring."""
+    marked = CAL[-31].isoformat()
+    watch = [q("a", "2026-01-06", ["up"], ["down"]),
+             q("b", "2026-01-06", ["up"], ["down"]),
+             q("p", "2026-01-06", ["up"], ["down"])]
+    fs = [fc("fa", "a", ["up"], ["down"], CAL[-30].isoformat()),
+          fc("fb", "b", ["up"], ["down"], marked),
+          fc("b-" + marked + "-r2", "b", ["s1"], ["s2"], marked, order=2),
+          fc("fp", "p", ["up"], ["down"], CAL[-8].isoformat())]
+    s = built(book, watch, fs, {k: {"status": "yes"} for k in "abp"})["summary"]
+    R = s["record"]
+    assert R["primary_horizon"] == 20 and R["benchmark"] == "EW_MAP"
+    assert R["n"] == 2 and R["hits"] == 2
+    assert s["direct_hit_5"]["n"] == 3, "three questions have a 5-session result"
+    assert R["hit_rate_interval"] is None and R["mean_excess_interval"] is None
+    assert R["note"] == "N=2 — too few to estimate a range"
+
+
+def test_with_nothing_scored_the_record_says_so_rather_than_zero(book):
+    R = built(book, [q("a", "2026-06-01", ["up"], [])])["summary"]["record"]
+    assert R["n"] == 0 and R["hits"] == 0
+    assert R["hit_rate"] is None and R["mean_excess"] is None
+    assert R["median_excess"] is None
+    assert R["note"] == "No forecast has completed its 20-session window yet"
+
+
+def test_below_eight_no_interval_is_given():
+    recs = [_rec(f"q{i}", float(i), True) for i in range(7)]
+    R = track.record_stats(recs)
+    assert R["n"] == 7 and track.MIN_N_FOR_INTERVAL == 8
+    assert R["hit_rate_interval"] is None and R["mean_excess_interval"] is None
+    assert R["note"] == "N=7 — too few to estimate a range"
+
+
+def test_at_eight_the_hit_rate_gets_a_wilson_interval():
+    """6 of 8 at 95%: the Wilson interval is about 0.409 to 0.929 -- not the
+    raw proportion's 0.75 plus or minus a normal band."""
+    recs = [_rec(f"q{i}", 1.0 if i < 6 else -1.0, i < 6) for i in range(8)]
+    R = track.record_stats(recs)
+    assert (R["hits"], R["n"], R["hit_rate"]) == (6, 8, 0.75)
+    lo, hi = R["hit_rate_interval"]
+    assert lo == pytest.approx(0.4093, abs=1e-3)
+    assert hi == pytest.approx(0.9285, abs=1e-3)
+    assert R["note"] is None
+
+
+def test_at_eight_the_mean_excess_gets_a_t_interval():
+    """1..8: mean 4.5, sd sqrt(6), se 0.866, t(7) = 2.365 -> 2.452 to 6.548."""
+    recs = [_rec(f"q{i}", float(i + 1), True) for i in range(8)]
+    R = track.record_stats(recs)
+    assert R["mean_excess"] == 4.5 and R["median_excess"] == 4.5
+    lo, hi = R["mean_excess_interval"]
+    assert lo == pytest.approx(2.4519, abs=1e-3)
+    assert hi == pytest.approx(6.5481, abs=1e-3)
+
+
+def test_wilson_never_collapses_to_a_point_at_all_or_nothing():
+    lo, hi = track.wilson(8, 8)
+    assert hi == pytest.approx(1.0) and lo < 0.7, "8 of 8 is not certainty"
+    lo, hi = track.wilson(0, 8)
+    assert lo == pytest.approx(0.0, abs=1e-12) and hi > 0.3
+
+
+def test_the_excess_is_signed_toward_the_call():
+    """A "no" whose spread fell was right; averaging it raw would cancel it
+    against a "yes" that was also right."""
+    R = track.record_stats([_rec("y", 2.0, True, 1), _rec("n", -2.0, True, -1)])
+    assert R["mean_excess"] == 2.0 and R["hits"] == 2
+
+
+def test_sox_is_a_diagnostic_and_never_the_hit_rate_basis():
+    """The EW_MAP excess was right on both; against SOX both baskets lagged.
+    The hit rate is still 2 of 2, and SOX shows up only in its own block."""
+    R = track.record_stats([_rec("a", 1.0, True, sox=-3.0),
+                            _rec("b", 0.5, True, sox=-1.0)])
+    assert R["hit_rate"] == 1.0 and R["mean_excess"] == 0.75
+    assert R["sox"] == {"diagnostic": True, "horizon": 20, "n": 2,
+                        "mean_excess": -2.0, "median_excess": -2.0}
+    assert "hit" not in json.dumps(R["sox"])
+
+
+def test_the_other_horizons_are_labelled_diagnostic():
+    R = track.record_stats([_rec("a", 1.0, True, h="5")])
+    assert R["n"] == 0, "a 5-session result is not a scored question"
+    assert set(R["diagnostic"]) == {"5", "10", "40"}
+    assert R["diagnostic"]["5"] == {"diagnostic": True, "n": 1, "hits": 1,
+                                    "mean_excess": 1.0}
+
+
+def _tiles(tmp_path, record, **summary):
+    import shutil
+    import subprocess
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    js = tmp_path / "tiles.js"
+    js.write_text("globalThis.window = {};\n" + cards_source() + "\n"
+                  "const root = {};\n"
+                  "window.renderTrack(root, " + json.dumps(
+                      {"summary": dict(summary, record=record),
+                       "forecasts": []}) + ");\n"
+                  "process.stdout.write(root.innerHTML);\n", encoding="utf-8")
+    html = subprocess.run(["node", str(js)], capture_output=True,
+                          check=True).stdout.decode("utf-8")
+    i = html.index('<div class="record"')
+    j = html.index("data-diagnostic-row")
+    return html, html[i:j], html[j:]
+
+
+def test_with_none_complete_the_record_shows_the_plain_sentence(tmp_path):
+    html, head, _diag = _tiles(tmp_path, track.record_stats([]), n_forecasts=0)
+    assert "No forecast has completed its 20-session window yet." in head
+    assert "Official score · 20-session excess vs EW_MAP" in head
+    assert "%" not in html, "no fabricated percentage anywhere on the record"
+
+
+def test_below_eight_the_page_prints_no_range(tmp_path):
+    recs = [_rec(f"q{i}", 1.0, i < 2) for i in range(3)]
+    html, head, _diag = _tiles(tmp_path, track.record_stats(recs), n_forecasts=3)
+    assert 'data-stat="hit"><b>2/3</b>' in head
+    assert head.count("N=3 — too few to estimate a range") == 2
+    assert "95% range" not in html
+
+
+def test_at_eight_the_page_prints_the_ranges_with_n(tmp_path):
+    recs = [_rec(f"q{i}", float(i + 1), i < 6, sox=0.1) for i in range(8)]
+    html, head, diag = _tiles(tmp_path, track.record_stats(recs), n_forecasts=8)
+    assert "N = 8 scored questions" in head
+    assert 'data-stat="hit"><b>6/8</b><span>hit rate 75% · 95% range 41% to 93%' in head
+    assert "95% range +2.45% to +6.55%" in head
+    assert "SOX" not in head, "SOX is never in the official block"
+    assert "Diagnostic, not the score" in diag
+    assert 'data-stat="sox"><b>+0.10%</b><span>excess vs SOX at 20d (n=8)' in diag

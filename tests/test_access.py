@@ -6,7 +6,8 @@ afterwards to catch what the other two got wrong. That last one exists because
 the first two disagreed at least once.
 
 This is the table. If the product's line moves, it moves here, and every
-builder follows because none of them decides.
+builder follows because none of them decides. It moved on 2026-09-13: the past
+is public proof, the future is the product.
 """
 from __future__ import annotations
 
@@ -29,26 +30,32 @@ TABLE = [
     ("method", {}, "free"),
     ("forecast_closed", {}, "free"),
 
-    # the one worked example, complete
+    # the one worked example: its text and first ring, nothing more
     ("question_text", {"nearest": True}, "free"),
     ("constellation", {"nearest": True}, "free"),
 
-    # anything already answered is public: a claim stops being an edge the
-    # moment its answer is
+    # anything answered is public, in full
     ("question_text", {"answered": True}, "free"),
     ("constellation", {"answered": True}, "free"),
     ("mark", {"answered": True}, "free"),
+    ("ring2", {"answered": True}, "free"),
+    ("forecast_active", {"answered": True}, "free"),
+    ("member_prices", {"answered": True}, "free"),
+    ("contract", {"answered": True}, "free"),
 
-    # and everything else is the working position
+    # and everything not yet answered is the product
     ("question_text", {}, "locked"),
     ("constellation", {}, "locked"),
     ("mark", {}, "locked"),
+    ("mark", {"nearest": True}, "locked"),
     ("ring2", {}, "locked"),
     ("ring2", {"nearest": True}, "locked"),
     ("forecast_active", {}, "locked"),
     ("forecast_active", {"nearest": True}, "locked"),
     ("member_prices", {}, "locked"),
-    ("member_prices", {"answered": True}, "locked"),
+    ("member_prices", {"nearest": True}, "locked"),
+    ("contract", {}, "locked"),
+    ("contract", {"nearest": True}, "locked"),
 ]
 
 
@@ -68,18 +75,20 @@ def test_an_unknown_kind_is_an_error_not_a_guess():
     assert "defaulting to free" in str(e.value)
 
 
-def test_the_second_ring_is_never_free():
-    """Derived work, not a public fact. Not even for the nearest question, and
-    not even after it is answered."""
-    for ctx in ({}, {"nearest": True}, {"answered": True},
-                {"nearest": True, "answered": True}):
-        assert access.tier("ring2", ctx) == "locked"
+def test_a_resolved_question_is_free_in_full():
+    """A skeptic who has to pay to check the record is being asked to take it
+    on trust. Every kind is free once the answer is in."""
+    for kind in access.KINDS:
+        for ctx in ({"answered": True}, {"answered": True, "nearest": True}):
+            assert access.tier(kind, ctx) == "free", (kind, ctx)
 
 
-def test_an_open_position_is_never_free():
-    for kind in ("forecast_active", "member_prices"):
-        for ctx in ({}, {"nearest": True}, {"answered": True}):
-            assert access.tier(kind, ctx) == "locked"
+def test_what_is_still_ahead_never_opens_early():
+    """Not even for the one worked example: its mark, members, prices, second
+    ring and contract bytes wait for the answer."""
+    for kind in access.LOCKED_UNTIL_ANSWERED:
+        for ctx in ({}, {"nearest": True}, {"answered": False}):
+            assert access.tier(kind, ctx) == "locked", (kind, ctx)
 
 
 def test_a_finished_forecast_is_always_free():

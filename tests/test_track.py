@@ -541,10 +541,12 @@ def test_the_rendered_page_says_nothing_undefined(book):
 
 def test_the_page_never_shows_a_bare_dash_in_a_tile():
     """With nothing finished the honest reading is a zero out of a zero, and a
-    caption that says which zero it is."""
-    body = template()
-    assert "'0 / 0'" in body
-    assert "no finished forecasts yet" in body
+    caption that says which zero it is. The tiles are drawn by the shared
+    renderer now, over the free resolved cards, so that is where it is checked."""
+    assert "summary:P.summary" in template()
+    cards = cards_source()
+    assert "'0 / 0'" in cards
+    assert "no scored forecasts yet" in cards
 
 
 # -- what the edge carries ----------------------------------------------------
@@ -747,43 +749,48 @@ def test_a_good_key_loads(monkeypatch):
 
 # -- the free half -----------------------------------------------------------
 
-def test_the_public_payload_describes_nothing_in_flight(book):
-    """Anything still running is counted, never described: its members and its
-    prices are not in the object at all."""
+def test_the_public_payload_describes_nothing_still_ahead(book):
+    """A question not yet answered is a count and a date. Its baskets, members,
+    prices and text are not in the object at all."""
+    # FLAT and STALE: stations the resolved card's own rings never touch, so
+    # finding one in the free object can only mean the future leaked.
     watch = [q("t", "2026-01-06", ["up"], ["down"]),
-             q("u", (TODAY + dt.timedelta(days=9)).isoformat(), ["up"], [])]
+             q("u", (TODAY + dt.timedelta(days=9)).isoformat(), ["flat"],
+               ["stale"], q="A question nobody has answered yet, still paid.")]
     fs = [fc("f", "t", ["up"], ["down"], CAL[-8].isoformat())]
     pub = track.public(built(book, watch, fs, {"t": {"status": "yes"}}))
+    assert [r["qid"] for r in pub["forecasts"]] == ["t"]
+    assert pub["n_ahead"] == 1 and pub["n_upcoming"] == 1
     blob = json.dumps(pub)
-    assert pub["n_active"] == 1 and pub["closed"] == []
-    for word in ("members", "series", "entry_close", "since_pct", "win2",
-                 "ring2_edges", "UP", "DOWN"):
+    for word in ('"qid": "u"', '"tk": "FLAT"', '"tk": "STALE"', '"flat"',
+                 "still paid"):
         assert word not in blob, word
 
 
-def test_a_finished_forecast_goes_out_whole(book):
-    """The record is the evidence, and evidence nobody can see is not
-    evidence."""
-    watch = [q("c", "2026-01-06", ["up"], ["down"])]
-    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
-    pub = track.public(built(book, watch, fs, {"c": {"status": "yes"}}))
-    assert len(pub["closed"]) == 1
-    row = pub["closed"][0]
-    assert row["who"] == "C" and row["status"] == "yes"
-    assert row["horizons"]["5"]["spread"] is not None
-    assert "members" not in row
+def test_a_resolved_forecast_in_flight_goes_out_whole(book):
+    """The past is public proof: a question answered yes is free in full the
+    day it is answered, not forty sessions later."""
+    watch = [q("t", "2026-01-06", ["up"], ["down"], q="Q?", yes="Y", no="N",
+               why="W")]
+    fs = [fc("f", "t", ["up"], ["down"], CAL[-8].isoformat())]
+    full = built(book, watch, fs, {"t": {"status": "yes"}})
+    row = track.public(full)["forecasts"][0]
+    assert row["state"] == "tracking"
+    assert row == full["forecasts"][0], "the whole card, not a summary of it"
+    for part in ("q", "yes", "no", "why", "members", "series", "horizons",
+                 "win2", "ring2_edges", "official", "primary_horizon"):
+        assert part in row, part
 
 
-def test_the_second_ring_is_a_count_not_a_cast_list(book):
+def test_a_resolved_card_carries_its_second_ring(book):
     marked = CAL[0].isoformat()
     watch = [q("c", "2026-01-06", ["up"], ["down"])]
     fs = [fc("f", "c", ["up"], ["down"], marked),
           fc("c-" + marked + "-r2", "c", ["s1"], ["s2"], marked, order=2)]
-    pub = track.public(built(book, watch, fs, {"c": {"status": "yes"}}))
-    row = pub["closed"][0]
-    assert isinstance(row["ring2_scored"], int)
-    blob = json.dumps(pub)
-    assert "s1" not in blob and "S1" not in blob
+    row = track.public(built(book, watch, fs,
+                             {"c": {"status": "yes"}}))["forecasts"][0]
+    assert row["state"] == "closed"
+    assert row["win2"] == ["s1"] and row["horizons2"]
 
 
 def test_the_public_payload_names_the_next_date_and_who(book):
@@ -946,19 +953,19 @@ def test_a_record_with_no_text_has_none_of_the_four(book):
         assert part not in r
 
 
-def test_the_public_half_never_carries_the_three_extra_parts(book):
-    """Only the question itself, and only on a finished forecast, whose answer
-    is already public. yes/no/why stay behind the key."""
+def test_the_public_half_carries_every_part_of_a_resolved_question_only(book):
+    """Once answered, the question and what yes, no and why sound like are
+    public -- they are the rule the answer was classified by. Before, none."""
+    later = (TODAY + dt.timedelta(days=9)).isoformat()
     watch = [q("c", "2026-01-06", ["up"], ["down"], q="Q?", yes="Y", no="N",
-               why="W")]
+               why="W"),
+             q("u", later, ["up"], [], q="Upcoming question text, still paid for.",
+               yes="Upcoming yes sentence, still paid for.")]
     fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
     pub = track.public(built(book, watch, fs, {"c": {"status": "yes"}}))
-    row = pub["closed"][0]
-    assert row["q"] == "Q?"
-    for part in ("yes", "no", "why"):
-        assert part not in row
-    blob = json.dumps(pub)
-    assert '"Y"' not in blob and '"N"' not in blob and '"W"' not in blob
+    row = pub["forecasts"][0]
+    assert (row["q"], row["yes"], row["no"], row["why"]) == ("Q?", "Y", "N", "W")
+    assert "still paid for" not in json.dumps(pub)
 
 
 def test_the_slim_copy_carries_no_text_at_all(book):
@@ -1459,3 +1466,158 @@ def test_the_verify_control_recomputes_the_committed_hash_in_the_browser(
     assert b["late"]["state"] == "late"
     assert "not a valid preregistration" in b["late"]["text"]
     assert b["tampered"]["state"] == "mismatch"
+
+
+# -- resolved is public, upcoming is paid ---------------------------------------
+
+def test_the_official_score_is_the_primary_horizon_excess(book):
+    watch = [q("s", "2026-01-06", ["up"], ["down"]),
+             q("p", "2026-01-06", ["up"], ["down"]),
+             q("m", "2026-01-06", ["up"], ["down"]),
+             q("o", "2026-01-06", [], [], observe_only=True)]
+    fs = [fc("fs", "s", ["up"], ["down"], CAL[-30].isoformat()),
+          fc("fp", "p", ["up"], ["down"], CAL[-8].isoformat())]
+    marks = {"s": {"status": "yes"}, "p": {"status": "yes"},
+             "m": {"status": "mixed"}, "o": {"status": "none"}}
+    by = {r["qid"]: r for r in built(book, watch, fs, marks)["forecasts"]}
+    assert track.PRIMARY_HORIZON == 20 and by["s"]["primary_horizon"] == 20
+    assert by["s"]["official"]["state"] == "scored" and by["s"]["official"]["counts"]
+    assert by["s"]["horizons"]["20"]["spread"] is not None
+    assert by["p"]["official"]["state"] == "pending"
+    assert by["p"]["official"]["counts"] is False
+    assert by["m"]["official"]["state"] == "unscored"
+    assert "mixed" in by["m"]["official"]["reason"]
+    assert by["o"]["official"]["state"] == "unscored"
+    assert "observation-only" in by["o"]["official"]["reason"]
+
+
+def _ahead(book):
+    later = (TODAY + dt.timedelta(days=9)).isoformat()
+    watch = [q("c", "2026-01-06", ["up"], ["down"], q="Q?", yes="Y"),
+             q("u", later, ["s1"], ["s2"],
+               q="The upcoming question, still being paid for.")]
+    fs = [fc("f", "c", ["up"], ["down"], CAL[0].isoformat())]
+    data = built(book, watch, fs, {"c": {"status": "yes"}})
+    prereg = {"u": {"contract":
+                    '{"qid":"u","win":["s1"],"yes_criteria":"a paid rule"}'}}
+    return data, prereg
+
+
+def test_the_free_file_passes_its_leak_gate(book):
+    data, prereg = _ahead(book)
+    assert track.public_leaks(track.public(data), data, prereg) == []
+
+
+@pytest.mark.parametrize("what", ["card", "sentence", "basket", "contract"])
+def test_anything_of_a_future_question_in_the_free_file_fails_the_gate(book,
+                                                                       what):
+    data, prereg = _ahead(book)
+    pub = track.public(data)
+    upcoming = next(r for r in data["forecasts"] if r["qid"] == "u")
+    if what == "card":
+        pub["forecasts"].append(upcoming)
+    elif what == "sentence":
+        pub["note"] = "The upcoming question, still being paid for."
+    elif what == "basket":
+        pub["extra"] = {"win": ["s1"]}
+    else:
+        pub["extra"] = prereg["u"]["contract"]
+    got = track.public_leaks(pub, data, prereg)
+    assert got and all(g.startswith("u:") for g in got), (what, got)
+
+
+def test_the_free_track_file_is_published_beside_live_json_and_scanned():
+    from chains import publish_site
+    assert ("track_public.json", "track_public.json") in publish_site.COPIES
+    assert "track_public.json" in publish_site.PAYWALLED
+    assert "track_public.json" in publish_site.GATED
+
+
+def test_live_json_carries_nothing_new(book):
+    """live.json is unchanged in what it carries: the slim copy still holds
+    only its fixed fields, and none of the free card's additions."""
+    watch = [q("s", "2026-01-06", ["up"], ["down"])]
+    fs = [fc("fs", "s", ["up"], ["down"], CAL[-30].isoformat())]
+    thin = track.slim(built(book, watch, fs, {"s": {"status": "yes"}}))
+    for r in thin["forecasts"]:
+        assert set(r) <= set(track.SLIM_FIELDS)
+        for k in ("official", "primary_horizon", "prereg", "members"):
+            assert k not in r
+
+
+def test_the_page_draws_resolved_cards_without_asking_for_any_key():
+    body = template()
+    i = body.index("function drawResolved(")
+    j = body.index("// ---- the locked panel", i)
+    free = body[i:j]
+    assert "window.renderTrack(root" in free and "forecasts:resolved" in free
+    for word in ("decrypt", "importKey", "track.enc", "localStorage"):
+        assert word not in free, word
+    assert "fetch('../commitments.json'" in free
+    k = body.index("function show(")
+    shown = body[k:body.index("async function tryKey", k)]
+    assert "resolvedIds.has" in shown and "{tiles:false}" in shown
+
+
+def test_a_resolved_card_renders_free_verifies_and_heads_with_twenty(book,
+                                                                    tmp_path):
+    """The free object, rendered by the real renderer with no key: the card is
+    there, Verify recomputes the committed hash with WebCrypto, and the
+    headline number is the 20-session excess over EW_MAP."""
+    import hashlib
+    import shutil
+    import subprocess
+
+    from chains import preregister
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    later = (TODAY + dt.timedelta(days=9)).isoformat()
+    watch = [q("s", "2026-01-06", ["up"], ["down"],
+               yes="Units shipped above guidance.", no="Units flat."),
+             q("u", later, ["s1"], [], q="Still ahead and paid for, this one.")]
+    fs = [fc("fs", "s", ["up"], ["down"], CAL[-30].isoformat())]
+    contract = preregister.canonical(
+        {"id": "s", "win": ["up"], "lose": ["down"], "kind": "tide"},
+        {"yes_en": "Units shipped above guidance.", "no_en": "Units flat."}
+    ).decode("utf-8")
+    sha = hashlib.sha256(contract.encode("utf-8")).hexdigest()
+    prereg = {"s": {"sha256": sha, "committed_at": "2026-01-01",
+                    "answer_date": "2026-01-06", "valid_preregistration": True,
+                    "primary_horizon": 20, "contract": contract}}
+    data = track.build(fs, forecast.build(fs, DOC, [], CAL), watch, DOC,
+                       {"s": {"status": "yes"}}, book, CAL, TODAY,
+                       prereg=prereg)
+    pub = track.public(data)
+    assert track.public_leaks(pub, data, prereg) == []
+    js = tmp_path / "free.js"
+    js.write_text(
+        "globalThis.window = {};\n" + cards_source() + "\n"
+        "const root = {};\n"
+        f"const n = window.renderTrack(root, {json.dumps(pub)});\n"
+        "const html = root.innerHTML;\n"
+        "const un = s => s.replace(/&quot;/g,'\"').replace(/&lt;/g,'<')"
+        ".replace(/&gt;/g,'>').replace(/&amp;/g,'&');\n"
+        "const re = /<div class=\"prereg\" data-prereg=\"([^\"]*)\" "
+        "data-sha=\"([^\"]*)\" data-valid=\"([01])\" data-committed=\"([^\"]*)\" "
+        "data-answer=\"([^\"]*)\" data-contract=\"([^\"]*)\"/g;\n"
+        "(async () => {\n"
+        "  const boxes = {};\n"
+        "  for (const m of html.matchAll(re)) {\n"
+        "    const r = await window.verifyPrereg(un(m[6]), m[2], m[3]==='1', m[4], m[5]);\n"
+        "    boxes[m[1]] = {state: r.state, hex: r.hex};\n"
+        "  }\n"
+        "  const off = /data-official=\"(\\d+)\" data-official-state=\"(\\w+)\"[\\s\\S]*?<b data-official-value[^>]*>([^<]*)<\\/b>/.exec(html);\n"
+        "  const diag = /data-diagnostic[^>]*>([^<]*)</.exec(html);\n"
+        "  process.stdout.write(JSON.stringify({n, boxes,\n"
+        "    official: off && {h: off[1], state: off[2], value: off[3]},\n"
+        "    diag: diag && diag[1], upcoming: html.includes('data-id=\"u\"')}));\n"
+        "})();\n", encoding="utf-8")
+    got = json.loads(subprocess.run(["node", str(js)], capture_output=True,
+                                    check=True).stdout.decode("utf-8"))
+    assert got["n"] == 1 and got["upcoming"] is False
+    assert got["boxes"] == {"s": {"state": "verified", "hex": sha}}
+    v = next(r for r in data["forecasts"] if r["qid"] == "s")["horizons"]["20"]["spread"]
+    assert got["official"] == {"h": "20", "state": "scored",
+                               "value": f"{'+' if v > 0 else ''}{v:.2f}%"}
+    assert got["diag"].startswith("Diagnostic, not the score · 5d ")
+    assert " 20d " not in got["diag"], "the official horizon is not a diagnostic"

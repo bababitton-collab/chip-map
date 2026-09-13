@@ -82,6 +82,9 @@ COPIES = [
     # Free and never paywalled: the hash of every question's scoring contract,
     # published before its answer date. Hashes and dates only, no sentence.
     ("commitments.json", "commitments.json"),
+    # Free: every RESOLVED question's whole card, with the contract bytes the
+    # Verify control hashes. Gated in chains/track.py, scanned again below.
+    ("track_public.json", "track_public.json"),
 ]
 
 BRIEFS = [("brief-free-*.md", "brief.md"),
@@ -99,11 +102,12 @@ TRACK_FILES = [("track.html", "index.html"),
                ("track.enc.json", "track.enc.json")]
 TRACK_PLAINTEXT = "track.json"
 
-GATED = ("index.html", "live_en.json")
+GATED = ("index.html", "live_en.json", "track_public.json")
 
 # Checked for locked question text rather than for Hebrew: these are the files
 # that could carry a sentence somebody is meant to pay for.
 PAYWALLED = ("index.html", "he.html", "live.json", "live_en.json",
+             "track_public.json",
              "brief.md", "brief-he.md",
              # The forward test names the question behind every mark, so it is
              # scanned on the same terms as the map and the letter. The sealed

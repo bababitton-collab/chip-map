@@ -87,7 +87,8 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
 def outputs(today: date) -> list[str]:
     return ["commitments.json", "live.json", "live_en.json",
             "public-map.html",
-            "public-map-en.html", "track.json", "track.html",
+            "public-map-en.html", "track.json", "track_public.json",
+            "track.html",
             f"brief-{today.isoformat()}.md",
             f"brief-free-{today.isoformat()}.md",
             f"brief-he-{today.isoformat()}.md",

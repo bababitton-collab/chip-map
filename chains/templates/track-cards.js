@@ -5,7 +5,8 @@
 // task writes to its database. They must not drift, so there is one file and
 // both inline it at build time.
 //
-// window.renderTrack(rootElement, fullPayload) -- nothing else is exported and
+// window.renderTrack(rootElement, payload[, {tiles:false}]) and
+// window.verifyPrereg(...) -- nothing else is exported, and
 // nothing here fetches, decrypts or decides what a reader may see. It draws
 // what it is handed.
 (function(){
@@ -415,6 +416,37 @@
     return out;
   }
 
+  // The official score: one number per scored question -- the excess over the
+  // equal-weight map at the pre-registered primary horizon. Every other
+  // horizon, and SOX, is a diagnostic read beside it and never a second chance
+  // to be right. N counts questions, not horizons.
+  function officialScore(r){
+    if(!r.entry_date) return '';
+    const PH = String(r.primary_horizon||20);
+    const hz = r.horizons||{}, h = hz[PH];
+    const diag = Object.keys(hz).filter(k=>k!==PH && hz[k])
+      .sort((a,b)=>Number(a)-Number(b)).map(k=>`${k}d ${p2(hz[k].spread)}`);
+    if(h && h.spread_sox!=null) diag.push(`vs SOX at ${PH}d ${p2(h.spread_sox)}`);
+    const big = 'display:block;font-family:IBM Plex Mono,monospace;font-weight:500;line-height:1.1';
+    const val = h
+      ? `<b data-official-value class="${h.hit?'pos':'neg'}" style="${big};font-size:1.6rem">${p2(h.spread)}</b><span>${h.hit?'hit':'miss'} · locked ${esc(h.date)}</span>`
+      : `<b data-official-value class="flat" style="${big};font-size:1.1rem">pending</b><span>locks at session ${PH} · day ${esc(r.day_index)} of ${PH}</span>`;
+    return `<div class="official" data-official="${PH}" data-official-state="${h?'scored':'pending'}" style="margin-top:14px;padding:10px 12px;border:1px solid #31405a;border-radius:8px">
+      <div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#b3bccb;margin-bottom:6px">Official score · ${PH}-session excess vs EW_MAP</div>
+      <div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7d8797">${val}</div>
+      ${diag.length?`<div data-diagnostic style="margin-top:8px;font-family:IBM Plex Mono,monospace;font-size:.6rem;color:#7d8797">Diagnostic, not the score · ${diag.map(esc).join(' · ')}</div>`:''}
+    </div>`;
+  }
+
+  // Why an answered card is not (or not yet) in the official score, in the
+  // card's own words. A scored card says it with its number instead.
+  function offNote(r){
+    const o = r.official;
+    if(!o || !ANSWERED(r) || r.entry_date || o.state==='scored') return '';
+    const lead = o.state==='pending' ? 'Not yet in the official score' : 'Not in the official score';
+    return `<div class="offnote" data-official-state="${esc(o.state)}" style="margin-top:8px;font-family:IBM Plex Mono,monospace;font-size:.66rem;color:#7d8797;line-height:1.5">${lead} · ${esc(o.reason)}</div>`;
+  }
+
   function head(r, today){
     const m = word(r);
     const daysTo = d => Math.round((Date.parse(d+'T00:00:00Z')
@@ -464,7 +496,7 @@
       <div class="dt">${esc(when)}</div>
       ${question(r)}
       ${findings(r)}
-      ${line}${nums}
+      ${line}${officialScore(r)}${offNote(r)}${nums}
     </div>`;
   }
 
@@ -499,7 +531,7 @@
     const ok = !!p.valid_preregistration;
     return `<div class="prereg" data-prereg="${esc(r.qid)}" data-sha="${esc(p.sha256)}" data-valid="${ok?'1':'0'}" data-committed="${esc(p.committed_at)}" data-answer="${esc(p.answer_date)}" data-contract="${esc(p.contract)}" style="margin-top:12px;padding:10px 12px;border:1px solid #222a36;border-radius:6px;font-family:IBM Plex Mono,monospace;font-size:.7rem;color:#b3bccb">
       <div>Pre-registered ${esc(p.committed_at)} · answer date ${esc(p.answer_date)} · primary horizon ${esc(p.primary_horizon)} sessions${ok?'':' · <b style="color:#f2b632">not a valid preregistration</b>'}</div>
-      <div style="word-break:break-all;margin:6px 0;color:#7d8797">SHA-256 ${esc(p.sha256)}</div>
+      <div style="word-break:break-all;margin:6px 0;color:#7d8797">SHA-256 ${esc(p.sha256)} · ${p.hash_source==='commitments.json'?'read from commitments.json':'as carried in this page'}</div>
       <button type="button" data-verify style="font:inherit;color:#e8ecf2;background:#141922;border:1px solid #31405a;border-radius:4px;padding:4px 10px;cursor:pointer">Verify preregistration</button>
       <span class="pr-result" role="status" style="margin-left:8px"></span>
       <details style="margin-top:6px"><summary>Scoring contract — the exact bytes that were hashed</summary><pre style="white-space:pre-wrap;word-break:break-all">${esc(p.contract)}</pre></details>
@@ -521,7 +553,8 @@
   function closedRow(r, today){
     const chips = ['5','10','20','40'].map(h=>{
       const d = (r.horizons||{})[h];
-      return `<span class="${d?(d.hit?'hit':'miss'):''}">${h}d ${d?p2(d.spread):'—'}</span>`;
+      const primary = h===String(r.primary_horizon||20);
+      return `<span class="${d?(d.hit?'hit':'miss'):''}"${primary?' data-official="1"':''}>${h}d${primary?' official':''} ${d?p2(d.spread):'—'}</span>`;
     }).join(' ');
     return `<details class="closed" data-id="${esc(r.qid)}" data-state="closed">
       <summary><b>${esc(r.who)}</b><span class="pill ${word(r)}">${word(r)}</span>${chips}</summary>
@@ -551,7 +584,10 @@
     </div>`;
   }
 
-  window.renderTrack = function(root, data){
+  window.renderTrack = function(root, data, opts){
+    // {tiles:false}: the page draws the scoreboard once, over the free
+    // cards, and not again over the ones a key opens beneath them.
+    opts = opts || {};
     // The payload carries its own glossary, so a card drawn from a decrypted
     // file underlines the same words as one drawn from live.json.
     if(window.GL) GL.use((data && data.glossary) || {});
@@ -560,7 +596,7 @@
                                      : new Date();
     const open = F.filter(r=>r.state!=='closed');
     const shut = F.filter(r=>r.state==='closed');
-    root.innerHTML = tiles(S)
+    root.innerHTML = (opts.tiles === false ? '' : tiles(S))
       + open.map(r=>card(r, today)).join('')
       + (shut.length ? `<div class="sect">Closed · every checkpoint scored</div>`
           + shut.map(r=>closedRow(r, today)).join('') : '');

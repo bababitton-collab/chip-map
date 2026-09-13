@@ -171,13 +171,12 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
 <a class="back" href="../index.html">← the map</a>
 <div class="eyebrow" style="margin-top:22px">05 · Forward test</div>
 <h2>What we said would move — and what moved</h2>
-<p class="lede">Every "yes" or "no" on a question registers a forecast the day it is marked: a basket that should go up, a basket that should go down, both measured against the equal-weight map from the next session's close. Updated with each day's prices. Nothing is added after the fact.</p>
+<p class="lede">Every question is pre-registered before its answer date: its baskets, the yes/no rule it will be classified by, the horizons and the benchmarks are hashed, and the hash is published. Once a question is answered its whole card is public here — what was claimed, what was reported, how the baskets moved against the equal-weight map and SOX — and anyone can recompute the hash to check that nothing changed. The official score is the excess over the equal-weight map at 20 sessions. Nothing is added after the fact.</p>
 
-<div id="tiles"></div>
-<h3 id="sbh">The record · forecasts whose forty sessions are complete</h3>
-<div class="board" id="board"></div>
+<h3 id="sbh">Resolved · free, in full, verifiable</h3>
+<div id="resolved"></div>
 
-<h3>Active tracking</h3>
+<h3>Upcoming · pre-registered, not yet answered</h3>
 <div class="locked" id="locked"></div>
 
 <div class="unlock" id="unlock">
@@ -192,9 +191,11 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
 </div>
 
 <script>
-// The FREE half, inlined. Everything still in flight is a count here and a
-// count is all it is -- the detail lives in track.enc.json, sealed, and is
-// opened in the reader's own browser by a key that never leaves it.
+// The FREE half, inlined: every RESOLVED question's whole card -- the same
+// object published beside live.json as track_public.json. A question still
+// ahead is a count and a date here and nothing more; its detail lives in
+// track.enc.json, sealed, and is opened in the reader's own browser by a key
+// that never leaves it.
 const PUBLIC = __TRACK__;
 </script>
 <script>
@@ -207,70 +208,57 @@ __CARDS_JS__
 (function(){
   const esc = v => String(v==null?'':v).replace(/[&<>"]/g, c=>(
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const p2 = v => v==null ? '—' : (v>0?'+':'') + v.toFixed(2) + '%';
-  const P = PUBLIC||{}, closed = P.closed||[];
+  const P = PUBLIC||{}, resolved = P.forecasts||[];
+  const resolvedIds = new Set(resolved.map(r=>r.qid));
 
-  // ---- tiles: closed forecasts only ------------------------------------
-  const nums = h => closed.map(r=>(r.horizons||{})[h]).filter(Boolean);
-  const rate = h => { const v=nums(h); return v.length
-    ? Math.round(v.filter(x=>x.hit).length/v.length*100)+'%' : '0 / 0'; };
-  const mean = h => { const v=nums(h); return v.length
-    ? p2(v.reduce((a,x)=>a+x.spread,0)/v.length) : '0 / 0'; };
-  const cap = (h,t) => nums(h).length ? t+' (n='+nums(h).length+')'
-                                      : 'no finished forecasts yet';
-  const tile = (v,label) =>
-    `<div class="tile"><b>${v}</b><span>${esc(label)}</span></div>`;
-  const nu = P.next_up||null;
-  const ring2 = closed.reduce((a,r)=>a+(r.ring2_scored||0),0);
-  document.getElementById('tiles').innerHTML = `<div class="tiles">
-    ${tile(P.n_closed||0,'forecasts complete')}
-    ${tile(rate('5'), cap('5','hit rate 5d'))}
-    ${tile(mean('20'), cap('20','avg spread 20d'))}
-    ${tile(mean('40'), cap('40','avg spread 40d'))}
-    ${tile(ring2, 'second ring · scored')}
-    ${tile(P.n_upcoming||0, nu ? 'pre-registered · next '+nu.d+' '+nu.who
-                               : 'pre-registered')}
-  </div>`;
-
-  // ---- the scoreboard ---------------------------------------------------
-  const board = document.getElementById('board');
-  if(!closed.length){
-    board.innerHTML = `<p class="empty">No forecast has run its full forty
-      sessions yet. The first one lands here the moment it does — with what was
-      claimed, when, and what happened, whichever way it went.</p>`;
-  } else {
-    const rows = closed.map(r=>{
-      const cells = ['5','10','20','40'].map(h=>{
-        const d=(r.horizons||{})[h];
-        return `<td class="${d?(d.hit?'hit':'miss'):''}">${d?p2(d.spread):'—'}</td>`;
-      }).join('');
-      const m = r.status==='no' ? 'no' : 'yes';
-      return `<tr><td>${esc(r.who)}</td>
-        <td>${esc(String(r.marked_at||'').slice(0,10))}</td>
-        <td><span class="pill ${m}">${m}</span></td>${cells}
-        <td>${r.ring2_scored||0}</td></tr>`;
-    }).join('');
-    board.innerHTML = `<table class="sb">
-      <tr><th>Question</th><th>Marked</th><th>Answer</th>
-        <th>5d</th><th>10d</th><th>20d</th><th>40d</th>
-        <th>Second ring · scored</th></tr>${rows}</table>`;
+  // ---- resolved: drawn for everyone -------------------------------------
+  // No key is asked for and nothing is opened. Each card's committed hash is
+  // taken from commitments.json -- the separately published file, in git --
+  // when it can be read, so Verify checks the revealed contract against that
+  // file rather than against a copy of the hash carried in this page.
+  function drawResolved(){
+    const root = document.getElementById('resolved');
+    if(!resolved.length){
+      root.innerHTML = `<p class="empty">No question has been answered yet. The
+        first one lands here, whole and verifiable, the day it is.</p>`;
+      return;
+    }
+    window.renderTrack(root, {as_of:P.as_of, summary:P.summary||{},
+                              glossary:P.glossary||{}, forecasts:resolved});
   }
+  fetch('../commitments.json', {cache:'no-store'})
+    .then(res => res.ok ? res.json() : [])
+    .then(list => {
+      const by = {};
+      (list||[]).forEach(e => { by[e.qid] = e; });
+      resolved.forEach(r => {
+        const e = by[r.qid];
+        if(!r.prereg || !e) return;
+        Object.assign(r.prereg, {sha256:e.sha256, committed_at:e.committed_at,
+          answer_date:e.answer_date, valid_preregistration:e.valid_preregistration,
+          hash_source:'commitments.json'});
+      });
+    })
+    .catch(() => {})
+    .then(drawResolved);
 
   // ---- the locked panel -------------------------------------------------
-  // The placeholder under the blur is generic on purpose: no ticker, no date,
-  // no label. A blur is a picture, and a picture of the real thing is the
-  // real thing to anyone who can read a screenshot.
+  // Only what is still ahead. The placeholder under the blur is generic on
+  // purpose: no ticker, no date, no label. A blur is a picture, and a picture
+  // of the real thing is the real thing to anyone who can read a screenshot.
   const bars = n => Array.from({length:n},()=>'<div class="gb"></div>').join('');
+  const nu = P.next_up||null;
   document.getElementById('locked').innerHTML = `
-    <div class="count">${P.n_active||0} forecast${P.n_active===1?'':'s'} in
-      progress · ${P.n_upcoming||0} pre-registered</div>
+    <div class="count">${P.n_upcoming||0} question${P.n_upcoming===1?'':'s'}
+      pre-registered, not yet answered${nu ? ' · next '+esc(nu.d)+' '+esc(nu.who) : ''}</div>
     <div class="ghost blur" aria-hidden="true">
       <div><div class="gring"></div>${bars(3)}</div>
       <div>${bars(6)}</div>
       <div>${bars(9)}</div>
     </div>
-    <div class="lockover"><div>🔒 Which stations, what they have done since
-      entry, and every spread against the map — <b>in the weekly mail</b>.
+    <div class="lockover"><div>🔒 The questions still ahead — what yes and no
+      sound like, which stations move, and every price since entry — <b>in the
+      weekly mail</b>. Each is already committed by hash in commitments.json.
       Subscribers: paste this month's key below.</div></div>`;
 
   // ---- the key ----------------------------------------------------------
@@ -296,13 +284,14 @@ __CARDS_JS__
     return JSON.parse(new TextDecoder().decode(out));
   }
 
+  // A key opens what is still ahead. The resolved cards are already on the
+  // page above it and are not drawn twice, and neither is the scoreboard.
   function show(data){
-    const n = window.renderTrack(document.getElementById('full'), data);
+    const ahead = (data.forecasts||[]).filter(r => !resolvedIds.has(r.qid));
+    const n = window.renderTrack(document.getElementById('full'),
+      Object.assign({}, data, {forecasts: ahead}), {tiles:false});
     document.getElementById('locked').style.display = 'none';
-    document.getElementById('tiles').style.display = 'none';
-    document.getElementById('sbh').textContent =
-      'The record · forecasts whose forty sessions are complete';
-    say(n + ' card' + (n===1?'':'s') + ' open · this key stays in this browser',
+    say(n + ' upcoming card' + (n===1?'':'s') + ' open · this key stays in this browser',
         'ok');
   }
 
@@ -340,7 +329,9 @@ __CARDS_JS__
     + ' rebalanced daily. A member with no close on a session carries its last one.'
     + ' Report-day close is the close on the day the question is answered, or the last'
     + ' one before it. Direct and second-ring results are reported separately — never'
-    + ' averaged together. Not a recommendation and not investment advice.';
+    + ' averaged together. The official score is the excess over the equal-weight map'
+    + ' at 20 sessions; 5, 10 and 40 sessions and SOX are diagnostics, and the official'
+    + ' N counts questions, not horizons. Not a recommendation and not investment advice.';
 })();
 </script>
 </body>

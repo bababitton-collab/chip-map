@@ -52,7 +52,8 @@ import os
 import statistics
 
 from chains import forecast, mapfile, rings
-from chains.answers import DEFAULT_ORDER, HORIZONS_R2, R2_SUFFIX, twin_id
+from chains.answers import (DEFAULT_ORDER, HORIZONS_R2, PRIMARY_HORIZON,
+                            R2_SUFFIX, twin_id)
 
 CHECKPOINTS = HORIZONS_R2
 STALE_AFTER = 3
@@ -77,6 +78,9 @@ ANSWERED = frozenset({"yes", "no", "mixed", "none"})
 # Answered, but nothing was pre-registered against it, so nothing is scored.
 # The card exists and says what was reported; no number on this page moves.
 UNSCORED = frozenset({"mixed", "none"})
+# How a card says what the answer was, in a sentence.
+MARK_WORDS = {"yes": "yes", "no": "no", "mixed": "mixed",
+              "none": "with no clear signal"}
 # Words that turn an observation into advice. A "read" carrying one of these
 # is dropped rather than published: the page measures, it does not counsel.
 NOT_ADVICE = ("buy", "buys", "buying", "bought",
@@ -565,12 +569,15 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
         f = direct.get(w["id"])
         tid = twin_id(w["id"], f["marked_at"]) if f else None
         twin = twins.get(tid) if tid else None
-        out.append(record(w, f, twin, rows.get(f["id"]) if f else None,
-                          rows.get(tid) if twin else None,
-                          marks.get(w["id"]), book, cal, doc, symbol_of,
-                          node_symbols, today, r2,
-                          by_ticker.get(str(w.get("tk") or "").upper()),
-                          (prereg or {}).get(w["id"])))
+        rec = record(w, f, twin, rows.get(f["id"]) if f else None,
+                     rows.get(tid) if twin else None,
+                     marks.get(w["id"]), book, cal, doc, symbol_of,
+                     node_symbols, today, r2,
+                     by_ticker.get(str(w.get("tk") or "").upper()),
+                     (prereg or {}).get(w["id"]))
+        rec["primary_horizon"] = PRIMARY_HORIZON
+        rec["official"] = official(rec)
+        out.append(rec)
     out.sort(key=sort_key)
     from chains import glossary as _gl
     return {"summary": summarise(out), "forecasts": out,
@@ -600,10 +607,50 @@ def slim(data: dict) -> dict:
 
 
 # ------------------------------------------------------------------- tiers
-# What the public page may hold. chains/access.py decides; this shapes the
-# payload to match, so the free file cannot leak by omission of a filter.
-PUBLIC_CARD = ("qid", "who", "tk", "d", "confirmed", "state", "status",
-               "marked_at", "entry_date", "day_index", "auto")
+# What the public page may hold. chains/access.py decides; public() shapes the
+# payload to match; public_leaks() checks the result before it is written. So
+# the free file can leak neither by a missing filter nor by a filter nobody ran.
+LEAK_MIN = 25      # shorter than this, a sentence is not evidence of anything
+RESOLVED_KINDS = ("question_text", "constellation", "mark", "ring2",
+                  "forecast_active", "member_prices", "contract")
+
+
+def is_resolved(r: dict) -> bool:
+    """A settled answer -- yes, no, mixed or none. Everything else is ahead."""
+    return r.get("status") in ANSWERED
+
+
+def official(r: dict) -> dict:
+    """Whether a card counts toward the official score, and why.
+
+    One number per question counts: the excess over EW_MAP at the primary
+    horizon, frozen at PRIMARY_HORIZON before the first scored forecast. The
+    official N is the count of questions scored there, never of horizons.
+    """
+    ph = PRIMARY_HORIZON
+    if r.get("observe_only"):
+        return {"counts": False, "state": "unscored",
+                "reason": "observation-only policy question: no basket was "
+                          "registered, so there is nothing to score"}
+    st = r.get("state")
+    if st == "reported":
+        word = MARK_WORDS.get(r.get("status"), r.get("status"))
+        return {"counts": False, "state": "unscored",
+                "reason": f"answered {word}: no direction, so no forecast -- "
+                          f"shown as an observation, not in the score"}
+    if st in ("tracking", "closed"):
+        if (r.get("horizons") or {}).get(str(ph)):
+            return {"counts": True, "state": "scored",
+                    "reason": f"scored: excess vs EW_MAP at {ph} sessions, "
+                              f"the pre-registered primary horizon"}
+        return {"counts": False, "state": "pending",
+                "reason": f"counts once the {ph}-session horizon locks "
+                          f"(day {r.get('day_index')} of {ph})"}
+    if st == "marked":
+        return {"counts": False, "state": "pending",
+                "reason": f"entered at the next close; counts once the "
+                          f"{ph}-session horizon locks"}
+    return {"counts": False, "state": "unscored", "reason": "not answered yet"}
 
 
 def _terms_on(gl: dict, texts: list[str]) -> dict:
@@ -611,9 +658,8 @@ def _terms_on(gl: dict, texts: list[str]) -> dict:
 
     A definition explains a word that is on the page, and a word that is not
     on the page needs no explaining. The free file carries the free text, so
-    it carries the terms of the free text -- otherwise forty-seven definitions
-    ride along for questions the free reader cannot see, and the teaser ends
-    up larger than the thing it is teasing.
+    it carries the terms of the free text -- otherwise every definition rides
+    along for questions the free reader cannot see.
     """
     from chains import glossary as _gl
     terms = [{"id": k, "match": v.get("match") or []} for k, v in gl.items()]
@@ -626,48 +672,89 @@ def _terms_on(gl: dict, texts: list[str]) -> dict:
 
 
 def public(data: dict) -> dict:
-    """The free half: finished forecasts in full, everything else as a count.
+    """The free half: every RESOLVED question's whole card, and a count of the rest.
 
-    A closed forecast is the record and the record is the evidence -- it goes
-    out whole. Anything still running is the working position: it is counted,
-    never described, and its members and prices are not in this object at all.
+    The past is public proof. A question whose answer is in goes out entire --
+    its text and the yes/no rule it was classified by, the mark and evidence,
+    both rings, the stations and their prices, the chart, every horizon against
+    both benchmarks, whether it counted and why, and the revealed
+    pre-registration contract. A question still ahead is a count and a date;
+    everything else about it stays in the sealed file.
     """
     from chains import access
-    rows, active, upcoming = [], 0, []
+    ctx = {"answered": True}
+    cards, upcoming, ahead = [], [], 0
     for r in data.get("forecasts", []):
-        if r["state"] == "closed":
-            assert access.is_free("forecast_closed")
-            row = {k: r[k] for k in PUBLIC_CARD if k in r}
-            row["horizons"] = r.get("horizons") or {}
-            # The second ring is a count, not a cast list.
-            row["ring2_scored"] = sum(
-                1 for v in (r.get("horizons2") or {}).values() if v)
-            if r.get("q"):
-                row["q"] = r["q"]
-            rows.append(row)
+        if is_resolved(r):
+            assert all(access.is_free(k, ctx) for k in RESOLVED_KINDS)
+            cards.append(dict(r))
             continue
+        ahead += 1
         if r["state"] == "upcoming":
             upcoming.append({"d": r.get("d"), "who": r["who"],
                              "confirmed": r.get("confirmed")})
-        else:
-            active += 1
-    s = dict(data.get("summary") or {})
-    scored = [r for r in rows]
+    texts = [c.get(p) for c in cards for p in ("q", "yes", "no", "why", "who")]
     return {
         "as_of": data.get("as_of"),
+        "primary_horizon": PRIMARY_HORIZON,
+        # Aggregates over what has happened, plus the calendar: all free.
+        "summary": dict(data.get("summary") or {}),
         # Narrowed to the free text: see _terms_on. The sealed payload keeps
         # the whole glossary, because behind the key every card is readable.
-        "glossary": _terms_on(
-            data.get("glossary") or {},
-            [r.get("q") for r in rows] + [r.get("who") for r in rows]
-            + [u.get("who") for u in upcoming]),
-        "closed": rows,
-        "n_active": active,
+        "glossary": _terms_on(data.get("glossary") or {},
+                              texts + [u.get("who") for u in upcoming]),
+        "forecasts": cards,
+        "n_resolved": len(cards),
+        "n_ahead": ahead,
         "n_upcoming": len(upcoming),
         "next_up": min(upcoming, key=lambda x: x["d"] or "9999", default=None),
-        "n_closed": len(scored),
-        "capital_rule": s.get("capital_rule"),
     }
+
+
+def public_leaks(pub: dict, data: dict,
+                 prereg: dict | None = None) -> list[str]:
+    """Anything of a question not yet answered that reached the free object.
+
+    Checked on the object about to be written, three ways: no card-shaped
+    record for an unresolved question anywhere in it; none of an unresolved
+    question's sentences, baskets or contract bytes in its serialised form
+    (searched as they appear inside JSON, escapes and all). A sentence or a
+    basket that a resolved card legitimately shares is not a leak.
+    """
+    done = {r["qid"] for r in data.get("forecasts", []) if is_resolved(r)}
+    blob = json.dumps(pub, ensure_ascii=False)
+    allowed = json.dumps([r for r in data.get("forecasts", [])
+                          if r["qid"] in done], ensure_ascii=False)
+    bad: list[str] = []
+
+    def walk(o, path):
+        if isinstance(o, dict):
+            if "qid" in o and o["qid"] not in done:
+                bad.append(f"{o['qid']}: a card at {path or '/'}")
+            for k, v in o.items():
+                walk(v, f"{path}/{k}")
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{i}]")
+
+    walk(pub, "")
+    inner = lambda s: json.dumps(s, ensure_ascii=False)[1:-1]   # noqa: E731
+    for r in data.get("forecasts", []):
+        if r["qid"] in done:
+            continue
+        for part in ("q", "yes", "no", "why"):
+            s = str(r.get(part) or "")
+            if len(s) >= LEAK_MIN and inner(s) in blob and inner(s) not in allowed:
+                bad.append(f"{r['qid']}: its {part} sentence")
+        for g in GROUPS:
+            legs = list(r.get(g) or [])
+            needle = inner({g: legs}) if legs else ""
+            if needle and needle in blob and needle not in allowed:
+                bad.append(f"{r['qid']}: its {g} basket")
+        c = ((prereg or {}).get(r["qid"]) or {}).get("contract")
+        if c and inner(c) in blob:
+            bad.append(f"{r['qid']}: its pre-registration contract")
+    return bad
 
 
 # ------------------------------------------------------------------- crypto
@@ -806,11 +893,13 @@ def _write(p, text: str) -> None:
 def build_files(plain: bool = False) -> dict:
     """Write the page and its data. Returns what was written, for the report.
 
-    Three files, and only one of them is ever published:
-      track.json      the full payload. Local only -- out/ is gitignored and
-                      publish_site does not copy it.
-      track.enc.json  the same thing sealed. This is what ships.
-      track.html      the page, with the FREE half inlined and nothing else.
+    Four files, and three of them are published:
+      track.json         the full payload. Local only -- out/ is gitignored
+                         and publish_site does not copy it.
+      track_public.json  every RESOLVED question's whole card. Free, gated
+                         by public_leaks() before it is written.
+      track.html         the page, with that same free object inlined.
+      track.enc.json     the full payload sealed. What a key opens.
     """
     from chains import answers as answers_mod
     from chains.paths import out_dir, watch_en_path, watch_path
@@ -846,6 +935,22 @@ def build_files(plain: bool = False) -> dict:
     _write(j, json.dumps(data, ensure_ascii=False, indent=1) + "\n")
     wrote["track.json"] = j
 
+    # The free half, written before the sealed one so it exists on a local
+    # build with no key -- and gated first: anything of a question still
+    # ahead in this object stops the build instead of being published.
+    pub = public(data)
+    leaks = public_leaks(pub, data, prereg)
+    if leaks:
+        raise SystemExit(
+            "track: a question that is not yet answered reached the free "
+            "file -- nothing written:\n  " + "\n  ".join(leaks[:10]))
+    p = out_dir() / "track_public.json"
+    _write(p, json.dumps(pub, ensure_ascii=False, indent=1) + "\n")
+    wrote["track_public.json"] = p
+    h = out_dir() / "track.html"
+    _write(h, render(pub))
+    wrote["track.html"] = h
+
     enc = out_dir() / "track.enc.json"
     if plain:
         # A local build with no secret. The file is REMOVED rather than left
@@ -857,9 +962,6 @@ def build_files(plain: bool = False) -> dict:
                                ensure_ascii=False, indent=1) + "\n")
         wrote["track.enc.json"] = enc
 
-    h = out_dir() / "track.html"
-    _write(h, render(public(data)))
-    wrote["track.html"] = h
     return {"wrote": wrote, "data": data}
 
 
@@ -910,7 +1012,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 __all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
-           "public", "PUBLIC_CARD", "build_files", "cards_js",
+           "public", "public_leaks", "is_resolved", "official",
+           "build_files", "cards_js",
            "CARDS_PLACEHOLDER", "GLOSSARY_PLACEHOLDER", "glossary_js",
            "encrypt", "decrypt", "load_key", "TrackKeyError", "KEY_ENV",
            "render", "main", "slim", "sort_key", "state_of", "members_for",

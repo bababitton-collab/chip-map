@@ -19,8 +19,8 @@ context and returns a word. A second map gets the same paywall without a line
 of code, which is the only kind of paywall worth having in an engine that is
 meant to carry more than one map.
 
-THE RULE
---------
+THE RULE: THE PAST IS PUBLIC PROOF, THE FUTURE IS THE PRODUCT
+-------------------------------------------------------------
 FREE is what makes the argument checkable by a stranger:
 
   * the map itself -- stations, edges, layers, the pulse. It is sourced
@@ -28,28 +28,29 @@ FREE is what makes the argument checkable by a stranger:
   * the calendar -- who reports, which ticker, what date, confirmed or
     expected, the countdown, which chokepoint it touches. A date is not a
     finding; it is a public fact with a countdown on it.
-  * the NEAREST upcoming question, in full: its text, what yes and no sound
-    like, why it matters, and both constellation rings. One worked example,
-    complete, so the offer is legible rather than described.
-  * every question that has already been ANSWERED -- its text and its mark.
-    A claim stops being an edge the moment its answer is public, and keeping
-    it behind glass afterwards would only hide the record.
-  * the scoreboard of FINISHED forecasts: what was claimed, and what happened
-    over the full forty sessions. The track record is the product's evidence
-    and evidence nobody can see is not evidence.
-  * brand and method copy.
+  * the NEAREST upcoming question's text and its first ring. One worked
+    example, so the offer is legible rather than described.
+  * every question that has been ANSWERED, in full: its text and the yes/no
+    rule it was classified by, the mark and its evidence, both rings, the
+    stations and their prices, the chart, every horizon against every
+    benchmark, whether it counted toward the score and why, and the revealed
+    pre-registration contract a stranger recomputes the hash of. A claim stops
+    being an edge the moment its answer is public, and a skeptic who has to pay
+    to check the record is being asked to take it on trust.
+  * the scoreboard of finished forecasts, and brand and method copy.
 
-LOCKED is the working position:
+LOCKED is what has not happened yet:
 
-  * every other question's text and its three sentences,
-  * their constellations, both rings,
-  * the second ring anywhere -- it is derived work, not a public fact,
-  * everything about a forecast still in flight: the members, their prices,
-    the spreads, the chart,
+  * every unanswered question's text and sentences, but the nearest one's,
+  * their constellations, and the second ring of any unanswered question --
+    derived work about a claim still ahead,
+  * the mark, members, prices and results of a question not yet answered,
+  * the contract bytes of an unanswered question (its hash is public; the bytes
+    carry the paid wording),
   * the paid halves of the letter.
 
-The line is between "here is the argument and here is the record" and "here is
-the position I am in right now".
+The line is between "here is the record, check it" and "here is what we think
+happens next".
 """
 from __future__ import annotations
 
@@ -69,6 +70,7 @@ KINDS = frozenset({
     "forecast_closed",                                 # a finished 40 sessions
     "forecast_active",                                 # anything still running
     "member_prices",                                   # entry/last/spread rows
+    "contract",                                        # the hashed contract bytes
     "brand", "method",                                 # copy
 })
 
@@ -78,9 +80,10 @@ ALWAYS_FREE = frozenset({
     "calendar_row", "forecast_closed", "brand", "method",
 })
 
-# The kinds that are never free, whatever the context.
-ALWAYS_LOCKED = frozenset({
-    "ring2", "forecast_active", "member_prices",
+# The kinds that are free once the question is answered and locked before --
+# not even the one worked example opens them early.
+LOCKED_UNTIL_ANSWERED = frozenset({
+    "ring2", "forecast_active", "member_prices", "contract", "mark",
 })
 
 
@@ -93,7 +96,7 @@ def tier(item: str, ctx: dict | None = None) -> str:
 
     ``ctx`` carries only what the rule needs:
       ``nearest``  this is the next question on the calendar
-      ``answered`` this question already has a mark
+      ``answered`` this question already has a settled answer
     """
     if item not in KINDS:
         raise AccessError(
@@ -103,14 +106,12 @@ def tier(item: str, ctx: dict | None = None) -> str:
     ctx = ctx or {}
     if item in ALWAYS_FREE:
         return FREE
-    if item in ALWAYS_LOCKED:
-        return LOCKED
-    # question_text, constellation, mark: free for the one worked example and
-    # for anything the answer has already made public.
+    # Resolved is public, whatever it is.
     if ctx.get("answered"):
         return FREE
-    if item == "mark":
-        return FREE if ctx.get("answered") else LOCKED
+    if item in LOCKED_UNTIL_ANSWERED:
+        return LOCKED
+    # question_text, constellation: free for the one worked example only.
     return FREE if ctx.get("nearest") else LOCKED
 
 
@@ -130,4 +131,4 @@ def open_question(row: dict, nearest_id: str | None = None) -> bool:
 
 
 __all__ = ["tier", "is_free", "open_question", "FREE", "LOCKED", "KINDS",
-           "ALWAYS_FREE", "ALWAYS_LOCKED", "AccessError"]
+           "ALWAYS_FREE", "LOCKED_UNTIL_ANSWERED", "AccessError"]

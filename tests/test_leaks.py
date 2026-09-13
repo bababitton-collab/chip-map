@@ -186,12 +186,15 @@ def test_the_two_watch_lists_carry_the_same_questions_in_the_same_order():
     assert [r["id"] for r in WATCH] == [r["id"] for r in WATCH_EN]
 
 
+MACHINE_FIELDS = ("d", "confirmed", "leaks", "lane", "win", "lose", "kind")
+
+
 def test_the_two_watch_lists_agree_on_dates_and_edges():
     """Only the prose may differ. A date that differed between languages would
-    put the same question on two different days of the same board."""
+    put the same question on two different days of the same board, and a
+    basket or kind that differed would show the English page a claim the
+    scorer never pre-registered."""
     en = {r["id"]: r for r in WATCH_EN}
-    bad = [r["id"] for r in WATCH
-           if (r["d"], r["confirmed"], r["leaks"], r["lane"])
-           != (en[r["id"]]["d"], en[r["id"]]["confirmed"],
-               en[r["id"]]["leaks"], en[r["id"]]["lane"])]
+    bad = [(r["id"], f) for r in WATCH for f in MACHINE_FIELDS
+           if r.get(f) != en[r["id"]].get(f)]
     assert bad == []

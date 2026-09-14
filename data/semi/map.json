@@ -936,7 +936,10 @@
    "market_cap_usd_b": 1210,
    "segment_share": {
     "value": "DRAM 38%; HBM 33% (up 12pp QoQ on HBM4); pure-play foundry 7%",
-    "source": "https://counterpointresearch.com/en/insights/global-dram-and-hbm-market-share ; https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share",
+    "source": [
+     "https://counterpointresearch.com/en/insights/global-dram-and-hbm-market-share",
+     "https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share"
+    ],
     "as_of": "Q2 2026"
    },
    "customer_concentration": [
@@ -1090,7 +1093,11 @@
    "market_cap_usd_b": 2162,
    "segment_share": {
     "value": "73% of pure-play foundry revenue (Q2 2026); ~99% of top-10 hyperscalers' AI compute ASIC fabrication; ~70% of CoWoS-class advanced packaging",
-    "source": "https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share ; https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027 ; https://siliconanalysts.com/tools/supply-chain",
+    "source": [
+     "https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share",
+     "https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027",
+     "https://siliconanalysts.com/tools/supply-chain"
+    ],
     "as_of": "Q2 2026 / 2026-01 / 2026-08"
    },
    "customer_concentration": [
@@ -1702,7 +1709,10 @@
    "market_cap_usd_b": null,
    "segment_share": {
     "value": "Gas turbine backlog approaching 70 GW; grid order backlog a record EUR51B on transformer demand",
-    "source": "https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/ ; https://mgrid.org/2026/08/09/siemens-energys-grid-order-backlog-hits-a-record-51-billion-euros-on-transformer-demand/",
+    "source": [
+     "https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/",
+     "https://mgrid.org/2026/08/09/siemens-energys-grid-order-backlog-hits-a-record-51-billion-euros-on-transformer-demand/"
+    ],
     "as_of": "2026"
    },
    "customer_concentration": [],
@@ -2276,7 +2286,10 @@
    "what": "Etch/deposition equipment; Lam FY2026 10-K names Samsung Electronics among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm ; https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+   ],
    "as_of": "2026-08-07"
   },
   {
@@ -2286,7 +2299,10 @@
    "what": "Etch/deposition equipment; Lam FY2026 10-K names TSMC among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm ; https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+   ],
    "as_of": "2026-08-07"
   },
   {
@@ -2296,7 +2312,10 @@
    "what": "Etch/deposition equipment; Lam FY2026 10-K names SK hynix among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm ; https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+   ],
    "as_of": "2026-08-07"
   },
   {
@@ -2306,7 +2325,10 @@
    "what": "Etch/deposition equipment; Lam FY2026 10-K names Micron among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm ; https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+    "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+   ],
    "as_of": "2026-08-07"
   },
   {
@@ -2316,7 +2338,10 @@
    "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K",
    "share": "Samsung 12% of AMAT FY2024 net revenue (15% FY2023); FY2025 10-K shows two customers at 19%/15% unnamed",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm ; https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/R82.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+    "https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/R82.htm"
+   ],
    "as_of": "2025-12-12"
   },
   {
@@ -2326,7 +2351,10 @@
    "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K; also TSMC 2025 supplier award",
    "share": "TSMC 11% of AMAT FY2024 net revenue (19% FY2023)",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm ; https://pr.tsmc.com/english/news/3274",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+    "https://pr.tsmc.com/english/news/3274"
+   ],
    "as_of": "2025-12-12"
   },
   {
@@ -2336,7 +2364,10 @@
    "what": "Process control / inspection & metrology; only named >10% customer in KLA 10-K FY2024-2026",
    "share": "TSMC 19% of KLA FY2026 revenue (19% FY2025, 13% FY2024)",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/klac-20260630.htm ; https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/R108.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/klac-20260630.htm",
+    "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/R108.htm"
+   ],
    "as_of": "2026-08-06"
   },
   {
@@ -2346,7 +2377,10 @@
    "what": "Coater/developer, etch, deposition equipment; TSMC names Tokyo Electron as an outstanding supplier (Supply Chain Management Forum awards 2023, 2024)",
    "share": null,
    "criticality": "high",
-   "source": "https://pr.tsmc.com/english/news/3192 ; https://pr.tsmc.com/english/news/3086",
+   "source": [
+    "https://pr.tsmc.com/english/news/3192",
+    "https://pr.tsmc.com/english/news/3086"
+   ],
    "as_of": "2024-12-02"
   },
   {
@@ -2356,7 +2390,10 @@
    "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
    "share": null,
    "criticality": "high",
-   "source": "https://pr.tsmc.com/english/news/3274 ; https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum",
+   "source": [
+    "https://pr.tsmc.com/english/news/3274",
+    "https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum"
+   ],
    "as_of": "2025-11-28"
   },
   {
@@ -2386,7 +2423,10 @@
    "what": "SoC test: UBS (Sep 2025) reported Teradyne positioned as second-source tester for Nvidia Blackwell; Teradyne Q1-2026 call disclosed first 'merchant GPU' production test orders without naming the customer. WEAK: pair named only by sell-side, not by either company",
    "share": null,
    "criticality": "medium",
-   "source": "https://www.indexbox.io/blog/teradynes-potential-turnaround-nvidia-deal-could-boost-revenue/ ; https://finance.biggo.com/news/US_TER_2026-04-29",
+   "source": [
+    "https://www.indexbox.io/blog/teradynes-potential-turnaround-nvidia-deal-could-boost-revenue/",
+    "https://finance.biggo.com/news/US_TER_2026-04-29"
+   ],
    "as_of": "2026-04-29"
   },
   {
@@ -2396,7 +2436,10 @@
    "what": "300mm silicon wafers; SUMCO listed in TSMC annual report 'Major Suppliers' (raw wafers) and awarded at TSMC supplier forums 2023-2025",
    "share": null,
    "criticality": "high",
-   "source": "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html ; https://pr.tsmc.com/english/news/3274",
+   "source": [
+    "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+    "https://pr.tsmc.com/english/news/3274"
+   ],
    "as_of": "2025-11-28"
   },
   {
@@ -2416,7 +2459,10 @@
    "what": "Filtration, specialty chemicals/gases, wafer handling; TSMC is Entegris' only named >10% customer",
    "share": "TSMC 16% of Entegris net sales in 2025 and 2024 (11% in 2023)",
    "criticality": "high",
-   "source": "https://companiesmarketcap.com/entegris/sec-reports-10k/0001101302-26-000012/ ; https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+   "source": [
+    "https://companiesmarketcap.com/entegris/sec-reports-10k/0001101302-26-000012/",
+    "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+   ],
    "as_of": "2026-02-20"
   },
   {
@@ -2426,7 +2472,10 @@
    "what": "Photoresists (incl. EUV); TOK listed in TSMC annual report 'Major Suppliers' (lithographic materials) and awarded at TSMC 2024 supplier forum",
    "share": null,
    "criticality": "high",
-   "source": "https://pr.tsmc.com/english/news/3192 ; https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+   "source": [
+    "https://pr.tsmc.com/english/news/3192",
+    "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+   ],
    "as_of": "2024-12-02"
   },
   {
@@ -2476,7 +2525,10 @@
    "what": "PCIe/CXL retimers, Scorpio fabric switches, optical engines; Amazon performance warrant vests on up to $6.5B of Amazon purchases (8-K); 10-K: one end customer >70% of 2025 revenue",
    "share": "One end customer >70% of Astera 2025 revenue (unnamed); Amazon warrant tied to up to $6.5B purchases",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/1736297/000110465926012606/tm265461d1_8k.htm ; https://www.sec.gov/Archives/edgar/data/1736297/000173629726000010/alab-20251231.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/1736297/000110465926012606/tm265461d1_8k.htm",
+    "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000010/alab-20251231.htm"
+   ],
    "as_of": "2026-02-20"
   },
   {
@@ -2486,7 +2538,10 @@
    "what": "AEC copper cables/DSPs; warrant issued to Amazon.com NV Investment Holdings vesting on Amazon purchases; Customer A 49% of FY2026 revenue (67% FY2025)",
    "share": "Customer A 49% of Credo FY2026 revenue; Amazon warrant holder (10-Q/10-K)",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/1807794/000180779425000021/crdo-20250802.htm ; https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/R45.htm",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/1807794/000180779425000021/crdo-20250802.htm",
+    "https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/R45.htm"
+   ],
    "as_of": "2026-06-15"
   },
   {
@@ -2496,7 +2551,10 @@
    "what": "Data-center Ethernet switches; Arista 10-K discloses two >10% customers (Microsoft, Meta)",
    "share": "Microsoft 26% of Arista 2025 revenue",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000013/anet-20251231.htm ; https://www.tradingview.com/news/gurufocus:09df08b61094b:0-microsoft-drives-26-of-arista-revenue/",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000013/anet-20251231.htm",
+    "https://www.tradingview.com/news/gurufocus:09df08b61094b:0-microsoft-drives-26-of-arista-revenue/"
+   ],
    "as_of": "2026-02-13"
   },
   {
@@ -2506,7 +2564,10 @@
    "what": "Data-center Ethernet switches; Arista 10-K discloses two >10% customers (Microsoft, Meta)",
    "share": "Meta 16% of Arista 2025 revenue",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000013/anet-20251231.htm ; https://www.tradingview.com/news/gurufocus:09df08b61094b:0-microsoft-drives-26-of-arista-revenue/",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000013/anet-20251231.htm",
+    "https://www.tradingview.com/news/gurufocus:09df08b61094b:0-microsoft-drives-26-of-arista-revenue/"
+   ],
    "as_of": "2026-02-13"
   },
   {
@@ -2576,7 +2637,10 @@
    "what": "HBM/memory and some wafers: NVIDIA FY2026 10-K: 'We purchase memory from SK Hynix, Micron, and Samsung' and uses Samsung as a foundry; Samsung certified for HBM4 on Vera Rubin (Jun-2026)",
    "share": "DIGITIMES: Nvidia not among Samsung's top-5 customers 1H26",
    "criticality": "high",
-   "source": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm ; https://finance.yahoo.com/sectors/technology/articles/nvidia-certifies-samsung-sk-hynix-133001560.html",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+    "https://finance.yahoo.com/sectors/technology/articles/nvidia-certifies-samsung-sk-hynix-133001560.html"
+   ],
    "as_of": "2026-06-05"
   },
   {
@@ -2636,7 +2700,10 @@
    "what": "GPUs (hyperscaler capex flow): AWS named as first-wave Blackwell cloud provider; P6e-GB200 UltraServers launched",
    "share": null,
    "criticality": "high",
-   "source": "https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing ; https://aws.amazon.com/blogs/aws/new-amazon-ec2-p6e-gb200-ultraservers-powered-by-nvidia-grace-blackwell-gpus-for-the-highest-ai-performance",
+   "source": [
+    "https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing",
+    "https://aws.amazon.com/blogs/aws/new-amazon-ec2-p6e-gb200-ultraservers-powered-by-nvidia-grace-blackwell-gpus-for-the-highest-ai-performance"
+   ],
    "as_of": "2025-07-09"
   },
   {
@@ -2646,7 +2713,10 @@
    "what": "GPUs (hyperscaler capex flow): Google Cloud deploying GB200 NVL72 / A4 VMs",
    "share": null,
    "criticality": "high",
-   "source": "https://nvidianews.nvidia.com/news/google-cloud-ai-development ; https://cloud.google.com/blog/products/compute/introducing-a4-vms-powered-by-nvidia-b200-gpu-aka-blackwell",
+   "source": [
+    "https://nvidianews.nvidia.com/news/google-cloud-ai-development",
+    "https://cloud.google.com/blog/products/compute/introducing-a4-vms-powered-by-nvidia-b200-gpu-aka-blackwell"
+   ],
    "as_of": "2025-03-18"
   },
   {
@@ -2656,7 +2726,10 @@
    "what": "GPUs (hyperscaler capex flow): Zuckerberg: 350,000 H100s by end-2024; Meta named Blackwell adopter",
    "share": "350k H100 by end-2024 (Meta statement)",
    "criticality": "high",
-   "source": "https://www.cnbc.com/2024/01/18/mark-zuckerberg-indicates-meta-is-spending-billions-on-nvidia-ai-chips.html ; https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing",
+   "source": [
+    "https://www.cnbc.com/2024/01/18/mark-zuckerberg-indicates-meta-is-spending-billions-on-nvidia-ai-chips.html",
+    "https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing"
+   ],
    "as_of": "2024-03-18"
   },
   {
@@ -2666,7 +2739,10 @@
    "what": "GPUs (Oracle as buyer): OCI Supercluster up to 131,072 Blackwell GPUs; OCI named first-wave Blackwell cloud",
    "share": "up to 131,072 Blackwell GPUs (OCI Supercluster)",
    "criticality": "high",
-   "source": "https://blogs.nvidia.com/blog/oracle-cloud-infrastructure-blackwell-gpus-agentic-ai-reasoning-models/ ; https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing",
+   "source": [
+    "https://blogs.nvidia.com/blog/oracle-cloud-infrastructure-blackwell-gpus-agentic-ai-reasoning-models/",
+    "https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing"
+   ],
    "as_of": "2025-05-29"
   },
   {
@@ -2843,7 +2919,10 @@
    ],
    "substitute": "None. Canon nanoimprint and multi-patterned DUV are not substitutes at N3/N2 economics. China's SMEE is generations behind and EUV is export-banned to China since 2019.",
    "substitution_time": "10+ years",
-   "source": "https://semiconductorx.com/spotlight-asml.html ; https://siliconanalysts.com/tools/supply-chain",
+   "source": [
+    "https://semiconductorx.com/spotlight-asml.html",
+    "https://siliconanalysts.com/tools/supply-chain"
+   ],
    "label": {
     "he": "מכונת האור",
     "en": "The light machine"
@@ -2867,7 +2946,10 @@
    ],
    "substitute": "None; 25+ years of co-development. A Zeiss Oberkochen outage stops EUV production worldwide.",
    "substitution_time": "10+ years",
-   "source": "https://semiconductorx.com/spotlight-asml.html ; https://siliconanalysts.com/tools/supply-chain",
+   "source": [
+    "https://semiconductorx.com/spotlight-asml.html",
+    "https://siliconanalysts.com/tools/supply-chain"
+   ],
    "label": {
     "he": "העדשות והלייזרים",
     "en": "Lenses and lasers"
@@ -2900,7 +2982,11 @@
    ],
    "substitute": "Samsung SF2 (Taylor, TX — Tesla AI5 taped out) and Intel 18A (Fab 52, Arizona, HVM Jan 2026 at ~60% yield). Both are real but sub-scale and unproven for large AI dies.",
    "substitution_time": "3-5 years for meaningful volume; 5-10 years for parity",
-   "source": "https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share ; https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027 ; https://semiconductorx.com/spotlight-intel-foundry.html",
+   "source": [
+    "https://counterpointresearch.com/en/insights/global-semiconductor-foundry-market-share",
+    "https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027",
+    "https://semiconductorx.com/spotlight-intel-foundry.html"
+   ],
    "label": {
     "he": "המפעל המתקדם",
     "en": "The advanced fab"
@@ -2931,7 +3017,10 @@
    ],
    "substitute": "OSAT CoWoS-equivalents (ASE FOCoS, Amkor, SPIL), Samsung I-Cube, Intel Foveros/EMIB; panel-level packaging (CoPoS) pilot line completed June 2026 but 2028-29 ramp.",
    "substitution_time": "2-4 years",
-   "source": "https://www.trendforce.com/news/2026/06/15/news-tsmc-cowos-supply-demand-gap-reportedly-seen-narrowing-from-20-to-10-by-end-2026-as-capacity-expands/ ; https://siliconanalysts.com/tools/supply-chain",
+   "source": [
+    "https://www.trendforce.com/news/2026/06/15/news-tsmc-cowos-supply-demand-gap-reportedly-seen-narrowing-from-20-to-10-by-end-2026-as-capacity-expands/",
+    "https://siliconanalysts.com/tools/supply-chain"
+   ],
    "label": {
     "he": "האריזה המתקדמת",
     "en": "Advanced packaging"
@@ -2961,7 +3050,10 @@
    ],
    "substitute": "None. CXMT (China) is not qualified for HBM3E/HBM4 in Western AI systems. New fabs (SK hynix Yongin Y2) do not reach volume before 2029.",
    "substitution_time": "5-7 years",
-   "source": "https://counterpointresearch.com/en/insights/global-dram-and-hbm-market-share ; https://invezz.com/news/2026/08/07/what-samsung-sk-hynix-and-microns-capex-mean-for-the-future-of-the-memory-trade/",
+   "source": [
+    "https://counterpointresearch.com/en/insights/global-dram-and-hbm-market-share",
+    "https://invezz.com/news/2026/08/07/what-samsung-sk-hynix-and-microns-capex-mean-for-the-future-of-the-memory-trade/"
+   ],
    "label": {
     "he": "הזיכרון המהיר",
     "en": "High-bandwidth memory"
@@ -3013,7 +3105,10 @@
    ],
    "substitute": "Sumitomo Chemical and Fujifilm are entering EUV resist; DuPont/Merck exist in DUV. Qualification of a new resist at a leading-edge node takes years. A single bad photoresist batch cost TSMC ~$550M in 2019.",
    "substitution_time": "5-10 years",
-   "source": "https://www.fountyltech.com/news/japanese-companies-monopolize-the-euv-photoresist-supply-market/ ; https://siliconanalysts.com/tools/supply-chain",
+   "source": [
+    "https://www.fountyltech.com/news/japanese-companies-monopolize-the-euv-photoresist-supply-market/",
+    "https://siliconanalysts.com/tools/supply-chain"
+   ],
    "label": {
     "he": "הרזיסט והכימיקלים",
     "en": "Resist and chemicals"
@@ -3040,7 +3135,10 @@
    ],
    "substitute": "No qualified drop-in substitute. Sekisui and Taiwanese entrants have not displaced it.",
    "substitution_time": "5-10 years",
-   "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE ; https://siliconanalysts.com/tools/supply-chain",
+   "source": [
+    "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+    "https://siliconanalysts.com/tools/supply-chain"
+   ],
    "label": {
     "he": "הדבק של Ajinomoto",
     "en": "Ajinomoto's film"
@@ -3126,7 +3224,11 @@
    ],
    "substitute": "Tier-2 European makers (Efacec, Pauwels, TMC) at 20-32 months, Hyundai Heavy 18-24 months, TBEA 12-18 months with compliance risk; behind-the-meter gas/fuel cells; nuclear PPAs and SMRs (post-2029).",
    "substitution_time": "2-5 years",
-   "source": "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/ ; https://www.gridreadiness.com/blog/power-transformer-lead-times-ai-data-center-2026.html ; https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/",
+   "source": [
+    "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/",
+    "https://www.gridreadiness.com/blog/power-transformer-lead-times-ai-data-center-2026.html",
+    "https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/"
+   ],
    "label": {
     "he": "טורבינות ושנאים",
     "en": "Turbines and transformers"
@@ -3241,7 +3343,10 @@
    "node_id": "nvda",
    "reason": "Two direct customers are a third of revenue, and its largest customers are simultaneously building substitutes",
    "evidence": "Customer A 22% and Customer B 14% of FY2026 revenue; separately, custom ASIC shipments are forecast to triple 2024-2027 and exceed data center GPU units by 2028",
-   "source": "NVIDIA FY2026 Form 10-K ; https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027"
+   "source": [
+    "NVIDIA FY2026 Form 10-K",
+    "https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027"
+   ]
   },
   {
    "node_id": "smci",
@@ -3253,13 +3358,19 @@
    "node_id": "crwv",
    "reason": "Demand is derivative of a handful of counterparties who are also competitors, funded with heavy debt",
    "evidence": "$104B RPO concentrated in Microsoft/OpenAI/Meta/NVIDIA relationships; raised >$10B unsecured debt plus a $3.1B HPC-collateralised term loan",
-   "source": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Second-Quarter-2026-Results/default.aspx ; https://electroneconomics.substack.com/p/coreweaves-customers-are-becoming"
+   "source": [
+    "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Second-Quarter-2026-Results/default.aspx",
+    "https://electroneconomics.substack.com/p/coreweaves-customers-are-becoming"
+   ]
   },
   {
    "node_id": "mrvl",
    "reason": "Being designed around inside its own customers' programs",
    "evidence": "Counterpoint models Marvell at ~8% of AI ASIC design share by 2027 despite doubling volumes, as Broadcom holds ~60% and MediaTek/AMD enter Google's TPU supply base",
-   "source": "https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027 ; https://www.trendforce.com/news/2026/08/20/news-marvell-amd-reportedly-shake-up-google-tpu-race-putting-broadcom-mediatek-under-pressure/"
+   "source": [
+    "https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027",
+    "https://www.trendforce.com/news/2026/08/20/news-marvell-amd-reportedly-shake-up-google-tpu-race-putting-broadcom-mediatek-under-pressure/"
+   ]
   },
   {
    "node_id": "anet",
@@ -3403,7 +3514,10 @@
    "ticker": "SOXX",
    "name": "iShares Semiconductor ETF",
    "as_of": "2026-08-20",
-   "source": "https://stockanalysis.com/etf/soxx/holdings/ ; AUM $41.4B per iShares as of 2026-09-03",
+   "source": [
+    "https://stockanalysis.com/etf/soxx/holdings/",
+    "AUM $41.4B per iShares as of 2026-09-03"
+   ],
    "incomplete": "25 of 34 holdings; the remaining 9 (~ the smallest weights) were behind a paywall and are not listed",
    "holdings": [
     {
@@ -3576,7 +3690,10 @@
    "to_layer": "L4",
    "annual_usd_b": 100,
    "what": "Micron data center revenue annualised run rate (>$25B in Q3 FY2026). A large share of the AI BOM: HBM is ~47% of a Blackwell-class accelerator's manufacturing cost (estimate).",
-   "source": "https://ca.investing.com/news/company-news/micron-q3-fy2026-slides-record-415b-revenue-new-customer-deals-93CH-4706541 ; https://siliconanalysts.com/analysis/b100-cost-economics"
+   "source": [
+    "https://ca.investing.com/news/company-news/micron-q3-fy2026-slides-record-415b-revenue-new-customer-deals-93CH-4706541",
+    "https://siliconanalysts.com/analysis/b100-cost-economics"
+   ]
   },
   {
    "from_layer": "L4",
@@ -3597,7 +3714,10 @@
    "to_layer": "L2",
    "annual_usd_b": 27,
    "what": "Micron FY2026 capex ~$27B; SK hynix approved ~$38.3B through 2031 for Yongin Y2 and M17.",
-   "source": "https://ca.investing.com/news/company-news/micron-q3-fy2026-slides-record-415b-revenue-new-customer-deals-93CH-4706541 ; https://invezz.com/news/2026/08/07/what-samsung-sk-hynix-and-microns-capex-mean-for-the-future-of-the-memory-trade/"
+   "source": [
+    "https://ca.investing.com/news/company-news/micron-q3-fy2026-slides-record-415b-revenue-new-customer-deals-93CH-4706541",
+    "https://invezz.com/news/2026/08/07/what-samsung-sk-hynix-and-microns-capex-mean-for-the-future-of-the-memory-trade/"
+   ]
   },
   {
    "from_layer": "L5",
@@ -3611,7 +3731,10 @@
    "to_layer": "L1",
    "annual_usd_b": 49,
    "what": "ASML 2026 revenue guidance EUR43-45B (~$47-49B), raised at Q2 2026 from EUR34-39B. Backlog was EUR38.8B at YE2025.",
-   "source": "https://www.asml.com/en/news/press-releases/2026/q2-2026-financial-results ; https://www.asml.com/en/news/press-releases/2026/q4-2025-financial-results"
+   "source": [
+    "https://www.asml.com/en/news/press-releases/2026/q2-2026-financial-results",
+    "https://www.asml.com/en/news/press-releases/2026/q4-2025-financial-results"
+   ]
   },
   {
    "from_layer": "L4",
@@ -3639,7 +3762,10 @@
    "to_layer": "L9",
    "annual_usd_b": null,
    "what": "Not quantifiable as a clean annual figure, but the physical claim on the energy layer is visible in backlog: GE Vernova 44 GW turbine backlog / 100 GW under contract with only ~10 GW of 2029-2030 slots left; Siemens Energy ~70 GW turbine backlog and a record EUR51B grid backlog.",
-   "source": "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/ ; https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/"
+   "source": [
+    "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/",
+    "https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/"
+   ]
   },
   {
    "from_layer": "L7",
@@ -4469,7 +4595,10 @@
    "what": "Deposition (PVD, CVD, epitaxy, selective ALD for GAA), CMP tools, ion implant, some e-beam metrology; backside-power and nanosheet steps at N2",
    "share": {
     "value": "~30% of deposition equipment market; ~19% of total semiconductor equipment (2023). 2025 update: reported to have lost share across CMP/deposition/etch/process control (paywalled table)",
-    "source": "https://patentpc.com/blog/top-chip-making-equipment-companies-asml-applied-materials-and-lam-research-market-data ; https://drrobertcastellano.substack.com/p/applied-materials-lost-share-across",
+    "source": [
+     "https://patentpc.com/blog/top-chip-making-equipment-companies-asml-applied-materials-and-lam-research-market-data",
+     "https://drrobertcastellano.substack.com/p/applied-materials-lost-share-across"
+    ],
     "as_of": "2023 / 2026-05-10"
    },
    "sole_source": false,
@@ -4855,7 +4984,10 @@
    "what": "Grid electricity for all Taiwan fabs (N2 fabs at Hsinchu Baoshan and Kaohsiung)",
    "share": {
     "value": "TSMC = ~6.4-8% of Taiwan's national electricity consumption; S&P projects up to ~24% by 2030; ~84% of fab electricity fossil-derived",
-    "source": "https://taiwaninsight.org/2025/11/05/water-nexus-can-semiconductors-and-sustainability-coexist-in-taiwan/ ; https://www.datacenterdynamics.com/en/news/tsmc-could-account-for-24-of-taiwans-electricity-consumption-by-2030/",
+    "source": [
+     "https://taiwaninsight.org/2025/11/05/water-nexus-can-semiconductors-and-sustainability-coexist-in-taiwan/",
+     "https://www.datacenterdynamics.com/en/news/tsmc-could-account-for-24-of-taiwans-electricity-consumption-by-2030/"
+    ],
     "as_of": "2025-11-05 / 2024-10-07"
    },
    "sole_source": true,
@@ -4943,7 +5075,10 @@
    "what": "Die-to-wafer hybrid bonders (Cu-Cu, for SoIC/CoWoS-L and future HBM), TCB bonders, flip-chip die attach",
    "share": {
     "value": "Hybrid-bonding customer count 21 (vs 15 at end-2025); Q1-2026 orders +105% on hybrid bonding; TSMC described as the customer 'driving the bus the fastest'; TSMC SoIC pitch 6um (2025) -> 4.5um (2029)",
-    "source": "https://www.investing.com/news/transcripts/earnings-call-transcript-besi-q2-2026-results-lift-revenue-but-stock-falls-93CH-4809494 ; https://www.tomshardware.com/tech-industry/semiconductors/hybrid-bonding-roadmap-examined",
+    "source": [
+     "https://www.investing.com/news/transcripts/earnings-call-transcript-besi-q2-2026-results-lift-revenue-but-stock-falls-93CH-4809494",
+     "https://www.tomshardware.com/tech-industry/semiconductors/hybrid-bonding-roadmap-examined"
+    ],
     "as_of": "2026-07-23 / 2026-09-02"
    },
    "sole_source": false,
@@ -4972,7 +5107,10 @@
    "what": "TC bonders for HBM stacking (HBM3E/HBM4) sold to SK hynix and Micron — the HBM that is then mounted on CoWoS interposers",
    "share": {
     "value": "~45% of SK hynix HBM3/3E TC-bonder volume (Hanwha ~45%, ASMPT ~5%), projected to fall to 20-30% by 2026; Jun-2026 order 44.2bn KRW for ~15 TC Bonder 4 units (~3bn KRW each)",
-    "source": "https://lumenalpha.substack.com/p/besi-asmpt-hanmi-and-hanwha-what ; https://www.trendforce.com/news/2026/06/09/news-sk-hynix-reportedly-places-44-2bn-won-tc-bonder-order-with-hanmi-accelerating-hbm4-ramp-up/",
+    "source": [
+     "https://lumenalpha.substack.com/p/besi-asmpt-hanmi-and-hanwha-what",
+     "https://www.trendforce.com/news/2026/06/09/news-sk-hynix-reportedly-places-44-2bn-won-tc-bonder-order-with-hanmi-accelerating-hbm4-ramp-up/"
+    ],
     "as_of": "2025 / 2026-06-09"
    },
    "sole_source": false,
@@ -5001,7 +5139,10 @@
    "what": "TC bonders for HBM (SK hynix second source), hybrid-bonding development with SK hynix",
    "share": {
     "value": "~45% of SK hynix HBM3/3E TCB volume (2025); Hanwha equipment 'not presently in use' for HBM4 as of Dec-2025",
-    "source": "https://lumenalpha.substack.com/p/besi-asmpt-hanmi-and-hanwha-what ; https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/",
+    "source": [
+     "https://lumenalpha.substack.com/p/besi-asmpt-hanmi-and-hanwha-what",
+     "https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/"
+    ],
     "as_of": "2025-12-12"
    },
    "sole_source": false,
@@ -5093,7 +5234,10 @@
    "what": "FC-BGA ABF package substrates for CoWoS (the organic substrate under the interposer); primary Nvidia substrate supplier",
    "share": {
     "value": "~35% of high-end FC-BGA substrate market (Shinko ~18%, Unimicron ~14%, AT&S ~10%, Nan Ya ~5%); another source: 85% of AI-server build-up substrate in 2023 falling to ~55% by 2026 as Unimicron gains; ¥500bn capex 2026-28 for 2.5x capacity by 2028; 14-layer lead times peaked at 28 weeks early 2025",
-    "source": "https://www.datagravity.dev/p/the-abf-substrate-bottleneck ; https://tspasemiconductor.substack.com/p/ai-server-build-up-substrate-industry",
+    "source": [
+     "https://www.datagravity.dev/p/the-abf-substrate-bottleneck",
+     "https://tspasemiconductor.substack.com/p/ai-server-build-up-substrate-industry"
+    ],
     "as_of": "2026-06-14"
    },
    "sole_source": false,
@@ -5126,7 +5270,10 @@
    "what": "FC-BGA ABF substrates for CoWoS (Nvidia second source, AMD, ASICs)",
    "share": {
     "value": "~14% of high-end FC-BGA (2026); rising from 10% (2023) of AI-server build-up substrate",
-    "source": "https://www.datagravity.dev/p/the-abf-substrate-bottleneck ; https://tspasemiconductor.substack.com/p/ai-server-build-up-substrate-industry",
+    "source": [
+     "https://www.datagravity.dev/p/the-abf-substrate-bottleneck",
+     "https://tspasemiconductor.substack.com/p/ai-server-build-up-substrate-industry"
+    ],
     "as_of": "2026-06-14"
    },
    "sole_source": false,
@@ -5241,7 +5388,10 @@
    "what": "Hyper-pure (11N) semiconductor-grade polysilicon for CZ ingot growth",
    "share": {
     "value": "Wacker + Hemlock ~ three-quarters of global semiconductor-grade polysilicon; one of only five producers at leading-edge purity; only US-owned producer; $325M CHIPS award Jan-2025 for new Michigan facility",
-    "source": "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf ; https://www.commerce.gov/news/press-releases/2025/01/department-commerce-announces-chips-incentives-award-hemlock",
+    "source": [
+     "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf",
+     "https://www.commerce.gov/news/press-releases/2025/01/department-commerce-announces-chips-incentives-award-hemlock"
+    ],
     "as_of": "2025-08-06 / 2025-01-07"
    },
    "sole_source": false,
@@ -5271,7 +5421,10 @@
    "what": "Semiconductor-grade polysilicon (Siemens process); EUR 300M new electronic-grade line commissioned Burghausen 2025",
    "share": {
     "value": "Wacker + Hemlock ~75% of semiconductor-grade polysilicon",
-    "source": "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf ; http://plasticsandrubberasia.com/IMA/july2025/semi-conductors-oci-tokuyama-to-build-us430-mn-polysilicon-facility-in-malaysia-wacker-commissions-eur300-mn-line-for-polysilicon-in-germany.html",
+    "source": [
+     "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf",
+     "http://plasticsandrubberasia.com/IMA/july2025/semi-conductors-oci-tokuyama-to-build-us430-mn-polysilicon-facility-in-malaysia-wacker-commissions-eur300-mn-line-for-polysilicon-in-germany.html"
+    ],
     "as_of": "2025-08 / 2025-07"
    },
    "sole_source": false,
@@ -5349,6 +5502,7 @@
   {
    "id": "sibelco_spruce_pine",
    "name": "Sibelco (Spruce Pine, NC — formerly Covia/Unimin)",
+   "short": "Sibelco",
    "ticker": "private (Sibelco NV, Belgian family-owned)",
    "exchange": null,
    "country_hq": "BE",
@@ -5357,10 +5511,21 @@
    "supplies_to": "quartz_crucibles",
    "what": "IOTA high-purity quartz (HPQ) sand for semiconductor-grade fused-quartz crucibles",
    "share": {
-    "value": "Spruce Pine (Sibelco + The Quartz Corp) = 70-90% of global HPQ, ~180-200k t/yr; crucibles ~30% of ingot cost, replaced every ~400 h; Sibelco Expansion 1 $200M (2025, doubles capacity) + Expansion 2 ~$500M (2024-27); HPQ output +70% 2019-2023",
-    "source": "https://www.construction-physics.com/p/does-all-semiconductor-manufacturing ; https://www.sibelco.com/en/news/sibelco-provides-an-update-on-the-expansion-of-its-spruce-pine-usa-high-purity-quartz-operations",
-    "as_of": "2024-10 / 2024"
+    "value": "80–90% (industry estimate)",
+    "source": [
+     "https://www.cnn.com/2024/10/02/tech/semiconductor-supply-chain-north-carolina-helene/index.html",
+     "https://www.inc.com/associated-press/helene-destroyed-a-town-thats-the-source-of-quartz-for-most-tech-products/90983974"
+    ],
+    "as_of": "2024-10",
+    "note": "no producer publishes a figure"
    },
+   "source": [
+    "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-quartz.pdf",
+    "https://www.sibelco.com/en/materials/high-purity-quartz",
+    "https://www.construction-physics.com/p/does-all-semiconductor-manufacturing",
+    "https://www.sibelco.com/en/news/sibelco-provides-an-update-on-the-expansion-of-its-spruce-pine-usa-high-purity-quartz-operations"
+   ],
+   "as_of": "2026-01",
    "sole_source": false,
    "sole_source_basis": "Two producers at one deposit — geographic single point, corporate duopoly; synthetic quartz exists at 5-10x cost",
    "alternatives": [
@@ -5369,7 +5534,7 @@
     "synthetic fused silica (Heraeus, Tosoh)",
     "Canada/Sri Lanka/Australia deposits (early)"
    ],
-   "notes": "Hurricane Helene (Sep-2024) halted both mines for weeks; inner-crucible layer for semi-grade uses the highest IOTA grades.",
+   "notes": "Hurricane Helene (Sep-2024) halted both mines for weeks; inner-crucible layer for semi-grade uses the highest IOTA grades. Sibelco: $200M Expansion 1 (announced Apr-2023) to double HPQ installed capacity, a further ~$500M Expansion 2 over 2024-2027, and HPQ output up over 70% from 2019 to 2023 (Sibelco expansion update). Construction Physics: Spruce Pine output estimated at 180-200,000 t/yr (the industry does not publish it); crucibles about 30% of mono-Si ingot cost, each good for about 400 hours.",
    "chokepoint_ids": [
     "CP6"
    ],
@@ -5380,6 +5545,7 @@
   {
    "id": "quartz_corp",
    "name": "The Quartz Corp (TQC)",
+   "short": "Quartz Corp",
    "ticker": "private (JV of Imerys and Norsk Mineral)",
    "exchange": null,
    "country_hq": "NO",
@@ -5388,10 +5554,20 @@
    "supplies_to": "quartz_crucibles",
    "what": "High-purity quartz sand (mined Spruce Pine, refined in Norway) for crucibles",
    "share": {
-    "value": "second of the two Spruce Pine producers (combined 70-90% of world HPQ)",
-    "source": "https://www.construction-physics.com/p/does-all-semiconductor-manufacturing",
-    "as_of": "2024-10"
+    "value": "80–90% (industry estimate)",
+    "source": [
+     "https://www.cnn.com/2024/10/02/tech/semiconductor-supply-chain-north-carolina-helene/index.html",
+     "https://www.inc.com/associated-press/helene-destroyed-a-town-thats-the-source-of-quartz-for-most-tech-products/90983974"
+    ],
+    "as_of": "2024-10",
+    "note": "no producer publishes a figure"
    },
+   "source": [
+    "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-quartz.pdf",
+    "https://www.thequartzcorp.com/articles/history",
+    "https://www.construction-physics.com/p/does-all-semiconductor-manufacturing"
+   ],
+   "as_of": "2026-01",
    "sole_source": false,
    "sole_source_basis": "duopoly at one deposit",
    "alternatives": [
@@ -5512,7 +5688,10 @@
    "what": "Thermosetting epoxy resin, phenolic/cyanate hardeners for ABF formulation",
    "share": {
     "value": "unsourced estimate — Ajinomoto does not disclose resin suppliers; ABF composition is epoxy resin + hardener + silica filler on PET carrier",
-    "source": "https://nikhs.substack.com/p/abf-the-material-beneath-the-model ; https://www.ajinomoto.com/innovation/our_innovation/buildupfilm",
+    "source": [
+     "https://nikhs.substack.com/p/abf-the-material-beneath-the-model",
+     "https://www.ajinomoto.com/innovation/our_innovation/buildupfilm"
+    ],
     "as_of": "2026"
    },
    "sole_source": false,
@@ -5608,7 +5787,11 @@
    "what": "Physical ABF coating capacity (internal node: all production is in Japan)",
    "share": {
     "value": ">95% of global ABF; FY3/2026 electronic-materials sales ¥100.7bn (+31%), OP ¥54.6bn (+35%), OP margin >50%; plan +50% capacity by 2030 (~¥25bn capex); ~30% price increase Q3-2026",
-    "source": "https://www.trendforce.com/news/2026/05/08/news-ajinomoto-ramps-chip-packaging-push-with-%C2%A51-2b-land-buy-for-new-plant-in-2032-abf-margins-top-50-on-ai-boom/ ; https://nikhs.substack.com/p/abf-the-material-beneath-the-model ; https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+    "source": [
+     "https://www.trendforce.com/news/2026/05/08/news-ajinomoto-ramps-chip-packaging-push-with-%C2%A51-2b-land-buy-for-new-plant-in-2032-abf-margins-top-50-on-ai-boom/",
+     "https://nikhs.substack.com/p/abf-the-material-beneath-the-model",
+     "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE"
+    ],
     "as_of": "2026-05-08 / 2026"
    },
    "sole_source": true,
@@ -8770,7 +8953,10 @@
     "approach": "RibbonFET GAA + PowerVia backside power; 18A-P for external customers, 14A risk production 2028 / volume 2029",
     "stage": "qualified",
     "signal": "A named external customer's product shipping in volume on 18A-P (reported: Apple low-end Mac/iPad, Nvidia, AMD hedges); reported yield ~65% -> >85% in one quarter (Jul-2026)",
-    "signal_source": "https://rcrtech.com/semiconductor-news/intel-foundry-18a-yields/ ; https://www.cnbc.com/2026/06/16/intel-begins-production-of-18a-p-inches-closer-to-possible-apple-deal.html",
+    "signal_source": [
+     "https://rcrtech.com/semiconductor-news/intel-foundry-18a-yields/",
+     "https://www.cnbc.com/2026/06/16/intel-begins-production-of-18a-p-inches-closer-to-possible-apple-deal.html"
+    ],
     "as_of": "2026-07-20",
     "sponsor": "intc"
    },
@@ -8876,7 +9062,10 @@
     "approach": "New 300mm capacity online Jul-2026 while rivals paused; Samsung/SK hynix-anchored",
     "stage": "volume",
     "signal": "New 300mm line output figure and first qualification at a non-Korean leading-edge fab (TSMC/Intel)",
-    "signal_source": "https://www.digitimes.com/news/a20260624VL221/sk-siltron-wafer-capacity-300mm-demand.html ; https://www.koreatimes.co.kr/business/companies/20260413/sk-siltron-sale-to-benefit-both-sk-doosan",
+    "signal_source": [
+     "https://www.digitimes.com/news/a20260624VL221/sk-siltron-wafer-capacity-300mm-demand.html",
+     "https://www.koreatimes.co.kr/business/companies/20260413/sk-siltron-sale-to-benefit-both-sk-doosan"
+    ],
     "as_of": "2026-06-24"
    },
    {
@@ -8886,7 +9075,10 @@
     "approach": "China's 300mm champion; nearing 1.2M wafers/month after ~90% shipment jump; RMB 11.45bn injection into Zingsemi for 300mm upgrade (Aug-2026)",
     "stage": "volume",
     "signal": "Qualification of NSIG prime 300mm wafers at a sub-7nm logic line (currently mostly mature-node and test wafers) — monthly capacity now ~1.2M (vs 370k in Jun-2023)",
-    "signal_source": "https://www.digitimes.com/news/a20260820VL212/nsig-300mm-capacity-silicon-wafer-silicon.html ; https://www.trendforce.com/news/2026/08/12/news-chinas-12-inch-silicon-wafers-hit-the-accelerator-with-billions-in-new-capacity-investments/",
+    "signal_source": [
+     "https://www.digitimes.com/news/a20260820VL212/nsig-300mm-capacity-silicon-wafer-silicon.html",
+     "https://www.trendforce.com/news/2026/08/12/news-chinas-12-inch-silicon-wafers-hit-the-accelerator-with-billions-in-new-capacity-investments/"
+    ],
     "as_of": "2026-08-20"
    },
    {
@@ -8908,7 +9100,10 @@
     "approach": "Drop-in build-up film competitor; 'has not credibly challenged Ajinomoto's advanced-grade position in over two decades'",
     "stage": "qualified",
     "signal": "A tier-1 substrate maker (Ibiden/Unimicron/AT&S) publicly qualifying Sekisui film for a >10-layer AI-GPU substrate, or Sekisui disclosing a build-up-film revenue line",
-    "signal_source": "https://nikhs.substack.com/p/abf-the-material-beneath-the-model ; https://www.sekisuichemical-hppc.com/en/products/detail/217/",
+    "signal_source": [
+     "https://nikhs.substack.com/p/abf-the-material-beneath-the-model",
+     "https://www.sekisuichemical-hppc.com/en/products/detail/217/"
+    ],
     "as_of": "2026"
    },
    {

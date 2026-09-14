@@ -328,7 +328,7 @@ def build(today: dt.date | None = None, lang: str = "he",
             "name": ch["name"], "stage": ch.get("stage"),
             "stage_he": stages.get(ch.get("stage"), ""),
             "signal": (ch.get("signal") or "")[:170], "as_of": ch.get("as_of"),
-            "src": ch.get("signal_source"),
+            "src": sources(ch.get("signal_source")),
             # The map station funding this attack, where the map records one.
             # It is what lets a company that holds no chokepoint still show
             # what it is doing to somebody else's.
@@ -349,17 +349,25 @@ def build(today: dt.date | None = None, lang: str = "he",
             sh = s.get("share") or {}
             v = str(sh.get("value", ""))
             unsourced = "unsourced" in v.lower()
-            subs.append({
+            row = {
                 "id": s["id"], "name": s["name"], "tier": s.get("tier"),
                 "to": s.get("supplies_to"), "what": (s.get("what") or "")[:110],
-                "share": "" if unsourced else v[:90],
-                "src": None if unsourced else sh.get("source"),
+                "share": "" if unsourced else clip(v, 90),
+                "src": [] if unsourced else sources(sh.get("source")),
                 "sole": bool(s.get("sole_source")), "ticker": s.get("ticker"),
                 "country": s.get("country_factory") or s.get("country_hq") or "",
                 "sym": s.get("price_symbol"),
                 "px": r13_only(get(s.get("price_symbol")))
                       if s.get("price_symbol") else None,
-            })
+            }
+            # Only where the map has them, so 130 rows do not each carry two
+            # empty keys toward the ceiling: the canvas label where the full
+            # name would be cut, and what the row rests on apart from its share.
+            if s.get("short"):
+                row["short"] = s["short"]
+            if sources(s.get("source")):
+                row["refs"] = sources(s.get("source"))
+            subs.append(row)
         cps.append({
             "id": cid, "he": (c.get("label") or {}).get(lang, c["name"]),
             "blurb": (c.get("blurb") or {}).get(lang, ""),
@@ -492,17 +500,54 @@ TRIM_LADDER = [
     ("signal text 170->110", lambda L: _cap(L, "sigs", "signal", 110)),
     ("approach 120->70", lambda L: _cap(L, "sigs", "approach", 70)),
     ("subnode what 110->70", lambda L: _cap(L, "subs", "what", 70)),
-    ("subnode share 90->60", lambda L: _cap(L, "subs", "share", 60)),
+    ("subnode share 90->60", lambda L: _cap(L, "subs", "share", 60, whole=True)),
     ("node role 1st clause", lambda L: _roles(L, 60)),
     ("signal text ->70", lambda L: _cap(L, "sigs", "signal", 70)),
 ]
 
 
-def _cap(live: dict, coll: str, field: str, n: int) -> None:
+def sources(v) -> list[str]:
+    """A source field as a list of references.
+
+    The map keeps one reference as a string and several as a list. Several used
+    to be joined into one string with " ; ", which the page then put into a
+    single href that opened nothing. Every reader downstream gets a list.
+    """
+    if not v:
+        return []
+    items = v if isinstance(v, list) else [v]
+    return [str(x).strip() for x in items if str(x).strip()]
+
+
+def clip(text: str, n: int) -> str:
+    """At most ``n`` characters, ending where a sentence or clause ends.
+
+    A cut in the middle of a clause says something the source did not --
+    "70-90% of global HPQ, ~180-200k t/yr; crucibles" -- so a long text stops
+    at the last sentence or clause boundary inside the limit, or failing that
+    the last whole word, and an ellipsis says it was shortened.
+    """
+    text = text.strip()
+    if len(text) <= n:
+        return text
+    head = text[:n - 1]
+    for sep in (". ", "; "):
+        i = head.rfind(sep)
+        if i >= n // 3:
+            return head[:i].rstrip() + "…"
+    i = head.rfind(" ")
+    cut = head[:i] if i >= n // 3 else head
+    return cut.rstrip(" ,;:—-") + "…"
+
+
+def _cap(live: dict, coll: str, field: str, n: int,
+         whole: bool = False) -> None:
+    """Shorten a text field on every child row. ``whole`` ends the cut at a
+    sentence or a word (see :func:`clip`) instead of mid-word."""
     for c in live["cps"]:
         for row in c.get(coll, []):
             if row.get(field):
-                row[field] = row[field][:n]
+                row[field] = clip(row[field], n) if whole else row[field][:n]
 
 
 def _cap_cp(live: dict, field: str, n: int) -> None:

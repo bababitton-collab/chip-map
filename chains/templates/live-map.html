@@ -419,6 +419,23 @@ let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, select
 let bands=[], l9y=0, l9x=14, l9anchor='left';
 const pct=v=>v==null?'—':((v>0?'+':'')+(v*100).toFixed(1)+'%');
 const cls=v=>v==null?'':(v<0?'neg':'pos');
+// A source is a list of references (a single string in an older snapshot), and
+// every URL in it is its own link: joined into one href they opened nothing.
+// The first URL carries the text it sources, as a lone source always has; each
+// further reference is a small link labelled by its host. One that is not a
+// URL ("NVIDIA FY2026 Form 10-K") is shown as the citation it is.
+const srcRefs=v=>(Array.isArray(v)?v:(v?[v]:[])).filter(Boolean);
+const srcIsUrl=u=>/^https?:\/\//i.test(u);
+const srcHost=u=>{ try{ return new URL(u).hostname.replace(/^www\./,''); }catch(e){ return u; } };
+const srcLink=u=>srcIsUrl(u)
+  ?`<a class="ref" href="${u}" target="_blank" rel="noopener" style="font-size:.8em;margin-inline-start:6px">${srcHost(u)}</a>`
+  :`<span class="ref" style="font-size:.8em;margin-inline-start:6px;color:var(--ink3)">${esc(u)}</span>`;
+function srcCited(text, v){
+  const r=srcRefs(v), i=r.findIndex(srcIsUrl);
+  const lead=i<0?text:`<a href="${r[i]}" target="_blank" rel="noopener">${text}</a>`;
+  return lead+r.filter((u,k)=>k!==i).map(srcLink).join('');
+}
+function srcLinks(v, sep){ const r=srcRefs(v); return r.length?sep+r.map(srcLink).join(''):''; }
 
 function build(){
   readLabels();
@@ -738,18 +755,18 @@ function open(n){
     // sub-suppliers
     const t1=c.subs.filter(s=>s.tier===1), t2=c.subs.filter(s=>s.tier===2);
     h+=`<h3>מי מספק למי ש${WORDS.holder} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;
-    const row=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">ספק יחיד</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">פרטית</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?(s.src?`<a href="${s.src}" target="_blank" rel="noopener">${s.share}</a>`:s.share):'<span style="color:var(--ink3)">אומדן</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}</div></div>`;
+    const row=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">ספק יחיד</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">פרטית</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">אומדן</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div></div>`;
     t1.forEach(s=>{ h+=row(s); t2.filter(x=>x.to===s.id).forEach(x=>h+=row(x)); });
     t2.filter(x=>!t1.some(s=>s.id===x.to)).forEach(x=>h+=row(x));
     // satellites layout: tier1 arc on the upstream (right) side
     const all=[...t1.map(s=>({s,tier:1})),...t2.map(s=>({s,tier:2}))];
     const dirX = n.x < W-220 ? 1 : -1; // open toward the right (upstream) unless at the right edge
     const tilt = n.y > H-170 ? -0.55 : (n.y < 170 ? 0.55 : 0);
-    all.forEach((o,i)=>{ const tier=o.tier; const arr=tier===1?t1:t2; const idx=arr.indexOf(o.s); const cnt=arr.length; const spread=Math.min(Math.PI*0.9, 0.28*Math.max(cnt-1,1)); const ang=tilt+(-spread/2)+(cnt>1?idx/(cnt-1):0.5)*spread; const R=tier===1?100:165; let tx=n.x+dirX*Math.cos(ang)*R, ty=n.y+Math.sin(ang)*R; ty=Math.max(40,Math.min(H-60,ty)); sats.push({tx, ty, tier, sole:o.s.sole, label:o.s.name.split(' ').slice(0,2).join(' ').slice(0,16)}); });
+    all.forEach((o,i)=>{ const tier=o.tier; const arr=tier===1?t1:t2; const idx=arr.indexOf(o.s); const cnt=arr.length; const spread=Math.min(Math.PI*0.9, 0.28*Math.max(cnt-1,1)); const ang=tilt+(-spread/2)+(cnt>1?idx/(cnt-1):0.5)*spread; const R=tier===1?100:165; let tx=n.x+dirX*Math.cos(ang)*R, ty=n.y+Math.sin(ang)*R; ty=Math.max(40,Math.min(H-60,ty)); sats.push({tx, ty, tier, sole:o.s.sole, label:(o.s.short||o.s.name.split(' ').slice(0,2).join(' ').slice(0,16))}); });
     // challengers
     h+=`<h3>מי ${WORDS.challenger} · ${c.sigs.length}</h3>`;
     const pxBy={}; c.chal.forEach(x=>{ if(x.px) pxBy[x.name]=x.px; });
-    c.sigs.forEach(s=>{ const px=pxBy[s.name]; h+=`<div class="ch"><b>${s.name}${px&&px.r13w!=null?`<span class="badge r13">13w ${pct(px.r13w)}</span>`:''}</b>${stageBar(s.stage)}<div class="sig">${s.approach?s.approach+'<br>':''}<span style="color:var(--ink3)">signal:</span> ${s.src?`<a href="${s.src}" target="_blank" rel="noopener">${s.signal}</a>`:s.signal} <small>${s.as_of||''}</small></div></div>`; });
+    c.sigs.forEach(s=>{ const px=pxBy[s.name]; h+=`<div class="ch"><b>${s.name}${px&&px.r13w!=null?`<span class="badge r13">13w ${pct(px.r13w)}</span>`:''}</b>${stageBar(s.stage)}<div class="sig">${s.approach?s.approach+'<br>':''}<span style="color:var(--ink3)">signal:</span> ${srcCited(s.signal,s.src)} <small>${s.as_of||''}</small></div></div>`; });
     // cal rows carry cps (a list) and who/d/days. They deliberately do NOT carry
     // the question text: the full rows travel in D.watch, and cal is the marker
     // layer. This read used e.cp and nx.he, neither of which exists, so nx was

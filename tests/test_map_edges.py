@@ -69,8 +69,12 @@ def test_a_source_may_be_a_named_filing_rather_than_a_url():
     """Five edges cite "Astera Labs FY2025 10-K" and the like. A named SEC
     filing is stronger provenance than a link, not weaker: it survives the URL
     rotting. So the requirement is that a source identifies something, not that
-    it is clickable."""
-    assert all(len(str(e.get("source", "")).strip()) > 8 for e in EDGES)
+    it is clickable. Several references are a list, and each one has to
+    identify something on its own."""
+    refs = [r for e in EDGES
+            for r in (e.get("source") if isinstance(e.get("source"), list)
+                      else [e.get("source", "")])]
+    assert refs and all(len(str(r).strip()) > 8 for r in refs)
 
 
 def test_the_sourced_cohort_does_not_shrink():

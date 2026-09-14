@@ -13,7 +13,7 @@ BRAND = "Linchpin Signal"
 MAP_LABEL = "Map"
 TRACK_RECORD = "Track Record"
 TRACK_RECORD_DESCRIPTOR = "Every forecast recorded before the answer."
-SUBSCRIBE_LABEL = "Get the key: subscribe to the weekly mail (free)"
+SUBSCRIBE_LABEL = "Get the key — subscribe to the weekly mail (free)"
 
 
 def links(dom: str) -> list[tuple[str, str, str]]:
@@ -53,7 +53,7 @@ def subscribe_html(url: str | None) -> str:
             '<p style="margin:0 0 8px;font-size:.95rem;color:#b3bccb">'
             f'{label}</p>'
             f'<iframe src="{_html.escape(url, quote=True)}" title="{label}" '
-            'width="480" height="150" loading="lazy" frameborder="0" '
+            'width="480" height="320" loading="lazy" frameborder="0" '
             'scrolling="no" style="display:block;width:100%;max-width:480px;'
             'border:1px solid #222a36;border-radius:8px;background:#fff">'
             '</iframe></div>')

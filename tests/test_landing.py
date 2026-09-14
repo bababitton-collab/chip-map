@@ -235,12 +235,16 @@ def test_the_advice_answer_is_exact(tmp_path):
             "recommendations. It is not investment advice.") in _text(_page(tmp_path))
 
 
+SUBSCRIBE_FAQ = " Subscribe (free) and the key arrives in the welcome email."
+
+
 def test_the_free_and_key_answer_is_held_to_access_py(tmp_path, monkeypatch):
+    monkeypatch.delenv("SUBSCRIBE_EMBED_URL", raising=False)
     text = _text(_page(tmp_path))
     assert ("Everything is free. The map, every chokepoint, the calendar, and "
             "every resolved question with its verification are open. The "
             "questions still ahead — their wording, baskets and live board — "
-            "unlock with a key sent in the weekly mail.") in text
+            "unlock with a key sent in the weekly mail." + SUBSCRIBE_FAQ) in text
     bare = _text(_page(tmp_path / "bare", commitments=False))
     assert "every resolved question are open" in bare, \
         "verification is claimed only with its proof"
@@ -277,12 +281,20 @@ def test_no_public_page_describes_a_charge(tmp_path):
 
 # -- the subscribe slot: dormant until SUBSCRIBE_EMBED_URL is set ------------------
 
-EMBED = "https://example.substack.com/embed"
+EMBED = "https://linchpinsignal.substack.com/embed"
+
+
+def test_the_live_publication_is_the_configured_form(monkeypatch):
+    from chains import paths
+    assert paths.SUBSCRIBE_EMBED_URL == EMBED
+    monkeypatch.delenv("SUBSCRIBE_EMBED_URL", raising=False)
+    assert paths.subscribe_embed_url() == EMBED
 
 
 def test_without_the_embed_url_neither_page_offers_a_signup(tmp_path,
                                                             monkeypatch):
-    monkeypatch.delenv("SUBSCRIBE_EMBED_URL", raising=False)
+    monkeypatch.setenv("SUBSCRIBE_EMBED_URL", "")
+    assert SUBSCRIBE_FAQ.strip() not in _text(_page(tmp_path))
     for html in (_page(tmp_path), _track_page()):
         assert "<iframe" not in html
         assert sitenav.SUBSCRIBE_LABEL not in html
@@ -294,12 +306,15 @@ def test_with_the_embed_url_both_pages_frame_the_form_under_the_label(
         tmp_path, monkeypatch):
     monkeypatch.setenv("SUBSCRIBE_EMBED_URL", EMBED)
     assert sitenav.SUBSCRIBE_LABEL == \
-        "Get the key: subscribe to the weekly mail (free)"
+        "Get the key — subscribe to the weekly mail (free)"
     land, trk = _page(tmp_path), _track_page()
     for html in (land, trk):
         assert html.count("<iframe") == 1
         assert f'<iframe src="{EMBED}"' in html
+        assert 'height="320"' in html and 'frameborder="0"' in html
+        assert "max-width:480px" in html
         assert sitenav.SUBSCRIBE_LABEL in _text(html)
+    assert SUBSCRIBE_FAQ.strip() in _text(land)
     # Beside the call to the track record, and beside the key field.
     assert (land.index("See the track record</a>") < land.index("<iframe")
             < land.index("</header>"))
@@ -315,11 +330,13 @@ def test_both_pages_pass_the_gates_with_or_without_the_slot(tmp_path,
     for html in (land, trk):
         assert build_pages.hebrew_runs(html) == []
         assert build_pages.render_faults(html) == []
-    # The slot adds its own block and nothing else, so whatever the locked-text
-    # gate decides about the page without it, it decides about the page with it.
+    # The slot adds its own block (and, on the landing, its FAQ sentence) and
+    # nothing else, so whatever the locked-text gate decides about the page
+    # without it, it decides about the page with it.
     block = sitenav.subscribe_html(embed or None)
     monkeypatch.setenv("SUBSCRIBE_EMBED_URL", "")
-    assert land.replace(block, "") == _page(tmp_path)
+    assert (land.replace(block, "").replace(SUBSCRIBE_FAQ, "")
+            == _page(tmp_path))
     assert trk.replace(block, "") == _track_page()
     for r in WATCH:
         assert r.get("who", "") == "" or f">{r['who']}<" not in block

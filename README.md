@@ -105,10 +105,11 @@ Two things a person has to do, both by hand:
 one line and continues with none — the map must never go dark because a share
 link expired). `SIGNUP_URL` is an optional *variable*, the newsletter link;
 until it is set the page's call to action says "coming soon" and offers no
-link. `SUBSCRIBE_EMBED_URL` is an optional *variable*, the mail service's
-embeddable subscribe form (https only); when set, the landing and the track
-page's locked state frame it under "Get the key: subscribe to the weekly mail
-(free)", and when empty they draw nothing.
+link. `SUBSCRIBE_EMBED_URL` is the weekly mail's Substack subscribe form
+(https only), committed in `chains/paths.py`; the landing and the track page's
+locked state frame it under "Get the key — subscribe to the weekly mail
+(free)". An environment value overrides it, and an empty one draws nothing.
+It is not a CI variable: an unset one would arrive empty and hide the form.
 
 Both URLs are secrets rather than variables because a repository variable is
 readable by anyone who can read the repository, and these two links are the

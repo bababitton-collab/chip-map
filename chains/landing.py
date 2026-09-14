@@ -148,6 +148,9 @@ def render(dom_dir: Path, dom: str, site_url: str,
         (templates_dir() / TEMPLATE).read_text(encoding="utf-8"))
     t = _blocks(t, "prereg", f["prereg"])
     t = _blocks(t, "observe", f["observe_only"] > 0)
+    # The FAQ's "subscribe" sentence, like the form, only with a form to use.
+    subscribe = subscribe_embed_url()
+    t = _blocks(t, "subscribe", bool(subscribe))
     values = {
         "brand": f["brand"],
         "companies": str(f["companies"]),
@@ -169,8 +172,8 @@ def render(dom_dir: Path, dom: str, site_url: str,
         "site_nav": sitenav.html(dom, "home"),
         "site_nav_css": sitenav.CSS,
         "jsonld": _jsonld(f["brand"], site_url),
-        # Empty until SUBSCRIBE_EMBED_URL is set: no form, no copy.
-        "subscribe": sitenav.subscribe_html(subscribe_embed_url()),
+        # Empty when SUBSCRIBE_EMBED_URL is: no form, no copy.
+        "subscribe": sitenav.subscribe_html(subscribe),
     }
 
     def fill(m):

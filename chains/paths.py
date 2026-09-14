@@ -9,8 +9,9 @@
     QUESTIONS_URL    required; the question text, see chains/questions.py
     ANSWERS_URL      optional; see chains/answers.py
     SIGNUP_URL       optional; where the page's CTA points
-    SUBSCRIBE_EMBED_URL  optional; the mail service's embeddable subscribe
-                     form, framed on the landing and the track page
+    SUBSCRIBE_EMBED_URL  the weekly mail's embeddable subscribe form, framed
+                     on the landing and the track page; defaults to
+                     SUBSCRIBE_EMBED_URL below, set it empty to draw none
 
 ONE ENGINE, MANY MAPS
 ---------------------
@@ -75,6 +76,11 @@ TOKEN_ENV = "EODHD_API_TOKEN"
 ANSWERS_URL_ENV = "ANSWERS_URL"
 SIGNUP_URL_ENV = "SIGNUP_URL"
 SUBSCRIBE_EMBED_URL_ENV = "SUBSCRIBE_EMBED_URL"
+
+# The weekly mail's subscribe form. It is on the public page by definition, so
+# it is configuration in git rather than a secret. The form only collects an
+# email address; the key arrives in the publication's welcome email.
+SUBSCRIBE_EMBED_URL = "https://linchpinsignal.substack.com/embed"
 
 
 def _dir(env: str, default: str) -> Path:
@@ -219,15 +225,17 @@ def signup_url() -> str | None:
 
 
 def subscribe_embed_url() -> str | None:
-    """The mail service's embeddable subscribe form, if there is one yet.
+    """The weekly mail's embeddable subscribe form, or None for no form.
 
-    Unset is the normal state until the publication exists, and it draws
-    nothing -- no placeholder and no dead form -- so the site never offers a
-    signup that goes nowhere. The URL is framed into two public pages, so only
-    https is accepted; anything else stops the build rather than putting an
+    ``SUBSCRIBE_EMBED_URL`` above unless the environment says otherwise. An
+    explicitly empty value draws nothing -- no placeholder and no dead form --
+    so if the publication is ever removed the site stops offering a signup
+    that goes nowhere. The URL is framed into two public pages, so only https
+    is accepted; anything else stops the build rather than putting an
     arbitrary scheme into an iframe.
     """
-    v = os.environ.get(SUBSCRIBE_EMBED_URL_ENV, "").strip()
+    v = os.environ.get(SUBSCRIBE_EMBED_URL_ENV)
+    v = SUBSCRIBE_EMBED_URL if v is None else v.strip()
     if not v:
         return None
     if not v.lower().startswith("https://"):

@@ -440,9 +440,13 @@ function layout(){
     const y0=top+(bottom-top-span)/2;
     g.forEach((nd,i)=>{ nd.x=xOf[L]; nd.y=n===1?(top+bottom)/2:y0+i*(span/(n-1||1)); });
   });
-  // L9 energy: bottom band under L6/L7
-  const g9=(groups['L9']||[]); const xs=[xOf['L7'],xOf['L6']];
-  g9.forEach((nd,i)=>{ nd.x=xOf['L7']+ (i/(g9.length-1||1))*(xOf['L6']-xOf['L7']); nd.y=H-34; });
+  // L9 energy: one row along the bottom, in equal steps from under L7 to under
+  // L4. Packed under L7/L6 it gave six stations two columns' width, and their
+  // labels ran into each other and into the L9 chip. Three columns' width
+  // leaves 72px between centres at the 900px minimum, room for the widest
+  // label on the row beside either neighbour.
+  const g9=(groups['L9']||[]); const x7=xOf['L7'], x4=xOf['L4'];
+  g9.forEach((nd,i)=>{ nd.x=x7+(i/(g9.length-1||1))*(x4-x7); nd.y=H-34; });
   nodes.forEach(n=>{ n.r = n.cap? Math.max(7, Math.min(24, 6+18*Math.sqrt(n.cap/5516))) : 7; });
   // The column geometry, kept for the header chips alone. Nothing is painted
   // behind the map: the ground stays one colour the whole way across.
@@ -452,21 +456,22 @@ function layout(){
   // Where the L9 row sits, and how wide its labels are: the chips have to
   // avoid them, and a canvas label has no box anything else can measure.
   l9y = H-34;
-  // The L9 chip sits beside CEG, on the far side of the row from the rest of
-  // it, rather than out at the map's edge where it named nothing in
-  // particular. Anchored to the node and not to a column, because L9 is a row.
-  const g9n = (groups['L9']||[]);
-  const ceg = byId.ceg;
-  if(ceg && g9n.length){
-    const others = g9n.filter(n=>n!==ceg).map(n=>n.x);
-    const outer = !others.length || ceg.x <= Math.min(...others);
-    l9x = outer ? Math.max(8, ceg.x-16-14) : Math.min(W-8, ceg.x+16+14);
+  ctx.font='600 14px "Assistant", sans-serif';
+  nodes.forEach(n=>{ n.lw = ctx.measureText(n.short||n.name.split(' ')[0]).width; });
+  // The L9 chip sits beside the row's first station -- the one under L4 -- on
+  // the far side of it from the rest of the row, so it never lands on a
+  // station or between two. It clears the station's ring or its label,
+  // whichever is wider: the label hangs down to the chip's own line. Anchored
+  // to the node and not to a column, because L9 is a row.
+  const lead = g9[g9.length-1];
+  if(lead){
+    const outer = g9.length<2 || lead.x <= g9[0].x;
+    const clear = Math.max(lead.r, (lead.lw||0)/2) + 14;
+    l9x = outer ? Math.max(8, lead.x-clear) : Math.min(W-8, lead.x+clear);
     l9anchor = outer ? 'right' : 'left';
   } else {
     l9x = 14; l9anchor = 'left';
   }
-  ctx.font='600 14px "Assistant", sans-serif';
-  nodes.forEach(n=>{ n.lw = ctx.measureText(n.short||n.name.split(' ')[0]).width; });
 }
 function resize(){
   DPR=Math.min(2,devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();

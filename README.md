@@ -81,7 +81,8 @@ Everything is configured by environment, with defaults relative to the
 repository root, so a fresh clone builds with no configuration but the token:
 `CHIP_MAP_DATA`, `CHIP_MAP_OUT`, `CHIP_MAP_SITE`, `CHIP_MAP_PRICES`,
 `EODHD_API_TOKEN` (prices only), `QUESTIONS_URL` (required — a URL, or a local
-path for a local build), `ANSWERS_URL` (optional) and `SIGNUP_URL` (optional).
+path for a local build), `ANSWERS_URL` (optional), `SIGNUP_URL` (optional) and `SUBSCRIBE_EMBED_URL`
+(optional).
 See `chains/paths.py` and `chains/questions.py`.
 
 `tests/test_isolation.py` walks every module's AST and fails on an import of
@@ -104,7 +105,10 @@ Two things a person has to do, both by hand:
 one line and continues with none — the map must never go dark because a share
 link expired). `SIGNUP_URL` is an optional *variable*, the newsletter link;
 until it is set the page's call to action says "coming soon" and offers no
-link.
+link. `SUBSCRIBE_EMBED_URL` is an optional *variable*, the mail service's
+embeddable subscribe form (https only); when set, the landing and the track
+page's locked state frame it under "Get the key: subscribe to the weekly mail
+(free)", and when empty they draw nothing.
 
 Both URLs are secrets rather than variables because a repository variable is
 readable by anyone who can read the repository, and these two links are the

@@ -186,6 +186,7 @@ __SITE_NAV__
   <button id="go" type="button">Unlock</button>
   <span class="msg" id="msg"></span>
 </div>
+__SUBSCRIBE__
 
 <div id="full"></div>
 <div class="foot" id="foot"></div>
@@ -258,9 +259,9 @@ __CARDS_JS__
       <div>${bars(9)}</div>
     </div>
     <div class="lockover"><div>🔒 The questions still ahead — what yes and no
-      sound like, which stations move, and every price since entry — <b>in the
-      weekly mail</b>. Each is already committed by hash in commitments.json.
-      Subscribers: paste this month's key below.</div></div>`;
+      sound like, which stations move, and every price since entry. Each is
+      already committed by hash in commitments.json. <b>Unlocks with the key
+      from the weekly mail.</b></div></div>`;
 
   // ---- the key ----------------------------------------------------------
   const msg = document.getElementById('msg');
@@ -292,6 +293,8 @@ __CARDS_JS__
     const n = window.renderTrack(document.getElementById('full'),
       Object.assign({}, data, {forecasts: ahead}), {tiles:false});
     document.getElementById('locked').style.display = 'none';
+    const mk = document.getElementById('mailkey');
+    if(mk) mk.hidden = true;
     say(n + ' upcoming card' + (n===1?'':'s') + ' open · this key stays in this browser',
         'ok');
   }

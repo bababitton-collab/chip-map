@@ -9,6 +9,8 @@
     QUESTIONS_URL    required; the question text, see chains/questions.py
     ANSWERS_URL      optional; see chains/answers.py
     SIGNUP_URL       optional; where the page's CTA points
+    SUBSCRIBE_EMBED_URL  optional; the mail service's embeddable subscribe
+                     form, framed on the landing and the track page
 
 ONE ENGINE, MANY MAPS
 ---------------------
@@ -72,6 +74,7 @@ TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 TOKEN_ENV = "EODHD_API_TOKEN"
 ANSWERS_URL_ENV = "ANSWERS_URL"
 SIGNUP_URL_ENV = "SIGNUP_URL"
+SUBSCRIBE_EMBED_URL_ENV = "SUBSCRIBE_EMBED_URL"
 
 
 def _dir(env: str, default: str) -> Path:
@@ -213,3 +216,23 @@ def signup_url() -> str | None:
     rather than offering a button that goes nowhere.
     """
     return os.environ.get(SIGNUP_URL_ENV, "").strip() or None
+
+
+def subscribe_embed_url() -> str | None:
+    """The mail service's embeddable subscribe form, if there is one yet.
+
+    Unset is the normal state until the publication exists, and it draws
+    nothing -- no placeholder and no dead form -- so the site never offers a
+    signup that goes nowhere. The URL is framed into two public pages, so only
+    https is accepted; anything else stops the build rather than putting an
+    arbitrary scheme into an iframe.
+    """
+    v = os.environ.get(SUBSCRIBE_EMBED_URL_ENV, "").strip()
+    if not v:
+        return None
+    if not v.lower().startswith("https://"):
+        raise SystemExit(
+            f"{SUBSCRIBE_EMBED_URL_ENV}={v!r} is not an https:// URL. It is "
+            f"framed into the public pages; set it to the mail service's "
+            f"embed link or leave it empty.")
+    return v

@@ -17,9 +17,10 @@ only when commitments.json AND track_public.json are among the published files.
 A page that described a Verify button with nothing behind it would be the one
 claim on the site a reader could not check.
 
-THE FREE/PAID ANSWER IS HELD TO chains/access.py
-------------------------------------------------
-The FAQ states the paywall in words. check_access() asks access.py the same
+THE FREE/KEY ANSWER IS HELD TO chains/access.py
+-----------------------------------------------
+Everything is free; the questions still ahead open with the key from the weekly
+mail. The FAQ states that line in words. check_access() asks access.py the same
 questions before the page is written, and refuses to write it if the answers
 no longer match -- so the rule cannot move without the page moving with it.
 
@@ -39,7 +40,7 @@ from chains.answers import PRIMARY_HORIZON
 TEMPLATE = "landing.html"
 
 # Filled without escaping: markup and JSON this module builds itself.
-RAW = frozenset({"site_nav", "site_nav_css", "jsonld"})
+RAW = frozenset({"site_nav", "site_nav_css", "jsonld", "subscribe"})
 
 
 class LandingError(ValueError):
@@ -58,7 +59,7 @@ def _series(items: list[str]) -> str:
 
 
 def check_access() -> None:
-    """The page's free/paid answer, asked of chains/access.py."""
+    """The page's free/key answer, asked of chains/access.py."""
     answered = {"answered": True}
     claims = [
         ("the map is free", access.is_free("map")),
@@ -67,8 +68,8 @@ def check_access() -> None:
          access.is_free("question_text", {"nearest": True})),
         ("a resolved question is free in full",
          all(access.is_free(k, answered) for k in access.KINDS)),
-        ("a question ahead is paid", not access.is_free("question_text")),
-        ("the prices behind a question ahead are paid",
+        ("a question ahead needs the key", not access.is_free("question_text")),
+        ("the prices behind a question ahead need the key",
          not access.is_free("member_prices")
          and not access.is_free("forecast_active", {"nearest": True})),
         ("a question ahead keeps its contract bytes",
@@ -77,7 +78,7 @@ def check_access() -> None:
     wrong = [c for c, ok in claims if not ok]
     if wrong:
         raise LandingError(
-            "the landing page's free/paid answer no longer matches "
+            "the landing page's free/key answer no longer matches "
             "chains/access.py: " + "; ".join(wrong))
 
 
@@ -140,7 +141,7 @@ def _jsonld(brand: str, url: str) -> str:
 def render(dom_dir: Path, dom: str, site_url: str,
            template: str | None = None) -> str:
     """The page. ``dom_dir`` is the published directory it describes."""
-    from chains.paths import templates_dir
+    from chains.paths import subscribe_embed_url, templates_dir
     check_access()
     f = facts(dom_dir)
     t = template if template is not None else (
@@ -168,6 +169,8 @@ def render(dom_dir: Path, dom: str, site_url: str,
         "site_nav": sitenav.html(dom, "home"),
         "site_nav_css": sitenav.CSS,
         "jsonld": _jsonld(f["brand"], site_url),
+        # Empty until SUBSCRIBE_EMBED_URL is set: no form, no copy.
+        "subscribe": sitenav.subscribe_html(subscribe_embed_url()),
     }
 
     def fill(m):

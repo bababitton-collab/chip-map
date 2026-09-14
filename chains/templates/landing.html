@@ -68,6 +68,7 @@ footer a{color:var(--ink2)}
     <a class="primary" href="{{map_href}}">Explore the map</a>
     <a class="secondary" href="{{track_href}}">See the track record</a>
   </div>
+{{subscribe}}
 </header>
 
 <main>
@@ -110,8 +111,8 @@ footer a{color:var(--ink2)}
   <h3>How are forecasts registered?</h3>
   <p>Each question's scoring contract is serialised canonically and hashed with SHA-256, and the hash is published with its commit date in <a href="{{commitments_href}}">commitments.json</a>. The build stops if a committed contract no longer matches its hash. When a question resolves, the exact contract text is published with its card, and the Verify button recomputes the SHA-256 in your browser with the Web Crypto API and compares it with the published hash. A commitment made on or after the answer date is marked as not a valid preregistration.</p>
 <!--END:prereg-->
-  <h3>What's free and what's paid?</h3>
-  <p>Free: the map with every company and chokepoint, the calendar of dated questions, the next question on the calendar as a worked example, and every resolved question in full — its question and yes/no criteria, its basket and how it moved against the benchmarks, and whether it counted toward the score<!--IF:prereg-->, with its pre-registration contract and the Verify button<!--END:prereg-->. Paid: the questions still ahead — their wording, their baskets and the prices behind them — which subscribers open on the Track Record with a key.</p>
+  <h3>What's free, and what needs the key?</h3>
+  <p>Everything is free. The map, every chokepoint, the calendar, and every resolved question<!--IF:prereg--> with its verification<!--END:prereg--> are open. The questions still ahead — their wording, baskets and live board — unlock with a key sent in the weekly mail.</p>
 
   <h3>Is this investment advice?</h3>
   <p>No. {{brand}} publishes questions and measurements, not recommendations. It is not investment advice.</p>

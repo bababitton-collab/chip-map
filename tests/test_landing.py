@@ -188,8 +188,8 @@ def test_the_scoring_sentence_is_the_scoring_code(tmp_path):
 # -- capabilities appear only with their proof ------------------------------------
 
 PREREG_WORDS = ("SHA-256", "commitments.json", "track_public.json", "Verify",
-                "scoring rules are set before the answer", "pre-registration",
-                "anyone can verify it")
+                "scoring rules are set before the answer",
+                "with its verification", "anyone can verify it")
 
 
 def test_with_both_files_the_preregistration_is_described(tmp_path):
@@ -225,7 +225,8 @@ def test_every_registered_forecast_was_committed_before_its_answer():
 def test_the_faq_asks_the_four_questions(tmp_path):
     html = _page(tmp_path)
     for q in ("What is Linchpin Signal?", "How are forecasts registered?",
-              "What's free and what's paid?", "Is this investment advice?"):
+              "What's free, and what needs the key?",
+              "Is this investment advice?"):
         assert f"<h3>{q}</h3>" in html, q
 
 
@@ -234,13 +235,103 @@ def test_the_advice_answer_is_exact(tmp_path):
             "recommendations. It is not investment advice.") in _text(_page(tmp_path))
 
 
-def test_the_free_paid_answer_is_held_to_access_py(tmp_path, monkeypatch):
+def test_the_free_and_key_answer_is_held_to_access_py(tmp_path, monkeypatch):
     text = _text(_page(tmp_path))
-    assert "every resolved question in full" in text
-    assert "Paid: the questions still ahead" in text
+    assert ("Everything is free. The map, every chokepoint, the calendar, and "
+            "every resolved question with its verification are open. The "
+            "questions still ahead — their wording, baskets and live board — "
+            "unlock with a key sent in the weekly mail.") in text
+    bare = _text(_page(tmp_path / "bare", commitments=False))
+    assert "every resolved question are open" in bare, \
+        "verification is claimed only with its proof"
     monkeypatch.setattr(access, "tier", lambda item, ctx=None: "free")
     with pytest.raises(landing.LandingError, match="access.py"):
         _page(tmp_path)
+
+
+def _track_page():
+    return track.render(track.public({"summary": {}, "forecasts": []}))
+
+
+def test_no_public_page_describes_a_charge(tmp_path):
+    """The product is free. The questions ahead need the key from the weekly
+    mail, and no English page may say they cost anything."""
+    en = tmp_path / "live-map-en.html"
+    build_pages.build_en_template(dst=en)
+    tpl = (templates_dir() / "track.html").read_text(encoding="utf-8")
+    i = tpl.index("// ---- the locked panel")
+    locked = re.sub(r"\s+", " ", tpl[i:tpl.index("// ---- the key", i)])
+    assert "Unlocks with the key from the weekly mail." in locked
+    pages = {"landing": _text(_page(tmp_path)),
+             "track": build_pages.visible_text(_track_page()),
+             "track locked panel": locked,
+             "map": en.read_text(encoding="utf-8")}
+    for name, body in pages.items():
+        low = body.lower()
+        for word in ("paid", "subscribers:", "subscribers pay", "pricing",
+                     "checkout"):
+            assert word not in low, (name, word)
+    assert "Key from the mail" in _track_page() and ">Unlock</button>" in \
+        _track_page()
+
+
+# -- the subscribe slot: dormant until SUBSCRIBE_EMBED_URL is set ------------------
+
+EMBED = "https://example.substack.com/embed"
+
+
+def test_without_the_embed_url_neither_page_offers_a_signup(tmp_path,
+                                                            monkeypatch):
+    monkeypatch.delenv("SUBSCRIBE_EMBED_URL", raising=False)
+    for html in (_page(tmp_path), _track_page()):
+        assert "<iframe" not in html
+        assert sitenav.SUBSCRIBE_LABEL not in html
+        assert "mailkey" not in build_pages.visible_text(html)
+        assert "subscribe" not in build_pages.visible_text(html).lower()
+
+
+def test_with_the_embed_url_both_pages_frame_the_form_under_the_label(
+        tmp_path, monkeypatch):
+    monkeypatch.setenv("SUBSCRIBE_EMBED_URL", EMBED)
+    assert sitenav.SUBSCRIBE_LABEL == \
+        "Get the key: subscribe to the weekly mail (free)"
+    land, trk = _page(tmp_path), _track_page()
+    for html in (land, trk):
+        assert html.count("<iframe") == 1
+        assert f'<iframe src="{EMBED}"' in html
+        assert sitenav.SUBSCRIBE_LABEL in _text(html)
+    # Beside the call to the track record, and beside the key field.
+    assert (land.index("See the track record</a>") < land.index("<iframe")
+            < land.index("</header>"))
+    assert (trk.index('placeholder="Key from the mail"') < trk.index("<iframe")
+            < trk.index('<div id="full">'))
+
+
+@pytest.mark.parametrize("embed", ["", EMBED])
+def test_both_pages_pass_the_gates_with_or_without_the_slot(tmp_path,
+                                                           monkeypatch, embed):
+    monkeypatch.setenv("SUBSCRIBE_EMBED_URL", embed)
+    land, trk = _page(tmp_path), _track_page()
+    for html in (land, trk):
+        assert build_pages.hebrew_runs(html) == []
+        assert build_pages.render_faults(html) == []
+    # The slot adds its own block and nothing else, so whatever the locked-text
+    # gate decides about the page without it, it decides about the page with it.
+    block = sitenav.subscribe_html(embed or None)
+    monkeypatch.setenv("SUBSCRIBE_EMBED_URL", "")
+    assert land.replace(block, "") == _page(tmp_path)
+    assert trk.replace(block, "") == _track_page()
+    for r in WATCH:
+        assert r.get("who", "") == "" or f">{r['who']}<" not in block
+
+
+def test_the_embed_url_must_be_https(monkeypatch):
+    from chains import paths
+    monkeypatch.setenv("SUBSCRIBE_EMBED_URL", "javascript:alert(1)")
+    with pytest.raises(SystemExit):
+        paths.subscribe_embed_url()
+    monkeypatch.setenv("SUBSCRIBE_EMBED_URL", "   ")
+    assert paths.subscribe_embed_url() is None
 
 
 def test_no_absolute_or_return_claims(tmp_path):

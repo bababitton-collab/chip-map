@@ -975,6 +975,9 @@ GLOSSARY_PLACEHOLDER = "__GLOSSARY_JS__"
 # The site nav, shared with the landing page and the map (chains/sitenav.py).
 NAV_PLACEHOLDER = "__SITE_NAV__"
 NAV_CSS_PLACEHOLDER = "__SITE_NAV_CSS__"
+# The mail service's subscribe form beside the key field; empty until
+# SUBSCRIBE_EMBED_URL is set (chains/sitenav.py).
+SUBSCRIBE_PLACEHOLDER = "__SUBSCRIBE__"
 
 
 def glossary_js() -> str:
@@ -1011,6 +1014,11 @@ def render(data: dict, template: str | None = None) -> str:
         from chains.paths import domain
         t = t.replace(NAV_CSS_PLACEHOLDER, sitenav.CSS)
         t = t.replace(NAV_PLACEHOLDER, sitenav.html(domain(), "track"))
+    if SUBSCRIBE_PLACEHOLDER in t:
+        from chains import sitenav
+        from chains.paths import subscribe_embed_url
+        t = t.replace(SUBSCRIBE_PLACEHOLDER,
+                      sitenav.subscribe_html(subscribe_embed_url()))
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "

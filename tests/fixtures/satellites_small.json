@@ -1,0 +1,1858 @@
+{
+ "en/900/hoya": [
+  {
+   "x": 154.726,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 166.106,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 170,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 166.106,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 154.726,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 233.386,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 233.386,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "en/900/tok": [
+  {
+   "x": 154.726,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 166.106,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 170,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 166.106,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 154.726,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 228.574,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 235,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 228.574,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "en/900/snps": [
+  {
+   "x": 254.298,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 233.516,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 218.691,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 210.978,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 210.978,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 218.691,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 233.516,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 254.298,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/900/cdns": [
+  {
+   "x": 254.298,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 233.516,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 218.691,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 210.978,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 210.978,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 218.691,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 233.516,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 254.298,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/900/ajinomoto": [
+  {
+   "x": 146.484,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 161.309,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 169.022,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 169.022,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 161.309,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 146.484,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ],
+ "en/1280/hoya": [
+  {
+   "x": 154.726,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 166.106,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 170,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 166.106,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 154.726,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 233.386,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 233.386,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "en/1280/tok": [
+  {
+   "x": 154.726,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 166.106,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 170,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 166.106,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 154.726,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 228.574,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 235,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 228.574,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "en/1280/snps": [
+  {
+   "x": 380.964,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 360.182,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 345.358,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 337.645,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 337.645,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 345.358,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 360.182,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 380.964,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/1280/cdns": [
+  {
+   "x": 380.964,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 360.182,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 345.358,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 337.645,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 337.645,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 345.358,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 360.182,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 380.964,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/1280/ajinomoto": [
+  {
+   "x": 146.484,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 161.309,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 169.022,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 169.022,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 161.309,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 146.484,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ],
+ "en/1920/hoya": [
+  {
+   "x": 154.726,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 166.106,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 170,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 166.106,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 154.726,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 233.386,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 233.386,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "en/1920/tok": [
+  {
+   "x": 154.726,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 166.106,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 170,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 166.106,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 154.726,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 228.574,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 235,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 228.574,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "en/1920/snps": [
+  {
+   "x": 594.298,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 573.516,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 558.691,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 550.978,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 550.978,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 558.691,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 573.516,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 594.298,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/1920/cdns": [
+  {
+   "x": 594.298,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 573.516,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 558.691,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 550.978,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 550.978,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 558.691,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 573.516,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 594.298,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/1920/ajinomoto": [
+  {
+   "x": 146.484,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 161.309,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 169.022,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 169.022,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 161.309,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 146.484,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ],
+ "en/2560/hoya": [
+  {
+   "x": 154.726,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 166.106,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 170,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 166.106,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 154.726,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 233.386,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 233.386,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "en/2560/tok": [
+  {
+   "x": 154.726,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 166.106,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 170,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 166.106,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 154.726,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 228.574,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 235,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 228.574,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "en/2560/snps": [
+  {
+   "x": 807.631,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 786.849,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 772.024,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 764.312,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 764.312,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 772.024,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 786.849,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 807.631,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/2560/cdns": [
+  {
+   "x": 807.631,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 786.849,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 772.024,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 764.312,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 764.312,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 772.024,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 786.849,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 807.631,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "en/2560/ajinomoto": [
+  {
+   "x": 146.484,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 161.309,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 169.022,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 169.022,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 161.309,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 146.484,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ],
+ "he/900/hoya": [
+  {
+   "x": 745.274,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 733.894,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 730,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 733.894,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 745.274,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 666.614,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 666.614,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "he/900/tok": [
+  {
+   "x": 745.274,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 733.894,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 730,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 733.894,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 745.274,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 671.426,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 665,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 671.426,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "he/900/snps": [
+  {
+   "x": 645.702,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 666.484,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 681.309,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 689.022,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 689.022,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 681.309,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 666.484,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 645.702,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/900/cdns": [
+  {
+   "x": 645.702,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 666.484,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 681.309,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 689.022,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 689.022,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 681.309,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 666.484,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 645.702,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/900/ajinomoto": [
+  {
+   "x": 753.516,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 738.691,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 730.978,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 730.978,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 738.691,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 753.516,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ],
+ "he/1280/hoya": [
+  {
+   "x": 1125.274,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 1113.894,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 1110,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 1113.894,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 1125.274,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 1046.614,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 1046.614,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "he/1280/tok": [
+  {
+   "x": 1125.274,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 1113.894,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 1110,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 1113.894,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 1125.274,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 1051.426,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 1045,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 1051.426,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "he/1280/snps": [
+  {
+   "x": 899.036,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 919.818,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 934.642,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 942.355,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 942.355,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 934.642,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 919.818,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 899.036,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/1280/cdns": [
+  {
+   "x": 899.036,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 919.818,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 934.642,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 942.355,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 942.355,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 934.642,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 919.818,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 899.036,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/1280/ajinomoto": [
+  {
+   "x": 1133.516,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 1118.691,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 1110.978,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 1110.978,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 1118.691,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 1133.516,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ],
+ "he/1920/hoya": [
+  {
+   "x": 1765.274,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 1753.894,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 1750,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 1753.894,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 1765.274,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 1686.614,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 1686.614,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "he/1920/tok": [
+  {
+   "x": 1765.274,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 1753.894,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 1750,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 1753.894,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 1765.274,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 1691.426,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 1685,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 1691.426,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "he/1920/snps": [
+  {
+   "x": 1325.702,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 1346.484,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 1361.309,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 1369.022,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 1369.022,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 1361.309,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 1346.484,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 1325.702,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/1920/cdns": [
+  {
+   "x": 1325.702,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 1346.484,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 1361.309,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 1369.022,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 1369.022,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 1361.309,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 1346.484,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 1325.702,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/1920/ajinomoto": [
+  {
+   "x": 1773.516,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 1758.691,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 1750.978,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 1750.978,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 1758.691,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 1773.516,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ],
+ "he/2560/hoya": [
+  {
+   "x": 2405.274,
+   "y": 472.881,
+   "tier": 1,
+   "label": "AGC Inc."
+  },
+  {
+   "x": 2393.894,
+   "y": 498.364,
+   "tier": 1,
+   "label": "Mitsui Chemicals"
+  },
+  {
+   "x": 2390,
+   "y": 526,
+   "tier": 1,
+   "label": "NuFlare Technolo"
+  },
+  {
+   "x": 2393.894,
+   "y": 553.636,
+   "tier": 1,
+   "label": "IMS Nanofabricat"
+  },
+  {
+   "x": 2405.274,
+   "y": 579.119,
+   "tier": 1,
+   "label": "Lasertec"
+  },
+  {
+   "x": 2326.614,
+   "y": 502.975,
+   "tier": 2,
+   "label": "Corning Inc."
+  },
+  {
+   "x": 2326.614,
+   "y": 549.025,
+   "tier": 2,
+   "label": "SCHOTT AG"
+  }
+ ],
+ "he/2560/tok": [
+  {
+   "x": 2405.274,
+   "y": 415.881,
+   "tier": 1,
+   "label": "JSR Corporation"
+  },
+  {
+   "x": 2393.894,
+   "y": 441.364,
+   "tier": 1,
+   "label": "FUJIFILM Electro"
+  },
+  {
+   "x": 2390,
+   "y": 469,
+   "tier": 1,
+   "label": "Sumitomo Chemica"
+  },
+  {
+   "x": 2393.894,
+   "y": 496.636,
+   "tier": 1,
+   "label": "Stella Chemifa"
+  },
+  {
+   "x": 2405.274,
+   "y": 522.119,
+   "tier": 1,
+   "label": "Morita Chemical"
+  },
+  {
+   "x": 2331.426,
+   "y": 423.401,
+   "tier": 2,
+   "label": "Toyo Gosei"
+  },
+  {
+   "x": 2325,
+   "y": 469,
+   "tier": 2,
+   "label": "Maruzen Petroche"
+  },
+  {
+   "x": 2331.426,
+   "y": 514.599,
+   "tier": 2,
+   "label": "Inpria (JSR)"
+  }
+ ],
+ "he/2560/snps": [
+  {
+   "x": 1752.369,
+   "y": 349.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 1773.151,
+   "y": 368.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 1787.976,
+   "y": 392.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 1795.688,
+   "y": 419.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 1795.688,
+   "y": 446.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 1787.976,
+   "y": 473.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 1773.151,
+   "y": 497.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 1752.369,
+   "y": 516.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/2560/cdns": [
+  {
+   "x": 1752.369,
+   "y": 271.95,
+   "tier": 1,
+   "label": "Siemens EDA"
+  },
+  {
+   "x": 1773.151,
+   "y": 290.578,
+   "tier": 1,
+   "label": "Arm Holdings"
+  },
+  {
+   "x": 1787.976,
+   "y": 314.224,
+   "tier": 1,
+   "label": "Synopsys Design"
+  },
+  {
+   "x": 1795.688,
+   "y": 341.046,
+   "tier": 1,
+   "label": "Rambus (memory"
+  },
+  {
+   "x": 1795.688,
+   "y": 368.954,
+   "tier": 1,
+   "label": "Alphawave Semi"
+  },
+  {
+   "x": 1787.976,
+   "y": 395.776,
+   "tier": 1,
+   "label": "Nvidia (GPU"
+  },
+  {
+   "x": 1773.151,
+   "y": 419.422,
+   "tier": 1,
+   "label": "Hyperscale cloud"
+  },
+  {
+   "x": 1752.369,
+   "y": 438.05,
+   "tier": 1,
+   "label": "US BIS"
+  }
+ ],
+ "he/2560/ajinomoto": [
+  {
+   "x": 2413.516,
+   "y": 176.578,
+   "tier": 1,
+   "label": "Epoxy resin"
+  },
+  {
+   "x": 2398.691,
+   "y": 200.224,
+   "tier": 1,
+   "label": "Sub-micron spher"
+  },
+  {
+   "x": 2390.978,
+   "y": 227.046,
+   "tier": 1,
+   "label": "PET carrier"
+  },
+  {
+   "x": 2390.978,
+   "y": 254.954,
+   "tier": 1,
+   "label": "Ajinomoto Fine-T"
+  },
+  {
+   "x": 2398.691,
+   "y": 281.776,
+   "tier": 1,
+   "label": "Ibiden (ABF"
+  },
+  {
+   "x": 2413.516,
+   "y": 305.422,
+   "tier": 1,
+   "label": "AT&S"
+  }
+ ]
+}

@@ -436,6 +436,114 @@ function srcCited(text, v){
   return lead+r.filter((u,k)=>k!==i).map(srcLink).join('');
 }
 function srcLinks(v, sep){ const r=srcRefs(v); return r.length?sep+r.map(srcLink).join(''):''; }
+// ---- satellites for a crowded station ---------------------------------------
+// A clicked station's suppliers fan out around it. Each chokepoint laid out its
+// own arc, so a station holding two (Shin-Etsu: CP6 and CP7) drew both arcs on
+// the same radii and their labels printed over each other. Up to 8 satellites
+// keep that layout exactly. Past 8 they are pooled across the station's
+// chokepoints onto rings -- two for 9 to 16, three for 17 or more -- far enough
+// out that neighbouring dots stay 22px apart, and each label goes where it
+// touches no other label, no dot and not the station's ring.
+const SAT_GAP=22, SAT_FONT='12px "IBM Plex Mono", monospace';
+function placeSats(n, list){
+  if(list.length<=8 || (stage && stage.classList.contains('portrait'))) return list;
+  const rings=satRings(list);
+  let R=0;
+  rings.forEach((ring,k)=>{
+    R = k===0 ? 100 : R+60;
+    let arc=null;
+    while(R<=460 && !(arc=satArc(n,R,ring.length))) R+=12;
+    if(!arc) arc=satArc(n,R,ring.length,true);
+    ring.forEach((s,i)=>{ s.ring=k; s.tx=n.x+Math.cos(arc[i])*R; s.ty=n.y+Math.sin(arc[i])*R; });
+  });
+  const all=[].concat(...rings);
+  satLabels(n, all);
+  return all;
+}
+// Tier-1 inside and tier-2 outside while both have members and neither ring
+// would hold more than 8; otherwise the pooled list, tier-1 first, split evenly.
+function satRings(list){
+  const t1=list.filter(s=>s.tier===1), t2=list.filter(s=>s.tier!==1), all=t1.concat(t2);
+  const split=k=>{ const per=Math.ceil(all.length/k);
+    return Array.from({length:k},(_,i)=>all.slice(i*per,(i+1)*per)).filter(r=>r.length); };
+  if(all.length<=16) return (t1.length && t2.length && t1.length<=8 && t2.length<=8) ? [t1,t2] : split(2);
+  return split(3);
+}
+// The angles for m dots on a ring of radius R: centred on the side the fan has
+// always opened to, inside the map, spaced so neighbours are at least SAT_GAP
+// apart (36px where the ring has room). Null when the ring cannot hold them;
+// forced, it keeps the spacing and ignores the edges.
+function satArc(n, R, m, force){
+  const dirX=n.x<W-220?1:-1, tilt=n.y>H-170?-0.55:(n.y<170?0.55:0);
+  const mid=dirX>0?tilt:Math.PI-tilt, half=Math.PI*0.62, step=Math.PI/180;
+  const chord=d=>2*Math.asin(Math.min(1,d/(2*R)));
+  const need=Math.max(0,m-1)*chord(SAT_GAP), want=Math.max(0,m-1)*chord(36);
+  const spread=(lo,span)=>Array.from({length:m},(_,i)=>m>1?lo+i*span/(m-1):lo+span/2);
+  if(force) return spread(mid-need/2, need);
+  const ok=th=>{ const x=n.x+Math.cos(th)*R, y=n.y+Math.sin(th)*R;
+    return x>=16 && x<=W-16 && y>=40 && y<=H-60; };
+  let best=null;
+  for(let th=mid-half; th<=mid+half+1e-9; th+=step){
+    if(!ok(th)) continue;
+    let hi=th; while(hi+step<=mid+half+1e-9 && ok(hi+step)) hi+=step;
+    if(!best || hi-th>best.hi-best.lo) best={lo:th, hi};
+    th=hi;
+  }
+  if(!best || best.hi-best.lo<need-1e-9) return null;
+  const span=Math.min(best.hi-best.lo, Math.max(need,want));
+  const lo=Math.max(best.lo, Math.min(best.hi-span, mid-span/2));
+  return spread(lo, span);
+}
+// Greedy, in ring order. For each satellite: the four spots beside its dot --
+// right, left, above, below; left first on the right-to-left map -- and the
+// first whose text box is clear wins. None clear: the spot moves out along the
+// satellite's radial, 12px at a time, up to three times, and a leader line
+// joins it to its dot. Still none: the label is shortened with an ellipsis
+// until it fits. Two label boxes never touch; a label with no room is not drawn.
+function satLabels(n, all){
+  const rtl=getComputedStyle(document.documentElement).direction==='rtl';
+  const sides=rtl?['left','right','above','below']:['right','left','above','below'];
+  const dots=all.map(s=>({x:s.tx, y:s.ty, r:(s.tier===1?4.5:3)+2}));
+  const ring={x:n.x, y:n.y, r:ringR(n)+2};
+  const placed=[];
+  const onCircle=(b,c)=>{ const dx=c.x-Math.max(b.x0,Math.min(c.x,b.x1)), dy=c.y-Math.max(b.y0,Math.min(c.y,b.y1));
+    return dx*dx+dy*dy<c.r*c.r; };
+  const clear=b=>b.x0>=2 && b.x1<=W-2 && b.y0>=2 && b.y1<=H-2
+    && !placed.some(p=>b.x0<p.x1+2 && p.x0<b.x1+2 && b.y0<p.y1+2 && p.y0<b.y1+2)
+    && !dots.some(c=>onCircle(b,c)) && !onCircle(b,ring);
+  const boxAt=(ax,ay,side,w)=>side==='right'?{x0:ax+8,x1:ax+8+w,y0:ay-6,y1:ay+7,tx:ax+8,ty:ay+4,align:'left'}
+    :side==='left'?{x0:ax-8-w,x1:ax-8,y0:ay-6,y1:ay+7,tx:ax-8,ty:ay+4,align:'right'}
+    :side==='above'?{x0:ax-w/2,x1:ax+w/2,y0:ay-21,y1:ay-8,tx:ax,ty:ay-11,align:'center'}
+    :{x0:ax-w/2,x1:ax+w/2,y0:ay+8,y1:ay+21,tx:ax,ty:ay+18,align:'center'};
+  ctx.save(); ctx.font=SAT_FONT;
+  all.forEach(s=>{
+    const dx=s.tx-n.x, dy=s.ty-n.y, d=Math.hypot(dx,dy)||1;
+    const fit=text=>{ const w=ctx.measureText(text).width;
+      for(let k=0;k<=3;k++){ const ax=s.tx+dx/d*12*k, ay=s.ty+dy/d*12*k;
+        for(const side of sides){ const b=boxAt(ax,ay,side,w); if(clear(b)) return {b,k}; } }
+      return null; };
+    let text=s.label, got=fit(text);
+    for(let cut=s.label.length-1; !got && cut>=1; cut--){ text=s.label.slice(0,cut).trimEnd()+'…'; got=fit(text); }
+    if(!got){ s.lab={hidden:true}; return; }
+    const {b,k}=got;
+    placed.push(b);
+    s.lab={text, x:b.tx, y:b.ty, align:b.align, box:{x0:b.x0,y0:b.y0,x1:b.x1,y1:b.y1}, nudged:k>0, leader:k>0};
+  });
+  ctx.restore();
+}
+function satLabel(s, x, y){
+  const L=s.lab; if(L.hidden) return;
+  if(L.leader){ const b=L.box; ctx.beginPath(); ctx.moveTo(x,y);
+    ctx.lineTo(Math.max(b.x0,Math.min(x,b.x1)), Math.max(b.y0,Math.min(y,b.y1)));
+    ctx.strokeStyle='#ffffff33'; ctx.lineWidth=1; ctx.stroke(); }
+  ctx.font=SAT_FONT; ctx.fillStyle=tok('--ink2'); ctx.textAlign=L.align; ctx.fillText(L.text, L.x, L.y);
+}
+// The satellites as laid out, for the browser check in tests/test_satellites.py:
+// canvas labels have no box the DOM can measure.
+window.__satBoxes=()=>({
+  station: selected?{id:selected.id, x:selected.x, y:selected.y, ring:ringR(selected)}:null,
+  sats: sats.map(s=>({x:s.tx, y:s.ty, r:s.tier===1?4.5:3, tier:s.tier, ring:s.ring==null?null:s.ring, label:s.label,
+    lab: !s.lab?null:(s.lab.hidden?{hidden:true}:{text:s.lab.text, box:s.lab.box, nudged:s.lab.nudged, leader:s.lab.leader})}))});
 
 function build(){
   readLabels();
@@ -679,7 +787,7 @@ function draw(now){
   // particles
   if(!REDUCED){ particles.forEach(q=>{ q.t+=q.v; if(q.t>1) q.t-=1; const e=edges[q.e]; const pt=bez(e._p,q.t); const rel=focus&&(e.from===focus.id||e.to===focus.id); ctx.beginPath(); ctx.arc(pt.x,pt.y,rel?2.4:1.6,0,7); ctx.fillStyle=LCOL[e._p.a.line]; ctx.globalAlpha=rel?1:.55; ctx.fill(); ctx.globalAlpha=1; }); }
   // satellites (opened sub-suppliers)
-  if(sats.length){ const k=Math.min(1,(now-satT)/450); sats.forEach(s=>{ const x=selected.x+(s.tx-selected.x)*k, y=selected.y+(s.ty-selected.y)*k; ctx.beginPath(); ctx.moveTo(selected.x,selected.y); ctx.lineTo(x,y); ctx.strokeStyle=s.sole?tok('--tight')+'88':'#ffffff33'; ctx.lineWidth=1; ctx.stroke(); const sr=s.tier===1?4.5:3; ctx.beginPath(); ctx.arc(x,y,sr,0,7); ctx.fillStyle=s.sole?tok('--tight'):(s.tier===1?tok('--ink2'):tok('--ink3')); ctx.fill(); inset(x,y,sr); s.x=x; s.y=y; if(k>=1){ ctx.font='12px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign=s.tx>=selected.x?'left':'right'; ctx.fillText(s.label, x+(s.tx>=selected.x?8:-8), y+4); } }); }
+  if(sats.length){ const k=Math.min(1,(now-satT)/450); sats.forEach(s=>{ const x=selected.x+(s.tx-selected.x)*k, y=selected.y+(s.ty-selected.y)*k; ctx.beginPath(); ctx.moveTo(selected.x,selected.y); ctx.lineTo(x,y); ctx.strokeStyle=s.sole?tok('--tight')+'88':'#ffffff33'; ctx.lineWidth=1; ctx.stroke(); const sr=s.tier===1?4.5:3; ctx.beginPath(); ctx.arc(x,y,sr,0,7); ctx.fillStyle=s.sole?tok('--tight'):(s.tier===1?tok('--ink2'):tok('--ink3')); ctx.fill(); inset(x,y,sr); s.x=x; s.y=y; if(k>=1){ if(s.lab) satLabel(s,x,y); else { ctx.font='12px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign=s.tx>=selected.x?'left':'right'; ctx.fillText(s.label, x+(s.tx>=selected.x?8:-8), y+4); } } }); }
   // nodes
   nodes.forEach(n=>{
     const pu=pulseOf(n);
@@ -800,6 +908,7 @@ function open(n){
       return `<div class="nextcp">${WORDS.via}: <b>${g.name}</b> — ${WORDS.against} ${who} <small>(${c.id} · ${c.he})</small></div>`;
     }).join('');
   }
+  sats=placeSats(n, sats);
   h+=fundTable(n.id);
   h+='</div>';
   panel.innerHTML=h; panel.scrollTop=0; satT=performance.now();

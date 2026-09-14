@@ -19,6 +19,30 @@ SUBSCRIBE_LABEL = "Get the key — subscribe to the weekly mail (free)"
 SUBSCRIBE_CONFIRM = ("Confirm in the first email — the key arrives in the "
                      "welcome email right after.")
 
+# Plausible: cookie-less page analytics, in the <head> of every public page and
+# of nothing private. Site-specific but public -- it is in every page's source
+# -- so it is defined once, here, and each public page's head takes it from
+# here: the landing (chains/landing.py), both maps (build_pages.public_page)
+# and the track page (chains/track.py). Kept verbatim.
+ANALYTICS_ORIGIN = "https://plausible.io"
+ANALYTICS = """<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-pY3vdi9LyMCXS_gJTVNhu.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>"""
+
+# The only custom events. A name and nothing else: no props, so nothing about
+# the reader, their email or their key can travel with one.
+EVENTS = ("unlock_success", "subscribe_form_view")
+
+
+def event_js(name: str) -> str:
+    """The call for one event, safe on a page that does not carry Plausible."""
+    if name not in EVENTS:
+        raise ValueError(f"{name!r} is not one of the site's events {EVENTS}")
+    return f"window.plausible&&plausible('{name}')"
+
 
 def links(dom: str) -> list[tuple[str, str, str]]:
     """``(key, label, href)`` for each item, in the order they are drawn."""
@@ -62,7 +86,10 @@ def subscribe_html(url: str | None) -> str:
             'width="480" height="320" loading="lazy" frameborder="0" '
             'scrolling="no" style="display:block;width:100%;max-width:480px;'
             'border:1px solid #222a36;border-radius:8px;background:#fff">'
-            '</iframe></div>')
+            '</iframe>'
+            # Once, when the form is drawn -- not on the iframe's load, which
+            # fires again every time Substack navigates inside it.
+            f'<script>{event_js("subscribe_form_view")}</script></div>')
 
 
 CSS = (".sitenav{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;"
@@ -81,5 +108,6 @@ CSS = (".sitenav{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;"
 
 
 __all__ = ["BRAND", "MAP_LABEL", "TRACK_RECORD", "TRACK_RECORD_DESCRIPTOR",
-           "SUBSCRIBE_LABEL", "SUBSCRIBE_CONFIRM", "links", "html",
+           "SUBSCRIBE_LABEL", "SUBSCRIBE_CONFIRM", "ANALYTICS",
+           "ANALYTICS_ORIGIN", "EVENTS", "event_js", "links", "html",
            "subscribe_html", "CSS"]

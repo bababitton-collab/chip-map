@@ -978,6 +978,8 @@ NAV_CSS_PLACEHOLDER = "__SITE_NAV_CSS__"
 # The mail service's subscribe form beside the key field; empty until
 # SUBSCRIBE_EMBED_URL is set (chains/sitenav.py).
 SUBSCRIBE_PLACEHOLDER = "__SUBSCRIBE__"
+# Plausible, in the page's <head>: this page is public (chains/sitenav.py).
+ANALYTICS_PLACEHOLDER = "__ANALYTICS__"
 
 
 def glossary_js() -> str:
@@ -1019,6 +1021,9 @@ def render(data: dict, template: str | None = None) -> str:
         from chains.paths import subscribe_embed_url
         t = t.replace(SUBSCRIBE_PLACEHOLDER,
                       sitenav.subscribe_html(subscribe_embed_url()))
+    if ANALYTICS_PLACEHOLDER in t:
+        from chains import sitenav
+        t = t.replace(ANALYTICS_PLACEHOLDER, sitenav.ANALYTICS)
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "

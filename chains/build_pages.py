@@ -405,6 +405,8 @@ def public_page(template: str, live: str, cfg: dict) -> str:
     wrong and leak.
     """
     import json as _json
+
+    from chains import sitenav
     try:
         snap = _json.loads(live)
     except ValueError:
@@ -443,7 +445,9 @@ def public_page(template: str, live: str, cfg: dict) -> str:
             f'dir="{cfg["dir"]}">\n<head>\n<meta charset="utf-8">\n'
             f'<meta name="viewport" content="width=device-width,'
             f'initial-scale=1">\n'
-            f'<meta name="description" content="{desc}">\n')
+            f'<meta name="description" content="{desc}">\n'
+            # Public pages only: private_page() below builds its own head.
+            + sitenav.ANALYTICS + "\n")
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n" + extra_head + "</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")

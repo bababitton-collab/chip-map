@@ -40,7 +40,8 @@ from chains.answers import PRIMARY_HORIZON
 TEMPLATE = "landing.html"
 
 # Filled without escaping: markup and JSON this module builds itself.
-RAW = frozenset({"site_nav", "site_nav_css", "jsonld", "subscribe"})
+RAW = frozenset({"site_nav", "site_nav_css", "jsonld", "subscribe",
+                 "analytics"})
 
 
 class LandingError(ValueError):
@@ -172,6 +173,7 @@ def render(dom_dir: Path, dom: str, site_url: str,
         "site_nav": sitenav.html(dom, "home"),
         "site_nav_css": sitenav.CSS,
         "jsonld": _jsonld(f["brand"], site_url),
+        "analytics": sitenav.ANALYTICS,
         # Empty when SUBSCRIBE_EMBED_URL is: no form, no copy.
         "subscribe": sitenav.subscribe_html(subscribe),
     }

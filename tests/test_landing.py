@@ -388,8 +388,17 @@ def test_json_ld_is_website_and_organization(tmp_path):
     assert all(d["url"] == URL and d["name"] == "Linchpin Signal" for d in data)
 
 
-def test_the_page_is_static_and_carries_no_tracking(tmp_path):
+def test_the_page_is_static_and_its_only_tracker_is_plausible(tmp_path):
+    """One external script origin, exactly https://plausible.io, and only the
+    shared snippet and the form's one event call. Take those out and the page
+    is what it was: static, with nothing else that tracks."""
     html = _page(tmp_path)
+    srcs = re.findall(r"<script\b[^>]*\bsrc=\"([^\"]+)\"", html)
+    assert srcs and all(s.startswith(sitenav.ANALYTICS_ORIGIN + "/")
+                        for s in srcs), srcs
+    assert html.count(sitenav.ANALYTICS) == 1
+    event = f'<script>{sitenav.event_js("subscribe_form_view")}</script>'
+    html = html.replace(sitenav.ANALYTICS, "", 1).replace(event, "", 1)
     scripts = re.findall(r"<script\b[^>]*>", html)
     assert scripts == ['<script type="application/ld+json">']
     for word in ("gtag", "analytics", "googletagmanager", "plausible", "fbq",

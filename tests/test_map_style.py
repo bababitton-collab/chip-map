@@ -138,27 +138,35 @@ def test_l9_has_its_own_layer_outside_the_sticky_header():
     assert 'data-l="L9"' in TPL[j:j + 300]
 
 
-def test_the_l9_chip_sits_beside_the_row_s_first_station_on_its_centre_line():
-    """Anchored to the node, not to the map's edge: L9 is a row, and a chip out
-    at the edge named nothing in particular. It goes on the far side of the
-    first station (under L4) from the rest of the row, clear of its ring and
-    its label, so it never lands on or between its own nodes. Measured in a
-    browser by tests/test_power_row.py."""
-    assert "const lead = g9[g9.length-1];" in TPL
-    assert "const outer = g9.length<2 || lead.x <= g9[0].x;" in TPL
-    assert "const clear = Math.max(lead.r, (lead.lw||0)/2) + 14;" in TPL
-    assert "l9x = outer ? Math.max(8, lead.x-clear) : Math.min(W-8, lead.x+clear);" in TPL
+def test_the_l9_chip_sits_above_the_row_centred_on_etn():
+    """Above the row it names, centred on ETN, its bottom edge 10px over the
+    top of ETN's ring. Measured in a browser by tests/test_power_row.py."""
+    assert "const tagOn = byId.etn || g9[Math.floor(g9.length/2)];" in TPL
+    assert "l9x = tagOn.x; l9y = tagOn.y - ringR(tagOn) - 10;" in TPL
+    assert "function ringR(n){ return pulseOf(n) ? n.r+5+1.25 : n.r+1; }" in TPL
     assert "left:${l9x.toFixed(1)}px;" in TPL
-    assert "top:${l9y.toFixed(1)}px;transform:${shift}" in TPL
+    assert "top:${l9y.toFixed(1)}px;transform:translate(-50%,-100%)" in TPL
     assert "l9y = H-34;" in TPL, "the row the L9 nodes are drawn on"
 
 
-def test_the_l9_chip_hangs_off_the_side_it_is_anchored_to():
-    """Anchored right means the chip's right edge meets the station; anchored left
-    means its left edge does. Without the swap it would sit on top of the node
-    it is naming."""
-    assert ("const shift = l9anchor==='right' ? 'translate(-100%,-50%)' "
-            ": 'translateY(-50%)';") in TPL
+def test_the_l9_chip_only_ever_moves_up():
+    """If a station, a ring or a label is in the way, the chip rises until it
+    is clear -- it never slides sideways off the station it is centred on."""
+    i = TPL.index("const tag=l9.firstElementChild")
+    body = TPL[i:TPL.index("\n}", i)]
+    assert "while(touches(bottom) && bottom-th>1) bottom-=1;" in body
+    assert "tag.style.top=" in body and "style.left" not in body
+
+
+def test_the_header_chips_keep_a_twelve_pixel_gap():
+    """Pushed apart only where two names do not fit, and laid out again when
+    the web font changes their widths. Measured in a browser at 900-2560px by
+    tests/test_power_row.py."""
+    assert "const CHIP_GAP = 12;" in TPL
+    i = TPL.index("bar.innerHTML = bands.map(")
+    assert 'data-cx="${b.cx.toFixed(1)}"' in TPL[i:i + 300]
+    assert "spreadChips(bar);" in TPL[i:i + 400]
+    assert "document.fonts.ready.then(()=>{ if(W) layerBar(); })" in TPL
 
 
 def test_the_shut_panel_carries_no_border():

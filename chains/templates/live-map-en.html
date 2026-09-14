@@ -458,21 +458,17 @@ function layout(){
   l9y = H-34;
   ctx.font='600 14px "Assistant", sans-serif';
   nodes.forEach(n=>{ n.lw = ctx.measureText(n.short||n.name.split(' ')[0]).width; });
-  // The L9 chip sits beside the row's first station -- the one under L4 -- on
-  // the far side of it from the rest of the row, so it never lands on a
-  // station or between two. It clears the station's ring or its label,
-  // whichever is wider: the label hangs down to the chip's own line. Anchored
-  // to the node and not to a column, because L9 is a row.
-  const lead = g9[g9.length-1];
-  if(lead){
-    const outer = g9.length<2 || lead.x <= g9[0].x;
-    const clear = Math.max(lead.r, (lead.lw||0)/2) + 14;
-    l9x = outer ? Math.max(8, lead.x-clear) : Math.min(W-8, lead.x+clear);
-    l9anchor = outer ? 'right' : 'left';
-  } else {
-    l9x = 14; l9anchor = 'left';
-  }
+  // The L9 chip names the row from above it, centred on ETN, its bottom edge
+  // 10px over the top of ETN's ring. layerBar() measures the chip and lifts it
+  // straight up if a station, a ring or a label would touch it there. Without
+  // ETN it takes the middle station of the row.
+  const tagOn = byId.etn || g9[Math.floor(g9.length/2)];
+  if(tagOn){ l9x = tagOn.x; l9y = tagOn.y - ringR(tagOn) - 10; }
+  else { l9x = W/2; l9y = H-34; }
 }
+// How far a station's drawing reaches: the chokepoint ring at r+5 with its
+// 2.5px stroke, or the station's own 2px outline.
+function ringR(n){ return pulseOf(n) ? n.r+5+1.25 : n.r+1; }
 function resize(){
   DPR=Math.min(2,devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
   SPR={};                      // the sprites were baked at the old DPR
@@ -489,21 +485,80 @@ function chip(L, name){
   return `<span class="n">${cut(L)}</span><span class="s">·</span>`
     + `<span class="t">${cut(name)}</span>`;
 }
+// Neighbouring header chips never touch. Each chip stays centred on its column
+// while there is room; where two columns are too close for their two names the
+// pair is pushed apart around the midpoint of their columns, and a run of three
+// or more around the run's own centre -- never shrunk, never cut. Measured
+// after the text is in, because a chip is as wide as its name; measured again
+// after a move, because a chip near the edge can wrap to a new width.
+const CHIP_GAP = 12;
+function spreadChips(bar){
+  const items=[...bar.querySelectorAll('.lchip')]
+    .map(el=>({el, cx:+el.dataset.cx})).sort((a,b)=>a.cx-b.cx);
+  for(let pass=0; pass<4; pass++){
+    // The rendered width, rounded up: offsetWidth rounds to the nearest pixel
+    // and a chip 0.4px wider than it says closes the gap by that much.
+    items.forEach(it=>{ it.w=Math.ceil(it.el.getBoundingClientRect().width); });
+    const runs=[];
+    items.forEach(it=>{
+      runs.push([it]);
+      // Merge the last two runs while they sit closer than the gap.
+      while(runs.length>1){
+        const a=place(runs[runs.length-2]), b=place(runs[runs.length-1]);
+        if(b.left - a.right >= CHIP_GAP) break;
+        runs.splice(runs.length-2, 2, runs[runs.length-2].concat(runs[runs.length-1]));
+      }
+    });
+    let moved=false;
+    runs.forEach(r=>{ place(r).at.forEach((x,i)=>{
+      if(Math.abs(x-(r[i].x??r[i].cx))>0.05) moved=true;
+      r[i].x=x; r[i].el.style.left=x.toFixed(1)+'px'; }); });
+    if(!moved) break;
+  }
+  // A run laid edge to edge with CHIP_GAP between, shifted so its chips move
+  // off their columns by nothing on average: for a pair, symmetric about the
+  // midpoint of the two columns.
+  function place(run){
+    const off=[0];
+    for(let i=1;i<run.length;i++) off.push(off[i-1]+run[i-1].w/2+CHIP_GAP+run[i].w/2);
+    const s=run.reduce((t,it,i)=>t+it.cx-off[i],0)/run.length;
+    const at=off.map(o=>s+o);
+    return {at, left:at[0]-run[0].w/2, right:at[at.length-1]+run[run.length-1].w/2};
+  }
+}
 function layerBar(){
   const bar=document.getElementById('layerbar');
   const l9=document.getElementById('l9bar');
   if(!bar||!l9) return;
   bar.innerHTML = bands.map(b=>
-    `<span class="lchip" data-l="${b.L}" style="left:${b.cx.toFixed(1)}px;`
+    `<span class="lchip" data-l="${b.L}" data-cx="${b.cx.toFixed(1)}" style="left:${b.cx.toFixed(1)}px;`
     + `top:6px;transform:translateX(-50%)">${chip(b.L, LAYER_HE[b.L]||'')}</span>`
   ).join('') + '<div class="rule"></div>';
-  // L9 is a row along the bottom, not a column. Its chip goes at the row's
-  // left edge, on the row's own centre line -- never in the header.
-  const shift = l9anchor==='right' ? 'translate(-100%,-50%)' : 'translateY(-50%)';
+  spreadChips(bar);
+  // L9 is a row along the bottom, not a column, so its chip is never in the
+  // header: it sits above the row, centred on l9x with its bottom edge at l9y
+  // (see layoutLandscape). If a station, its ring or its label would touch it
+  // there, it goes straight up until none does -- never sideways. Link lines
+  // may run behind it; the chip is opaque, as the header chips are.
   l9.innerHTML = `<span class="lchip" data-l="L9" style="left:${l9x.toFixed(1)}px;`
-    + `top:${l9y.toFixed(1)}px;transform:${shift}">`
+    + `top:${l9y.toFixed(1)}px;transform:translate(-50%,-100%)">`
     + `${chip('L9', LAYER_HE.L9||'')}</span>`;
+  const tag=l9.firstElementChild, tr=tag.getBoundingClientRect();
+  const tw=Math.ceil(tr.width), th=Math.ceil(tr.height);
+  const x0=l9x-tw/2-1, x1=l9x+tw/2+1;
+  const touches=bottom=>nodes.some(n=>{
+    const y0=bottom-th-1, y1=bottom+1;
+    const dx=n.x-Math.max(x0,Math.min(n.x,x1)), dy=n.y-Math.max(y0,Math.min(n.y,y1));
+    if(dx*dx+dy*dy<=ringR(n)*ringR(n)) return true;
+    const lx=n.x-(n.lw||0)/2, ly=n.y+n.r+5;
+    return lx<=x1 && x0<=lx+(n.lw||0) && ly<=y1 && y0<=ly+14;
+  });
+  let bottom=l9y;
+  while(touches(bottom) && bottom-th>1) bottom-=1;
+  if(bottom!==l9y) tag.style.top=bottom.toFixed(1)+'px';
 }
+// The web font changes every chip's width once it arrives.
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(W) layerBar(); });
 
 // The node labels are painted, so they have no box the DOM can measure. Their
 // rectangles are published for the check that no chip lands on one.

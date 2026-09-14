@@ -235,7 +235,8 @@ def test_the_advice_answer_is_exact(tmp_path):
             "recommendations. It is not investment advice.") in _text(_page(tmp_path))
 
 
-SUBSCRIBE_FAQ = " Subscribe (free) and the key arrives in the welcome email."
+SUBSCRIBE_FAQ = (" Subscribe (free), confirm in the first email, and the key "
+                 "arrives in the welcome email right after.")
 
 
 def test_the_free_and_key_answer_is_held_to_access_py(tmp_path, monkeypatch):
@@ -298,6 +299,7 @@ def test_without_the_embed_url_neither_page_offers_a_signup(tmp_path,
     for html in (_page(tmp_path), _track_page()):
         assert "<iframe" not in html
         assert sitenav.SUBSCRIBE_LABEL not in html
+        assert sitenav.SUBSCRIBE_CONFIRM not in html
         assert "mailkey" not in build_pages.visible_text(html)
         assert "subscribe" not in build_pages.visible_text(html).lower()
 
@@ -307,6 +309,9 @@ def test_with_the_embed_url_both_pages_frame_the_form_under_the_label(
     monkeypatch.setenv("SUBSCRIBE_EMBED_URL", EMBED)
     assert sitenav.SUBSCRIBE_LABEL == \
         "Get the key — subscribe to the weekly mail (free)"
+    # The embed is double opt-in: the confirm step is said before the form.
+    assert sitenav.SUBSCRIBE_CONFIRM == ("Confirm in the first email — the key "
+                                         "arrives in the welcome email right after.")
     land, trk = _page(tmp_path), _track_page()
     for html in (land, trk):
         assert html.count("<iframe") == 1
@@ -314,6 +319,9 @@ def test_with_the_embed_url_both_pages_frame_the_form_under_the_label(
         assert 'height="320"' in html and 'frameborder="0"' in html
         assert "max-width:480px" in html
         assert sitenav.SUBSCRIBE_LABEL in _text(html)
+        assert sitenav.SUBSCRIBE_CONFIRM in _text(html)
+        assert (html.index(sitenav.SUBSCRIBE_LABEL)
+                < html.index(sitenav.SUBSCRIBE_CONFIRM) < html.index("<iframe"))
     assert SUBSCRIBE_FAQ.strip() in _text(land)
     # Beside the call to the track record, and beside the key field.
     assert (land.index("See the track record</a>") < land.index("<iframe")

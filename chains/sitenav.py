@@ -14,6 +14,10 @@ MAP_LABEL = "Map"
 TRACK_RECORD = "Track Record"
 TRACK_RECORD_DESCRIPTOR = "Every forecast recorded before the answer."
 SUBSCRIBE_LABEL = "Get the key — subscribe to the weekly mail (free)"
+# The embed is double opt-in: Substack sends a confirmation first, and only a
+# confirmed reader gets the welcome email that carries the key.
+SUBSCRIBE_CONFIRM = ("Confirm in the first email — the key arrives in the "
+                     "welcome email right after.")
 
 
 def links(dom: str) -> list[tuple[str, str, str]]:
@@ -50,8 +54,10 @@ def subscribe_html(url: str | None) -> str:
         return ""
     label = _html.escape(SUBSCRIBE_LABEL, quote=True)
     return ('<div id="mailkey" style="margin:18px 0 0;max-width:480px">'
-            '<p style="margin:0 0 8px;font-size:.95rem;color:#b3bccb">'
+            '<p style="margin:0 0 2px;font-size:.95rem;color:#b3bccb">'
             f'{label}</p>'
+            '<p style="margin:0 0 8px;font-size:.85rem;color:#7d8797">'
+            f'{_html.escape(SUBSCRIBE_CONFIRM)}</p>'
             f'<iframe src="{_html.escape(url, quote=True)}" title="{label}" '
             'width="480" height="320" loading="lazy" frameborder="0" '
             'scrolling="no" style="display:block;width:100%;max-width:480px;'
@@ -75,4 +81,5 @@ CSS = (".sitenav{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;"
 
 
 __all__ = ["BRAND", "MAP_LABEL", "TRACK_RECORD", "TRACK_RECORD_DESCRIPTOR",
-           "SUBSCRIBE_LABEL", "links", "html", "subscribe_html", "CSS"]
+           "SUBSCRIBE_LABEL", "SUBSCRIBE_CONFIRM", "links", "html",
+           "subscribe_html", "CSS"]

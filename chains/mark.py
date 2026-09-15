@@ -56,10 +56,16 @@ KEY_ENV = "ANTHROPIC_API_KEY"
 API = "https://api.anthropic.com/v1"
 VERSION = "2023-06-01"
 
-# How far back a date can be and still be marked. Three days covers a Friday
-# call reached on Monday; beyond that a silent row is a row somebody has to
-# look at rather than one a machine should quietly close.
-LOOKBACK = 3
+# How long a question stays on the list after its date: five sessions. A call
+# after the close is read that evening or the next morning, a Friday call on
+# Monday, and a company that has said nothing clean by the fifth session is
+# closed as "none" rather than left open for good. Sessions are weekdays: the
+# price store that knows the holidays is not on the marking runner, and a
+# holiday can only make the window a day shorter, never longer.
+WINDOW_SESSIONS = 5
+EXPIRED_NOTE = f"no clean answer within {WINDOW_SESSIONS} sessions"
+# Calendar days of headlines asked for after the date: the window, and a weekend.
+NEWS_DAYS = 7
 MAX_SEARCHES = 5
 MAX_EVIDENCE = 200
 MAX_NOTE = 300
@@ -137,38 +143,55 @@ def load_marks(domain: str | None = None) -> dict:
     return doc
 
 
-def due(rows: list[dict], marks: dict, today: dt.date,
-        only: str | None = None) -> list[dict]:
-    """Rows whose day has come and whose answer is not settled by a person.
+def sessions_after(day: dt.date, today: dt.date) -> int:
+    """Weekday sessions after ``day``, up to and including ``today``."""
+    n, d = 0, day + dt.timedelta(days=1)
+    while d <= today:
+        if d.weekday() < 5:
+            n += 1
+        d += dt.timedelta(days=1)
+    return n
+
+
+def _unsettled(rows: list[dict], marks: dict, today: dt.date,
+               only: str | None):
+    """(row, sessions since its date) for every row dated on or before today
+    whose answer is missing or an automatic "open".
 
     A mark without ``auto: true`` was made by hand. It is never revisited --
-    not to refine it, not to correct it. The machine's job stops where a
-    person's judgement starts.
+    not to refine it, not to correct it, not to close it. The machine's job
+    stops where a person's judgement starts.
     """
-    out = []
-    lo = today - dt.timedelta(days=LOOKBACK)
     for r in rows:
         if only and r["id"] != only:
             continue
-        d = r.get("d")
-        if not d:
-            continue
         try:
-            day = dt.date.fromisoformat(d)
+            day = dt.date.fromisoformat(r.get("d") or "")
         except ValueError:
             continue
-        if not (lo <= day <= today):
+        if day > today:
             continue
         got = marks.get("answers", {}).get(r["id"])
-        if got is None:
-            out.append(r)
-        elif not got.get("auto"):
-            continue                      # a person marked it; leave it alone
-        elif got.get("status") == "open":
-            out.append(r)
-        else:
-            continue
-    return out
+        if got is None or (got.get("auto") and got.get("status") == "open"):
+            yield r, sessions_after(day, today)
+
+
+def due(rows: list[dict], marks: dict, today: dt.date,
+        only: str | None = None) -> list[dict]:
+    """Rows to ask about: dated on or before today, answer missing or "open",
+    and no more than WINDOW_SESSIONS sessions past their date.
+
+    An "open" is re-asked on every run until it settles or the window ends.
+    """
+    return [r for r, n in _unsettled(rows, marks, today, only)
+            if n <= WINDOW_SESSIONS]
+
+
+def expired(rows: list[dict], marks: dict, today: dt.date,
+            only: str | None = None) -> list[dict]:
+    """Rows still unsettled after the window: closed as "none", not asked."""
+    return [r for r, n in _unsettled(rows, marks, today, only)
+            if n > WINDOW_SESSIONS]
 
 
 # ---------------------------------------------------------------- evidence
@@ -184,7 +207,7 @@ def headlines(ticker: str, day: dt.date, token: str | None) -> list[str]:
     try:
         import httpx
         frm = (day - dt.timedelta(days=1)).isoformat()
-        to = (day + dt.timedelta(days=LOOKBACK)).isoformat()
+        to = (day + dt.timedelta(days=NEWS_DAYS)).isoformat()
         r = httpx.get(f"https://eodhd.com/api/news",
                       params={"s": ticker, "from": frm, "to": to,
                               "limit": 10, "api_token": token, "fmt": "json"},
@@ -304,6 +327,12 @@ def unresolved(day: str, why: str) -> dict:
             "note": f"{NOTE_PREFIX}{why} on {day}"}
 
 
+def closed() -> dict:
+    """The mark a question gets when its window ends with nothing clean."""
+    return {"status": "none", "basis": "unclear", "evidence": "",
+            "note": f"{NOTE_PREFIX}{EXPIRED_NOTE}"}
+
+
 # ------------------------------------------------------------- the forecast
 def forecast_for(row: dict, status: str, when: str, today: str) -> dict:
     """Assembled here, from the watch row. The model never sees this."""
@@ -360,27 +389,34 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
         if not todo:
             raise MarkError(f"--force {force}: no such question in watch.json")
         say(f"force: {force} (date {todo[0].get('d')}, dry-run)")
+        gone: list[dict] = []
     else:
         todo = due(rows, marks, today, only)
+        gone = expired(rows, marks, today, only)
     day = today.isoformat()
 
-    if not todo:
+    if not todo and not gone:
         say("אין שאלות לסימון היום.")
         say("commit: לא נדרש")
         return 0
 
-    from chains import questions as Q
-    text = Q.fetch()
-    say(f"questions: {len(text)} fetched; text for "
-        f"{sum(1 for r in todo if text.get(r['id']))}/{len(todo)} due")
+    # Closing an expired row asks nobody, so it needs neither the text nor
+    # the key; only a row that is actually asked does.
+    text: dict = {}
+    key = model = ""
+    if todo:
+        from chains import questions as Q
+        text = Q.fetch()
+        say(f"questions: {len(text)} fetched; text for "
+            f"{sum(1 for r in todo if text.get(r['id']))}/{len(todo)} due")
 
-    key = os.environ.get(KEY_ENV, "").strip()
-    if not key:
-        raise MarkError(
-            f"{KEY_ENV} is not set. The marking job cannot read a source "
-            f"without it; add it as a repository secret.")
-    model = pick_model(key)
-    say(f"model: {model}")
+        key = os.environ.get(KEY_ENV, "").strip()
+        if not key:
+            raise MarkError(
+                f"{KEY_ENV} is not set. The marking job cannot read a source "
+                f"without it; add it as a repository secret.")
+        model = pick_model(key)
+        say(f"model: {model}")
 
     eod = os.environ.get("EODHD_API_TOKEN", "").strip() or None
     when = dt.datetime.now(dt.timezone.utc).replace(
@@ -429,6 +465,17 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
                 f = forecast_for(row, rec["status"], when, day)
                 marks["forecasts"].append(f)
                 made.append(f)
+
+    for row in gone:
+        rec = closed()
+        rec["auto"] = True
+        rec["updated"] = when
+        marks["answers"][row["id"]] = rec
+        changed = True
+        marked.append((row, rec))
+        trail.append(f"  {row['id']}: "
+                     f"{sessions_after(dt.date.fromisoformat(row['d']), today)}"
+                     f" sessions since {row['d']}, closed as none")
 
     blob = json.dumps(marks, ensure_ascii=False)
     leak = check_no_question_text(blob, text)

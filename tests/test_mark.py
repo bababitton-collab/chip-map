@@ -35,15 +35,53 @@ def test_a_row_dated_today_is_due():
     assert [r["id"] for r in mark.due(rows, marks(), TODAY)] == ["a"]
 
 
-def test_a_row_three_days_back_is_still_due():
-    """Three days covers a Friday call reached on Monday."""
-    rows = [row("a", "2026-09-08")]
+def test_a_row_five_sessions_back_is_still_due():
+    """Fri 4 Sep to Fri 11 Sep is five sessions: 7, 8, 9, 10, 11."""
+    rows = [row("a", "2026-09-04")]
     assert [r["id"] for r in mark.due(rows, marks(), TODAY)] == ["a"]
+    assert mark.expired(rows, marks(), TODAY) == []
 
 
-def test_a_row_four_days_back_is_not():
-    rows = [row("a", "2026-09-07")]
+def test_a_row_six_sessions_back_is_not_due_but_expires():
+    rows = [row("a", "2026-09-03")]
     assert mark.due(rows, marks(), TODAY) == []
+    assert [r["id"] for r in mark.expired(rows, marks(), TODAY)] == ["a"]
+
+
+def test_sessions_are_weekdays_after_the_date_through_today():
+    assert mark.sessions_after(dt.date(2026, 9, 30), dt.date(2026, 9, 30)) == 0
+    assert mark.sessions_after(dt.date(2026, 9, 30), dt.date(2026, 10, 1)) == 1
+    assert mark.sessions_after(dt.date(2026, 9, 30), dt.date(2026, 10, 4)) == 2
+    assert mark.sessions_after(dt.date(2026, 9, 30), dt.date(2026, 10, 7)) == 5
+
+
+# Micron reports Wed 30 Sep after the US close. Its "open" is asked again on
+# every run through Wed 7 Oct -- the fifth session -- and closed on 8 Oct.
+@pytest.mark.parametrize("today,is_due,is_expired", [
+    ("2026-09-29", False, False),        # before the date: nothing
+    ("2026-09-30", True, False),         # the 03:00 and the 23:30 run
+    ("2026-10-01", True, False),         # the morning after the call
+    ("2026-10-03", True, False),         # a weekend changes nothing
+    ("2026-10-05", True, False),
+    ("2026-10-07", True, False),         # fifth session
+    ("2026-10-08", False, True),         # sixth: closed as none
+])
+def test_an_open_answer_is_rechecked_until_the_window_ends(
+        today, is_due, is_expired):
+    rows = [row("mu_fq4", "2026-09-30")]
+    m = marks({"mu_fq4": {"status": "open", "basis": "unclear", "auto": True}})
+    t = dt.date.fromisoformat(today)
+    assert bool(mark.due(rows, m, t)) is is_due
+    assert bool(mark.expired(rows, m, t)) is is_expired
+
+
+def test_a_settled_or_manual_mark_never_expires():
+    rows = [row("a", "2026-09-01"), row("b", "2026-09-01"),
+            row("c", "2026-09-01")]
+    m = marks({"a": {"status": "yes", "basis": "yes", "auto": True},
+               "b": {"status": "mixed", "basis": "unclear", "auto": True},
+               "c": {"status": "open", "basis": "unclear"}})
+    assert mark.expired(rows, m, TODAY) == []
 
 
 def test_a_row_dated_tomorrow_is_not():
@@ -268,6 +306,58 @@ def test_a_missing_key_stops_the_run(wired, monkeypatch):
     with pytest.raises(mark.MarkError) as e:
         mark.run(None, TODAY, True, None, say=lambda *_: None)
     assert mark.KEY_ENV in str(e.value)
+
+
+# -- after the window ------------------------------------------------------------
+def test_an_expired_row_is_closed_as_none_without_asking(wired, monkeypatch):
+    from chains import answers
+    doc = {"answers": {"a": {"status": "open", "basis": "unclear", "auto": True,
+                             "note": "auto: no source found on 2026-09-11"}},
+           "forecasts": []}
+    (wired / "marks.json").write_text(json.dumps(doc), encoding="utf-8")
+    fake = Fake(GOOD)
+    monkeypatch.setattr(mark, "ask", fake)
+    monkeypatch.setattr("chains.questions.fetch",
+                        lambda url=None: pytest.fail("fetched"))
+    monkeypatch.delenv(mark.KEY_ENV, raising=False)   # closing needs no key
+    mon = dt.date(2026, 9, 21)                         # sixth session after
+    assert mark.run(None, mon, False, None, say=lambda *_: None) == 0
+    assert fake.calls == 0
+    got = read_marks(wired)
+    rec = got["answers"]["a"]
+    assert rec["status"] == "none"
+    assert rec["note"] == "auto: no clean answer within 5 sessions"
+    assert rec["auto"] is True and rec["updated"].endswith("Z")
+    assert got["forecasts"] == []
+    assert answers.check_row("a", rec, {"a"}) is None
+
+
+def test_an_expired_row_on_a_dry_run_writes_nothing(wired, monkeypatch):
+    monkeypatch.setattr(mark, "ask", Fake(GOOD))
+    said: list[str] = []
+    mark.run(None, dt.date(2026, 9, 21), True, None, say=said.append)
+    assert "closed as none" in "\n".join(said)
+    assert read_marks(wired) == {"answers": {}, "forecasts": []}
+
+
+def test_an_open_answer_is_asked_again_the_next_session(wired, monkeypatch):
+    doc = {"answers": {"a": {"status": "open", "basis": "unclear", "auto": True,
+                             "note": "auto: no source found on 2026-09-11"}},
+           "forecasts": []}
+    (wired / "marks.json").write_text(json.dumps(doc), encoding="utf-8")
+    fake = Fake(GOOD)
+    monkeypatch.setattr(mark, "ask", fake)
+    mark.run(None, dt.date(2026, 9, 14), False, None, say=lambda *_: None)
+    assert fake.calls == 1
+    assert read_marks(wired)["answers"]["a"]["status"] == "yes"
+
+
+def test_the_workflow_runs_in_the_morning_and_after_the_close():
+    from pathlib import Path
+    yml = (Path(__file__).resolve().parents[1] / ".github" / "workflows"
+           / "mark.yml").read_text(encoding="utf-8")
+    assert 'cron: "0 3 * * 2-6"' in yml
+    assert 'cron: "30 23 * * 1-5"' in yml
 
 
 # -- a forced question: the whole path, on a dry run only -----------------------

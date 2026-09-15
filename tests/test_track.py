@@ -569,7 +569,7 @@ def test_a_station_with_no_edge_gets_no_reason_at_all(book):
     beside every station on a card and read like three findings when it was one
     label. A blank says what is true: the map records no link."""
     doc = {"nodes": [{"id": "up", "layer": "L4"}], "subnodes": [], "edges": [],
-           "labels": {"layers": {"L4": {"he": "x", "en": "chip designers"}}}}
+           "labels": {"layers": {"L4": {"he": "x", "en": "chipmakers"}}}}
     assert track.reason_for(doc, "acme", "up") == ""
 
 

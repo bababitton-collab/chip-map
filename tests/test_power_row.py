@@ -51,9 +51,15 @@ MEASURE = """() => {
   const c = document.getElementById('map').getBoundingClientRect();
   const box = el => { const r = el.getBoundingClientRect();
     return {x: r.left - c.left, y: r.top - c.top, w: r.width, h: r.height}; };
+  const rows = el => { const g = document.createRange(); g.selectNodeContents(el);
+    return new Set([...g.getClientRects()].map(q => Math.round(q.top))).size; };
   const chips = [...document.querySelectorAll('#layerbar .lchip')].map(el =>
     Object.assign(box(el), {L: el.dataset.l, cx: +el.dataset.cx,
-                            left: parseFloat(el.style.left)}));
+                            left: parseFloat(el.style.left),
+                            text: (el.querySelector('.t') || el).textContent,
+                            sw: el.scrollWidth, cw: el.clientWidth,
+                            sh: el.scrollHeight, ch: el.clientHeight,
+                            rows: rows(el)}));
   const tag = document.querySelector('#l9bar .lchip');
   return {W: c.width, H: c.height, chips, tag: tag ? box(tag) : null,
           labels: window.__labelBoxes()};
@@ -232,10 +238,17 @@ def test_a_header_chip_leaves_its_column_only_to_make_room(measured, lang,
     exactly 12px from a neighbour, and each run of them is shifted
     symmetrically: its chips' offsets from their columns sum to zero."""
     chips = _header(measured[(lang, width)])
-    gaps = [b["x"] - (a["x"] + a["w"]) for a, b in zip(chips, chips[1:])]
+    # The layout spaces a run by each chip's width rounded UP (spreadChips:
+    # Math.ceil), so two pushed-together chips sit exactly
+    # ceil(wa)/2 + 12 + ceil(wb)/2 apart centre to centre, and their visible gap
+    # is 12 plus up to a pixel of rounding. Judged on the gap alone, a chip whose
+    # width happens to end in .7 looked like a loner that had wandered off its
+    # column -- which is what L3's longer caption exposed at 1280.
+    centre = lambda c: c["x"] + c["w"] / 2
     runs, run = [], [chips[0]]
-    for g, c in zip(gaps, chips[1:]):
-        if abs(g - CHIP_GAP) <= 0.3:
+    for a, c in zip(chips, chips[1:]):
+        spaced = math.ceil(a["w"]) / 2 + CHIP_GAP + math.ceil(c["w"]) / 2
+        if abs((centre(c) - centre(a)) - spaced) <= 0.15:
             run.append(c)
         else:
             runs.append(run)
@@ -247,3 +260,16 @@ def test_a_header_chip_leaves_its_column_only_to_make_room(measured, lang,
             assert abs(offsets[0]) <= 0.1, (r[0]["L"], offsets[0])
         else:
             assert abs(sum(offsets)) <= 0.1 * len(r), ([c["L"] for c in r], offsets)
+
+
+@pytest.mark.parametrize("lang,width", CASES)
+def test_no_header_chip_is_cut_and_every_caption_is_whole(measured, lang, width):
+    """Never shrunk, never cut: nothing overflows a chip's box, and each chip
+    carries its layer's whole caption from the snapshot -- the longest of them,
+    L3's "design tools & IP", included."""
+    labels = json.loads(LIVE[lang].read_text(encoding="utf-8"))["labels"]["layers"]
+    for c in _header(measured[(lang, width)]):
+        assert c["sw"] <= c["cw"] + 1 and c["sh"] <= c["ch"] + 1, (c["L"], c)
+        want = labels[c["L"]]
+        want = want.get(lang, want.get("en")) if isinstance(want, dict) else want
+        assert want.lower() in c["text"].lower(), (c["L"], c["text"], want)

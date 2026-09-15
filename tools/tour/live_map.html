@@ -120,7 +120,7 @@ let D = LIVE;
 const C = getComputedStyle(document.documentElement); const tok=n=>C.getPropertyValue(n).trim();
 const LCOL = {logic:tok('--logic'),memory:tok('--memory'),packaging:tok('--packaging'),network:tok('--network'),power:tok('--power'),cloud:tok('--cloud')};
 const LHE = {logic:'לוגיקה',memory:'זיכרון',packaging:'אריזה',network:'רשת',power:'חשמל',cloud:'ענן'};
-const LAYER_HE = {L1:'חומרי גלם',L2:'ציוד',L3:'תכנון',L4:'מעצבות',L5:'מפעל ואריזה',L6:'מערכות',L7:'ענן',L9:'חשמל'};
+const LAYER_HE = {L1:'חומרי גלם',L2:'ציוד',L3:'כלי תכנון וקניין רוחני',L4:'יצרני שבבים',L5:'מפעל ואריזה',L6:'מערכות',L7:'ענן',L9:'חשמל'};
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
 let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, sats=[], satT=0, t0=performance.now();

@@ -159,5 +159,8 @@ def test_the_supplier_and_challenger_rows_cite_one_link_per_reference():
     assert "r.filter((u,k)=>k!==i).map(srcLink)" in TPL
 
 
-def test_the_canvas_label_prefers_the_short_name():
-    assert "label:(o.s.short||o.s.name.split(' ').slice(0,2).join(' ').slice(0,16))" in TPL
+def test_a_focus_label_is_the_full_name_and_the_panel_keeps_it():
+    """The satellite fan that drew the short canvas names is gone. Focus mode
+    names a supplier in full, and ``short`` stays in the data for the rest."""
+    assert "name:st?st.name:sub.name" in TPL
+    assert "label:(o.s.short" not in TPL

@@ -28,12 +28,31 @@ a{color:inherit}
 .stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0px;min-height:720px}
 .stage.open{grid-template-columns:minmax(0,1fr) 460px}
 canvas{display:block;width:100%;height:720px;cursor:crosshair}
+/* A portrait viewport needs a portrait canvas: at a fixed 720px a 1080-wide
+   phone frame is still a 1.5:1 letterbox, and layout() -- which reads the
+   canvas, not the window -- would go on drawing columns in it. Recording mode
+   is the exception and the simplest case: there the page IS the canvas, so it
+   takes the whole viewport whichever way round it is. */
+@media (max-aspect-ratio: 1/1){ canvas{height:82vh;height:82svh;min-height:560px} }
+html.rec canvas{height:100vh;height:100svh;min-height:0}
 .mapwrap{position:relative;min-width:0}
 /* Zero height so it overlays the canvas instead of pushing it down; sticky so
    the labels stay put while the map scrolls past. The bands themselves are
    painted on the canvas and do NOT stick -- they are part of the map. */
 .layerbar{position:sticky;top:0;height:0;z-index:3;pointer-events:none}
 .l9bar{position:absolute;inset:0;z-index:2;pointer-events:none}
+/* Focus mode: the checkpoints strip and the layer tags stay, dimmed with the map
+   to the same 12%. */
+#next,.layerbar,.l9bar{transition:opacity .3s}
+html.focusing #next,html.focusing .layerbar,html.focusing .l9bar{opacity:.12}
+.focusui{position:absolute;inset:0;pointer-events:none;z-index:5;display:none}
+html.focusing .focusui{display:block}
+.focusui button{position:absolute;pointer-events:auto;box-sizing:border-box;height:26px;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;background:#141922;color:#f3e2b4;border:1px solid #3a3320;border-radius:5px;padding:0 10px;cursor:pointer;white-space:nowrap}
+.focusui .fdetails{width:100px}.focusui .fmore{width:140px}
+.focusui button:hover{border-color:#f2b632}
+.focusui button[hidden]{display:none}
+/* A recording films the arcs, not the buttons beside them. */
+html.rec .focusui{display:none!important}
 .lchip{position:absolute;display:inline-block;background:#141922;border:1px solid #3a3320;border-radius:5px;padding:5px 11px;
   font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;
   box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 0 0 1px rgba(242,182,50,.08),0 6px 16px rgba(0,0,0,.45),0 0 18px rgba(242,182,50,.10)}
@@ -71,6 +90,43 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .legend .pe{width:10px;height:10px;border-radius:50%;border:2px solid var(--erode)}
 .legend .pa{width:10px;height:10px;border-radius:50%;border:2px solid var(--amber)}
 .tip{position:absolute;pointer-events:none;background:#000d;color:var(--ink);font-size:.95rem;padding:6px 9px;border:1px solid var(--rule);display:none;max-width:280px;line-height:1.35;z-index:4}
+
+/* RECORDING MODE. ?rec=1 adds .rec to <html>, and everything below hangs off
+   that class: a plain load matches none of these selectors.
+
+   What it is for: a screen recording of the map is a recording of the map, not
+   of the page around it. The header, the checkpoint row, the legend and the
+   board are all reading matter -- they belong in the video's own titles, not
+   burnt into the footage at whatever size the browser happened to use.
+
+   The layer-chip row stays. It is position:sticky with height:0, so it does
+   not sit above the canvas -- it overlays the top of it, and the topmost
+   station (NVDA, y=70, r=24) starts at y=46 while the chips end near y=40. It
+   costs no viewport height and covers nothing. */
+html.rec, html.rec body{background:var(--bg);overflow:hidden}
+html.rec body > *:not(.stage){display:none!important}
+html.rec #tip, html.rec #panel{display:none!important}
+/* The panel column stays 0px even when something asks for it, so the canvas
+   is never squashed and layout() never has a reason to disagree with the
+   hit test. */
+html.rec .stage, html.rec .stage.open{grid-template-columns:minmax(0,1fr) 0px}
+html.rec canvas{cursor:none}
+
+/* PORTRAIT. Chosen by the container's SHAPE, not by a width breakpoint: a
+   1080x1920 phone frame and a 390px phone are the same map at two sizes, and
+   the sideways strip a narrow landscape viewport gets is wrong for both. The
+   class is set from layout(), which is the only thing that knows the ratio. */
+.stage.portrait .mapwrap{overflow:visible}
+.stage.portrait canvas{min-width:0}
+.stage.portrait .layerbar{position:absolute;inset:0;height:auto}
+.stage.portrait .lchip{font-size:10px;padding:3px 7px;letter-spacing:.1em;
+  max-width:none;white-space:nowrap}
+/* The panel is a bottom sheet here and never a side column -- taking 460px out
+   of a 1080-wide frame would leave the map too narrow to name a station. */
+.stage.portrait.open{grid-template-columns:minmax(0,1fr)}
+.stage.portrait.open .panel{position:absolute;inset:auto 0 0 0;height:62%;
+  z-index:3;border-top:1px solid var(--rule);border-inline-start:0;
+  overflow-y:auto}
 .tip b{font-family:"IBM Plex Mono",monospace;direction:ltr;display:block;text-align:start}
 .panel{background:var(--panel);overflow:hidden;height:720px}
 .stage.open .panel{border-inline-start:1px solid var(--rule)}
@@ -304,6 +360,11 @@ abbr.gl{text-decoration:underline dotted var(--ink3);text-underline-offset:3px;c
 .bleg s{display:inline-block;width:26px;border-top:2px solid var(--amber);vertical-align:3px;margin-inline-end:5px;text-decoration:none}
 .hints{margin:4px 0 8px}
 .hints h3{font-size:1.05rem;margin:10px 0 4px}
+/* An answered hint names the question that answered it, and that question has
+   a card further down the page. Saying its name without being able to reach
+   it is the kind of dead end a reader gives up on. */
+.hints .hlink{cursor:pointer;border-bottom:1px dotted var(--rule);font-weight:600;color:var(--ink2)}
+.hints .hlink:hover{color:var(--ink);border-bottom-color:var(--ink3)}
 .hrow{display:grid;grid-template-columns:200px minmax(0,1fr);gap:4px 14px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:.98rem}
 .hrow .hd{white-space:nowrap;font-family:"IBM Plex Mono",monospace;font-size:.85rem;direction:ltr;text-align:start;color:var(--ink3)}
 .hrow .hd b{display:block;color:var(--ink);font-size:1rem;font-family:Assistant,system-ui,sans-serif}
@@ -394,6 +455,7 @@ __CARDS_JS__
 
 <script>
 const LIVE = __LIVE__;
+const FOCUS = __FOCUS__;
 </script>
 <script>
 (function(){
@@ -415,11 +477,32 @@ const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace t
   legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?'};
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Recording hook. The whole script is a closure, so a recorder driving the
+// map from outside has no way to find a station: it would have to re-derive
+// layout() by hand and re-derive it again every time the arithmetic changes.
+// With ?rec=1 the positions are published -- the positions only, which are
+// already on the screen, and nothing that is not. Absent the parameter this
+// is one boolean that stays false. See tools/record_map.py.
+const REC = /[?&]rec=1(?:&|$)/.test(location.search);
+// Recording films focus mode, as a visitor's click would. ?rec=1&legacy=1 keeps
+// the old click -- select the station, light its edges -- for footage cut to it.
+const LEGACY = REC && /[?&]legacy=1(?:&|$)/.test(location.search);
+// Which station the finale leans on, if any. Recording only -- a normal load
+// cannot reach it, and without it every branch below is skipped.
+const EMPH = REC ? ((location.search.match(/[?&]emph=([a-z0-9_]+)/i)||[])[1]||'') : '';
+// A still map: the particles stay where they were seeded instead of running.
+// For the quiet shot that precedes the music, where the cut wants the same
+// framing as the live one and none of the movement. Recording only.
+const FREEZE = REC && /[?&]freeze=1(?:&|$)/.test(location.search);
+if(REC) document.documentElement.classList.add('rec');
 const cv=document.getElementById('map'), ctx=cv.getContext('2d'), tip=document.getElementById('tip'), stage=document.getElementById('stage'), panel=document.getElementById('panel');
-let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, sats=[], satT=0, t0=performance.now();
+let W=0,H=0,DPR=1, nodes=[], byId={}, edges=[], particles=[], hover=null, selected=null, t0=performance.now();
 let bands=[], l9y=0, l9x=14, l9anchor='left';
 const pct=v=>v==null?'—':((v>0?'+':'')+(v*100).toFixed(1)+'%');
 const cls=v=>v==null?'':(v<0?'neg':'pos');
+// Text from the data, made safe to put inside HTML. This script has no esc() of
+// its own -- the card scripts further down do, in their own scope.
+const escHtml=v=>String(v==null?'':v).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // A source is a list of references (a single string in an older snapshot), and
 // every URL in it is its own link: joined into one href they opened nothing.
 // The first URL carries the text it sources, as a lone source always has; each
@@ -437,114 +520,446 @@ function srcCited(text, v){
   return lead+r.filter((u,k)=>k!==i).map(srcLink).join('');
 }
 function srcLinks(v, sep){ const r=srcRefs(v); return r.length?sep+r.map(srcLink).join(''):''; }
-// ---- satellites for a crowded station ---------------------------------------
-// A clicked station's suppliers fan out around it. Each chokepoint laid out its
-// own arc, so a station holding two (Shin-Etsu: CP6 and CP7) drew both arcs on
-// the same radii and their labels printed over each other. Up to 8 satellites
-// keep that layout exactly. Past 8 they are pooled across the station's
-// chokepoints onto rings -- two for 9 to 16, three for 17 or more -- far enough
-// out that neighbouring dots stay 22px apart, and each label goes where it
-// touches no other label, no dot and not the station's ring.
-const SAT_GAP=22, SAT_FONT='12px "IBM Plex Mono", monospace';
-function placeSats(n, list){
-  if(list.length<=8 || (stage && stage.classList.contains('portrait'))) return list;
-  const rings=satRings(list);
-  let R=0;
-  rings.forEach((ring,k)=>{
-    R = k===0 ? 100 : R+60;
-    let arc=null;
-    while(R<=460 && !(arc=satArc(n,R,ring.length))) R+=12;
-    if(!arc) arc=satArc(n,R,ring.length,true);
-    ring.forEach((s,i)=>{ s.ring=k; s.tx=n.x+Math.cos(arc[i])*R; s.ty=n.y+Math.sin(arc[i])*R; });
+// ---- focus mode: one station and its direct suppliers ------------------------
+// A click on a station no longer opens the panel. The map dims, slides until
+// the station sits in the middle of what is on screen, and the station is drawn
+// half again as large with every supplier that feeds it straight in -- stations
+// and subnodes alike -- set around it on arcs, each under its full name.
+// "Details" (or Enter) opens the panel as before; Escape or a click on the dim
+// map leaves. FOCUS is written beside live.json by chains/live_snapshot.py and
+// inlined when the page is built, so the snapshot's size ceiling is not spent
+// on it.
+const FOCUSW = {details:'Details', more:'more'};
+const F_FONT='600 14px "Assistant", sans-serif', F_NAME='700 16px "Assistant", sans-serif';
+const F_CAP='600 11px "IBM Plex Mono", monospace', F_LINE=18, F_WRAP=240, F_PAD=8, F_MS=300;
+// Every label sits on its own solid box, F_BOX of it around the text. The map
+// under the arcs is dimmed to 12% (F_DIM is the veil's opacity), and a halo on
+// the letters alone did not keep the lines behind them out of the words.
+const F_CP='#f3e2b4', F_BG='rgba(11,14,20,.85)', F_BOX=3, F_DIM=0.88, F_DET={w:100, h:26}, F_MORE={w:140, h:26};
+let focusN=null, focusT=0, focusL=null, focusFrom={x:0,y:0};
+let fcam={x:0,y:0}, fcamFrom={x:0,y:0}, fdim=0, fdimFrom=0;
+// A crowded station grows the canvas first -- down to the bottom of the window,
+// less the header and the checkpoints strip, over the same 300ms -- and only
+// what still does not fit is counted into "+N more". Leaving shrinks it back.
+let fGrow=null, fBaseH=0;
+const fEase=t=>1-Math.pow(1-Math.min(1,Math.max(0,t)),3);
+const focusUI=document.createElement('div');
+focusUI.className='focusui';
+focusUI.innerHTML='<button type="button" class="fdetails"></button><button type="button" class="fmore" hidden></button>';
+cv.parentElement.appendChild(focusUI);
+const fDetails=focusUI.querySelector('.fdetails'), fMore=focusUI.querySelector('.fmore');
+fDetails.textContent=FOCUSW.details;
+fDetails.addEventListener('click',()=>{ if(focusN) open(focusN); });
+// "+N more" opens the same panel, scrolled to where its supplier rows begin.
+fMore.addEventListener('click',()=>{ if(!focusN) return; open(focusN);
+  const row=panel.querySelector('.sub'); if(row) panel.scrollTop=Math.max(0,row.offsetTop-60); });
+document.addEventListener('keydown',ev=>{
+  if(!focusN || REC) return;
+  if(ev.key==='Escape'){ exitFocus(); ev.preventDefault(); return; }
+  const tag=(ev.target&&ev.target.tagName)||'';
+  if(ev.key==='Enter' && !/^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(tag)){ open(focusN); ev.preventDefault(); }
+});
+// What is on screen moves when the page scrolls, so the arcs are laid out again.
+addEventListener('scroll',()=>{ if(focusN && !fGrow) focusL=null; },{passive:true});
+
+// Every station and subnode with a link straight into n, once each. A subnode
+// that shares its id with a station is that station.
+function suppliersOf(n){
+  const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, out=[], seen=new Set();
+  (F.up||[]).forEach(e=>{
+    if(e.to!==n.id || e.from===n.id || seen.has(e.from)) return;
+    const st=byId[e.from]||null, sub=(F.subs||{})[e.from]||null;
+    if(!st && !sub) return;
+    seen.add(e.from);
+    out.push({id:e.from, st, name:st?st.name:sub.name, g:e.g||'', wt:e.w||2, what:e.what||'',
+      cp: st ? !!(st.cp&&st.cp.length) : !!sub.cp, sole: !st && !!sub.sole,
+      line: st?st.line:n.line, r: st?st.r:8});
   });
-  const all=[].concat(...rings);
-  satLabels(n, all);
-  return all;
+  return out;
 }
-// Tier-1 inside and tier-2 outside while both have members and neither ring
-// would hold more than 8; otherwise the pooled list, tier-1 first, split evenly.
-function satRings(list){
-  const t1=list.filter(s=>s.tier===1), t2=list.filter(s=>s.tier!==1), all=t1.concat(t2);
-  const split=k=>{ const per=Math.ceil(all.length/k);
-    return Array.from({length:k},(_,i)=>all.slice(i*per,(i+1)*per)).filter(r=>r.length); };
-  if(all.length<=16) return (t1.length && t2.length && t1.length<=8 && t2.length<=8) ? [t1,t2] : split(2);
-  return split(3);
+// The second tier: the suppliers of n's suppliers that the panel lists beneath
+// them, each drawn beside the supplier it feeds.
+function childrenOf(n){
+  const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, out=[], seen=new Set();
+  (F.under||[]).forEach(e=>{
+    const key=e.from+'>'+e.to;
+    if(e.at!==n.id || seen.has(key)) return;
+    const st=byId[e.from]||null, sub=(F.subs||{})[e.from]||null;
+    if(!st && !sub) return;
+    seen.add(key);
+    out.push({id:e.from, parent:e.to, st, name:st?st.name:sub.name, g:e.g||'', wt:e.w||2, what:e.what||'',
+      cp: st ? !!(st.cp&&st.cp.length) : !!sub.cp, sole: !st && !!sub.sole, line:n.line, r:st?Math.min(st.r,8):6});
+  });
+  return out;
 }
-// The angles for m dots on a ring of radius R: centred on the side the fan has
-// always opened to, inside the map, spaced so neighbours are at least SAT_GAP
-// apart (36px where the ring has room). Null when the ring cannot hold them;
-// forced, it keeps the spacing and ignores the edges.
-function satArc(n, R, m, force){
-  const dirX=n.x<W-220?1:-1, tilt=n.y>H-170?-0.55:(n.y<170?0.55:0);
-  const mid=dirX>0?tilt:Math.PI-tilt, half=Math.PI*0.62, step=Math.PI/180;
-  const chord=d=>2*Math.asin(Math.min(1,d/(2*R)));
-  const need=Math.max(0,m-1)*chord(SAT_GAP), want=Math.max(0,m-1)*chord(36);
-  const spread=(lo,span)=>Array.from({length:m},(_,i)=>m>1?lo+i*span/(m-1):lo+span/2);
-  if(force) return spread(mid-need/2, need);
-  const ok=th=>{ const x=n.x+Math.cos(th)*R, y=n.y+Math.sin(th)*R;
-    return x>=16 && x<=W-16 && y>=40 && y<=H-60; };
-  let best=null;
-  for(let th=mid-half; th<=mid+half+1e-9; th+=step){
-    if(!ok(th)) continue;
-    let hi=th; while(hi+step<=mid+half+1e-9 && ok(hi+step)) hi+=step;
-    if(!best || hi-th>best.hi-best.lo) best={lo:th, hi};
-    th=hi;
+// A long name wraps onto more lines. It is never shortened.
+function fWrap(text){
+  const lines=[]; let cur='';
+  String(text).split(' ').forEach(w=>{ const t=cur?cur+' '+w:w;
+    if(!cur || ctx.measureText(t).width<=F_WRAP) cur=t; else { lines.push(cur); cur=w; } });
+  if(cur) lines.push(cur);
+  return lines;
+}
+// A label's lines and its box: the text plus F_BOX of background on every side.
+function fMeasure(s){
+  const lines=fWrap(s.name);
+  return Object.assign(s,{lines, w:Math.max(...lines.map(l=>ctx.measureText(l).width))+2*F_BOX,
+    h:lines.length*F_LINE+2*F_BOX});
+}
+// The part of the canvas inside the browser window, in canvas coordinates.
+function fVisible(){
+  const r=cv.getBoundingClientRect(), vw=document.documentElement.clientWidth, vh=window.innerHeight;
+  return {x0:Math.max(0,-r.left), y0:Math.max(0,-r.top), x1:Math.min(W,vw-r.left), y1:Math.min(H,vh-r.top)};
+}
+const fHit=(a,b,p)=>a.x0<b.x1+p && b.x0<a.x1+p && a.y0<b.y1+p && b.y0<a.y1+p;
+const fOnCircle=(cx,cy,r,b)=>{ const dx=cx-Math.max(b.x0,Math.min(cx,b.x1)), dy=cy-Math.max(b.y0,Math.min(cy,b.y1));
+  return dx*dx+dy*dy<r*r; };
+// Where the label goes for a dot at angle a: outward, on the side it points to.
+function fBoxAt(s, x, y, a){
+  const c=Math.cos(a);
+  return c>0.3 ? {x0:x+s.r+F_PAD, x1:x+s.r+F_PAD+s.w, y0:y-s.h/2, y1:y+s.h/2, align:'left'}
+    : c<-0.3 ? {x0:x-s.r-F_PAD-s.w, x1:x-s.r-F_PAD, y0:y-s.h/2, y1:y+s.h/2, align:'right'}
+    : Math.sin(a)<0 ? {x0:x-s.w/2, x1:x+s.w/2, y0:y-s.r-F_PAD-s.h, y1:y-s.r-F_PAD, align:'center'}
+    : {x0:x-s.w/2, x1:x+s.w/2, y0:y+s.r+F_PAD, y1:y+s.r+F_PAD+s.h, align:'center'};
+}
+// How tall the canvas may grow: the window, less what stays on screen above the
+// map once it is scrolled into place -- the site bar where it sticks, and the
+// checkpoints strip. The introduction above the strip scrolls away: counted in,
+// it would leave a 1080px window no room to grow at all.
+function fChrome(){
+  const nav=document.querySelector('.sitenav'), nx=document.getElementById('next');
+  const sticks=!!nav && /^(sticky|fixed)$/.test(getComputedStyle(nav).position);
+  return (sticks?nav.offsetHeight:0)+(nx?nx.offsetHeight:0);
+}
+function fGrowTarget(){ return Math.floor(window.innerHeight-fChrome()); }
+function fGrowTo(h, clear){ fGrow={from:cv.clientHeight, to:h, t0:performance.now(), clear:!!clear}; }
+
+// Arcs by count: one up to 8, two past that; at 1280px and wider as many as the
+// suppliers need, 8 to an arc. Chokepoints and sole sources first, then the
+// weightier links -- which decides who is shown when a screen cannot hold them
+// all, and who sits first within a group. Groups sit together. The second tier
+// goes outside, beside its parents; a group caption is always placed.
+function layoutFocus(){
+  const n=focusN, V=fVisible(), M=10;
+  const B={x0:V.x0+M, y0:V.y0+M, x1:V.x1-M, y1:V.y1-M};
+  const cx=(V.x0+V.x1)/2, cy=(V.y0+V.y1)/2, R0=n.r*1.6;
+  const wide=document.documentElement.clientWidth>=1280;
+  ctx.save();
+  ctx.font=F_NAME;
+  const nw=ctx.measureText(n.name).width;
+  const nameBox={x0:cx-nw/2-4, x1:cx+nw/2+4, y0:cy+R0+8, y1:cy+R0+30};
+  const detBox={x0:nameBox.x1+10, x1:nameBox.x1+10+F_DET.w, y0:nameBox.y0-2, y1:nameBox.y0-2+F_DET.h};
+  ctx.font=F_FONT;
+  const all=suppliersOf(n).map(fMeasure), kids=childrenOf(n).map(fMeasure);
+  const pri=(a,b)=>(b.cp-a.cp)||(b.sole-a.sole)||(b.wt-a.wt)||a.name.localeCompare(b.name);
+  const grouped=list=>{ const gs=new Map();
+    list.slice().sort(pri).forEach(s=>{ if(!gs.has(s.g)) gs.set(s.g,[]); gs.get(s.g).push(s); });
+    return [].concat(...gs.values()); };
+  const byPri=all.slice().sort(pri);
+  // The dimmed layer tags are DOM, drawn over the canvas: nothing goes under one.
+  const cr=cv.getBoundingClientRect();
+  const tags=[...document.querySelectorAll('#layerbar .lchip, #l9bar .lchip')].map(el=>{ const t=el.getBoundingClientRect();
+    return {x0:t.left-cr.left, x1:t.right-cr.left, y0:t.top-cr.top, y1:t.bottom-cr.top}; }).filter(t=>t.x1>t.x0);
+  const obst={cx, cy, r:R0+12, boxes:[nameBox, detBox, ...tags]};
+  const asp=Math.max(1, Math.min(1.8, (B.x1-B.x0)/Math.max(1,B.y1-B.y0)));
+  const ringsFor=c=>c<=8?1:(wide?Math.ceil(c/8):2);
+  const search=reserve=>{
+    let res=null, more=0;
+    for(let keep=all.length; keep>=0 && !res; keep--){
+      const pick=new Set(byPri.slice(0,keep)), shown=grouped(all.filter(s=>pick.has(s)));
+      more=all.length-keep;
+      const moreBox=(more||reserve)?{x0:cx-F_MORE.w/2, x1:cx+F_MORE.w/2, y0:B.y1-F_MORE.h, y1:B.y1}:null;
+      if(!shown.length){ res={items:[], kids:[], kidsMissing:kids.length, captions:[], moreBox, nr:0}; break; }
+      const nr0=ringsFor(shown.length), nrMax=wide?nr0+2:2;
+      for(let nr=nr0; nr<=nrMax && !res; nr++) res=fTry(shown, kids, nr, cx, cy, R0, B, asp, obst, moreBox);
+    }
+    return {res, more};
+  };
+  let {res, more}=search(false);
+  if(res.kidsMissing && !res.moreBox) ({res, more}=search(true));
+  ctx.restore();
+  const more2=res.kidsMissing;
+  // Short of room: grow the canvas once, and lay out again when it has grown.
+  if((more||more2) && !REC && MODE!=='portrait' && !fGrow){
+    const t=fGrowTarget();
+    if(t>H+1){
+      if(!fBaseH) fBaseH=H;
+      const want=Math.max(0, cv.getBoundingClientRect().top+window.scrollY-fChrome());
+      if(Math.abs(window.scrollY-want)>1) window.scrollTo(0, want);
+      fGrowTo(t);
+    }
   }
-  if(!best || best.hi-best.lo<need-1e-9) return null;
-  const span=Math.min(best.hi-best.lo, Math.max(need,want));
-  const lo=Math.max(best.lo, Math.min(best.hi-span, mid-span/2));
-  return spread(lo, span);
+  focusL={id:n.id, W, H, cx, cy, R0, cam:{x:cx-n.x, y:cy-n.y}, nameBox, detBox, tags,
+    items:res.items, kids:res.kids, captions:res.captions, more, more2, total:all.length, total2:kids.length,
+    moreBox:res.moreBox, rings:res.nr};
+  fDetails.style.left=detBox.x0+'px'; fDetails.style.top=detBox.y0+'px';
+  const extra=more+more2;
+  fMore.hidden=!extra || !!fGrow;
+  if(extra && res.moreBox){ fMore.textContent='+'+extra+' '+FOCUSW.more;
+    fMore.style.left=res.moreBox.x0+'px'; fMore.style.top=res.moreBox.y0+'px'; }
 }
-// Greedy, in ring order. For each satellite: the four spots beside its dot --
-// right, left, above, below; left first on the right-to-left map -- and the
-// first whose text box is clear wins. None clear: the spot moves out along the
-// satellite's radial, 12px at a time, up to five times, and a leader line
-// joins it to its dot. Still none: the label is shortened with an ellipsis
-// until it fits. Two label boxes never touch; a label with no room is not drawn.
-function satLabels(n, all){
-  const rtl=getComputedStyle(document.documentElement).direction==='rtl';
-  const sides=rtl?['left','right','above','below']:['right','left','above','below'];
-  const dots=all.map(s=>({x:s.tx, y:s.ty, r:(s.tier===1?4.5:3)+2}));
-  const ring={x:n.x, y:n.y, r:ringR(n)+2};
-  const placed=[];
-  const onCircle=(b,c)=>{ const dx=c.x-Math.max(b.x0,Math.min(c.x,b.x1)), dy=c.y-Math.max(b.y0,Math.min(c.y,b.y1));
-    return dx*dx+dy*dy<c.r*c.r; };
-  const clear=b=>b.x0>=2 && b.x1<=W-2 && b.y0>=2 && b.y1<=H-2
-    && !placed.some(p=>b.x0<p.x1+2 && p.x0<b.x1+2 && b.y0<p.y1+2 && p.y0<b.y1+2)
-    && !dots.some(c=>onCircle(b,c)) && !onCircle(b,ring);
-  const boxAt=(ax,ay,side,w)=>side==='right'?{x0:ax+8,x1:ax+8+w,y0:ay-6,y1:ay+7,tx:ax+8,ty:ay+4,align:'left'}
-    :side==='left'?{x0:ax-8-w,x1:ax-8,y0:ay-6,y1:ay+7,tx:ax-8,ty:ay+4,align:'right'}
-    :side==='above'?{x0:ax-w/2,x1:ax+w/2,y0:ay-21,y1:ay-8,tx:ax,ty:ay-11,align:'center'}
-    :{x0:ax-w/2,x1:ax+w/2,y0:ay+8,y1:ay+21,tx:ax,ty:ay+18,align:'center'};
-  ctx.save(); ctx.font=SAT_FONT;
-  all.forEach(s=>{
-    const dx=s.tx-n.x, dy=s.ty-n.y, d=Math.hypot(dx,dy)||1;
-    const fit=text=>{ const w=ctx.measureText(text).width;
-      for(let k=0;k<=5;k++){ const ax=s.tx+dx/d*12*k, ay=s.ty+dy/d*12*k;
-        for(const side of sides){ const b=boxAt(ax,ay,side,w); if(clear(b)) return {b,k}; } }
-      return null; };
-    let text=s.label, got=fit(text);
-    for(let cut=s.label.length-1; !got && cut>=1; cut--){ text=s.label.slice(0,cut).trimEnd()+'…'; got=fit(text); }
-    if(!got){ s.lab={hidden:true}; return; }
-    const {b,k}=got;
-    placed.push(b);
-    s.lab={text, x:b.tx, y:b.ty, align:b.align, box:{x0:b.x0,y0:b.y0,x1:b.x1,y1:b.y1}, nudged:k>0, leader:k>0};
+// One try at a given number of arcs, growing the radius until every label and
+// dot fits inside the screen and clear of every other. Neighbours alternate
+// between arcs, and each supplier's share of the circle follows the room its
+// own label needs at that angle, so a long name gets more of it. A radius at
+// which a group caption has nowhere to go does not fit. The first radius with
+// room for the whole second tier wins; failing that, the first that holds the
+// first tier, with the children that fit.
+function fTry(items, kids, nr, cx, cy, R0, B, asp, obst, moreBox){
+  const m=items.length, GAP=66;
+  const Rmax=Math.max(B.y1-cy, cy-B.y0, (B.x1-cx)/asp, (cx-B.x0)/asp);
+  const hard=[...obst.boxes, ...(moreBox?[moreBox]:[])];
+  const inside=b=>b.x0>=B.x0 && b.x1<=B.x1 && b.y0>=B.y0 && b.y1<=B.y1;
+  let fallback=null;
+  for(let R=R0+46; R+(nr-1)*GAP<=Rmax+1; R+=10){
+    const rad=items.map((_,i)=>R+(i%nr)*GAP);
+    let th=items.map((_,i)=>-Math.PI/2+(i+0.5)*2*Math.PI/m), fits=true;
+    for(let it=0; it<3; it++){
+      const ext=items.map((s,i)=>{ const a=th[i];
+        return (Math.abs(Math.sin(a))*(s.w+F_PAD)+Math.abs(Math.cos(a))*(s.h+F_PAD)+2*s.r)/(rad[i]*(nr>1?1.6:1)); });
+      const tot=ext.reduce((a,b)=>a+b,0);
+      if(tot>2*Math.PI){ fits=false; break; }
+      const slack=(2*Math.PI-tot)/m; let acc=-Math.PI/2;
+      th=ext.map(e=>{ const a=acc+(e+slack)/2; acc+=e+slack; return a; });
+    }
+    if(!fits) continue;
+    const placed=[]; let ok=true;
+    for(let i=0; i<m && ok; i++){
+      const s=items[i], a=th[i], x=cx+Math.cos(a)*rad[i]*asp, y=cy+Math.sin(a)*rad[i];
+      const box=fBoxAt(s, x, y, a);
+      const dot={x0:x-s.r-6, x1:x+s.r+6, y0:y-s.r-6, y1:y+s.r+6};
+      ok = inside(box) && inside(dot)
+        && !hard.some(o=>fHit(box,o,4)||fHit(dot,o,2))
+        && !fOnCircle(obst.cx,obst.cy,obst.r,box) && !fOnCircle(obst.cx,obst.cy,obst.r,dot)
+        && !placed.some(p=>fHit(box,p.box,4)||fHit(box,p.dot,2)||fHit(dot,p.box,2)||fHit(dot,p.dot,4));
+      if(ok) placed.push({s, x, y, a, box, dot});
+    }
+    if(!ok) continue;
+    const K=fKids(kids, placed, cx, cy, asp, inside, hard, obst);
+    const caps=fCaptions(placed.concat(K.placed), cx, cy, asp, B, obst, hard);
+    if(!caps) continue;
+    const res={items:placed.map(p=>Object.assign({}, p.s, {x:p.x, y:p.y, a:p.a, box:p.box})),
+      kids:K.placed.map(p=>Object.assign({}, p.s, {x:p.x, y:p.y, a:p.a, box:p.box,
+        px:p.parent.x, py:p.parent.y, line:p.parent.s.line})),
+      kidsMissing:K.miss.length, captions:caps, moreBox, nr};
+    if(!K.miss.length) return res;
+    if(!fallback) fallback=res;
+  }
+  return fallback;
+}
+// Each child beside its own parent: out along the parent's angle, a little to
+// either side when a parent has several, further out until its label and dot
+// are clear of everything already placed.
+function fKids(kids, placed, cx, cy, asp, inside, hard, obst){
+  const byParent=new Map(placed.map(p=>[p.s.id, p])), taken=[];
+  placed.forEach(p=>{ taken.push(p.box, p.dot); });
+  const out=[], miss=[], fam=new Map();
+  kids.forEach(k=>{ if(!byParent.has(k.parent)){ miss.push(k); return; }
+    if(!fam.has(k.parent)) fam.set(k.parent, []); fam.get(k.parent).push(k); });
+  fam.forEach((list, pid)=>{
+    const p=byParent.get(pid), pr=Math.hypot((p.x-cx)/asp, p.y-cy);
+    list.forEach((k, j)=>{
+      const base=(j-(list.length-1)/2)*0.22; let got=null;
+      for(let dr=58; dr<=200 && !got; dr+=12){
+        for(const off of [0, 0.1, -0.1, 0.2, -0.2, 0.32, -0.32]){
+          const a=p.a+base+off, R=pr+dr, x=cx+Math.cos(a)*R*asp, y=cy+Math.sin(a)*R;
+          const box=fBoxAt(k, x, y, a), dot={x0:x-k.r-6, x1:x+k.r+6, y0:y-k.r-6, y1:y+k.r+6};
+          if(inside(box) && inside(dot) && !hard.some(o=>fHit(box,o,4)||fHit(dot,o,2))
+            && !fOnCircle(obst.cx,obst.cy,obst.r,box) && !fOnCircle(obst.cx,obst.cy,obst.r,dot)
+            && !taken.some(t=>fHit(box,t,4)||fHit(dot,t,2))){ got={s:k, x, y, a, box, dot, parent:p}; break; }
+        }
+      }
+      if(got){ taken.push(got.box, got.dot); out.push(got); } else miss.push(k);
+    });
   });
+  return {placed:out, miss};
+}
+// One caption per group, never dropped. Beside that group's own names first --
+// above them in the upper half, below in the lower, the other side if that is
+// taken -- and where neither has room, a small chip on the outer radius at the
+// group's angular centre. Null when even the chip has nowhere to go: the radius
+// does not fit.
+function fCaptions(placed, cx, cy, asp, B, obst, hard){
+  const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, names=F.groups||{}, out=[];
+  ctx.font=F_CAP;
+  const taken=[...placed.map(p=>p.box), ...placed.map(p=>p.dot), ...hard];
+  const runs=[];
+  placed.forEach(p=>{ const r=runs[runs.length-1]; if(r&&r.key===p.s.g) r.list.push(p); else runs.push({key:p.s.g, list:[p]}); });
+  const best=new Map();
+  runs.forEach(r=>{ const b=best.get(r.key); if(!b || r.list.length>b.list.length) best.set(r.key, r); });
+  for(const g of best.values()){
+    const text=String(names[g.key]||'').toUpperCase(); if(!text) continue;
+    const tw=ctx.measureText(text).width, w=tw+2*F_BOX, h=14+2*F_BOX, gap=4;
+    const a=Math.atan2(g.list.reduce((t,p)=>t+Math.sin(p.a),0), g.list.reduce((t,p)=>t+Math.cos(p.a),0));
+    const c=Math.cos(a), sn=Math.sin(a);
+    const u={x0:Math.min(...g.list.map(p=>p.box.x0)), x1:Math.max(...g.list.map(p=>p.box.x1)),
+      y0:Math.min(...g.list.map(p=>p.box.y0)), y1:Math.max(...g.list.map(p=>p.box.y1))};
+    const align = c>0.3 ? 'left' : c<-0.3 ? 'right' : 'center';
+    const x0 = align==='left' ? u.x0 : align==='right' ? u.x1-w : (u.x0+u.x1-w)/2;
+    const above={y0:u.y0-gap-h, y1:u.y0-gap}, below={y0:u.y1+gap, y1:u.y1+gap+h};
+    const clear=box=>!(box.x0<B.x0||box.x1>B.x1||box.y0<B.y0||box.y1>B.y1)
+      && !taken.some(t=>fHit(box,t,3)) && !fOnCircle(obst.cx,obst.cy,obst.r,box);
+    let cap=null;
+    for(const v of (sn<0 ? [above, below] : [below, above])){
+      const box={x0, x1:x0+w, y0:v.y0, y1:v.y1, align};
+      if(clear(box)){ cap={text, box, key:g.key, chip:false}; break; }
+    }
+    if(!cap){
+      const cw=tw+12, ch=17;
+      let reach=0;
+      g.list.forEach(p=>[[p.box.x0,p.box.y0],[p.box.x1,p.box.y0],[p.box.x0,p.box.y1],[p.box.x1,p.box.y1]]
+        .forEach(([x,y])=>{ reach=Math.max(reach, Math.hypot((x-cx)/asp, y-cy)); }));
+      for(let dr=10; dr<=160 && !cap; dr+=8){
+        for(const da of [0, 0.05, -0.05, 0.1, -0.1, 0.18, -0.18, 0.28, -0.28]){
+          const aa=a+da, R=reach+dr, x=cx+Math.cos(aa)*R*asp, y=cy+Math.sin(aa)*R;
+          const box={x0:x-cw/2, x1:x+cw/2, y0:y-ch/2, y1:y+ch/2, align:'center'};
+          if(clear(box)){ cap={text, box, key:g.key, chip:true}; break; }
+        }
+      }
+    }
+    if(!cap) return null;
+    taken.push(cap.box); out.push(cap);
+  }
+  return out;
+}
+function enterFocus(n, from){
+  if(!n) return;
+  // The whole canvas in view first, where it can be, so the arcs have the room.
+  const r=cv.getBoundingClientRect(), vh=window.innerHeight;
+  if(r.top<0 || r.bottom>vh){ const dy=r.top<0?r.top:Math.min(r.top, r.bottom-vh); if(dy) window.scrollBy(0,dy); }
+  fcamFrom={x:fcam.x, y:fcam.y}; fdimFrom=fdim;
+  focusFrom=from||{x:n.x+fcam.x, y:n.y+fcam.y};
+  focusN=n; focusT=performance.now(); focusL=null;
+  hover=null; hoverEdge=null; tip.style.display='none';
+  document.documentElement.classList.add('focusing');
+  layoutFocus();
+}
+function exitFocus(){
+  if(!focusN) return;
+  fcamFrom={x:fcam.x, y:fcam.y}; fdimFrom=fdim;
+  focusN=null; focusL=null; focusT=performance.now();
+  document.documentElement.classList.remove('focusing');
+  fMore.hidden=true;
+  if(fBaseH){ fGrowTo(fBaseH, true); fBaseH=0; }
+  close();
+}
+// Per frame, before the map is drawn: how tall the canvas is, where the camera
+// is and how dim the map is. The layer tags stay where they are, dimmed; the
+// arcs keep clear of them. True while the map is moved.
+function focusFrame(now){
+  if(fGrow){
+    const g=fEase((now-fGrow.t0)/F_MS), h=fGrow.from+(fGrow.to-fGrow.from)*g;
+    cv.style.height=h.toFixed(1)+'px';
+    if(Math.abs(cv.clientHeight-H)>=1) resize();
+    if(g>=1){
+      const done=fGrow; fGrow=null;
+      if(done.clear){ cv.style.height=''; resize(); }
+      if(focusN){ if(focusL) focusFrom={x:focusL.cx, y:focusL.cy};
+        fcamFrom={x:fcam.x, y:fcam.y}; focusL=null; focusT=now; }
+    }
+  }
+  const k=fEase((now-focusT)/F_MS);
+  if(focusN){
+    if(!focusL || (!fGrow && (focusL.W!==W || focusL.H!==H))) layoutFocus();
+    fcam.x=fcamFrom.x+(focusL.cam.x-fcamFrom.x)*k; fcam.y=fcamFrom.y+(focusL.cam.y-fcamFrom.y)*k;
+    fdim=fdimFrom+(1-fdimFrom)*k;
+  } else if(fcam.x||fcam.y||fdim){
+    fcam.x=fcamFrom.x*(1-k); fcam.y=fcamFrom.y*(1-k); fdim=fdimFrom*(1-k);
+    if(k>=1){ fcam.x=0; fcam.y=0; fdim=0; }
+  }
+  return !!(fcam.x||fcam.y);
+}
+// A station circle in the map's own style: its pulse, its glow, its inset. A
+// supplier that is itself a chokepoint wears the amber ring.
+function fStation(st, x, y, r, cp, T, line){
+  const a=ctx.globalAlpha, pu=st?pulseOf(st):null;
+  if(pu&&!REDUCED){ const ph=(T%pu.period)/pu.period; ctx.beginPath(); ctx.arc(x,y,r+4+ph*16,0,7);
+    ctx.strokeStyle=pu.col; ctx.globalAlpha=a*(1-ph)*.7; ctx.lineWidth=2; ctx.stroke(); ctx.globalAlpha=a; }
+  if(pu||cp){ ctx.beginPath(); ctx.arc(x,y,r+5,0,7); ctx.strokeStyle=cp?tok('--amber'):pu.col; ctx.lineWidth=2.5; ctx.stroke(); }
+  ctx.save(); ctx.shadowColor=LCOL[line]||'#ffffff55'; ctx.shadowBlur=r*0.9;
+  ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill(); ctx.restore();
+  ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill();
+  inset(x,y,r);
+  ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.lineWidth=2; ctx.strokeStyle=tok('--ink3'); ctx.stroke();
+}
+// A label's solid box, rounded, under the text; a chip gets a rule round it.
+function fBg(b, rule){
+  ctx.beginPath();
+  if(ctx.roundRect) ctx.roundRect(b.x0, b.y0, b.x1-b.x0, b.y1-b.y0, 4); else ctx.rect(b.x0, b.y0, b.x1-b.x0, b.y1-b.y0);
+  ctx.fillStyle=F_BG; ctx.fill();
+  if(rule){ ctx.lineWidth=1; ctx.strokeStyle=rule; ctx.stroke(); }
+}
+function fLabel(b, lines, fill){
+  fBg(b);
+  ctx.fillStyle=fill; ctx.textAlign=b.align;
+  const tx=b.align==='left'?b.x0+F_BOX:b.align==='right'?b.x1-F_BOX:(b.x0+b.x1)/2;
+  lines.forEach((ln,j)=>ctx.fillText(ln, tx, b.y0+F_BOX+F_LINE*(j+0.5)));
+}
+// After the map: the dim veil, then the focused station, its suppliers and theirs.
+function drawFocus(now){
+  if(fdim>0){ ctx.fillStyle='rgba(11,14,20,'+(F_DIM*fdim).toFixed(3)+')'; ctx.fillRect(0,0,W,H); }
+  const n=focusN, L=focusL; if(!n||!L) return;
+  const T=now-t0;
+  // While the canvas grows the arcs wait; the station stays where it is.
+  if(fGrow){ fStation(n, n.x+fcam.x, n.y+fcam.y, n.r, false, T, n.line); return; }
+  const k=fEase((now-focusT)/F_MS);
+  const sx=focusFrom.x+(L.cx-focusFrom.x)*k, sy=focusFrom.y+(L.cy-focusFrom.y)*k, rr=n.r*(1+0.6*k);
+  const at=s=>({x:sx+(s.x-L.cx)*k, y:sy+(s.y-L.cy)*k});
+  ctx.save();
+  ctx.globalAlpha=k;
+  L.items.forEach((s,i)=>{ const p=at(s), col=LCOL[s.line]||tok('--ink3');
+    ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(sx,sy); ctx.strokeStyle=col; ctx.lineWidth=1.2; ctx.stroke();
+    // The flowing dots: supplier to customer, the way the goods go.
+    if(!REDUCED) for(let d=0; d<2; d++){ const u=((T/1800)+i*0.137+d*0.5)%1;
+      ctx.beginPath(); ctx.arc(p.x+(sx-p.x)*u, p.y+(sy-p.y)*u, 2, 0, 7); ctx.fillStyle=col; ctx.fill(); } });
+  // The second tier: a thin link from each child in to its parent, in the parent's line colour.
+  L.kids.forEach(s=>{ const p=at(s), q=at({x:s.px, y:s.py}), col=LCOL[s.line]||tok('--ink3');
+    ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.strokeStyle=col; ctx.lineWidth=0.9; ctx.stroke(); });
+  L.items.forEach(s=>{ const p=at(s); fStation(s.st, p.x, p.y, s.r, s.cp, T, s.line); });
+  L.kids.forEach(s=>{ const p=at(s); fStation(null, p.x, p.y, s.r, s.cp, T, s.line); });
+  fStation(n, sx, sy, rr, false, T, n.line);
+  ctx.textBaseline='middle'; ctx.direction='ltr';
+  ctx.globalAlpha=k;
+  if(k>=1){
+    ctx.font=F_FONT;
+    L.items.forEach(s=>fLabel(s.box, s.lines, s.cp?F_CP:'#ffffff'));
+    L.kids.forEach(s=>fLabel(s.box, s.lines, s.cp?F_CP:'#ffffff'));
+    ctx.font=F_CAP;
+    L.captions.forEach(c=>{ const b=c.box;
+      fBg(b, c.chip?'#3a3320':null);
+      ctx.fillStyle=c.chip?F_CP:tok('--ink3'); ctx.textAlign=b.align;
+      const tx=b.align==='left'?b.x0+F_BOX:b.align==='right'?b.x1-F_BOX:(b.x0+b.x1)/2;
+      ctx.fillText(c.text, tx, (b.y0+b.y1)/2); });
+  }
+  ctx.font=F_NAME; ctx.textAlign='center';
+  const hw=(L.nameBox.x1-L.nameBox.x0)/2;
+  fBg({x0:sx-hw, x1:sx+hw, y0:sy+rr+8, y1:sy+rr+30});
+  ctx.fillStyle='#ffffff'; ctx.fillText(n.name, sx, sy+rr+19);
   ctx.restore();
 }
-function satLabel(s, x, y){
-  const L=s.lab; if(L.hidden) return;
-  if(L.leader){ const b=L.box; ctx.beginPath(); ctx.moveTo(x,y);
-    ctx.lineTo(Math.max(b.x0,Math.min(x,b.x1)), Math.max(b.y0,Math.min(y,b.y1)));
-    ctx.strokeStyle='#ffffff33'; ctx.lineWidth=1; ctx.stroke(); }
-  ctx.font=SAT_FONT; ctx.fillStyle=tok('--ink2'); ctx.textAlign=L.align; ctx.fillText(L.text, L.x, L.y);
+function focusHit(x,y){
+  const L=focusL; if(!focusN||!L) return null;
+  return L.items.concat(L.kids).find(s=>Math.hypot(s.x-x,s.y-y)<=s.r+6
+    || (x>=s.box.x0&&x<=s.box.x1&&y>=s.box.y0&&y<=s.box.y1))||null;
 }
-// The satellites as laid out, for the browser check in tests/test_satellites.py:
-// canvas labels have no box the DOM can measure.
-window.__satBoxes=()=>({
-  station: selected?{id:selected.id, x:selected.x, y:selected.y, ring:ringR(selected)}:null,
-  sats: sats.map(s=>({x:s.tx, y:s.ty, r:s.tier===1?4.5:3, tier:s.tier, ring:s.ring==null?null:s.ring, label:s.label,
-    lab: !s.lab?null:(s.lab.hidden?{hidden:true}:{text:s.lab.text, box:s.lab.box, nudged:s.lab.nudged, leader:s.lab.leader})}))});
+function focusOnSelf(x,y){
+  const L=focusL, b=L&&L.nameBox;
+  return !!L && (Math.hypot(L.cx-x,L.cy-y)<=L.R0+8 || (x>=b.x0&&x<=b.x1&&y>=b.y0&&y<=b.y1));
+}
+// What focus mode drew, for the browser check in tests/test_focus.py: canvas
+// text has no box the DOM can measure.
+window.__focus=()=>{
+  const L=focusL; if(!focusN||!L) return null;
+  const r=cv.getBoundingClientRect(), bx=b=>({x0:b.x0, y0:b.y0, x1:b.x1, y1:b.y1});
+  const lab=s=>({id:s.id, name:s.name, text:s.lines.join(' '), lines:s.lines.length, box:bx(s.box),
+    x:s.x, y:s.y, cp:s.cp, sole:s.sole, group:s.g, station:!!s.st, what:s.what||''});
+  return {id:focusN.id, panelOpen:stage.classList.contains('open'), canvas:{left:r.left, top:r.top, height:H}, centre:{x:L.cx, y:L.cy},
+    vw:document.documentElement.clientWidth, vh:window.innerHeight, total:L.total, more:L.more, rings:L.rings,
+    total2:L.total2, more2:L.more2, growMax:fGrowTarget(), baseH:fBaseH||H, growing:!!fGrow, dim:F_DIM*fdim,
+    labels:L.items.map(lab), labels2:L.kids.map(s=>Object.assign(lab(s), {parent:s.parent})),
+    captions:L.captions.map(c=>({text:c.text, key:c.key, chip:!!c.chip, box:bx(c.box)})),
+    nameBox:bx(L.nameBox), tags:L.tags.map(bx), animDone:!fGrow && (performance.now()-focusT)>=F_MS};
+};
 
 function build(){
   readLabels();
@@ -552,7 +967,127 @@ function build(){
   edges = D.edges.filter(e=>byId[e.from]&&byId[e.to]);
   D.cps.forEach(c=>{ c.holders.forEach(h=>{ const n=byId[h.id]; if(!n) return; n.cp=n.cp||[]; n.cp.push(c); }); });
 }
+// Which way the map is drawn. Wider than tall keeps the columns it has always
+// had; taller than wide gets rows. 1.15 rather than 1.0 so a nearly-square
+// container -- a 1:1 post, a tablet held upright -- takes the rows too, where
+// seven columns would leave nothing but initials.
+const PORTRAIT_AT = 1.15;
+let MODE='landscape', pitch=0, rowY={};
+
 function layout(){
+  MODE = (W / Math.max(H,1)) < PORTRAIT_AT ? 'portrait' : 'landscape';
+  if(stage) stage.classList.toggle('portrait', MODE==='portrait');
+  if(MODE==='portrait') layoutPortrait(); else layoutLandscape();
+  // The finale shot leans on one station. Recording only, one named id, and
+  // nothing about it leaks into a normal load: EMPH is empty without the
+  // parameter and this is a no-op.
+  if(EMPH && byId[EMPH]) byId[EMPH].r *= 1.2;
+  // Republished on every layout, because layout() is what moves them.
+  if(REC){ const o={}; nodes.forEach(n=>{ o[n.id]={x:n.x,y:n.y,r:n.r,
+    name:n.name, short:n.short||''}; }); window.__nodes=o;
+    window.__mapSize={W:W,H:H,bitmapW:cv.width,bitmapH:cv.height,DPR:DPR,
+      mode:MODE,pitch:pitch}; }
+}
+
+// Rows, top to bottom: raw materials at the top, the cloud at the bottom, and
+// the power row last of all. Every station keeps its layer, its colour, its
+// ring and its size -- only the axis changes.
+function layoutPortrait(){
+  const rows=['L1','L2','L3','L4','L5','L6','L7','L9'];
+  const order=['logic','memory','packaging','network','cloud','power'];
+  const groups={};
+  nodes.forEach(n=>{ const L=n.layer==='L9'?'L9':n.layer; (groups[L]=groups[L]||[]).push(n); });
+  // Nothing above the first row; the last row needs room under it for a label.
+  const top=34, bottom=46, padX=22;
+  pitch=(H-top-bottom)/rows.length;
+  // The scale floor is 0.9, not W/1600. At 1080 the raw ratio is 0.675 and it
+  // took a third off every station: NVDA came out at 16.2 against its
+  // landscape 24, and the map lost the size difference that says which
+  // companies are large. A station is scaled to the frame, not shrunk by it.
+  const kr=Math.max(0.9, W/1600);
+  rowY={};
+  // The largest station on the map sits at the CENTRE of its row, and the row
+  // shares the remaining width evenly on either side of it. Left-to-right
+  // order is otherwise kept. The reason is the edges: this is the station the
+  // map points at -- twenty-seven of them arrive here -- and from the end of a
+  // row every one comes in from the same side. From the middle they arrive
+  // from left, right, above and below.
+  //
+  // Found from the data rather than named, so no company id enters the layout.
+  let rowCentre=null, biggest=-1;
+  nodes.forEach(n=>{ if((n.cap||0)>biggest){ biggest=n.cap||0; rowCentre=n.id; } });
+  rows.forEach((L,ri)=>{
+    const y=top+pitch*(ri+0.5); rowY[L]=y;
+    const g=(groups[L]||[]).sort((a,b)=>order.indexOf(a.line)-order.indexOf(b.line)||(b.cap||0)-(a.cap||0));
+    const cnt=g.length; if(!cnt) return;
+    const slot=(W-2*padX)/cnt;
+    // Re-seat so the centre station takes the middle place. On an odd row the
+    // middle place IS W/2, so the comb below is unchanged and nothing can
+    // collide; on an even one the override moves it half a slot and the pass
+    // afterwards opens the gap again.
+    let seats=g;
+    const mid=g.findIndex(n=>n.id===rowCentre);
+    if(mid>=0 && cnt>2){
+      const rest=g.filter(n=>n.id!==rowCentre);
+      const at=Math.floor(cnt/2);
+      seats=rest.slice(0,at).concat([g[mid]], rest.slice(at));
+    }
+    seats.forEach((nd,i)=>{ nd.x=padX+slot*(i+0.5); nd.y=y; nd.slot=slot;
+      // Nine or more in a row and the labels cannot all sit on one line, so
+      // every other one drops a line. Alternating rather than wrapping keeps
+      // each label under its own station.
+      nd.stagger=(cnt>=9 && (i%2===1)); });
+    if(mid>=0 && cnt>2){
+      const k=Math.floor(cnt/2);
+      seats[k].x=W/2;
+      // Nothing in a row may touch. If centring closed a gap, push the
+      // neighbours outward from the centre until they clear again.
+      for(let i=k+1;i<cnt;i++){
+        const a=seats[i-1], b=seats[i], need=a.r+b.r+4;
+        if(b.x-a.x<need) b.x=a.x+need;
+      }
+      for(let i=k-1;i>=0;i--){
+        const a=seats[i+1], b=seats[i], need=a.r+b.r+4;
+        if(a.x-b.x<need) b.x=a.x-need;
+      }
+    }
+  });
+  // The same cap-to-radius curve as landscape, scaled to the narrower frame.
+  // The SAME formula landscape uses, including its inner floor of 7 -- the
+  // portrait branch had dropped that and applied a 6 after scaling instead,
+  // so every small station bottomed out at 6 rather than at 7 scaled.
+  nodes.forEach(n=>{ n.r=(n.cap?Math.max(7,Math.min(24,6+18*Math.sqrt(n.cap/5516))):7)*kr; });
+  // A row still has to hold its stations side by side. At 1080 the widest row
+  // gives each one 94px and nothing here binds; on a 390px phone it is 31px
+  // and a 0.9-scaled NVDA would sit on top of its neighbours, so the slot caps
+  // the radius. Legibility of the big names first, but not at the cost of the
+  // row being readable at all.
+  nodes.forEach(n=>{ if(n.slot) n.r=Math.min(n.r, n.slot*0.42); });
+  // Labels: as big as the frame allows, then as big as the slot allows, and
+  // only then cut. A station whose name has been shortened to an initial is
+  // not on the map in any useful sense, so 10px is the floor before an
+  // ellipsis takes over.
+  const base=Math.max(11, Math.min(22, W/54));
+  nodes.forEach(n=>{
+    let lbl=n.short||n.name.split(' ')[0], fs=base;
+    const room=Math.max(24,(n.slot||W)-6);
+    ctx.font='600 '+fs+'px "Assistant", sans-serif';
+    while(ctx.measureText(lbl).width>room && fs>10){ fs-=1;
+      ctx.font='600 '+fs+'px "Assistant", sans-serif'; }
+    if(ctx.measureText(lbl).width>room){
+      while(lbl.length>1 && ctx.measureText(lbl+'\u2026').width>room) lbl=lbl.slice(0,-1);
+      lbl+='\u2026';
+    }
+    n.lfs=fs; n.lbl=lbl; n.lw=ctx.measureText(lbl).width;
+    n.ldy=n.stagger?Math.round(base*1.15):0;
+  });
+  bands=[]; l9y=rowY['L9']||(H-34); l9x=8; l9anchor='left';
+}
+
+function layoutLandscape(){
+  // Portrait writes per-node label metrics; landscape computes its own, so
+  // they are cleared rather than left to leak across an orientation change.
+  nodes.forEach(n=>{ n.lfs=null; n.lbl=null; n.ldy=0; n.slot=null; n.stagger=false; });
   const cols=['L1','L2','L3','L4','L5','L6','L7'];
   const padR=110, padL=70, colW=(W-padR-padL)/(cols.length-1);
   const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);
@@ -596,7 +1131,13 @@ function layout(){
 // 2.5px stroke, or the station's own 2px outline.
 function ringR(n){ return pulseOf(n) ? n.r+5+1.25 : n.r+1; }
 function resize(){
-  DPR=Math.min(2,devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
+  // Up to 3, not 2: a phone at devicePixelRatio 3 was being drawn at two
+  // thirds of its own resolution, which is exactly where a thin edge and a
+  // 10px label cannot afford it. The cap is there to bound the bitmap on a
+  // device nobody chose; when RECORDING the ratio is chosen deliberately, and
+  // clamping it to 3 under a 4x surface would upscale the canvas by a third
+  // and throw away the pixels the whole run exists to capture.
+  DPR = REC ? (devicePixelRatio||1) : Math.min(3, devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
   SPR={};                      // the sprites were baked at the old DPR
   layerBar();
 }
@@ -656,6 +1197,17 @@ function layerBar(){
   const bar=document.getElementById('layerbar');
   const l9=document.getElementById('l9bar');
   if(!bar||!l9) return;
+  if(MODE==='portrait'){
+    // A row is named at its left margin, in the gap above it, where there is
+    // nothing else -- a bar across the top would name columns that no longer
+    // exist.
+    bar.innerHTML = Object.keys(rowY).map(L=>
+      `<span class="lchip" data-l="${L}" style="left:8px;`
+      + `top:${(rowY[L]-pitch*0.40).toFixed(1)}px;transform:translateY(-50%)">`
+      + `${chip(L, LAYER_HE[L]||'')}</span>`).join('');
+    l9.innerHTML='';
+    return;
+  }
   bar.innerHTML = bands.map(b=>
     `<span class="lchip" data-l="${b.L}" data-cx="${b.cx.toFixed(1)}" style="left:${b.cx.toFixed(1)}px;`
     + `top:6px;transform:translateX(-50%)">${chip(b.L, LAYER_HE[b.L]||'')}</span>`
@@ -692,10 +1244,23 @@ window.__labelBoxes = () => nodes.map(n=>({
   id:n.id, x:n.x-(n.lw||0)/2, y:n.y+n.r+16-11, w:n.lw||0, h:14,
 }));
 
-function edgePath(e){ const a=byId[e.from], b=byId[e.to]; const mx=(a.x+b.x)/2; return {a,b,c1:{x:mx,y:a.y},c2:{x:mx,y:b.y}}; }
+function edgePath(e){ const a=byId[e.from], b=byId[e.to];
+  if(MODE==='portrait'){
+    // Down out of the supplier, up into the customer: control points straight
+    // below and above, so a line reads as flow down the stack rather than as
+    // a wire strung between two dots.
+    const d=pitch*0.45, s=(b.y>=a.y)?1:-1;
+    return {a,b,c1:{x:a.x,y:a.y+s*d},c2:{x:b.x,y:b.y-s*d}};
+  }
+  const mx=(a.x+b.x)/2; return {a,b,c1:{x:mx,y:a.y},c2:{x:mx,y:b.y}}; }
 function bez(p,t){ const {a,b,c1,c2}=p; const u=1-t; return {x:u*u*u*a.x+3*u*u*t*c1.x+3*u*t*t*c2.x+t*t*t*b.x, y:u*u*u*a.y+3*u*u*t*c1.y+3*u*t*t*c2.y+t*t*t*b.y}; }
 function seedParticles(){
-  particles=[]; edges.forEach((e,i)=>{ const n=e.crit==='high'?4:2; for(let k=0;k<n;k++) particles.push({e:i,t:Math.random(),v:0.0018+Math.random()*0.0012}); });
+  // Three and a half times the site's speed when recording. At the site's
+  // pace a dot takes nine to eighteen seconds to cross an edge, which on a
+  // six-second shot is a stationary speck; at this pace it is three to five,
+  // and the line reads as flowing.
+  const kv = REC ? 3.5 : 1;
+  particles=[]; edges.forEach((e,i)=>{ const n=e.crit==='high'?4:2; for(let k=0;k<n;k++) particles.push({e:i,t:Math.random(),v:(0.0018+Math.random()*0.0012)*kv}); });
 }
 function pulseOf(n){ // returns {col, period, kind}
   if(!n.cp||!n.cp.length) return null;
@@ -769,11 +1334,18 @@ function draw(now){
   const _fs=performance.now();
   const T=now-t0;
   ctx.clearRect(0,0,W,H);
+  const camOn=focusFrame(now);
+  if(camOn){ ctx.save(); ctx.translate(fcam.x, fcam.y); }
   // Every layer label is DOM now -- see layerBar() -- so the header can stay
   // put when the page scrolls, and so L9's chip can sit beside its own row
   // instead of on top of the two nodes nearest the middle of it.
   // edges
   const focus = selected||hover;
+  // Recording: what the map believes is under the pointer and what is
+  // selected. With the tooltip gone there is nothing else for the
+  // recorder to read back, and a clip that filmed the wrong station is
+  // worth knowing about before it is cut into a video.
+  if(REC) window.__rec={hover:hover&&hover.id, selected:(focusN||selected)?(focusN||selected).id:null, focus:focusN&&focusN.id, lit:edges.filter(e=>focus&&(e.from===focus.id||e.to===focus.id)).length};
   edges.forEach((e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); const on=(e===hoverEdge);
     ctx.beginPath(); ctx.moveTo(p.a.x,p.a.y); ctx.bezierCurveTo(p.c1.x,p.c1.y,p.c2.x,p.c2.y,p.b.x,p.b.y);
     ctx.strokeStyle=(rel||on)?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=on?2.6:(rel?1.8:1); ctx.stroke(); e._p=p;
@@ -786,11 +1358,50 @@ function draw(now){
     ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-7,-3.2); ctx.lineTo(-7,3.2); ctx.closePath();
     ctx.fillStyle=(rel||on)?LCOL[p.a.line]:'#ffffff33'; ctx.fill(); ctx.restore(); });
   // particles
-  if(!REDUCED){ particles.forEach(q=>{ q.t+=q.v; if(q.t>1) q.t-=1; const e=edges[q.e]; const pt=bez(e._p,q.t); const rel=focus&&(e.from===focus.id||e.to===focus.id); ctx.beginPath(); ctx.arc(pt.x,pt.y,rel?2.4:1.6,0,7); ctx.fillStyle=LCOL[e._p.a.line]; ctx.globalAlpha=rel?1:.55; ctx.fill(); ctx.globalAlpha=1; }); }
-  // satellites (opened sub-suppliers)
-  if(sats.length){ const k=Math.min(1,(now-satT)/450); sats.forEach(s=>{ const x=selected.x+(s.tx-selected.x)*k, y=selected.y+(s.ty-selected.y)*k; ctx.beginPath(); ctx.moveTo(selected.x,selected.y); ctx.lineTo(x,y); ctx.strokeStyle=s.sole?tok('--tight')+'88':'#ffffff33'; ctx.lineWidth=1; ctx.stroke(); const sr=s.tier===1?4.5:3; ctx.beginPath(); ctx.arc(x,y,sr,0,7); ctx.fillStyle=s.sole?tok('--tight'):(s.tier===1?tok('--ink2'):tok('--ink3')); ctx.fill(); inset(x,y,sr); s.x=x; s.y=y; if(k>=1){ if(s.lab) satLabel(s,x,y); else { ctx.font='12px "IBM Plex Mono", monospace'; ctx.fillStyle=tok('--ink2'); ctx.textAlign=s.tx>=selected.x?'left':'right'; ctx.fillText(s.label, x+(s.tx>=selected.x?8:-8), y+4); } } }); }
+  if(!REDUCED){ particles.forEach(q=>{ if(!FREEZE){ q.t+=q.v; if(q.t>1) q.t-=1; } const e=edges[q.e]; const rel=focus&&(e.from===focus.id||e.to===focus.id); const col=LCOL[e._p.a.line];
+    // t runs 0 -> 1 from p.a to p.b, and p.a is the edge's FROM. So a dot
+    // travels supplier -> customer, which is the direction the goods go.
+    if(REC&&rel){
+      // A comet: four dots trailing the head, each smaller and fainter, so a
+      // fast particle reads as a direction rather than as a flicker.
+      for(let k=4;k>=1;k--){
+        const tt=q.t-k*0.014; if(tt<0) continue;
+        const pp=bez(e._p,tt);
+        ctx.beginPath(); ctx.arc(pp.x,pp.y,4.5*(1-k*0.17),0,7);
+        ctx.fillStyle=col; ctx.globalAlpha=0.40*(1-k/5); ctx.fill();
+      }
+      const pt=bez(e._p,q.t);
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,4.5,0,7); ctx.fillStyle=col; ctx.globalAlpha=1; ctx.fill(); ctx.globalAlpha=1;
+    } else {
+      const pt=bez(e._p,q.t);
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,rel?2.4:1.6,0,7); ctx.fillStyle=col; ctx.globalAlpha=rel?1:.55; ctx.fill(); ctx.globalAlpha=1;
+    } }); }
   // nodes
   nodes.forEach(n=>{
+    // The finale's emphasis: an amber halo that breathes, and a ring that
+    // leaves every three seconds. Drawn under the station so the station
+    // stays the thing in focus, and only for the one id the flag names -- no
+    // station acquires a pulse it has not earned by holding a chokepoint.
+    if(EMPH && n.id===EMPH){
+      const A=tok('--amber');
+      const k=REDUCED?0.5:(0.5-0.5*Math.cos((T%2000)/2000*Math.PI*2));
+      const hr=n.r*(1.15+0.20*k), ha=0.5-0.4*k;
+      ctx.beginPath(); ctx.arc(n.x,n.y,hr,0,7);
+      ctx.strokeStyle=A; ctx.globalAlpha=ha; ctx.lineWidth=3;
+      ctx.stroke(); ctx.globalAlpha=1;
+      // The phase, so a still can be taken at a chosen point in the breath
+      // rather than wherever the shutter happened to fall, and so a check can
+      // assert the bounds instead of eyeballing them.
+      window.__emph={id:n.id, r:n.r, halo:hr, alpha:ha, k:k,
+                     ratio:hr/n.r, period:2000};
+      if(!REDUCED){
+        const u=(T%3000)/3000;
+        if(u<0.62){ const g=u/0.62;
+          ctx.beginPath(); ctx.arc(n.x,n.y,n.r*(1.2+g*2.4),0,7);
+          ctx.strokeStyle=A; ctx.globalAlpha=(1-g)*0.45; ctx.lineWidth=2;
+          ctx.stroke(); ctx.globalAlpha=1; }
+      }
+    }
     const pu=pulseOf(n);
     if(pu&&!REDUCED){ const ph=(T%pu.period)/pu.period; const rr=n.r+4+ph*16; ctx.beginPath(); ctx.arc(n.x,n.y,rr,0,7); ctx.strokeStyle=pu.col; ctx.globalAlpha=(1-ph)*.7; ctx.lineWidth=2; ctx.stroke(); ctx.globalAlpha=1; }
     if(pu){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r+5,0,7); ctx.strokeStyle=pu.col; ctx.lineWidth=2.5; ctx.stroke(); }
@@ -803,10 +1414,13 @@ function draw(now){
     ctx.lineWidth=(n===selected||n===hover)?3:2;
     ctx.strokeStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink3'); ctx.stroke();
     // label
-    ctx.font=(n===selected||n===hover?'700 ':'600 ')+'14px "Assistant", sans-serif'; ctx.fillStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink2'); ctx.textAlign='center';
-    const lbl=n.short||n.name.split(' ')[0];
-    ctx.fillText(lbl, n.x, n.y+n.r+16);
+    const lfs=n.lfs||14;
+    ctx.font=(n===selected||n===hover?'700 ':'600 ')+lfs+'px "Assistant", sans-serif'; ctx.fillStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink2'); ctx.textAlign='center';
+    const lbl=n.lbl||n.short||n.name.split(' ')[0];
+    ctx.fillText(lbl, n.x, n.y+n.r+(MODE==='portrait'?lfs+3:16)+(n.ldy||0));
   });
+  if(camOn) ctx.restore();
+  drawFocus(now);
   window.__frameMs=performance.now()-_fs;
   requestAnimationFrame(draw);
 }
@@ -838,14 +1452,30 @@ function edgeSentence(e){
   // edge tooltip from a station one without parsing the sentence.
   return `<span class="edgetip"><b>${a.name}</b> ${WORDS.sells1} ${what} ${WORDS.to}<b>${b.name}</b></span>`;
 }
-cv.addEventListener('mousemove',ev=>{ const r=cv.getBoundingClientRect(); const mx=ev.clientX-r.left, my=ev.clientY-r.top; const n=nodeAt(mx,my); hover=n; hoverEdge=n?null:edgeAt(mx,my); cv.style.cursor=(n||hoverEdge)?'pointer':'crosshair';
+cv.addEventListener('mousemove',ev=>{ const r=cv.getBoundingClientRect(); const mx=ev.clientX-r.left, my=ev.clientY-r.top;
+  if(focusN){ hover=null; hoverEdge=null; const fs=focusHit(mx,my); cv.style.cursor=(fs&&fs.st)?'pointer':'default';
+    // A station that absorbed a supplier entry says what that entry supplies.
+    if(fs&&fs.what&&!REC){ tip.innerHTML=`<b>${escHtml(fs.name)}</b>${escHtml(fs.what)}`; tip.style.display='block';
+      tip.style.left=Math.min(mx+14, W-290)+'px'; tip.style.top=(my+12)+'px'; } else tip.style.display='none';
+    return; }
+  const n=nodeAt(mx,my); hover=n; hoverEdge=n?null:edgeAt(mx,my); cv.style.cursor=(n||hoverEdge)?'pointer':'crosshair';
+  // Recording: hover still lights the edges -- that is the shot -- but the
+  // tooltip is never built and never shown.
+  if(REC){ tip.style.display='none'; return; }
   // The hint has done its job the moment somebody hovers anything.
   if(!hintGone && (n||hoverEdge)){ hintGone=true;
     const h=document.getElementById('maphint'); if(h) h.classList.add('gone'); }
   if(!n&&hoverEdge){ tip.innerHTML=edgeSentence(hoverEdge); tip.style.display='block'; const px0=Math.min(mx+14,W-260); tip.style.left=px0+'px'; tip.style.top=(my+14)+'px'; return; }
   if(n){ const px=n.px; tip.innerHTML=`<b>${n.name}${n.ticker?' · '+n.ticker:''}</b>${px?`13 weeks <span dir="ltr">${pct(px.r13w)}</span> · 1 year <span dir="ltr">${pct(px.r52w)}</span>`:'no price line'}${n.cp?'<br>'+n.cp.map(c=>c.he).join(' · '):''}`; tip.style.display='block'; const lx=ev.clientX-r.left, ly=ev.clientY-r.top; tip.style.left=Math.min(lx+14, W-290)+'px'; tip.style.top=(ly+12)+'px'; } else tip.style.display='none'; });
 cv.addEventListener('mouseleave',()=>{hover=null;hoverEdge=null;tip.style.display='none';});
-cv.addEventListener('click',ev=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(ev.clientX-r.left, ev.clientY-r.top); if(n) open(n); else close(); });
+cv.addEventListener('click',ev=>{ const r=cv.getBoundingClientRect(); const x=ev.clientX-r.left, y=ev.clientY-r.top;
+  // Legacy recording keeps the old click: select the station and light its edges.
+  if(LEGACY){ const n=nodeAt(x,y); if(n) open(n); else close(); return; }
+  // In focus mode a supplier that is a station takes the focus; the dim map
+  // around the arcs lets go of it.
+  if(focusN){ const s=focusHit(x,y); if(s){ if(s.st) enterFocus(s.st, {x:s.x, y:s.y}); return; }
+    if(!focusOnSelf(x,y)) exitFocus(); return; }
+  const n=nodeAt(x,y); if(n) enterFocus(n); else close(); });
 
 // A price line too thin to read a move from, or gone quiet, says so beside the
 // ticker. The chart under it is still drawn; it is just not taken at face value.
@@ -854,11 +1484,17 @@ function spark(px){ if(!px||!px.spark||px.spark.length<2) return '<p class="role
 function stageBar(st){ const lv={research:1,pilot:2,qualified:3,volume:4}[st]||0; const he={research:'research',pilot:'pilot',qualified:'qualified',volume:'volume'}[st]||''; return `<div class="st">${[0,1,2,3].map(i=>`<i class="${i<lv?'on':''}"></i>`).join('')}<em>${he}</em></div>`; }
 function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>From the filings (EDGAR)</h3><table class="ftab"><tr><th>FY</th><th>revenue $B</th><th>YoY</th><th>op margin</th></tr>${f.annual.map(r=>`<tr><td>${r.fy}</td><td>${r.rev}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td class="${r.om<0?'neg':''}">${r.om==null?'—':r.om+'%'}</td></tr>`).join('')}${f.q.length?`<tr><th>quarter</th><th>revenue $B</th><th>YoY</th><th></th></tr>${f.q.map(r=>`<tr><td>${r.pe}</td><td>${r.rev??'—'}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td></td></tr>`).join('')}`:''}</table>`; }
 
+// The curator's note on a subnode -- the member list, the product, the cross-
+// reference -- under its row. Its name is kept to a name; this is where the rest is.
+const noteOf=id=>{ const t=(((typeof FOCUS!=='undefined'&&FOCUS)||{}).notes||{})[id];
+  return t?`<div class="w nt">${escHtml(t)}</div>`:''; };
 function open(n){
-  selected=n; stage.classList.add('open');
+  // Legacy recording selects the station -- its edges light -- and
+  // stops there. No panel means no 460px column, so the canvas keeps its
+  // full width and the drawing and the hit test stay in the same space.
+  selected=n; if(!REC) stage.classList.add('open');
   const cps=n.cp||[];
-  let h=`<div class="pin"><button class="close" id="pclose">close</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span>${priceBadge(n)}<p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):esc(n.role||'')}</p>${spark(n.px)}`;
-  sats=[];
+  let h=`<div class="pin"><button class="close" id="pclose">close</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span>${priceBadge(n)}<p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):escHtml(n.role||'')}</p>${spark(n.px)}`;
   cps.forEach(c=>{
     const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');
     const sent = pu==null ? (c.n_chal_priced? 'The company that controls it has no price line.':'Nobody listed is trying to replace them. Amber ring: the market pressure cannot be measured.') : (pu>0? 'The lock is tightening: the company in control is outrunning the ones trying to replace it.' : 'The lock is eroding: the ones trying to replace it are outrunning the company in control.');
@@ -867,14 +1503,9 @@ function open(n){
     // sub-suppliers
     const t1=c.subs.filter(s=>s.tier===1), t2=c.subs.filter(s=>s.tier===2);
     h+=`<h3>Who supplies the company that ${WORDS.holder} · ${t1.length} direct, ${t2.length} beneath them</h3>`;
-    const row=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">sole source</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">private</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">estimate</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div></div>`;
+    const row=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">sole source</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">private</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">estimate</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div>${noteOf(s.id)}</div>`;
     t1.forEach(s=>{ h+=row(s); t2.filter(x=>x.to===s.id).forEach(x=>h+=row(x)); });
     t2.filter(x=>!t1.some(s=>s.id===x.to)).forEach(x=>h+=row(x));
-    // satellites layout: tier1 arc on the upstream (right) side
-    const all=[...t1.map(s=>({s,tier:1})),...t2.map(s=>({s,tier:2}))];
-    const dirX = n.x > 220 ? -1 : 1; // open toward the left (upstream) unless at the left edge
-    const tilt = n.y > H-170 ? -0.55 : (n.y < 170 ? 0.55 : 0);
-    all.forEach((o,i)=>{ const tier=o.tier; const arr=tier===1?t1:t2; const idx=arr.indexOf(o.s); const cnt=arr.length; const spread=Math.min(Math.PI*0.9, 0.28*Math.max(cnt-1,1)); const ang=tilt+(-spread/2)+(cnt>1?idx/(cnt-1):0.5)*spread; const R=tier===1?100:165; let tx=n.x+dirX*Math.cos(ang)*R, ty=n.y+Math.sin(ang)*R; ty=Math.max(40,Math.min(H-60,ty)); sats.push({tx, ty, tier, sole:o.s.sole, label:(o.s.short||o.s.name.split(' ').slice(0,2).join(' ').slice(0,16))}); });
     // challengers
     h+=`<h3>Who is ${WORDS.challenger} · ${c.sigs.length}</h3>`;
     const pxBy={}; c.chal.forEach(x=>{ if(x.px) pxBy[x.name]=x.px; });
@@ -912,13 +1543,12 @@ function open(n){
       return `<div class="nextcp">${WORDS.via}: <b>${g.name}</b> — ${WORDS.against} ${who} <small>(${c.id} · ${c.he})</small></div>`;
     }).join('');
   }
-  sats=placeSats(n, sats);
   h+=fundTable(n.id);
   h+='</div>';
-  panel.innerHTML=h; panel.scrollTop=0; satT=performance.now();
-  document.getElementById('pclose').addEventListener('click',close);
+  panel.innerHTML=REC?'':h; panel.scrollTop=0;
+  if(!REC) document.getElementById('pclose').addEventListener('click',close);
 }
-function close(){ selected=null; sats=[]; stage.classList.remove('open'); panel.innerHTML=''; }
+function close(){ selected=null; stage.classList.remove('open'); panel.innerHTML=''; }
 
 function header(){
   const B = (D.labels||{}).brand||{};
@@ -944,6 +1574,20 @@ function header(){
 }
 function boot(){ if(window.GL) GL.use(D.glossary||{});
   build(); resize(); header(); requestAnimationFrame(draw); }
+// layout() used to run on a window resize and on nothing else. The canvas
+// changes size for other reasons -- a panel opening takes 460px out of it, a
+// phone turns -- and none of them recomputed anything: the drawing squashed
+// while the hit test stayed in the old coordinate space, so a click landed
+// some 195px from the circle it was aimed at, and the layer chips stayed at
+// their old x and ended up over the panel. Observing the canvas catches every
+// cause instead of enumerating them.
+let _relayout=false;
+if(window.ResizeObserver){
+  new ResizeObserver(()=>{
+    if(_relayout) return; _relayout=true;
+    requestAnimationFrame(()=>{ _relayout=false; resize(); });
+  }).observe(cv);
+}
 addEventListener('resize',()=>{ resize(); });
 boot();
 
@@ -958,6 +1602,17 @@ const BOARD={statuses:{},render(){}};
   const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};
   const STC = {yes:'var(--erode)', no:'var(--tight)', mixed:'var(--amber)', none:'var(--ink3)'};
   const bwrap=document.getElementById('bwrap'), btip=document.getElementById('btip'), hints=document.getElementById('hints');
+  // Delegated, because the hint rows are rebuilt whenever a mark lands.
+  hints && hints.addEventListener('click', ev => {
+    const t = ev.target.closest && ev.target.closest('.hlink[data-q]');
+    if(!t) return;
+    const card = document.querySelector(
+      `#qcards .card[data-id="${t.dataset.q}"], #qpast .card[data-id="${t.dataset.q}"]`);
+    if(!card) return;
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.style.outline = '2px solid var(--amber)';
+    setTimeout(() => card.style.outline = '', 1800);
+  });
   const byQ={}; W.forEach(w=>byQ[w.id]=w);
   const outOf={}; W.forEach(w=>(w.leaks||[]).forEach(l=>{ (outOf[l]=outOf[l]||[]).push(w.id); }));
   const allSt = () => Object.assign({}, D.answers||{}, BOARD.statuses);
@@ -1009,7 +1664,7 @@ const BOARD={statuses:{},render(){}};
     let h=`<h3>${BT.hintsH}</h3>`;
     if(!withAns.length){ const first=W.filter(w=>days(w.d)>=0&&(outOf[w.id]||[]).length).sort((a,b)=>a.d.localeCompare(b.d))[0]; h+=`<p class="lede">${BT.hintsNone} <b>${first?first.who+' · '+first.d:''}</b></p>`; }
     withAns.forEach(w=>{ const t=tally(w), [lc,lt]=lean(t); const bar=t.items.map(i=>`<i class="${i.s}${i.auto?' autohint':''}" title="${byQ[i.id].who}${i.auto?BT.autoSuffix:''}"></i>`).join(''); const openL=t.items.filter(i=>i.s==='open').map(i=>byQ[i.id].who).join(' · ');
-      h+=`<div class="hrow"><div class="hd"><b>${w.who}</b>${w.d} · ${BT.in} ${days(w.d)} ${BT.days}</div><div class="hb"><span class="bar">${bar}</span><span class="lean ${lc}">${lt}</span> — ${t.yes+t.no+t.mixed} ${BT.of} ${t.items.length} ${BT.answered}: ${t.items.filter(i=>i.s!=='open').map(i=>byQ[i.id].who+' ('+STATUS[i.s]+')'+(i.auto?BT.autoSuffix:'')).join(' · ')}${openL?`<small>${BT.stillOpen} ${openL}</small>`:''}</div></div>`; });
+      h+=`<div class="hrow"><div class="hd"><b>${w.who}</b>${w.d} · ${BT.in} ${days(w.d)} ${BT.days}</div><div class="hb"><span class="bar">${bar}</span><span class="lean ${lc}">${lt}</span> — ${t.yes+t.no+t.mixed} ${BT.of} ${t.items.length} ${BT.answered}: ${t.items.filter(i=>i.s!=='open').map(i=>`<b class="hlink" data-q="${i.id}">`+byQ[i.id].who+' ('+STATUS[i.s]+')'+(i.auto?BT.autoSuffix:'')+'</b>').join(' · ')}${openL?`<small>${BT.stillOpen} ${openL}</small>`:''}</div></div>`; });
     hints.innerHTML=h;
   }
   BOARD.render=board; board();

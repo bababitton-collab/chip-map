@@ -80,6 +80,11 @@ COPIES = [
     ("public-map.html", "he.html"),
     ("live_en.json", "live_en.json"),
     ("live.json", "live.json"),
+    # Focus mode's rows, beside the snapshots they were drawn from. The pages
+    # inline them at build time; they are published too, so what the map drew
+    # around a station is a file anyone can read.
+    ("focus_en.json", "focus_en.json"),
+    ("focus.json", "focus.json"),
     # Free and never paywalled: the hash of every question's scoring contract,
     # published before its answer date. Hashes and dates only, no sentence.
     ("commitments.json", "commitments.json"),
@@ -103,13 +108,14 @@ TRACK_FILES = [("track.html", "index.html"),
                ("track.enc.json", "track.enc.json")]
 TRACK_PLAINTEXT = "track.json"
 
-GATED = ("index.html", "live_en.json", "track_public.json",
+GATED = ("index.html", "live_en.json", "focus_en.json", "track_public.json",
          # the landing page, at the site root
          "../index.html")
 
 # Checked for locked question text rather than for Hebrew: these are the files
 # that could carry a sentence somebody is meant to pay for.
 PAYWALLED = ("index.html", "he.html", "live.json", "live_en.json",
+             "focus.json", "focus_en.json",
              "track_public.json", "../index.html",
              "brief.md", "brief-he.md",
              # The forward test names the question behind every mark, so it is

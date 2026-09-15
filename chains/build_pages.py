@@ -70,6 +70,10 @@ LIVE_HE = "live.json"
 LIVE_EN = "live_en.json"
 PUBLIC_HE = "public-map.html"
 PUBLIC_EN = "public-map-en.html"
+# What focus mode draws around a station, written by chains/live_snapshot.py
+# and inlined into every page at build time.
+FOCUS_HE = "focus.json"
+FOCUS_EN = "focus_en.json"
 
 HEBREW = re.compile(r"[֐-׿]")
 
@@ -119,13 +123,13 @@ HE_FOOT_TO = ("זו מפה להבנת חשיפות, לא אות מסחר, לא �
 
 PUB = {
     "he": {
-        "template": TEMPLATE_HE, "live": LIVE_HE,
+        "template": TEMPLATE_HE, "live": LIVE_HE, "focus": FOCUS_HE,
         "out": PUBLIC_HE, "lang": "he", "dir": "rtl",
         "desc": ("מפה חיה של שרשרת האספקה של שבבי הבינה המלאכותית: {nodes} תחנות, "
                  "{cps} צווארי בקבוק שדופקים לפי השוק, ושאלות עם תאריך."),
     },
     "en": {
-        "template": TEMPLATE_EN, "live": LIVE_EN,
+        "template": TEMPLATE_EN, "live": LIVE_EN, "focus": FOCUS_EN,
         "out": PUBLIC_EN, "lang": "en", "dir": "ltr",
         # The counts are read from the snapshot at build time: a number
         # typed here was true on the day it was typed, and this one said 49
@@ -173,7 +177,6 @@ TRANSLATIONS = [
  # Layout flip. RTL reads raw materials on the right; LTR reads them on the
  # left, so the column order and the panel's opening direction both reverse.
  ("const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);", "const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);"),
- ("const dirX = n.x < W-220 ? 1 : -1; // open toward the right (upstream) unless at the right edge", "const dirX = n.x > 220 ? -1 : 1; // open toward the left (upstream) unless at the left edge"),
  ("const padR=70, padL=110,", "const padR=110, padL=70,"),
  # The forecast board.
  ('<h2>לוח החיזוי</h2>', '<h2>The Forecast Board</h2>'),
@@ -232,6 +235,9 @@ TRANSLATIONS = [
   '<h2>What gets answered next — and what the answer will look like</h2>'),
  ('<p class="lede">כל כרטיס הוא שאלה שמתבררת ביום ידוע. לא "מה לקנות": איך נשמעת תשובה חיובית ואיך נשמעת שלילית בשיחת התוצאות, ואילו תחנות על המפה זזות אם היא חיובית. השאלה הבאה פתוחה; השאר מגיעות במייל השבועי.</p>',
   '<p class="lede">Every card is a question that gets answered on a known day. Not "what to buy": what "yes" and "no" sound like on the call, and which stations on the map move if it is yes. The next question is open; the rest arrive in the weekly mail.</p>'),
+ # Focus mode's two buttons.
+ ("const FOCUSW = {details:'פרטים', more:'נוספים'};",
+  "const FOCUSW = {details:'Details', more:'more'};"),
 ]
 
 
@@ -398,7 +404,8 @@ def en_top(dom: str) -> str:
             '</div>')
 
 
-def public_page(template: str, live: str, cfg: dict) -> str:
+def public_page(template: str, live: str, cfg: dict,
+                focus: str = "null") -> str:
     """A template plus a snapshot, wired for a page with no database.
 
     There used to be a five-row teaser spliced in here, because the private
@@ -454,10 +461,10 @@ def public_page(template: str, live: str, cfg: dict) -> str:
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n" + extra_head + "</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return doc.replace("__LIVE__", live)
+    return doc.replace("__FOCUS__", focus).replace("__LIVE__", live)
 
 
-def private_page(template: str, live: str) -> str:
+def private_page(template: str, live: str, focus: str = "null") -> str:
     """The Hebrew page for the artifact, with its database reads intact.
 
     The mirror of public_page(): everything that function takes OUT is what
@@ -479,7 +486,7 @@ def private_page(template: str, live: str) -> str:
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return doc.replace("__LIVE__", live)
+    return doc.replace("__FOCUS__", focus).replace("__LIVE__", live)
 
 
 def build_private(template=None, live=None, out=None):
@@ -488,21 +495,29 @@ def build_private(template=None, live=None, out=None):
     template = template or (templates_dir() / TEMPLATE_HE)
     live = live or (out_dir() / LIVE_HE)
     out = out or (out_dir() / "live-map.built.html")
+    focus = out_dir() / FOCUS_HE
     doc = private_page(template.read_text(encoding="utf-8"),
-                       live.read_text(encoding="utf-8"))
+                       live.read_text(encoding="utf-8"),
+                       focus.read_text(encoding="utf-8") if focus.exists()
+                       else "null")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8", newline="\n")
     return out, len(doc.encode("utf-8"))
 
 
 def _build_public(lang: str, template=None, live=None, out=None,
-                  teaser=None):
+                  teaser=None, focus=None):
     cfg = PUB[lang]
     template = template or (templates_dir() / cfg["template"])
     live = live or (out_dir() / cfg["live"])
     out = out or (out_dir() / cfg["out"])
+    # Focus mode's rows. Without them the page still draws; a click then
+    # focuses a station with no suppliers around it.
+    focus = focus or (out_dir() / cfg["focus"])
     doc = public_page(template.read_text(encoding="utf-8"),
-                      live.read_text(encoding="utf-8"), cfg)
+                      live.read_text(encoding="utf-8"), cfg,
+                      focus.read_text(encoding="utf-8") if focus.exists()
+                      else "null")
     return _inline_cards(doc), out
 
 

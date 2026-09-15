@@ -593,6 +593,128 @@ def write(live: dict, path: Path | None = None) -> tuple[Path, int, list[str]]:
     return p, len(blob), applied
 
 
+FOCUS_FILE = {"he": "focus.json", "en": "focus_en.json"}
+CRIT_WEIGHT = {"high": 3, "medium": 2, "low": 1}
+
+
+def focus_for(m: dict, lang: str) -> dict:
+    """What the page's focus mode draws around a station, in one language.
+
+    Every link straight into a station: the ``supplies`` edges between stations
+    and the subnode edges that end on one, each with its curated ``group`` and
+    a weight from its criticality, once per supplier. Subnodes carry their name
+    and the two flags the page sorts and colours by. The group names come from
+    the map's labels, so this module names no group itself.
+
+    ``under`` is the second tier: for a station holding a chokepoint, that
+    chokepoint's tier-2 subnodes, each under the tier-1 supplier it feeds
+    (``supplies_to``) -- the set the panel lists "beneath them" -- and only
+    where that supplier is itself in the station's ``up`` rows, since a child
+    is drawn beside its parent.
+
+    A supplier entry that IS a station is drawn once, as that station, and the
+    row carries the entry's ``what``. ``notes`` carries every subnode's note for
+    the panel.
+
+    Written beside live.json rather than inside it: that file sits a few
+    hundred bytes under the size at which its prose starts being cut (see
+    TRIM_AT), and these rows change only when the map does, so the page build
+    inlines them instead.
+    """
+    import re
+    node_ids = {n["id"] for n in m["nodes"]}
+    nodes = {n["id"]: n for n in m["nodes"]}
+    subs = {s["id"]: s for s in m.get("subnodes", [])}
+    groups = {k: ((v or {}).get(lang) or k)
+              for k, v in ((m.get("labels") or {}).get("groups") or {}).items()}
+    by_symbol = {n["price_symbol"]: n["id"] for n in m["nodes"] if n.get("price_symbol")}
+
+    def station_of(sid: str | None, into: str) -> str | None:
+        """The station an entry IS, where it is one; else the entry itself.
+
+        Its own id, or a subnode priced on a station's line whose name starts
+        with that station's name -- "KLA Corporation", "Lam Research (TSV
+        etch)". A category priced by one member ("Hyperscale cloud for EDA" on
+        Amazon's line) is not that member, and a subsidiary feeding its own
+        parent (Cymer into ASML) stays itself: the parent is the station in
+        the middle.
+        """
+        if not sid or sid in node_ids:
+            return sid
+        s = subs.get(sid) or {}
+        st = by_symbol.get(s.get("price_symbol"))
+        if not st or st == into:
+            return sid
+        first = re.split(r"[\s(]+", nodes[st]["name"].strip().lower())[0]
+        return st if re.match(r"\W*" + re.escape(first) + r"\b", s["name"].lower()) else sid
+
+    links = [e for e in m.get("edges", []) if e.get("type") == "supplies"]
+    links += m.get("sub_edges", [])
+    up, at, texts, merged = [], {}, {}, {}
+    for e in links:
+        b = e["to"]
+        if b not in node_ids or (e["from"] not in node_ids and e["from"] not in subs):
+            continue
+        a = station_of(e["from"], b)
+        if a == b:
+            continue
+        key = (a, b)
+        w = CRIT_WEIGHT.get(e.get("criticality"), 2)
+        if key not in at:
+            at[key] = {"from": a, "to": b, "g": e.get("group", ""), "w": w}
+            up.append(at[key]); texts[key] = []; merged[key] = False
+        else:
+            at[key]["w"] = max(at[key]["w"], w)
+        if e["from"] != a:
+            merged[key] = True
+        t = ((subs[e["from"]].get("what") if e["from"] not in node_ids else None)
+             or e.get("what") or "").strip()
+        if t and t not in texts[key]:
+            texts[key].append(t)
+    # One label per company: a station that absorbed a supplier entry carries
+    # what that entry said it supplies.
+    for key, row in at.items():
+        if merged[key] and texts[key]:
+            row["what"] = " · ".join(texts[key])
+
+    into: dict[str, set] = {}
+    for r in up:
+        into.setdefault(r["to"], set()).add(r["from"])
+    sub_edge = {(e["from"], e["to"]): e for e in m.get("sub_edges", [])}
+    under, seen2 = [], set()
+    for c in m.get("chokepoints", []):
+        for s in subs.values():
+            if s.get("tier") != 2 or c["id"] not in (s.get("chokepoint_ids") or []):
+                continue
+            for station in c["node_ids"]:
+                parent = station_of(s.get("supplies_to"), station)
+                child = station_of(s["id"], station)
+                # Beside a parent that is drawn, and never a company that is
+                # already drawn around the station as a direct supplier.
+                if (child == station or parent not in into.get(station, set())
+                        or child in into.get(station, set())):
+                    continue
+                key = (child, parent, station)
+                if key in seen2:
+                    continue
+                seen2.add(key)
+                e = sub_edge.get((s["id"], s.get("supplies_to"))) or {}
+                row = {"from": child, "to": parent, "at": station, "g": e.get("group", ""),
+                       "w": CRIT_WEIGHT.get(e.get("criticality"), 2)}
+                if child != s["id"] and (s.get("what") or "").strip():
+                    row["what"] = s["what"].strip()
+                under.append(row)
+    used = sorted({r["from"] for r in up + under if r["from"] not in node_ids})
+    return {"groups": groups, "up": up, "under": under,
+            "subs": {i: {"name": subs[i]["name"],
+                         "cp": bool(subs[i].get("chokepoint")),
+                         "sole": bool(subs[i].get("sole_source"))}
+                     for i in used},
+            # The curator's notes, for the panel rows that name these subnodes.
+            # Here rather than in live.json, which sits at its size ceiling.
+            "notes": {i: s["note"] for i, s in subs.items() if s.get("note")}}
+
+
 def main() -> int:
     # Read once, log once, embed in both. A dropped row is printed here and
     # the run continues on the rows that survived -- see chains/answers.py for
@@ -621,6 +743,7 @@ def main() -> int:
     for line in log:
         print(f"  ledger: {line}")
 
+    m_doc = mapfile.load()
     first = None
     for lang in LANG:
         live = build(lang=lang, answers=good, ledger=ledger, text=text,
@@ -642,6 +765,11 @@ def main() -> int:
         print(f"  questions open {live['n_open']} of {len(live['watch'])}"
               f"  signup {'set' if live['signup'] else 'coming soon'}")
         first = first or live
+        # What focus mode draws around a station; see focus_for().
+        fp = out_dir() / FOCUS_FILE[lang]
+        fp.write_text(json.dumps(focus_for(m_doc, lang), ensure_ascii=False,
+                                 separators=(",", ":")), encoding="utf-8")
+        print(f"wrote {fp}  ({fp.stat().st_size:,} bytes)")
 
     live = first
     print()

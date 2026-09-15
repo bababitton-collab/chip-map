@@ -2126,6 +2126,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "EUV and High-NA EUV scanners; sole source",
+   "group": "tools",
    "criticality": "high",
    "source": "https://semiconductorx.com/spotlight-asml.html"
   },
@@ -2134,6 +2135,7 @@
    "to": "samsung",
    "type": "supplies",
    "what": "EUV scanners",
+   "group": "tools",
    "criticality": "high",
    "source": "https://semiconductorx.com/spotlight-asml.html"
   },
@@ -2142,6 +2144,7 @@
    "to": "intc",
    "type": "supplies",
    "what": "EUV incl. first production High-NA EXE:5200B shipment (Q2 2025)",
+   "group": "tools",
    "criticality": "high",
    "source": "https://semiconductorx.com/spotlight-asml.html"
   },
@@ -2150,6 +2153,7 @@
    "to": "skhynix",
    "type": "supplies",
    "what": "EUV for 1a/1b DRAM used in HBM",
+   "group": "tools",
    "criticality": "high",
    "source": "https://semiconductorx.com/spotlight-asml.html"
   },
@@ -2158,6 +2162,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "300mm silicon wafers and photoresist",
+   "group": "wafers",
    "criticality": "high",
    "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market"
   },
@@ -2166,6 +2171,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "EUV mask blanks (with AGC, ~93% of world supply)",
+   "group": "masks",
    "criticality": "high",
    "source": "https://siliconanalysts.com/tools/supply-chain"
   },
@@ -2174,6 +2180,7 @@
    "to": "unimicron",
    "type": "supplies",
    "what": "ABF build-up film, >95% share",
+   "group": "packmat",
    "criticality": "high",
    "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE"
   },
@@ -2182,6 +2189,7 @@
    "to": "ibiden",
    "type": "supplies",
    "what": "ABF build-up film",
+   "group": "packmat",
    "criticality": "high",
    "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE"
   },
@@ -2190,6 +2198,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "FC-BGA package substrate for GPU modules",
+   "group": "substrates",
    "criticality": "high",
    "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE"
   },
@@ -2198,6 +2207,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "EDA tools and IP for chip design",
+   "group": "design",
    "criticality": "high",
    "source": "https://www.shashi.co/2026/07/synopsys-cadence-and-siemens-eda-design.html"
   },
@@ -2206,6 +2216,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "CPU architecture licence for Grace/Vera CPUs",
+   "group": "design",
    "criticality": "medium",
    "source": "https://www.datacenterdynamics.com/en/news/arm-posts-recording-breaking-revenue-for-full-year-and-q4-26-with-its-share-of-hyperscaler-cpu-compute-hitting-50/"
   },
@@ -2214,6 +2225,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "N4/N3 wafers plus CoWoS-L packaging; ~23% of B100 cost is logic die, ~17% CoWoS (estimate)",
+   "group": "foundry",
    "criticality": "high",
    "source": "https://siliconanalysts.com/analysis/b100-cost-economics"
   },
@@ -2222,6 +2234,7 @@
    "to": "avgo",
    "type": "supplies",
    "what": "Wafers and advanced packaging for XPUs; TSMC ~99% of top-10 hyperscaler ASIC fabrication",
+   "group": "foundry",
    "criticality": "high",
    "source": "https://counterpointresearch.com/en/insights/AI-Server-Compute-ASIC-Shipments-to-Triple-by-2027"
   },
@@ -2230,6 +2243,7 @@
    "to": "alab",
    "type": "supplies",
    "what": "Sole IC foundry",
+   "group": "foundry",
    "criticality": "high",
    "source": "Astera Labs FY2025 10-K"
   },
@@ -2238,6 +2252,7 @@
    "to": "crdo",
    "type": "supplies",
    "what": "Exclusive wafer foundry in FY2026",
+   "group": "foundry",
    "criticality": "high",
    "source": "Credo FY2026 10-K"
   },
@@ -2246,6 +2261,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "HBM3E/HBM4 stacks; HBM is ~47% of a Blackwell-class BOM (estimate)",
+   "group": "memory",
    "criticality": "high",
    "source": "https://siliconanalysts.com/analysis/b100-cost-economics"
   },
@@ -2254,6 +2270,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "HBM3E/HBM4 and LPDDR",
+   "group": "memory",
    "criticality": "high",
    "source": "https://ca.investing.com/news/company-news/micron-q3-fy2026-slides-record-415b-revenue-new-customer-deals-93CH-4706541"
   },
@@ -2262,6 +2279,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "US-based advanced packaging/test (Arizona)",
+   "group": "assembly",
    "criticality": "medium",
    "source": "Amkor 2025 10-K"
   },
@@ -2270,6 +2288,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "GB200/GB300 rack-scale integration; ~2,400 racks/month Feb 2026",
+   "group": "compute",
    "criticality": "high",
    "source": "https://www.technetbooks.com/2026/03/ai-server-market-shipment-growth-2026.html"
   },
@@ -2278,6 +2297,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "Optical modules; NVIDIA = 16.3% of Fabrinet FY2026 revenue",
+   "group": "networking",
    "criticality": "high",
    "source": "Fabrinet FY2026 10-K"
   },
@@ -2286,6 +2306,7 @@
    "to": "fn",
    "type": "supplies",
    "what": "Lasers/EML and optical components",
+   "group": "optics",
    "criticality": "medium",
    "source": "https://counterpointresearch.com/en/insights/fcc-china-ban-ai-component"
   },
@@ -2294,6 +2315,7 @@
    "to": "anet",
    "type": "supplies",
    "what": "Tomahawk/Jericho switch silicon inside Arista switches",
+   "group": "chips",
    "criticality": "high",
    "source": "https://www.idc.com/resource-center/blog/nvidia-becomes-1-in-datacenter-ethernet-switching-as-1q26-market-surges-39-8-to-15-4-billion/"
   },
@@ -2302,6 +2324,7 @@
    "to": "googl",
    "type": "supplies",
    "what": "TPU v7 Ironwood in volume, TPU v8I shipments started",
+   "group": "chips",
    "criticality": "high",
    "source": "https://convergedigest.com/broadcom-q3-2026-ai-semiconductor-xpu-networking/"
   },
@@ -2310,6 +2333,7 @@
    "to": "meta",
    "type": "supplies",
    "what": "MTIA custom accelerators",
+   "group": "chips",
    "criticality": "high",
    "source": "https://convergedigest.com/broadcom-q3-2026-ai-semiconductor-xpu-networking/"
   },
@@ -2318,6 +2342,7 @@
    "to": "msft",
    "type": "supplies",
    "what": "GPUs and full racks",
+   "group": "compute",
    "criticality": "high",
    "source": "NVIDIA FY2026 10-K customer concentration (Customer A 22%, B 14%; identities not disclosed)"
   },
@@ -2326,6 +2351,7 @@
    "to": "crwv",
    "type": "supplies",
    "what": "GPUs to neocloud; NVIDIA is also an investor and customer of CoreWeave",
+   "group": "compute",
    "criticality": "high",
    "source": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Second-Quarter-2026-Results/default.aspx"
   },
@@ -2382,6 +2408,7 @@
    "to": "msft",
    "type": "supplies",
    "what": "Gas turbines and grid equipment for data center power; slots effectively gone through 2030",
+   "group": "power",
    "criticality": "high",
    "source": "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/"
   },
@@ -2390,6 +2417,7 @@
    "to": "crwv",
    "type": "supplies",
    "what": "Power and liquid cooling for GPU halls",
+   "group": "power",
    "criticality": "high",
    "source": "https://www.vertiv.com/en-us/about/news-and-events/corporate-news/from-vision-to-readiness-vertiv-collaborates-with-nvidia-to-advance-800-vdc-platform-designs-to-power-the-next-generation-of-ai-factories/"
   },
@@ -2398,6 +2426,7 @@
    "to": "samsung",
    "type": "supplies",
    "what": "Etch/deposition equipment; Lam FY2026 10-K names Samsung Electronics among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+   "group": "tools",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
    "source": [
@@ -2411,6 +2440,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "Etch/deposition equipment; Lam FY2026 10-K names TSMC among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+   "group": "tools",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
    "source": [
@@ -2424,6 +2454,7 @@
    "to": "skhynix",
    "type": "supplies",
    "what": "Etch/deposition equipment; Lam FY2026 10-K names SK hynix among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+   "group": "tools",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
    "source": [
@@ -2437,6 +2468,7 @@
    "to": "mu",
    "type": "supplies",
    "what": "Etch/deposition equipment; Lam FY2026 10-K names Micron among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+   "group": "tools",
    "share": "One of four >10% customers in Lam FY2026 (16/15/12/12%); individual % not attributed (10-K Item 1 + Note 9, R92)",
    "criticality": "high",
    "source": [
@@ -2450,6 +2482,7 @@
    "to": "samsung",
    "type": "supplies",
    "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K",
+   "group": "tools",
    "share": "Samsung 12% of AMAT FY2024 net revenue (15% FY2023); FY2025 10-K shows two customers at 19%/15% unnamed",
    "criticality": "high",
    "source": [
@@ -2463,6 +2496,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K; also TSMC 2025 supplier award",
+   "group": "tools",
    "share": "TSMC 11% of AMAT FY2024 net revenue (19% FY2023)",
    "criticality": "high",
    "source": [
@@ -2476,6 +2510,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "Process control / inspection & metrology; only named >10% customer in KLA 10-K FY2024-2026",
+   "group": "tools",
    "share": "TSMC 19% of KLA FY2026 revenue (19% FY2025, 13% FY2024)",
    "criticality": "high",
    "source": [
@@ -2489,6 +2524,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "Coater/developer, etch, deposition equipment; TSMC names Tokyo Electron as an outstanding supplier (Supply Chain Management Forum awards 2023, 2024)",
+   "group": "tools",
    "share": null,
    "criticality": "high",
    "source": [
@@ -2502,6 +2538,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
+   "group": "test",
    "share": null,
    "criticality": "high",
    "source": [
@@ -2515,6 +2552,7 @@
    "to": "skhynix",
    "type": "supplies",
    "what": "Memory/HBM test systems; DIGITIMES: Advantest 'long an established supplier' to SK hynix memory test, now losing some HBM4 tester orders to Korean vendors",
+   "group": "test",
    "share": null,
    "criticality": "medium",
    "source": "https://www.digitimes.com/news/a20260730VL224/sk-hynix-hbm-tester-wafer-advantest.html",
@@ -2525,6 +2563,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "SoC testers for AI GPUs; trade press consistently labels Advantest an 'Nvidia supplier' (no % disclosed by Advantest)",
+   "group": "test",
    "share": null,
    "criticality": "medium",
    "source": "https://www.investing.com/news/earnings/nvidia-supplier-advantest-jumps-12-after-ai-demand-lifts-earnings-outlook-4822271",
@@ -2535,6 +2574,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "SoC test: UBS (Sep 2025) reported Teradyne positioned as second-source tester for Nvidia Blackwell; Teradyne Q1-2026 call disclosed first 'merchant GPU' production test orders without naming the customer. WEAK: pair named only by sell-side, not by either company",
+   "group": "test",
    "share": null,
    "criticality": "medium",
    "source": [
@@ -2548,6 +2588,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "300mm silicon wafers; SUMCO listed in TSMC annual report 'Major Suppliers' (raw wafers) and awarded at TSMC supplier forums 2023-2025",
+   "group": "wafers",
    "share": null,
    "criticality": "high",
    "source": [
@@ -2561,6 +2602,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "Silicon wafers; GlobalWafers listed in TSMC 2022 annual report 'Raw Materials Supply - Major Suppliers' (raw wafers). Later TSMC reports anonymize suppliers",
+   "group": "wafers",
    "share": null,
    "criticality": "medium",
    "source": "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
@@ -2571,6 +2613,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "Filtration, specialty chemicals/gases, wafer handling; TSMC is Entegris' only named >10% customer",
+   "group": "chemicals",
    "share": "TSMC 16% of Entegris net sales in 2025 and 2024 (11% in 2023)",
    "criticality": "high",
    "source": [
@@ -2584,6 +2627,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "Photoresists (incl. EUV); TOK listed in TSMC annual report 'Major Suppliers' (lithographic materials) and awarded at TSMC 2024 supplier forum",
+   "group": "resists",
    "share": null,
    "criticality": "high",
    "source": [
@@ -2597,6 +2641,7 @@
    "to": "intc",
    "type": "supplies",
    "what": "IC package substrates; CEO (Bloomberg interview): Intel historically 70-80% of substrate revenue, ~30% in FY ended Mar-2024",
+   "group": "substrates",
    "share": "Intel ~30% of Ibiden package-substrate revenue FY2023/24 (down from 70-80%)",
    "criticality": "high",
    "source": "https://www.business-standard.com/technology/tech-news/nvidia-supplier-ibiden-weighs-faster-expansion-to-meet-ai-demand-says-ceo-124123000069_1.html",
@@ -2607,6 +2652,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "IC package substrates for AI GPUs; CEO: 'All of Nvidia's AI semiconductors now use Ibiden's substrates'",
+   "group": "substrates",
    "share": "AI semis >15% of Ibiden sales (~JPY370bn) per CEO",
    "criticality": "high",
    "source": "https://www.business-standard.com/technology/tech-news/nvidia-supplier-ibiden-weighs-faster-expansion-to-meet-ai-demand-says-ceo-124123000069_1.html",
@@ -2617,6 +2663,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "EDA/verification tools; Cadence-NVIDIA expanded partnership: 'NVIDIA is adopting the AgentStack flow in its semiconductor and system design flows'",
+   "group": "design",
    "share": null,
    "criticality": "medium",
    "source": "https://www.businesswire.com/news/home/20260415332711/en/Cadence-and-NVIDIA-Expand-Partnership-to-Reinvent-Engineering-for-the-Age-of-AI-and-Accelerated-Computing",
@@ -2627,6 +2674,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "Voltage regulator / power modules for Nvidia GPUs; Edgewater Research report on MPS Blackwell allocation (Nvidia reportedly cut ~half of MPS backlog). WEAK: sell-side report, MPS 10-K does not name customer",
+   "group": "power",
    "share": null,
    "criticality": "medium",
    "source": "https://finance.yahoo.com/news/monolithic-power-falls-amid-risk-205430868.html",
@@ -2637,6 +2685,7 @@
    "to": "amzn",
    "type": "supplies",
    "what": "PCIe/CXL retimers, Scorpio fabric switches, optical engines; Amazon performance warrant vests on up to $6.5B of Amazon purchases (8-K); 10-K: one end customer >70% of 2025 revenue",
+   "group": "chips",
    "share": "One end customer >70% of Astera 2025 revenue (unnamed); Amazon warrant tied to up to $6.5B purchases",
    "criticality": "high",
    "source": [
@@ -2650,6 +2699,7 @@
    "to": "amzn",
    "type": "supplies",
    "what": "AEC copper cables/DSPs; warrant issued to Amazon.com NV Investment Holdings vesting on Amazon purchases; Customer A 49% of FY2026 revenue (67% FY2025)",
+   "group": "networking",
    "share": "Customer A 49% of Credo FY2026 revenue; Amazon warrant holder (10-Q/10-K)",
    "criticality": "high",
    "source": [
@@ -2663,6 +2713,7 @@
    "to": "msft",
    "type": "supplies",
    "what": "Data-center Ethernet switches; Arista 10-K discloses two >10% customers (Microsoft, Meta)",
+   "group": "networking",
    "share": "Microsoft 26% of Arista 2025 revenue",
    "criticality": "high",
    "source": [
@@ -2676,6 +2727,7 @@
    "to": "meta",
    "type": "supplies",
    "what": "Data-center Ethernet switches; Arista 10-K discloses two >10% customers (Microsoft, Meta)",
+   "group": "networking",
    "share": "Meta 16% of Arista 2025 revenue",
    "criticality": "high",
    "source": [
@@ -2689,6 +2741,7 @@
    "to": "msft",
    "type": "supplies",
    "what": "20-year nuclear PPA: Crane Clean Energy Center (TMI-1 restart, ~835 MW) to Microsoft data centers",
+   "group": "power",
    "share": "835 MW, 20-year PPA",
    "criticality": "high",
    "source": "https://www.constellationenergy.com/news/2024/Constellation-to-Launch-Crane-Clean-Energy-Center-Restoring-Jobs-and-Carbon-Free-Power-to-The-Grid.html",
@@ -2699,6 +2752,7 @@
    "to": "meta",
    "type": "supplies",
    "what": "20-year PPA: 1,121 MW from Clinton Clean Energy Center (IL) to Meta",
+   "group": "power",
    "share": "1,121 MW, 20-year PPA",
    "criticality": "high",
    "source": "https://www.constellationenergy.com/news/2025/constellation-meta-sign-20-year-deal-for-clean-reliable-nuclear-energy-in-illinois.html",
@@ -2709,6 +2763,7 @@
    "to": "msft",
    "type": "supplies",
    "what": "UPS / power distribution; Eaton-Microsoft strategic framework agreement includes Eaton EnergyAware UPS in Microsoft data-center projects",
+   "group": "power",
    "share": null,
    "criticality": "medium",
    "source": "https://www.eaton.com/us/en-us/company/news-insights/news-releases/2022/eaton-to-expand-collaboration-with-microsoft-on-grid-interactive.html",
@@ -2719,6 +2774,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "800 VDC power infrastructure reference architecture for NVIDIA AI factories (collaboration, not disclosed sales)",
+   "group": "power",
    "share": null,
    "criticality": "medium",
    "source": "https://www.businesswire.com/news/home/20251010367772/en/Eaton-Unveils-Next-generation-Architecture-to-Advance-800-VDC-Power-Infrastructure-for-AI-Factories",
@@ -2729,6 +2785,7 @@
    "to": "amzn",
    "type": "supplies",
    "what": "Turnkey substations for Amazon data-center grid connection; exploring GW-scale generation/microgrids (AWS press release)",
+   "group": "power",
    "share": null,
    "criticality": "high",
    "source": "https://press.aboutamazon.com/aws/2026/4/aws-and-siemens-energy-team-up-to-advance-energy-sector-digital-transformation",
@@ -2739,6 +2796,7 @@
    "to": "amzn",
    "type": "supplies",
    "what": "Turnkey substations/electrical equipment for AWS data centers, plus power generation & wind (strategic framework agreement)",
+   "group": "power",
    "share": null,
    "criticality": "high",
    "source": "https://www.gevernova.com/news/press-releases/ge-vernova-aws-accelerate-global-energy-demand",
@@ -2749,6 +2807,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "HBM/memory and some wafers: NVIDIA FY2026 10-K: 'We purchase memory from SK Hynix, Micron, and Samsung' and uses Samsung as a foundry; Samsung certified for HBM4 on Vera Rubin (Jun-2026)",
+   "group": "memory",
    "share": "DIGITIMES: Nvidia not among Samsung's top-5 customers 1H26",
    "criticality": "high",
    "source": [
@@ -2762,6 +2821,7 @@
    "to": "amd",
    "type": "supplies",
    "what": "AMD 10-K: relies on TSMC for all CPU/GPU wafers at 7nm and below",
+   "group": "foundry",
    "share": null,
    "criticality": "high",
    "source": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
@@ -2772,6 +2832,7 @@
    "to": "amd",
    "type": "supplies",
    "what": "ATMP: AMD 10-K names SPIL (ASE subsidiary) among providers of assembly/test/packaging",
+   "group": "assembly",
    "share": null,
    "criticality": "high",
    "source": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
@@ -2782,6 +2843,7 @@
    "to": "nvda",
    "type": "supplies",
    "what": "Advanced packaging (CoWoS spillover, FoCUS 2.5D for Vera CPU), system integration and wafer test for NVIDIA (Economic Daily News/CNA via TrendForce)",
+   "group": "assembly",
    "share": "~US$4B ASE advanced-packaging revenue 2026 est.",
    "criticality": "medium",
    "source": "https://www.trendforce.com/news/2026/01/14/news-ase-buys-nt2-8b-zhunan-facility-packaging-orders-reportedly-span-nvidia-amd-and-more/",
@@ -2792,6 +2854,7 @@
    "to": "amzn",
    "type": "supplies",
    "what": "Five-year multi-generational supply agreement: custom AI silicon, optical DSPs, AEC DSPs, PCIe retimers, DCI modules, Ethernet switching (8-K Ex.99.1)",
+   "group": "chips",
    "share": null,
    "criticality": "high",
    "source": "https://www.sec.gov/Archives/edgar/data/1835632/000183563224000193/final2024_12x02xmarvell-.htm",
@@ -2802,6 +2865,7 @@
    "to": "smci",
    "type": "supplies",
    "what": "GPUs/HGX/NVL systems; NVIDIA names Supermicro among server makers delivering Blackwell systems",
+   "group": "compute",
    "share": null,
    "criticality": "high",
    "source": "https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing",
@@ -2812,6 +2876,7 @@
    "to": "amzn",
    "type": "supplies",
    "what": "GPUs (hyperscaler capex flow): AWS named as first-wave Blackwell cloud provider; P6e-GB200 UltraServers launched",
+   "group": "compute",
    "share": null,
    "criticality": "high",
    "source": [
@@ -2825,6 +2890,7 @@
    "to": "googl",
    "type": "supplies",
    "what": "GPUs (hyperscaler capex flow): Google Cloud deploying GB200 NVL72 / A4 VMs",
+   "group": "compute",
    "share": null,
    "criticality": "high",
    "source": [
@@ -2838,6 +2904,7 @@
    "to": "meta",
    "type": "supplies",
    "what": "GPUs (hyperscaler capex flow): Zuckerberg: 350,000 H100s by end-2024; Meta named Blackwell adopter",
+   "group": "compute",
    "share": "350k H100 by end-2024 (Meta statement)",
    "criticality": "high",
    "source": [
@@ -2851,6 +2918,7 @@
    "to": "orcl",
    "type": "supplies",
    "what": "GPUs (Oracle as buyer): OCI Supercluster up to 131,072 Blackwell GPUs; OCI named first-wave Blackwell cloud",
+   "group": "compute",
    "share": "up to 131,072 Blackwell GPUs (OCI Supercluster)",
    "criticality": "high",
    "source": [
@@ -2864,6 +2932,7 @@
    "to": "orcl",
    "type": "supplies",
    "what": "Instinct GPUs: Oracle to deploy 50,000 MI450 from CQ3-2026",
+   "group": "compute",
    "share": "50,000 MI450 GPUs from CQ3 2026",
    "criticality": "high",
    "source": "https://www.oracle.com/news/announcement/ai-world-oracle-and-amd-expand-partnership-to-help-customers-achieve-next-generation-ai-scale-2025-10-14/",
@@ -2874,6 +2943,7 @@
    "to": "msft",
    "type": "supplies",
    "what": "Instinct MI300X on Microsoft Azure (Nadella quote at AMD Advancing AI 2024)",
+   "group": "compute",
    "share": null,
    "criticality": "medium",
    "source": "https://www.amd.com/en/newsroom/press-releases/2024-10-10-amd-unveils-leadership-ai-solutions-at-advancing-a.html",
@@ -2884,6 +2954,7 @@
    "to": "meta",
    "type": "supplies",
    "what": "Instinct MI300X 'serving all live traffic on Llama 405B' at Meta (AMD Advancing AI 2024)",
+   "group": "compute",
    "share": null,
    "criticality": "medium",
    "source": "https://www.amd.com/en/newsroom/press-releases/2024-10-10-amd-unveils-leadership-ai-solutions-at-advancing-a.html",
@@ -2894,6 +2965,7 @@
    "to": "msft",
    "type": "supplies",
    "what": "GPU cloud capacity sold to Microsoft (CoreWeave 10-K)",
+   "group": "compute",
    "share": "Microsoft ~67% of CoreWeave 2025 revenue",
    "criticality": "high",
    "source": "https://s205.q4cdn.com/133937190/files/doc_financials/2025/q4/CoreWeave-Inc-FY25-10-K-7.pdf",
@@ -2904,6 +2976,7 @@
    "to": "meta",
    "type": "supplies",
    "what": "GPU cloud capacity: Meta committed up to ~$14.2B through Dec-2031 (CoreWeave 10-K)",
+   "group": "compute",
    "share": "Meta order up to ~$14.2B through 2031",
    "criticality": "high",
    "source": "https://s205.q4cdn.com/133937190/files/doc_financials/2025/q4/CoreWeave-Inc-FY25-10-K-7.pdf",
@@ -2914,6 +2987,7 @@
    "to": "siemensenergy",
    "type": "supplies",
    "what": "grain-oriented electrical steel for power transformers",
+   "group": "metals",
    "criticality": "high",
    "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works"
   },
@@ -2922,6 +2996,7 @@
    "to": "gev",
    "type": "supplies",
    "what": "grain-oriented electrical steel for power transformers",
+   "group": "metals",
    "criticality": "high",
    "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works"
   },
@@ -2930,6 +3005,7 @@
    "to": "etn",
    "type": "supplies",
    "what": "grain-oriented electrical steel for power transformers",
+   "group": "metals",
    "criticality": "high",
    "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works"
   },
@@ -2938,6 +3014,7 @@
    "to": "gev",
    "type": "supplies",
    "what": "cast superalloy blades for industrial gas turbines",
+   "group": "metals",
    "criticality": "high",
    "source": "https://finance.yahoo.com/markets/stocks/articles/howmet-aerospace-hwm-facing-competition-141108207.html"
   },
@@ -2946,6 +3023,7 @@
    "to": "lite",
    "type": "supplies",
    "what": "InP substrates for lasers/transceivers",
+   "group": "substrates",
    "criticality": "high",
    "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml"
   },
@@ -2954,6 +3032,7 @@
    "to": "cohr",
    "type": "supplies",
    "what": "InP substrates for lasers/transceivers",
+   "group": "substrates",
    "criticality": "high",
    "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml"
   },
@@ -2962,6 +3041,7 @@
    "to": "cohr",
    "type": "supplies",
    "what": "germanium for optical components",
+   "group": "minerals",
    "criticality": "medium",
    "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/"
   },
@@ -2970,6 +3050,7 @@
    "to": "lite",
    "type": "supplies",
    "what": "germanium for optical components",
+   "group": "minerals",
    "criticality": "medium",
    "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/"
   },
@@ -2978,6 +3059,7 @@
    "to": "anet",
    "type": "supplies",
    "what": "optical transceivers/lasers for data-center networking",
+   "group": "networking",
    "criticality": "medium",
    "source": "https://www.tomshardware.com/tech-industry/semiconductors/lumentum-ceo-says-the-indium-phosphide-shortage-will-become-worse-than-memory"
   },
@@ -2986,6 +3068,7 @@
    "to": "unimicron",
    "type": "supplies",
    "what": "glass substrate (ABF alternative)",
+   "group": "substrates",
    "criticality": "medium",
    "source": "https://www.trendforce.com/news/2025/07/07/news-absolics-reportedly-ramps-up-glass-substrate-production-mass-production-expected-by-year-end/"
   },
@@ -2994,6 +3077,7 @@
    "to": "hoya",
    "type": "supplies",
    "what": "actinic inspection for EUV mask blanks",
+   "group": "tools",
    "criticality": "high",
    "source": "https://semiconductorx.com/semiconductor-euv-mask-blanks.html"
   },
@@ -3002,6 +3086,7 @@
    "to": "skhynix",
    "type": "supplies",
    "what": "TC bonders for HBM stacking",
+   "group": "tools",
    "criticality": "medium",
    "source": "https://www.trendforce.com/news/2026/06/09/news-sk-hynix-reportedly-places-44-2bn-won-tc-bonder-order-with-hanmi-accelerating-hbm4-ramp-up/"
   },
@@ -3010,6 +3095,7 @@
    "to": "ase",
    "type": "supplies",
    "what": "TCB bonders for advanced packaging",
+   "group": "tools",
    "criticality": "medium",
    "source": "https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/"
   },
@@ -3018,6 +3104,7 @@
    "to": "shinetsu",
    "type": "supplies",
    "what": "semiconductor-grade polysilicon; Wacker supplies \"all major wafer manufacturers\" (2024) and SIA names Shin-Etsu, SUMCO and GlobalWafers among the five majors (2025)",
+   "group": "polysilicon",
    "share": null,
    "criticality": "high",
    "source": [
@@ -3031,6 +3118,7 @@
    "to": "sumco",
    "type": "supplies",
    "what": "semiconductor-grade polysilicon; Wacker supplies \"all major wafer manufacturers\" (2024) and SIA names Shin-Etsu, SUMCO and GlobalWafers among the five majors (2025)",
+   "group": "polysilicon",
    "share": null,
    "criticality": "high",
    "source": [
@@ -3044,6 +3132,7 @@
    "to": "globalwafers",
    "type": "supplies",
    "what": "semiconductor-grade polysilicon; Wacker supplies \"all major wafer manufacturers\" (2024) and SIA names Shin-Etsu, SUMCO and GlobalWafers among the five majors (2025)",
+   "group": "polysilicon",
    "share": null,
    "criticality": "high",
    "source": [
@@ -3057,6 +3146,7 @@
    "to": "tsmc",
    "type": "supplies",
    "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+   "group": "wafers",
    "share": null,
    "criticality": "medium",
    "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
@@ -3067,6 +3157,7 @@
    "to": "samsung",
    "type": "supplies",
    "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+   "group": "wafers",
    "share": null,
    "criticality": "medium",
    "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
@@ -4991,7 +5082,8 @@
   },
   {
    "id": "tnsc",
-   "name": "Taiyo Nippon Sanso (Nippon Sanso Holdings)",
+   "name": "Taiyo Nippon Sanso",
+   "note": "Nippon Sanso Holdings",
    "ticker": "4091.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -5021,7 +5113,8 @@
   },
   {
    "id": "neon_chain",
-   "name": "Neon / noble-gas purifiers (Ukraine Cryoin & Ingas; Chinese steel-mill ASU byproduct)",
+   "name": "Neon and noble-gas purifiers",
+   "note": "Ukraine Cryoin & Ingas; Chinese steel-mill ASU byproduct",
    "ticker": "private / state-linked (CN)",
    "exchange": null,
    "country_hq": "UA / CN",
@@ -5141,7 +5234,8 @@
   },
   {
    "id": "fab_filtration",
-   "name": "Fab liquid/gas/air filtration (Entegris, Pall/Danaher, Nippon Muki, Camfil)",
+   "name": "Fab liquid, gas and air filtration",
+   "note": "Entegris, Pall/Danaher, Nippon Muki, Camfil",
    "ticker": "ENTG / DHR / private (Nippon Muki = Nippon Sheet Glass group) / private (Camfil)",
    "exchange": "NASDAQ / NYSE",
    "country_hq": "US / US / JP / SE",
@@ -5325,7 +5419,8 @@
   },
   {
    "id": "hanwha_semitech",
-   "name": "Hanwha Semitech (Hanwha Vision spin-off)",
+   "name": "Hanwha Semitech",
+   "note": "Hanwha Vision spin-off",
    "ticker": "private (Hanwha Group; Hanwha Vision 489790.KS parent)",
    "exchange": null,
    "country_hq": "KR",
@@ -5546,7 +5641,8 @@
   },
   {
    "id": "ajinomoto_ref",
-   "name": "Ajinomoto Fine-Techno (ABF) — see CP8",
+   "name": "Ajinomoto Fine-Techno (ABF)",
+   "note": "see CP8",
    "ticker": "2802.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -5697,7 +5793,8 @@
   },
   {
    "id": "sibelco_spruce_pine",
-   "name": "Sibelco (Spruce Pine, NC — formerly Covia/Unimin)",
+   "name": "Sibelco (Spruce Pine, NC)",
+   "note": "formerly Covia/Unimin",
    "short": "Sibelco",
    "ticker": "private (Sibelco NV, Belgian family-owned)",
    "exchange": null,
@@ -5724,6 +5821,7 @@
    "as_of": "2026-01",
    "sole_source": false,
    "sole_source_basis": "Two producers at one deposit — geographic single point, corporate duopoly; synthetic quartz exists at 5-10x cost",
+   "chokepoint": true,
    "alternatives": [
     "The Quartz Corp (same deposit)",
     "China HPQ (~5k t/yr scaling to 20k+)",
@@ -5766,6 +5864,7 @@
    "as_of": "2026-01",
    "sole_source": false,
    "sole_source_basis": "duopoly at one deposit",
+   "chokepoint": true,
    "alternatives": [
     "Sibelco"
    ],
@@ -5779,7 +5878,8 @@
   },
   {
    "id": "quartz_crucibles",
-   "name": "Quartz crucible makers (Shin-Etsu Quartz Products, Momentive Technologies, Ferrotec, Coorstek)",
+   "name": "Quartz crucible makers",
+   "note": "Shin-Etsu Quartz Products, Momentive Technologies, Ferrotec, Coorstek",
    "ticker": "Shin-Etsu Quartz = 4063.T subsidiary; Momentive Technologies = private (KKR); Ferrotec = 6890.T (TSE) / 佳一 sub in CN; Coorstek = private",
    "exchange": "mixed",
    "country_hq": "JP / US / JP-CN / US",
@@ -5807,7 +5907,8 @@
   },
   {
    "id": "cz_pullers",
-   "name": "CZ crystal puller makers (PVA TePla, Ferrotec, Jinglong/JSG, Linton, S-TECH; Shin-Etsu & SUMCO in-house)",
+   "name": "CZ crystal puller makers",
+   "note": "PVA TePla, Ferrotec, Jinglong/JSG, Linton, S-TECH; Shin-Etsu & SUMCO in-house",
    "ticker": "PVA TePla = TPE (Xetra); Ferrotec = 6890.T; Jinglong = 300316.SZ (Shenzhen); Linton = private",
    "exchange": "mixed",
    "country_hq": "DE / JP / CN / CN",
@@ -5845,7 +5946,8 @@
   },
   {
    "id": "fujimi_wafer",
-   "name": "Fujimi (wafer polishing slurry) — see CP3 fujimi",
+   "name": "Fujimi",
+   "note": "wafer polishing slurry — see CP3 fujimi",
    "ticker": "5384.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -5874,7 +5976,8 @@
   },
   {
    "id": "abf_epoxy",
-   "name": "Epoxy resin & hardener inputs (Mitsubishi Chemical, Nippon Kayaku, DIC, Resonac — inferred)",
+   "name": "Epoxy resin & hardener inputs",
+   "note": "Mitsubishi Chemical, Nippon Kayaku, DIC, Resonac — inferred",
    "ticker": "4188.T / 4272.T / 4631.T / 4004.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -5910,7 +6013,8 @@
   },
   {
    "id": "abf_silica",
-   "name": "Sub-micron spherical silica filler (Admatechs — Toyota Tsusho/AGC affiliate; Denka; Tatsumori)",
+   "name": "Sub-micron spherical silica filler",
+   "note": "Admatechs — Toyota Tsusho/AGC affiliate; Denka; Tatsumori",
    "ticker": "Admatechs private (Toyota Tsusho); Denka 4061.T; Tatsumori private",
    "exchange": "TSE (Denka)",
    "country_hq": "JP",
@@ -5940,7 +6044,8 @@
   },
   {
    "id": "pet_carrier",
-   "name": "PET carrier film (Toray, Toyobo, Mitsubishi Chemical — inferred)",
+   "name": "PET carrier film",
+   "note": "Toray, Toyobo, Mitsubishi Chemical — inferred",
    "ticker": "3402.T / 3101.T / 4188.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -5973,7 +6078,8 @@
   },
   {
    "id": "ajinomoto_plants",
-   "name": "Ajinomoto Fine-Techno plants (Kawasaki; Showa-mura Gunma; Kani, Gifu from 2032)",
+   "name": "Ajinomoto Fine-Techno plants",
+   "note": "Kawasaki; Showa-mura Gunma; Kani, Gifu from 2032",
    "ticker": "2802.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -6060,7 +6166,8 @@
   },
   {
    "id": "tsmc_hbm_basedie",
-   "name": "TSMC (HBM4/HBM4E base/logic die foundry)",
+   "name": "TSMC (HBM4 base die)",
+   "note": "HBM4/HBM4E base/logic die foundry",
    "ticker": "2330.TW / TSM",
    "exchange": "TWSE / NYSE",
    "country_hq": "TW",
@@ -6088,7 +6195,8 @@
   },
   {
    "id": "lam_tsv_etch",
-   "name": "Lam Research (TSV deep-silicon etch, Syndion)",
+   "name": "Lam Research (TSV etch)",
+   "note": "TSV deep-silicon etch, Syndion",
    "ticker": "LRCX",
    "exchange": "NASDAQ",
    "country_hq": "US",
@@ -6116,7 +6224,8 @@
   },
   {
    "id": "tel_tsv",
-   "name": "Tokyo Electron (TSV etch, debond/temporary-bond, coater)",
+   "name": "Tokyo Electron (TSV)",
+   "note": "TSV etch, debond/temporary-bond, coater",
    "ticker": "8035.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -6145,7 +6254,8 @@
   },
   {
    "id": "amat_tsv_ecd",
-   "name": "Applied Materials (TSV copper fill ECD, PECVD liners, CMP)",
+   "name": "Applied Materials (TSV fill)",
+   "note": "TSV copper fill ECD, PECVD liners, CMP",
    "ticker": "AMAT",
    "exchange": "NASDAQ",
    "country_hq": "US",
@@ -6173,7 +6283,8 @@
   },
   {
    "id": "ebara_plating_cmp",
-   "name": "Ebara Corporation (plating and CMP for TSV/packaging)",
+   "name": "Ebara Corporation",
+   "note": "plating and CMP for TSV/packaging",
    "ticker": "6361.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -6202,7 +6313,8 @@
   },
   {
    "id": "namics_ref",
-   "name": "NAMICS Corporation (MR-MUF resin) — see fab.json CP4 'namics'",
+   "name": "NAMICS Corporation (MR-MUF resin)",
+   "note": "see fab.json CP4 'namics'",
    "ticker": "private",
    "exchange": null,
    "country_hq": "JP",
@@ -6230,7 +6342,8 @@
   },
   {
    "id": "resonac_ncf",
-   "name": "Resonac Holdings (ex-Showa Denko / Showa Denko Materials, ex-Hitachi Chemical) — NCF and TIM",
+   "name": "Resonac Holdings",
+   "note": "ex-Showa Denko / Showa Denko Materials, ex-Hitachi Chemical — NCF and TIM",
    "ticker": "4004.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -6262,7 +6375,8 @@
   },
   {
    "id": "advantest_hbm_ref",
-   "name": "Advantest (HBM wafer/stack testers T5835, T5801, B6700) — see CP13 holder 'advantest'",
+   "name": "Advantest (HBM testers)",
+   "note": "HBM wafer/stack testers T5835, T5801, B6700 — see CP13 holder 'advantest'",
    "ticker": "6857.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -6294,7 +6408,8 @@
   },
   {
    "id": "dram_resist_ref",
-   "name": "DRAM photoresists (JSR, TOK, Shin-Etsu; Dongjin Semichem localizing) — see euv.json CP7",
+   "name": "DRAM photoresists",
+   "note": "JSR, TOK, Shin-Etsu; Dongjin Semichem localizing — see euv.json CP7",
    "ticker": "4185.T / 4186.T / 4063.T / 005290.KQ",
    "exchange": "TSE / TSE / TSE / KOSDAQ",
    "country_hq": "JP (Dongjin: KR)",
@@ -6323,7 +6438,8 @@
   },
   {
    "id": "dram_wafers_ref",
-   "name": "300mm DRAM wafers (Shin-Etsu, SUMCO, GlobalWafers) — see fab.json CP6",
+   "name": "300mm DRAM wafers",
+   "note": "Shin-Etsu, SUMCO, GlobalWafers — see fab.json CP6",
    "ticker": "4063.T / 3436.T / 6488.TW",
    "exchange": "TSE / TSE / TPEx",
    "country_hq": "JP / JP / TW",
@@ -6353,7 +6469,8 @@
   },
   {
    "id": "bonders_ref",
-   "name": "TC/hybrid bonders (Hanmi, Hanwha Semitech, ASMPT, Besi) — see fab.json CP4",
+   "name": "TC and hybrid bonders",
+   "note": "Hanmi, Hanwha Semitech, ASMPT, Besi — see fab.json CP4",
    "ticker": "042700.KS / 000880.KS sub / 0522.HK / BESI.AS",
    "exchange": "KRX / KRX / HKEX / Euronext",
    "country_hq": "KR / KR / SG-HK / NL",
@@ -6381,7 +6498,8 @@
   },
   {
    "id": "towa_molding",
-   "name": "TOWA Corporation (compression molding for MR-MUF)",
+   "name": "TOWA Corporation",
+   "note": "compression molding for MR-MUF",
    "ticker": "6315.T",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -6410,7 +6528,8 @@
   },
   {
    "id": "cn_gallium_primary",
-   "name": "Chinese primary gallium producers (Bayer-liquor byproduct at Chalco/Chinalco, Zhongjin Lingnan, Zhuhai Fangyuan, etc.)",
+   "name": "Chinese primary gallium producers",
+   "note": "Bayer-liquor byproduct at Chalco/Chinalco, Zhongjin Lingnan, Zhuhai Fangyuan, etc.",
    "ticker": "601600.SS (Chalco) et al.",
    "exchange": "SSE",
    "country_hq": "CN",
@@ -6440,7 +6559,8 @@
   },
   {
    "id": "sunresin",
-   "name": "Sunresin New Materials (gallium-extraction chelating resin)",
+   "name": "Sunresin New Materials",
+   "note": "gallium-extraction chelating resin",
    "ticker": "300487.SZ",
    "exchange": "SZSE",
    "country_hq": "CN",
@@ -6499,7 +6619,8 @@
   },
   {
    "id": "teck_trail",
-   "name": "Teck Resources (Trail, BC smelter — germanium and gallium)",
+   "name": "Teck Resources (Trail, BC)",
+   "note": "smelter — germanium and gallium",
    "ticker": "TECK",
    "exchange": "NYSE/TSX",
    "country_hq": "CA",
@@ -6527,7 +6648,8 @@
   },
   {
    "id": "umicore_ge",
-   "name": "Umicore (germanium refining/recycling, Olen)",
+   "name": "Umicore (Olen)",
+   "note": "germanium refining/recycling",
    "ticker": "UMI.BR",
    "exchange": "Euronext Brussels",
    "country_hq": "BE",
@@ -6555,7 +6677,8 @@
   },
   {
    "id": "cn_rare_earth_magnets",
-   "name": "China rare-earth chain (China Northern Rare Earth, China Rare Earth Group; NdFeB magnet makers JL MAG, Ningbo Yunsheng, Zhong Ke San Huan)",
+   "name": "China rare-earth chain",
+   "note": "China Northern Rare Earth, China Rare Earth Group; NdFeB magnet makers JL MAG, Ningbo Yunsheng, Zhong Ke San Huan",
    "ticker": "600111.SS; 300748.SZ; 600366.SS; 000970.SZ",
    "exchange": "SSE / SZSE",
    "country_hq": "CN",
@@ -6584,7 +6707,8 @@
   },
   {
    "id": "cn_tungsten",
-   "name": "China tungsten chain (Xiamen Tungsten, China Minmetals/CMOC, Jiangxi Tungsten; APT and WF6 supply)",
+   "name": "China tungsten chain",
+   "note": "Xiamen Tungsten, China Minmetals/CMOC, Jiangxi Tungsten; APT and WF6 supply",
    "ticker": "600549.SS; 603993.SS",
    "exchange": "SSE",
    "country_hq": "CN",
@@ -6613,7 +6737,8 @@
   },
   {
    "id": "cn_antimony",
-   "name": "China antimony producers (Hunan Gold / Hsikwangshan Twinkling Star)",
+   "name": "China antimony producers",
+   "note": "Hunan Gold / Hsikwangshan Twinkling Star",
    "ticker": "002155.SZ",
    "exchange": "SZSE",
    "country_hq": "CN",
@@ -6907,7 +7032,8 @@
   },
   {
    "id": "kr_hbm_testers",
-   "name": "Korean HBM test-equipment entrants (UniTest, Digital Frontier, Techwing, Exicon)",
+   "name": "Korean HBM test-equipment entrants",
+   "note": "UniTest, Digital Frontier, Techwing, Exicon",
    "ticker": "086390.KQ (UniTest); 089030.KQ (Techwing); 092870.KQ (Exicon)",
    "exchange": "KOSDAQ",
    "country_hq": "KR",
@@ -6991,7 +7117,8 @@
   },
   {
    "id": "snps_ip_internal",
-   "name": "Synopsys Design IP (interface IP: PCIe/CXL, UCIe, HBM4 PHY, 224G SerDes)",
+   "name": "Synopsys Design IP",
+   "note": "interface IP: PCIe/CXL, UCIe, HBM4 PHY, 224G SerDes",
    "ticker": "SNPS",
    "exchange": "NASDAQ",
    "country_hq": "US",
@@ -7020,7 +7147,8 @@
   },
   {
    "id": "rambus_ip",
-   "name": "Rambus (memory interface IP and chips)",
+   "name": "Rambus",
+   "note": "memory interface IP and chips",
    "ticker": "RMBS",
    "exchange": "NASDAQ",
    "country_hq": "US",
@@ -7049,7 +7177,8 @@
   },
   {
    "id": "alphawave_qcom",
-   "name": "Alphawave Semi (acquired by Qualcomm, $2.4B, 2025)",
+   "name": "Alphawave Semi",
+   "note": "acquired by Qualcomm, $2.4B, 2025",
    "ticker": "QCOM (parent)",
    "exchange": "NASDAQ",
    "country_hq": "UK/CA (now US parent)",
@@ -7078,7 +7207,8 @@
   },
   {
    "id": "nvidia_gpu_compute",
-   "name": "Nvidia (GPU acceleration of EDA; $2B Synopsys stake)",
+   "name": "Nvidia (EDA acceleration)",
+   "note": "GPU acceleration of EDA; $2B Synopsys stake",
    "ticker": "NVDA",
    "exchange": "NASDAQ",
    "country_hq": "US",
@@ -7106,7 +7236,8 @@
   },
   {
    "id": "cloud_eda",
-   "name": "Hyperscale cloud for EDA (AWS, Microsoft Azure, Google Cloud; Synopsys Cloud, Cadence OnCloud)",
+   "name": "Hyperscale cloud for EDA",
+   "note": "AWS, Microsoft Azure, Google Cloud; Synopsys Cloud, Cadence OnCloud",
    "ticker": "AMZN / MSFT / GOOGL",
    "exchange": "NASDAQ",
    "country_hq": "US",
@@ -7191,7 +7322,8 @@
   },
   {
    "id": "cohr_inp_fab",
-   "name": "Coherent InP fabs (Sherman TX; Jarfalla SE)",
+   "name": "Coherent InP fabs",
+   "note": "Sherman TX; Jarfalla SE",
    "ticker": "COHR",
    "exchange": "NYSE",
    "country_hq": "US",
@@ -7221,7 +7353,8 @@
   },
   {
    "id": "broadcom_optical",
-   "name": "Broadcom (optical components + DSP)",
+   "name": "Broadcom (optical)",
+   "note": "optical components + DSP",
    "ticker": "AVGO",
    "exchange": "NASDAQ",
    "country_hq": "US",
@@ -7280,7 +7413,8 @@
   },
   {
    "id": "sumitomo_inp_sub",
-   "name": "Sumitomo Electric Industries (InP substrates + CW lasers)",
+   "name": "Sumitomo Electric Industries",
+   "note": "InP substrates + CW lasers",
    "ticker": "5802",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -7339,7 +7473,8 @@
   },
   {
    "id": "mitsubishi_eml",
-   "name": "Mitsubishi Electric (semiconductor & device)",
+   "name": "Mitsubishi Electric",
+   "note": "semiconductor & device",
    "ticker": "6503",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -7428,7 +7563,8 @@
   },
   {
    "id": "fabrinet_cm",
-   "name": "Fabrinet (contract manufacturer)",
+   "name": "Fabrinet",
+   "note": "contract manufacturer",
    "ticker": "FN",
    "exchange": "NYSE",
    "country_hq": "KY/TH",
@@ -7458,7 +7594,8 @@
   },
   {
    "id": "corning_fiber",
-   "name": "Corning (optical fiber & cable)",
+   "name": "Corning (optical fiber)",
+   "note": "optical fiber & cable",
    "ticker": "GLW",
    "exchange": "NYSE",
    "country_hq": "US",
@@ -7489,7 +7626,8 @@
   },
   {
    "id": "hyperlight_tfln",
-   "name": "HyperLight (thin-film lithium niobate modulators)",
+   "name": "HyperLight (TFLN modulators)",
+   "note": "thin-film lithium niobate modulators",
    "ticker": "private",
    "exchange": null,
    "country_hq": "US",
@@ -7519,7 +7657,8 @@
   },
   {
    "id": "howmet_igt",
-   "name": "Howmet Aerospace (Engine Products - IGT airfoils)",
+   "name": "Howmet Aerospace (IGT airfoils)",
+   "note": "Engine Products - IGT airfoils",
    "ticker": "HWM",
    "exchange": "NYSE",
    "country_hq": "US",
@@ -7549,7 +7688,8 @@
   },
   {
    "id": "pcc_igt",
-   "name": "Precision Castparts Corp. (PCC Airfoils / Wyman-Gordon)",
+   "name": "Precision Castparts Corp.",
+   "note": "PCC Airfoils / Wyman-Gordon",
    "ticker": "private (Berkshire Hathaway, BRK.A NYSE)",
    "exchange": null,
    "country_hq": "US",
@@ -7671,7 +7811,8 @@
   },
   {
    "id": "nippon_steel_goes",
-   "name": "Nippon Steel (Hirohata/Setouchi electrical steel)",
+   "name": "Nippon Steel (electrical steel)",
+   "note": "Hirohata/Setouchi electrical steel",
    "ticker": "5401",
    "exchange": "TSE",
    "country_hq": "JP",
@@ -7702,7 +7843,8 @@
   },
   {
    "id": "winding_labor",
-   "name": "Coil-winding labor pool (US transformer plants)",
+   "name": "Coil-winding labor pool",
+   "note": "US transformer plants",
    "ticker": "n/a",
    "exchange": null,
    "country_hq": "US",
@@ -7730,7 +7872,8 @@
   },
   {
    "id": "hitachi_bushings",
-   "name": "Hitachi Energy insulation & components (bushings, tap changers)",
+   "name": "Hitachi Energy insulation & components",
+   "note": "bushings, tap changers",
    "ticker": "6501",
    "exchange": "TSE",
    "country_hq": "CH/SE",
@@ -7819,7 +7962,8 @@
   },
   {
    "id": "cat_cummins_gensets",
-   "name": "Caterpillar / Cummins (backup gensets, recips, Solar Turbines)",
+   "name": "Caterpillar / Cummins",
+   "note": "backup gensets, recips, Solar Turbines",
    "ticker": "CAT / CMI",
    "exchange": "NYSE",
    "country_hq": "US",
@@ -7853,6 +7997,7 @@
    "from": "zeiss_smt",
    "to": "asml",
    "what": "EUV optical column",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7860,6 +8005,7 @@
    "from": "trumpf",
    "to": "asml",
    "what": "CO2 drive laser",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7867,6 +8013,7 @@
    "from": "cymer",
    "to": "asml",
    "what": "EUV LPP source",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7874,6 +8021,7 @@
    "from": "trumpf",
    "to": "cymer",
    "what": "drive laser integrated into source",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7881,6 +8029,7 @@
    "from": "zeiss_smt",
    "to": "cymer",
    "what": "EUV collector mirror (widely reported, unsourced here)",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7888,6 +8037,7 @@
    "from": "vdl_etg",
    "to": "asml",
    "what": "frames and stage modules",
+   "group": "subsystems",
    "criticality": "medium",
    "chokepoint_id": "CP1"
   },
@@ -7895,6 +8045,7 @@
    "from": "vdl_etg",
    "to": "zeiss_smt",
    "what": "complex frames for optics",
+   "group": "subsystems",
    "criticality": "medium",
    "chokepoint_id": "CP1"
   },
@@ -7902,6 +8053,7 @@
    "from": "prodrive",
    "to": "asml",
    "what": "electronics / motion control",
+   "group": "subsystems",
    "criticality": "medium",
    "chokepoint_id": "CP1"
   },
@@ -7909,6 +8061,7 @@
    "from": "berliner_glas",
    "to": "asml",
    "what": "wafer clamps, reticle stage optics-mechanics",
+   "group": "subsystems",
    "criticality": "medium",
    "chokepoint_id": "CP1"
   },
@@ -7916,6 +8069,7 @@
    "from": "pfeiffer_vacuum",
    "to": "asml",
    "what": "vacuum pumps",
+   "group": "subsystems",
    "criticality": "low",
    "chokepoint_id": "CP1"
   },
@@ -7923,6 +8077,7 @@
    "from": "access_laser",
    "to": "trumpf",
    "what": "CO2 seed laser",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7930,6 +8085,7 @@
    "from": "schott",
    "to": "zeiss_smt",
    "what": "ZERODUR mirror blanks",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7937,6 +8093,7 @@
    "from": "corning_ule",
    "to": "zeiss_smt",
    "what": "ULE mirror blanks",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP1"
   },
@@ -7944,6 +8101,7 @@
    "from": "vacuumschmelze",
    "to": "vdl_etg",
    "what": "NdFeB stage magnets",
+   "group": "subsystems",
    "criticality": "low",
    "chokepoint_id": "CP1"
   },
@@ -7951,6 +8109,7 @@
    "from": "zeiss_smt",
    "to": "asml",
    "what": "EUV optics",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP2"
   },
@@ -7958,6 +8117,7 @@
    "from": "trumpf",
    "to": "asml",
    "what": "drive laser",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP2"
   },
@@ -7965,6 +8125,7 @@
    "from": "schott",
    "to": "zeiss_smt",
    "what": "ZERODUR blanks",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP2"
   },
@@ -7972,6 +8133,7 @@
    "from": "corning_ule",
    "to": "zeiss_smt",
    "what": "ULE blanks",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP2"
   },
@@ -7979,6 +8141,7 @@
    "from": "access_laser",
    "to": "trumpf",
    "what": "seed laser",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP2"
   },
@@ -7986,6 +8149,7 @@
    "from": "vdl_etg_zeiss",
    "to": "zeiss_smt",
    "what": "frames",
+   "group": "subsystems",
    "criticality": "medium",
    "chokepoint_id": "CP2"
   },
@@ -7993,6 +8157,7 @@
    "from": "mo_si_targets",
    "to": "zeiss_smt",
    "what": "coating targets",
+   "group": "optics",
    "criticality": "low",
    "chokepoint_id": "CP2"
   },
@@ -8000,6 +8165,7 @@
    "from": "toyo_gosei",
    "to": "tok",
    "what": "PAG",
+   "group": "resists",
    "criticality": "high",
    "chokepoint_id": "CP7"
   },
@@ -8007,6 +8173,7 @@
    "from": "toyo_gosei",
    "to": "shinetsu",
    "what": "PAG",
+   "group": "resists",
    "criticality": "high",
    "chokepoint_id": "CP7"
   },
@@ -8014,6 +8181,7 @@
    "from": "toyo_gosei",
    "to": "jsr",
    "what": "PAG",
+   "group": "resists",
    "criticality": "high",
    "chokepoint_id": "CP7"
   },
@@ -8021,6 +8189,7 @@
    "from": "maruzen_petrochem",
    "to": "tok",
    "what": "resist polymers",
+   "group": "resists",
    "criticality": "medium",
    "chokepoint_id": "CP7"
   },
@@ -8028,6 +8197,7 @@
    "from": "maruzen_petrochem",
    "to": "shinetsu",
    "what": "resist polymers",
+   "group": "resists",
    "criticality": "medium",
    "chokepoint_id": "CP7"
   },
@@ -8035,6 +8205,7 @@
    "from": "inpria",
    "to": "jsr",
    "what": "MOR formulation",
+   "group": "resists",
    "criticality": "medium",
    "chokepoint_id": "CP7"
   },
@@ -8042,6 +8213,7 @@
    "from": "jsr",
    "to": "tsmc",
    "what": "EUV resist (peer to holders)",
+   "group": "resists",
    "criticality": "high",
    "chokepoint_id": "CP7"
   },
@@ -8049,6 +8221,7 @@
    "from": "stella_chemifa",
    "to": "tsmc",
    "what": "UHP HF",
+   "group": "chemicals",
    "criticality": "medium",
    "chokepoint_id": "CP7"
   },
@@ -8056,6 +8229,7 @@
    "from": "morita_chemical",
    "to": "samsung",
    "what": "UHP HF",
+   "group": "chemicals",
    "criticality": "medium",
    "chokepoint_id": "CP7"
   },
@@ -8063,6 +8237,7 @@
    "from": "fujifilm_resist",
    "to": "tsmc",
    "what": "EUV resist second source",
+   "group": "resists",
    "criticality": "low",
    "chokepoint_id": "CP7"
   },
@@ -8070,6 +8245,7 @@
    "from": "sumitomo_chem_resist",
    "to": "samsung",
    "what": "EUV resist second source",
+   "group": "resists",
    "criticality": "low",
    "chokepoint_id": "CP7"
   },
@@ -8077,6 +8253,7 @@
    "from": "agc_blanks",
    "to": "tsmc",
    "what": "EUV mask blanks (co-holder)",
+   "group": "masks",
    "criticality": "high",
    "chokepoint_id": "CP9"
   },
@@ -8084,6 +8261,7 @@
    "from": "corning_ule_blanks",
    "to": "hoya",
    "what": "ULE substrates",
+   "group": "masks",
    "criticality": "high",
    "chokepoint_id": "CP9"
   },
@@ -8091,6 +8269,7 @@
    "from": "corning_ule_blanks",
    "to": "agc_blanks",
    "what": "ULE substrates (supplementary; AGC also in-house)",
+   "group": "masks",
    "criticality": "low",
    "chokepoint_id": "CP9"
   },
@@ -8098,6 +8277,7 @@
    "from": "schott_blanks",
    "to": "hoya",
    "what": "LTE substrates",
+   "group": "masks",
    "criticality": "medium",
    "chokepoint_id": "CP9"
   },
@@ -8105,6 +8285,7 @@
    "from": "lasertec",
    "to": "hoya",
    "what": "actinic blank inspection",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP9"
   },
@@ -8112,6 +8293,7 @@
    "from": "lasertec",
    "to": "agc_blanks",
    "what": "actinic blank inspection",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP9"
   },
@@ -8119,6 +8301,7 @@
    "from": "mitsui_pellicle",
    "to": "tsmc",
    "what": "EUV pellicles",
+   "group": "masks",
    "criticality": "medium",
    "chokepoint_id": "CP9"
   },
@@ -8126,6 +8309,7 @@
    "from": "ims_nano",
    "to": "hoya",
    "what": "mask writers (downstream of blanks, at mask shops)",
+   "group": "tools",
    "criticality": "medium",
    "chokepoint_id": "CP9"
   },
@@ -8133,6 +8317,7 @@
    "from": "nuflare",
    "to": "hoya",
    "what": "mask writers (downstream)",
+   "group": "tools",
    "criticality": "low",
    "chokepoint_id": "CP9"
   },
@@ -8140,6 +8325,7 @@
    "from": "amat",
    "to": "tsmc",
    "what": "deposition/CMP/implant tools",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP3"
   },
@@ -8147,6 +8333,7 @@
    "from": "lam",
    "to": "tsmc",
    "what": "etch and ALD tools",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP3"
   },
@@ -8154,6 +8341,7 @@
    "from": "tel",
    "to": "tsmc",
    "what": "EUV coater/developer tracks (sole), etch, cleaning",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP3"
   },
@@ -8161,6 +8349,7 @@
    "from": "kla",
    "to": "tsmc",
    "what": "inspection & metrology",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP3"
   },
@@ -8168,6 +8357,7 @@
    "from": "asmi",
    "to": "tsmc",
    "what": "HKMG ALD and GAA epi",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP3"
   },
@@ -8175,6 +8365,7 @@
    "from": "linde",
    "to": "tsmc",
    "what": "on-site bulk gases",
+   "group": "gases",
    "criticality": "medium",
    "chokepoint_id": "CP3"
   },
@@ -8182,6 +8373,7 @@
    "from": "air_liquide",
    "to": "tsmc",
    "what": "bulk & specialty gases, precursors",
+   "group": "gases",
    "criticality": "medium",
    "chokepoint_id": "CP3"
   },
@@ -8189,6 +8381,7 @@
    "from": "tnsc",
    "to": "tsmc",
    "what": "specialty gases (incl. JASM Kumamoto)",
+   "group": "gases",
    "criticality": "medium",
    "chokepoint_id": "CP3"
   },
@@ -8196,6 +8389,7 @@
    "from": "neon_chain",
    "to": "linde",
    "what": "crude neon for purification",
+   "group": "gases",
    "criticality": "medium",
    "chokepoint_id": "CP3"
   },
@@ -8203,6 +8397,7 @@
    "from": "entegris_cmc",
    "to": "tsmc",
    "what": "CMP slurry, filters, FOUPs",
+   "group": "chemicals",
    "criticality": "medium",
    "chokepoint_id": "CP3"
   },
@@ -8210,6 +8405,7 @@
    "from": "dupont_cmp",
    "to": "tsmc",
    "what": "CMP pads",
+   "group": "chemicals",
    "criticality": "medium",
    "chokepoint_id": "CP3"
   },
@@ -8217,6 +8413,7 @@
    "from": "fujimi",
    "to": "tsmc",
    "what": "CMP slurry",
+   "group": "chemicals",
    "criticality": "low",
    "chokepoint_id": "CP3"
   },
@@ -8224,6 +8421,7 @@
    "from": "stella_chemifa",
    "to": "tsmc",
    "what": "UHP hydrofluoric acid",
+   "group": "chemicals",
    "criticality": "medium",
    "chokepoint_id": "CP3"
   },
@@ -8231,6 +8429,7 @@
    "from": "fab_filtration",
    "to": "tsmc",
    "what": "liquid/gas/air filtration",
+   "group": "chemicals",
    "criticality": "low",
    "chokepoint_id": "CP3"
   },
@@ -8238,6 +8437,7 @@
    "from": "taipower",
    "to": "tsmc",
    "what": "grid power",
+   "group": "utilities",
    "criticality": "high",
    "chokepoint_id": "CP3"
   },
@@ -8245,6 +8445,7 @@
    "from": "taiwan_water",
    "to": "tsmc",
    "what": "process water",
+   "group": "utilities",
    "criticality": "high",
    "chokepoint_id": "CP3"
   },
@@ -8252,6 +8453,7 @@
    "from": "disco",
    "to": "tsmc",
    "what": "grinders/dicers + blades",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP4"
   },
@@ -8259,6 +8461,7 @@
    "from": "disco",
    "to": "ase",
    "what": "grinders/dicers",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP4"
   },
@@ -8266,6 +8469,7 @@
    "from": "besi",
    "to": "tsmc",
    "what": "hybrid bonders (SoIC)",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP4"
   },
@@ -8273,6 +8477,7 @@
    "from": "hanmi",
    "to": "tsmc",
    "what": "HBM stacks via SK hynix/Micron TC bonders",
+   "group": "tools",
    "criticality": "medium",
    "chokepoint_id": "CP4"
   },
@@ -8280,6 +8485,7 @@
    "from": "hanwha_semitech",
    "to": "tsmc",
    "what": "HBM stacks via SK hynix TC bonders",
+   "group": "tools",
    "criticality": "low",
    "chokepoint_id": "CP4"
   },
@@ -8287,6 +8493,7 @@
    "from": "asmpt",
    "to": "ase",
    "what": "TCB/die attach",
+   "group": "tools",
    "criticality": "medium",
    "chokepoint_id": "CP4"
   },
@@ -8294,6 +8501,7 @@
    "from": "asmpt",
    "to": "amkr",
    "what": "TCB/die attach",
+   "group": "tools",
    "criticality": "medium",
    "chokepoint_id": "CP4"
   },
@@ -8301,6 +8509,7 @@
    "from": "namics",
    "to": "tsmc",
    "what": "underfill",
+   "group": "packmat",
    "criticality": "medium",
    "chokepoint_id": "CP4"
   },
@@ -8308,6 +8517,7 @@
    "from": "ibiden",
    "to": "tsmc",
    "what": "FC-BGA substrates (Nvidia)",
+   "group": "substrates",
    "criticality": "high",
    "chokepoint_id": "CP4"
   },
@@ -8315,6 +8525,7 @@
    "from": "unimicron",
    "to": "tsmc",
    "what": "FC-BGA substrates",
+   "group": "substrates",
    "criticality": "high",
    "chokepoint_id": "CP4"
   },
@@ -8322,6 +8533,7 @@
    "from": "shinko",
    "to": "tsmc",
    "what": "FC-BGA substrates",
+   "group": "substrates",
    "criticality": "medium",
    "chokepoint_id": "CP4"
   },
@@ -8329,6 +8541,7 @@
    "from": "semco_kinsus",
    "to": "ase",
    "what": "FC-BGA substrates",
+   "group": "substrates",
    "criticality": "medium",
    "chokepoint_id": "CP4"
   },
@@ -8336,6 +8549,7 @@
    "from": "semco_kinsus",
    "to": "amkr",
    "what": "FC-BGA substrates",
+   "group": "substrates",
    "criticality": "medium",
    "chokepoint_id": "CP4"
   },
@@ -8343,6 +8557,7 @@
    "from": "ajinomoto_ref",
    "to": "ibiden",
    "what": "ABF film",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP4"
   },
@@ -8350,6 +8565,7 @@
    "from": "ajinomoto_ref",
    "to": "unimicron",
    "what": "ABF film",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP4"
   },
@@ -8357,6 +8573,7 @@
    "from": "hemlock",
    "to": "shinetsu",
    "what": "semi-grade polysilicon",
+   "group": "polysilicon",
    "criticality": "high",
    "chokepoint_id": "CP6"
   },
@@ -8364,6 +8581,7 @@
    "from": "hemlock",
    "to": "globalwafers",
    "what": "semi-grade polysilicon",
+   "group": "polysilicon",
    "criticality": "high",
    "chokepoint_id": "CP6"
   },
@@ -8371,6 +8589,7 @@
    "from": "tokuyama",
    "to": "shinetsu",
    "what": "semi-grade polysilicon",
+   "group": "polysilicon",
    "criticality": "medium",
    "chokepoint_id": "CP6"
   },
@@ -8378,6 +8597,7 @@
    "from": "tokuyama",
    "to": "sumco",
    "what": "semi-grade polysilicon",
+   "group": "polysilicon",
    "criticality": "medium",
    "chokepoint_id": "CP6"
   },
@@ -8385,6 +8605,7 @@
    "from": "oci",
    "to": "globalwafers",
    "what": "polysilicon",
+   "group": "polysilicon",
    "criticality": "low",
    "chokepoint_id": "CP6"
   },
@@ -8392,6 +8613,7 @@
    "from": "sibelco_spruce_pine",
    "to": "quartz_crucibles",
    "what": "HPQ sand",
+   "group": "quartz",
    "criticality": "high",
    "chokepoint_id": "CP6"
   },
@@ -8399,6 +8621,7 @@
    "from": "quartz_corp",
    "to": "quartz_crucibles",
    "what": "HPQ sand",
+   "group": "quartz",
    "criticality": "high",
    "chokepoint_id": "CP6"
   },
@@ -8406,6 +8629,7 @@
    "from": "quartz_crucibles",
    "to": "shinetsu",
    "what": "CZ crucibles",
+   "group": "quartz",
    "criticality": "high",
    "chokepoint_id": "CP6"
   },
@@ -8413,6 +8637,7 @@
    "from": "quartz_crucibles",
    "to": "sumco",
    "what": "CZ crucibles",
+   "group": "quartz",
    "criticality": "high",
    "chokepoint_id": "CP6"
   },
@@ -8420,6 +8645,7 @@
    "from": "quartz_crucibles",
    "to": "globalwafers",
    "what": "CZ crucibles",
+   "group": "quartz",
    "criticality": "high",
    "chokepoint_id": "CP6"
   },
@@ -8427,6 +8653,7 @@
    "from": "cz_pullers",
    "to": "sumco",
    "what": "CZ furnaces",
+   "group": "tools",
    "criticality": "low",
    "chokepoint_id": "CP6"
   },
@@ -8434,6 +8661,7 @@
    "from": "fujimi_wafer",
    "to": "shinetsu",
    "what": "polishing slurry",
+   "group": "chemicals",
    "criticality": "medium",
    "chokepoint_id": "CP6"
   },
@@ -8441,6 +8669,7 @@
    "from": "abf_epoxy",
    "to": "ajinomoto",
    "what": "epoxy resin/hardener",
+   "group": "packmat",
    "criticality": "low",
    "chokepoint_id": "CP8"
   },
@@ -8448,6 +8677,7 @@
    "from": "abf_silica",
    "to": "ajinomoto",
    "what": "sub-micron spherical silica filler",
+   "group": "packmat",
    "criticality": "medium",
    "chokepoint_id": "CP8"
   },
@@ -8455,6 +8685,7 @@
    "from": "pet_carrier",
    "to": "ajinomoto",
    "what": "PET carrier film",
+   "group": "packmat",
    "criticality": "low",
    "chokepoint_id": "CP8"
   },
@@ -8462,6 +8693,7 @@
    "from": "ajinomoto_plants",
    "to": "ajinomoto",
    "what": "all coating capacity (Japan only)",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP8"
   },
@@ -8469,6 +8701,7 @@
    "from": "ajinomoto",
    "to": "ibiden_cp8",
    "what": "ABF film",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP8"
   },
@@ -8476,6 +8709,7 @@
    "from": "ajinomoto",
    "to": "ats",
    "what": "ABF film",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP8"
   },
@@ -8483,6 +8717,7 @@
    "from": "tsmc_hbm_basedie",
    "to": "skhynix",
    "what": "HBM4 base die (12nm-class)",
+   "group": "foundry",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8490,6 +8725,7 @@
    "from": "tsmc_hbm_basedie",
    "to": "mu",
    "what": "HBM4/HBM4E logic die",
+   "group": "foundry",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8497,6 +8733,7 @@
    "from": "lam_tsv_etch",
    "to": "skhynix",
    "what": "TSV etch",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8504,6 +8741,7 @@
    "from": "tel_tsv",
    "to": "samsung",
    "what": "TSV etch / debond / tracks",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8511,6 +8749,7 @@
    "from": "amat_tsv_ecd",
    "to": "skhynix",
    "what": "TSV Cu fill, liners, CMP",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8518,6 +8757,7 @@
    "from": "ebara_plating_cmp",
    "to": "samsung",
    "what": "plating / CMP",
+   "group": "tools",
    "criticality": "medium",
    "chokepoint_id": "CP5"
   },
@@ -8525,6 +8765,7 @@
    "from": "namics_ref",
    "to": "skhynix",
    "what": "MR-MUF resin (exclusive)",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8532,6 +8773,7 @@
    "from": "towa_molding",
    "to": "namics_ref",
    "what": "compression molding press for MR-MUF",
+   "group": "tools",
    "criticality": "medium",
    "chokepoint_id": "CP5"
   },
@@ -8539,6 +8781,7 @@
    "from": "resonac_ncf",
    "to": "samsung",
    "what": "NCF",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8546,6 +8789,7 @@
    "from": "resonac_ncf",
    "to": "mu",
    "what": "NCF",
+   "group": "packmat",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8553,6 +8797,7 @@
    "from": "advantest_hbm_ref",
    "to": "skhynix",
    "what": "HBM wafer/stack testers",
+   "group": "test",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8560,6 +8805,7 @@
    "from": "dram_resist_ref",
    "to": "skhynix",
    "what": "EUV/ArF resists",
+   "group": "resists",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8567,6 +8813,7 @@
    "from": "dram_wafers_ref",
    "to": "mu",
    "what": "300mm wafers",
+   "group": "wafers",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8574,6 +8821,7 @@
    "from": "bonders_ref",
    "to": "skhynix",
    "what": "TC bonders",
+   "group": "tools",
    "criticality": "high",
    "chokepoint_id": "CP5"
   },
@@ -8581,6 +8829,7 @@
    "from": "sunresin",
    "to": "cn_gallium_primary",
    "what": "extraction resin (~90%)",
+   "group": "minerals",
    "criticality": "high",
    "chokepoint_id": "CP12"
   },
@@ -8588,6 +8837,7 @@
    "from": "cn_gallium_primary",
    "to": "compound-semiconductor makers (GaN/GaAs)",
    "what": "4N-7N gallium",
+   "group": "minerals",
    "criticality": "high",
    "chokepoint_id": "CP12"
   },
@@ -8595,6 +8845,7 @@
    "from": "yunnan_germanium",
    "to": "fiber/IR optics and SiGe",
    "what": "GeO2 / GeCl4 / Ge crystal",
+   "group": "minerals",
    "criticality": "high",
    "chokepoint_id": "CP12"
   },
@@ -8602,6 +8853,7 @@
    "from": "teck_trail",
    "to": "Western optics customers",
    "what": "germanium (non-China)",
+   "group": "minerals",
    "criticality": "medium",
    "chokepoint_id": "CP12"
   },
@@ -8609,6 +8861,7 @@
    "from": "umicore_ge",
    "to": "Western optics customers",
    "what": "recycled germanium",
+   "group": "minerals",
    "criticality": "medium",
    "chokepoint_id": "CP12"
   },
@@ -8616,6 +8869,7 @@
    "from": "cn_rare_earth_magnets",
    "to": "server fans, servo motors, fab-tool stages",
    "what": "NdFeB magnets and Dy/Tb",
+   "group": "minerals",
    "criticality": "high",
    "chokepoint_id": "CP12"
   },
@@ -8623,6 +8877,7 @@
    "from": "cn_tungsten",
    "to": "WF6 / W-target makers",
    "what": "APT feedstock",
+   "group": "minerals",
    "criticality": "high",
    "chokepoint_id": "CP12"
   },
@@ -8630,6 +8885,7 @@
    "from": "cn_antimony",
    "to": "PCB laminate flame retardants",
    "what": "Sb2O3",
+   "group": "minerals",
    "criticality": "low",
    "chokepoint_id": "CP12"
   },
@@ -8637,6 +8893,7 @@
    "from": "formfactor",
    "to": "advantest",
    "what": "HBM/DRAM probe cards on Advantest wafer testers",
+   "group": "test",
    "criticality": "high",
    "chokepoint_id": "CP13"
   },
@@ -8644,6 +8901,7 @@
    "from": "technoprobe",
    "to": "ter",
    "what": "logic probe cards",
+   "group": "test",
    "criticality": "high",
    "chokepoint_id": "CP13"
   },
@@ -8651,6 +8909,7 @@
    "from": "mjc",
    "to": "advantest",
    "what": "DRAM probe cards",
+   "group": "test",
    "criticality": "medium",
    "chokepoint_id": "CP13"
   },
@@ -8658,6 +8917,7 @@
    "from": "jem",
    "to": "advantest",
    "what": "memory probe cards",
+   "group": "test",
    "criticality": "medium",
    "chokepoint_id": "CP13"
   },
@@ -8665,6 +8925,7 @@
    "from": "cohu",
    "to": "ter",
    "what": "thermal handlers",
+   "group": "test",
    "criticality": "medium",
    "chokepoint_id": "CP13"
   },
@@ -8672,6 +8933,7 @@
    "from": "hon_precision",
    "to": "advantest",
    "what": "OSAT handlers",
+   "group": "test",
    "criticality": "medium",
    "chokepoint_id": "CP13"
   },
@@ -8679,6 +8941,7 @@
    "from": "chroma",
    "to": "advantest",
    "what": "SLT / burn-in (complement and substitute)",
+   "group": "test",
    "criticality": "medium",
    "chokepoint_id": "CP13"
   },
@@ -8686,6 +8949,7 @@
    "from": "aem",
    "to": "ter",
    "what": "SLT cells",
+   "group": "test",
    "criticality": "low",
    "chokepoint_id": "CP13"
   },
@@ -8693,6 +8957,7 @@
    "from": "leeno",
    "to": "advantest",
    "what": "test sockets",
+   "group": "test",
    "criticality": "medium",
    "chokepoint_id": "CP13"
   },
@@ -8700,6 +8965,7 @@
    "from": "kr_hbm_testers",
    "to": "advantest",
    "what": "displacement at SK hynix HBM4 wafer test",
+   "group": "test",
    "criticality": "medium",
    "chokepoint_id": "CP13"
   },
@@ -8707,6 +8973,7 @@
    "from": "siemens_eda",
    "to": "snps",
    "what": "Calibre signoff in Synopsys flows",
+   "group": "design",
    "criticality": "high",
    "chokepoint_id": "CP14"
   },
@@ -8714,6 +8981,7 @@
    "from": "siemens_eda",
    "to": "cdns",
    "what": "Calibre signoff in Cadence flows",
+   "group": "design",
    "criticality": "high",
    "chokepoint_id": "CP14"
   },
@@ -8721,6 +8989,7 @@
    "from": "arm_ip",
    "to": "cdns",
    "what": "CPU IP in Arm SoC flows",
+   "group": "design",
    "criticality": "high",
    "chokepoint_id": "CP14"
   },
@@ -8728,6 +8997,7 @@
    "from": "snps_ip_internal",
    "to": "cdns",
    "what": "interface PHYs bought into Cadence-flow designs",
+   "group": "design",
    "criticality": "medium",
    "chokepoint_id": "CP14"
   },
@@ -8735,6 +9005,7 @@
    "from": "rambus_ip",
    "to": "snps",
    "what": "HBM4/DDR5 controller IP alternative",
+   "group": "design",
    "criticality": "low",
    "chokepoint_id": "CP14"
   },
@@ -8742,6 +9013,7 @@
    "from": "alphawave_qcom",
    "to": "cdns",
    "what": "SerDes IP (now Qualcomm-owned)",
+   "group": "design",
    "criticality": "medium",
    "chokepoint_id": "CP14"
   },
@@ -8749,6 +9021,7 @@
    "from": "nvidia_gpu_compute",
    "to": "snps",
    "what": "GPU acceleration + $2B stake",
+   "group": "compute",
    "criticality": "medium",
    "chokepoint_id": "CP14"
   },
@@ -8756,6 +9029,7 @@
    "from": "nvidia_gpu_compute",
    "to": "cdns",
    "what": "Millennium GPU platforms",
+   "group": "compute",
    "criticality": "medium",
    "chokepoint_id": "CP14"
   },
@@ -8763,6 +9037,7 @@
    "from": "cloud_eda",
    "to": "snps",
    "what": "burst compute",
+   "group": "compute",
    "criticality": "low",
    "chokepoint_id": "CP14"
   },
@@ -8770,6 +9045,7 @@
    "from": "bis_export_lever",
    "to": "snps",
    "what": "license conditions on China sales (16% -> 12% of revenue)",
+   "group": "policy",
    "criticality": "high",
    "chokepoint_id": "CP14"
   },
@@ -8777,6 +9053,7 @@
    "from": "lumentum_eml",
    "to": "cohr",
    "what": "EML/CW lasers (also to Innolight, Eoptolink)",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP10"
   },
@@ -8784,6 +9061,7 @@
    "from": "cohr_inp_fab",
    "to": "cohr",
    "what": "in-house InP laser chips",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP10"
   },
@@ -8791,6 +9069,7 @@
    "from": "broadcom_optical",
    "to": "innolight",
    "what": "EML/VCSEL/CW lasers + PAM4 DSP",
+   "group": "optics",
    "criticality": "high",
    "chokepoint_id": "CP10"
   },
@@ -8798,6 +9077,7 @@
    "from": "marvell_dsp",
    "to": "cohr",
    "what": "PAM4 DSP (also to Innolight/Eoptolink)",
+   "group": "chips",
    "criticality": "high",
    "chokepoint_id": "CP10"
   },
@@ -8805,6 +9085,7 @@
    "from": "sumitomo_inp_sub",
    "to": "lumentum_eml",
    "what": "InP substrates",
+   "group": "substrates",
    "criticality": "high",
    "chokepoint_id": "CP10"
   },
@@ -8812,6 +9093,7 @@
    "from": "axt_inp",
    "to": "lumentum_eml",
    "what": "InP substrates (China-made, permit-gated)",
+   "group": "substrates",
    "criticality": "high",
    "chokepoint_id": "CP10"
   },
@@ -8819,6 +9101,7 @@
    "from": "mitsubishi_eml",
    "to": "innolight",
    "what": "EML chips",
+   "group": "optics",
    "criticality": "medium",
    "chokepoint_id": "CP10"
   },
@@ -8826,6 +9109,7 @@
    "from": "tsmc_siph",
    "to": "cohr",
    "what": "SiPh PIC wafers / COUPE",
+   "group": "foundry",
    "criticality": "medium",
    "chokepoint_id": "CP10"
   },
@@ -8833,6 +9117,7 @@
    "from": "macom_semtech",
    "to": "cohr",
    "what": "TIA/driver ICs",
+   "group": "chips",
    "criticality": "medium",
    "chokepoint_id": "CP10"
   },
@@ -8840,6 +9125,7 @@
    "from": "fabrinet_cm",
    "to": "cohr",
    "what": "assembly capacity (Thailand)",
+   "group": "assembly",
    "criticality": "medium",
    "chokepoint_id": "CP10"
   },
@@ -8847,6 +9133,7 @@
    "from": "corning_fiber",
    "to": "cohr",
    "what": "fiber/cable",
+   "group": "networking",
    "criticality": "low",
    "chokepoint_id": "CP10"
   },
@@ -8854,6 +9141,7 @@
    "from": "hyperlight_tfln",
    "to": "cohr",
    "what": "TFLN modulators (emerging)",
+   "group": "optics",
    "criticality": "low",
    "chokepoint_id": "CP10"
   },
@@ -8861,6 +9149,7 @@
    "from": "howmet_igt",
    "to": "gev",
    "what": "hot-section airfoils",
+   "group": "metals",
    "criticality": "high",
    "chokepoint_id": "CP11"
   },
@@ -8868,6 +9157,7 @@
    "from": "pcc_igt",
    "to": "gev",
    "what": "castings/forgings",
+   "group": "metals",
    "criticality": "high",
    "chokepoint_id": "CP11"
   },
@@ -8875,6 +9165,7 @@
    "from": "doosan_enerbility",
    "to": "gev",
    "what": "components / competitor OEM",
+   "group": "power",
    "criticality": "medium",
    "chokepoint_id": "CP11"
   },
@@ -8882,6 +9173,7 @@
    "from": "jsw_forgings",
    "to": "gev",
    "what": "rotor forgings",
+   "group": "metals",
    "criticality": "medium",
    "chokepoint_id": "CP11"
   },
@@ -8889,6 +9181,7 @@
    "from": "cliffs_goes",
    "to": "gev",
    "what": "GOES core steel (US-made; Prolec GE cores)",
+   "group": "metals",
    "criticality": "high",
    "chokepoint_id": "CP11"
   },
@@ -8896,6 +9189,7 @@
    "from": "nippon_steel_goes",
    "to": "cliffs_goes",
    "what": "import substitute for high-grade GOES",
+   "group": "metals",
    "criticality": "high",
    "chokepoint_id": "CP11"
   },
@@ -8903,6 +9197,7 @@
    "from": "winding_labor",
    "to": "gev",
    "what": "coil-winding capacity",
+   "group": "power",
    "criticality": "high",
    "chokepoint_id": "CP11"
   },
@@ -8910,6 +9205,7 @@
    "from": "hitachi_bushings",
    "to": "gev",
    "what": "bushings / tap changers",
+   "group": "power",
    "criticality": "medium",
    "chokepoint_id": "CP11"
   },
@@ -8917,6 +9213,7 @@
    "from": "copper_oil",
    "to": "winding_labor",
    "what": "copper wire, insulating oil",
+   "group": "metals",
    "criticality": "low",
    "chokepoint_id": "CP11"
   },
@@ -8924,6 +9221,7 @@
    "from": "eaton_switchgear",
    "to": "etn",
    "what": "MV switchgear",
+   "group": "power",
    "criticality": "medium",
    "chokepoint_id": "CP11"
   },
@@ -8931,6 +9229,7 @@
    "from": "cat_cummins_gensets",
    "to": "gev",
    "what": "bridge/backup power substitute",
+   "group": "power",
    "criticality": "medium",
    "chokepoint_id": "CP11"
   }
@@ -10105,6 +10404,108 @@
    "volume": {
     "he": "ייצור",
     "en": "volume"
+   }
+  },
+  "groups": {
+   "wafers": {
+    "he": "פרוסות סיליקון",
+    "en": "silicon wafers"
+   },
+   "polysilicon": {
+    "he": "פוליסיליקון",
+    "en": "polysilicon"
+   },
+   "quartz": {
+    "he": "קוורץ",
+    "en": "quartz"
+   },
+   "resists": {
+    "he": "רזיסטים",
+    "en": "resists"
+   },
+   "chemicals": {
+    "he": "כימיקלים",
+    "en": "chemicals"
+   },
+   "gases": {
+    "he": "גזים",
+    "en": "gases"
+   },
+   "tools": {
+    "he": "ציוד ייצור",
+    "en": "fab tools"
+   },
+   "test": {
+    "he": "ציוד בדיקה",
+    "en": "test"
+   },
+   "optics": {
+    "he": "אופטיקה ולייזרים",
+    "en": "optics & lasers"
+   },
+   "masks": {
+    "he": "מסכות",
+    "en": "masks"
+   },
+   "subsystems": {
+    "he": "תת-מערכות",
+    "en": "subsystems"
+   },
+   "substrates": {
+    "he": "מצעים",
+    "en": "substrates"
+   },
+   "packmat": {
+    "he": "חומרי אריזה",
+    "en": "packaging materials"
+   },
+   "assembly": {
+    "he": "שירותי אריזה",
+    "en": "packaging services"
+   },
+   "foundry": {
+    "he": "ייצור שבבים",
+    "en": "foundry"
+   },
+   "memory": {
+    "he": "זיכרון",
+    "en": "memory"
+   },
+   "chips": {
+    "he": "שבבים",
+    "en": "chips"
+   },
+   "design": {
+    "he": "תכנון וקניין רוחני",
+    "en": "design & IP"
+   },
+   "compute": {
+    "he": "מחשוב ומערכות",
+    "en": "compute & systems"
+   },
+   "networking": {
+    "he": "תקשורת",
+    "en": "networking"
+   },
+   "power": {
+    "he": "חשמל ואנרגיה",
+    "en": "power"
+   },
+   "utilities": {
+    "he": "תשתיות",
+    "en": "utilities"
+   },
+   "metals": {
+    "he": "מתכות וסגסוגות",
+    "en": "metals & alloys"
+   },
+   "minerals": {
+    "he": "מינרלים קריטיים",
+    "en": "critical minerals"
+   },
+   "policy": {
+    "he": "מדיניות",
+    "en": "policy"
    }
   },
   "brand": {

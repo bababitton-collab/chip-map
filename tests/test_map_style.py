@@ -240,11 +240,11 @@ def test_the_highlight_is_offset_up_and_left_and_fades_at_seventy_percent():
     assert "gr.addColorStop(0.7,'rgba(255,255,255,0)')" in body
 
 
-def test_every_station_and_every_satellite_gets_it():
+def test_every_station_and_every_focus_supplier_gets_it():
     i = TPL.index("function draw(now){")
-    body = TPL[i:]
-    assert "inset(n.x,n.y,n.r);" in body, "stations"
-    assert "inset(x,y,sr);" in body, "satellites"
+    assert "inset(n.x,n.y,n.r);" in TPL[i:], "stations"
+    j = TPL.index("function fStation(")
+    assert "inset(x,y,r);" in TPL[j:TPL.index("\n}\n", j)], "focus-mode suppliers, both tiers"
 
 
 def test_the_stroke_colours_were_not_touched():
@@ -255,9 +255,16 @@ def test_the_stroke_colours_were_not_touched():
 
 
 def test_the_sprite_cache_is_invalidated_on_resize():
-    """The sprites are rasterised at the current device pixel ratio."""
+    """The sprites are rasterised at the current device pixel ratio.
+
+    Scoped to resize()'s own body rather than to a character count from its
+    opening brace -- a comment added inside the function pushed the statement
+    past a 500-character window and failed a test about where the statement
+    is, not about how much prose precedes it.
+    """
     i = TPL.index("function resize(){")
-    assert "SPR={};" in TPL[i:i + 500]
+    body = TPL[i:TPL.index(chr(10) + "}", i)]
+    assert "SPR={};" in body
 
 
 def test_the_frame_cost_is_published_for_the_check_to_read():

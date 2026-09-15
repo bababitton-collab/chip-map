@@ -34,6 +34,12 @@ the summary carries who/when/what. :func:`check_no_question_text` holds that,
 and publish_site's locked-text gate covers marks.json as well.
 
     python -m chains.mark --dry-run --today 2026-09-11 --only orcl_q1
+    python -m chains.mark --dry-run --force mu_fq4
+
+``--force`` asks one question whatever its date and whatever is already
+marked, to prove the whole path -- fetch, key, sources, decision -- end to end.
+It exists only as a dry run: a mark made before the call happened is exactly
+the claim the ledger cannot carry.
 """
 from __future__ import annotations
 
@@ -243,9 +249,21 @@ def ask(row: dict, q: dict, news: list[str], key: str, model: str) -> str:
                    headers={"x-api-key": key, "anthropic-version": VERSION,
                             "content-type": "application/json"})
     r.raise_for_status()
-    parts = [b.get("text", "") for b in r.json().get("content", [])
-             if b.get("type") == "text"]
+    content = r.json().get("content", [])
+    LAST_CALL["searches"] = sum(1 for b in content
+                                if b.get("type") == "server_tool_use")
+    LAST_CALL["sources"] = [
+        str(s.get("url")) for b in content
+        if b.get("type") == "web_search_tool_result"
+        and isinstance(b.get("content"), list)
+        for s in b["content"] if isinstance(s, dict) and s.get("url")]
+    parts = [b.get("text", "") for b in content if b.get("type") == "text"]
     return "\n".join(parts).strip()
+
+
+# What the last model call searched and read: counts and URLs, never text.
+LAST_CALL: dict = {"searches": 0, "sources": []}
+MAX_SOURCES_SHOWN = 8
 
 
 # -------------------------------------------------------------- validation
@@ -329,12 +347,21 @@ def check_no_question_text(blob: str, questions: dict) -> list[str]:
 
 # -------------------------------------------------------------------- run
 def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
-        say=print) -> int:
+        say=print, force: str | None = None) -> int:
     from chains.paths import marks_path
 
+    if force and not dry:
+        raise MarkError("--force is a dry run only: a question asked before "
+                        "its date cannot be marked for real")
     rows = load_watch(domain)
     marks = load_marks(domain)
-    todo = due(rows, marks, today, only)
+    if force:
+        todo = [r for r in rows if r["id"] == force]
+        if not todo:
+            raise MarkError(f"--force {force}: no such question in watch.json")
+        say(f"force: {force} (date {todo[0].get('d')}, dry-run)")
+    else:
+        todo = due(rows, marks, today, only)
     day = today.isoformat()
 
     if not todo:
@@ -344,6 +371,8 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
 
     from chains import questions as Q
     text = Q.fetch()
+    say(f"questions: {len(text)} fetched; text for "
+        f"{sum(1 for r in todo if text.get(r['id']))}/{len(todo)} due")
 
     key = os.environ.get(KEY_ENV, "").strip()
     if not key:
@@ -358,22 +387,32 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
         microsecond=0).isoformat().replace("+00:00", "Z")
 
     changed = False
-    marked, made = [], []
+    marked, made, trail = [], [], []
     for row in todo:
         q = text.get(row["id"]) or {}
         news = headlines(str(row.get("tk") or ""),
                          dt.date.fromisoformat(row["d"]), eod)
+        trail.append(f"  {row['id']}: {len(news)} EODHD headline(s)")
         rec = None
         for attempt in (1, 2):
+            LAST_CALL.update(searches=0, sources=[])
             try:
                 rec = parse(ask(row, q, news, key, model), row["d"])
             except Exception as e:
                 say(f"  {row['id']}: קריאה נכשלה ({type(e).__name__})")
                 rec = None
+            srcs = LAST_CALL["sources"]
+            trail.append(f"  {row['id']}: call {attempt}: "
+                         f"{LAST_CALL['searches']} web search(es), "
+                         f"{len(srcs)} source(s) read, "
+                         f"{'valid' if rec else 'no valid'} decision")
+            trail += [f"    {u}" for u in srcs[:MAX_SOURCES_SHOWN]]
             if rec:
                 break
         if not rec:
             rec = unresolved(day, "model output invalid")
+        trail.append(f"  {row['id']}: decision "
+                     f"{json.dumps(rec, ensure_ascii=False)}")
 
         rec["auto"] = True
         rec["updated"] = when
@@ -395,7 +434,12 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
     leak = check_no_question_text(blob, text)
     if leak:
         raise MarkError(f"a question's own sentence reached marks.json: {leak}")
+    leak = check_no_question_text("\n".join(trail), text)
+    if leak:
+        raise MarkError(f"a question's own sentence reached the log: {leak}")
 
+    for line in trail:
+        say(line)
     for row, rec in marked:
         say(f"  {row.get('who')} · {row.get('d')} · {rec['status']} · "
             f"{rec['note']}")
@@ -432,7 +476,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--today", default=None, metavar="YYYY-MM-DD")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--only", default=None, metavar="QID")
+    ap.add_argument("--force", default=None, metavar="QID",
+                    help="ask this question whatever its date; needs --dry-run")
     args = ap.parse_args(argv)
+    if args.force and not args.dry_run:
+        ap.error("--force needs --dry-run")
 
     if args.domain:
         # The same plumbing build_all uses: one env var, and every path helper
@@ -447,7 +495,8 @@ def main(argv: list[str] | None = None) -> int:
         lines.append(msg)
 
     try:
-        rc = run(args.domain, today, args.dry_run, args.only, say)
+        rc = run(args.domain, today, args.dry_run, args.only, say,
+                 force=args.force)
     except MarkError as e:
         print(f"mark: {e}", file=sys.stderr)
         return 1

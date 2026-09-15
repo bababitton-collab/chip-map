@@ -270,6 +270,80 @@ def test_a_missing_key_stops_the_run(wired, monkeypatch):
     assert mark.KEY_ENV in str(e.value)
 
 
+# -- a forced question: the whole path, on a dry run only -----------------------
+def test_force_asks_a_question_outside_the_window_and_writes_nothing(
+        wired, monkeypatch):
+    fake = Fake(GOOD)
+    monkeypatch.setattr(mark, "ask", fake)
+    far = TODAY - dt.timedelta(days=30)
+    said: list[str] = []
+    assert mark.run(None, far, True, None, say=said.append, force="a") == 0
+    assert fake.calls == 1
+    out = "\n".join(said)
+    assert "force: a" in out and "questions: 1 fetched" in out
+    assert '"status": "yes"' in out and "commit: לא נדרש (dry-run)" in out
+    assert read_marks(wired) == {"answers": {}, "forecasts": []}
+
+
+def test_force_ignores_a_manual_mark_but_still_writes_nothing(wired, monkeypatch):
+    doc = {"answers": {"a": {"status": "no", "note": "by hand"}}, "forecasts": []}
+    (wired / "marks.json").write_text(json.dumps(doc), encoding="utf-8")
+    fake = Fake(GOOD)
+    monkeypatch.setattr(mark, "ask", fake)
+    mark.run(None, TODAY, True, None, say=lambda *_: None, force="a")
+    assert fake.calls == 1
+    assert read_marks(wired) == doc
+
+
+def test_force_without_dry_run_is_refused_before_anything_runs(
+        wired, monkeypatch):
+    fake = Fake(GOOD)
+    monkeypatch.setattr(mark, "ask", fake)
+    monkeypatch.setattr("chains.questions.fetch",
+                        lambda url=None: pytest.fail("fetched"))
+    with pytest.raises(mark.MarkError) as e:
+        mark.run(None, TODAY, False, None, say=lambda *_: None, force="a")
+    assert "dry run" in str(e.value)
+    assert fake.calls == 0
+    assert read_marks(wired) == {"answers": {}, "forecasts": []}
+
+
+def test_the_command_line_refuses_force_without_dry_run():
+    with pytest.raises(SystemExit) as e:
+        mark.main(["--force", "a"])
+    assert e.value.code == 2
+
+
+def test_force_names_an_unknown_question(wired):
+    with pytest.raises(mark.MarkError) as e:
+        mark.run(None, TODAY, True, None, say=lambda *_: None, force="nope")
+    assert "nope" in str(e.value)
+
+
+def test_the_trail_shows_sources_read_but_no_question_text(wired, monkeypatch):
+    def reads(row, q, news, key, model):
+        mark.LAST_CALL.update(searches=2, sources=["https://a.example/mu"])
+        return GOOD
+    monkeypatch.setattr(mark, "ask", reads)
+    said: list[str] = []
+    mark.run(None, TODAY, True, None, say=said.append, force="a")
+    out = "\n".join(said)
+    assert "2 web search(es), 1 source(s) read, valid decision" in out
+    assert "https://a.example/mu" in out
+    assert "Did the company raise its guidance for the year?" not in out
+
+
+def test_the_workflow_keeps_force_a_dry_run_that_commits_nothing():
+    from pathlib import Path
+    yml = (Path(__file__).resolve().parents[1] / ".github" / "workflows"
+           / "mark.yml").read_text(encoding="utf-8")
+    assert "force_qid:" in yml
+    assert "FORCE_QID: ${{ inputs.force_qid }}" in yml
+    assert "${{ inputs.force_qid }}\"" not in yml   # never pasted into the shell
+    assert "force_qid runs only as a dry run" in yml
+    assert "if: ${{ inputs.dry_run != true && !inputs.force_qid }}" in yml
+
+
 # -- the question text goes nowhere -------------------------------------------
 def test_no_question_text_in_the_file_or_the_summary(wired, monkeypatch):
     monkeypatch.setattr(mark, "ask", Fake(GOOD))

@@ -27,6 +27,10 @@ on:
         description: "One question id"
         type: string
         required: false
+      force_qid:
+        description: "Ask this question whatever its date (dry run only; commits nothing)"
+        type: string
+        required: false
 
 # The one thing this job does that the build does not: commit to main.
 permissions:
@@ -72,19 +76,33 @@ jobs:
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
           QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
           EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+          FORCE_QID: ${{ inputs.force_qid }}
         run: |
           set -euo pipefail
           args=""
           if [ "${{ inputs.dry_run }}" = "true" ]; then args="$args --dry-run"; fi
           if [ -n "${{ inputs.today }}" ]; then args="$args --today ${{ inputs.today }}"; fi
           if [ -n "${{ inputs.only }}" ]; then args="$args --only ${{ inputs.only }}"; fi
+          # A forced question is asked before its date, so it is never a real
+          # mark: refuse it without dry_run rather than quietly adding one.
+          if [ -n "${FORCE_QID}" ]; then
+            if [ "${{ inputs.dry_run }}" != "true" ]; then
+              echo "::error::force_qid runs only as a dry run; set dry_run to true"
+              exit 1
+            fi
+            if ! [[ "${FORCE_QID}" =~ ^[a-z0-9_]+$ ]]; then
+              echo "::error::force_qid must be a question id"
+              exit 1
+            fi
+            args="$args --force ${FORCE_QID}"
+          fi
           python -m chains.mark $args
 
       # Only when the file actually moved, and never on a dry run. Rebase then
       # push, up to three times: the build may have pushed to main in between,
       # and a mark is an append that rebases cleanly.
       - name: commit the marks
-        if: ${{ inputs.dry_run != true }}
+        if: ${{ inputs.dry_run != true && !inputs.force_qid }}
         env:
           TODAY: ${{ inputs.today }}
         run: |

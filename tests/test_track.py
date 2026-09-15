@@ -1471,6 +1471,62 @@ def test_the_verify_control_recomputes_the_committed_hash_in_the_browser(
     assert b["tampered"]["state"] == "mismatch"
 
 
+def test_a_revised_card_says_so_and_verifies_the_hash_in_force(tmp_path):
+    """Re-committed before its answer date: the card says when and why, Verify
+    checks the current hash, and the replaced hash is there only on request."""
+    import shutil
+    import subprocess
+    from chains import preregister
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    row = {"id": "hoya_h1", "d": "2026-10-30", "win": ["hoya"],
+           "lose": ["agc"], "kind": "share"}
+    text = {"yes_en": "Blank sales up.", "no_en": "Blank sales flat."}
+    contract = preregister.canonical(row, text).decode("utf-8")
+    sha = preregister.digest(row, text)
+    old = preregister.digest(dict(row, kind="tide", win=["hoya", "tsmc"],
+                                  lose=[]), text)
+    note = "Basket revised before the answer date."
+
+    def card(qid, **over):
+        p = {"sha256": sha, "committed_at": "2026-09-15",
+             "answer_date": "2026-10-30", "valid_preregistration": True,
+             "primary_horizon": 20, "contract": contract}
+        p.update(over)
+        return {"qid": qid, "who": qid.upper(), "state": "reported",
+                "status": "yes", "d": "2026-10-30",
+                "report_date": "2026-10-30", "members": [], "prereg": p}
+
+    payload = {"as_of": "2026-10-31", "summary": {}, "forecasts": [
+        card("revised", revised_at="2026-09-15", revision_note=note,
+             history=[{"sha256": old, "committed_at": "2026-09-13"}]),
+        card("plain")]}
+    js = tmp_path / "revised.js"
+    js.write_text(
+        "globalThis.window = {};\n" + cards_source() + "\n"
+        "const root = {};\n"
+        f"window.renderTrack(root, {json.dumps(payload)});\n"
+        "const html = root.innerHTML;\n"
+        "const un = s => s.replace(/&quot;/g,'\"').replace(/&lt;/g,'<')"
+        ".replace(/&gt;/g,'>').replace(/&amp;/g,'&');\n"
+        "const m = /<div class=\"prereg\" data-prereg=\"revised\" "
+        "data-sha=\"([^\"]*)\" data-valid=\"([01])\" data-committed=\"([^\"]*)\" "
+        "data-answer=\"([^\"]*)\" data-contract=\"([^\"]*)\"/.exec(html);\n"
+        "(async () => {\n"
+        "  const r = await window.verifyPrereg(un(m[5]), m[1], m[2]==='1', m[3], m[4]);\n"
+        "  process.stdout.write(JSON.stringify({html, state: r.state, hex: r.hex}));\n"
+        "})();\n", encoding="utf-8")
+    got = json.loads(subprocess.run(["node", str(js)], capture_output=True,
+                                    check=True).stdout.decode("utf-8"))
+    html = got["html"]
+    assert got["state"] == "verified" and got["hex"] == sha
+    assert html.count("Revised 2026-09-15 — before the answer date") == 1
+    assert note in html
+    assert html.count(old) == 1, "the replaced hash is shown once"
+    assert html.index("<summary>Previous commitment</summary>") < html.index(old)
+    assert f'data-sha="{old}"' not in html, "Verify never checks the old hash"
+
+
 # -- resolved is public, upcoming is paid ---------------------------------------
 
 def test_the_official_score_is_the_primary_horizon_excess(book):

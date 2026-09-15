@@ -183,12 +183,86 @@ def test_a_changed_contract_can_be_recommitted_only_before_its_answer():
     prior = P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1))
     moved = dict(ROW, lose=[])
     got = P.entries([moved], {"mu_fq4": TEXT}, prior, DAY,
-                    recommit={"mu_fq4"})
+                    recommit={"mu_fq4"}, note="loser removed")
     assert got[0]["committed_at"] == "2026-09-13"
     assert got[0]["sha256"] == P.digest(moved, TEXT)
     with pytest.raises(P.PreregisterError, match="answer date"):
         P.entries([moved], {"mu_fq4": TEXT}, prior, dt.date(2026, 9, 30),
-                  recommit={"mu_fq4"})
+                  recommit={"mu_fq4"}, note="loser removed")
+
+
+def test_a_recommit_after_the_answer_date_is_refused_and_nothing_moves(
+        tmp_path):
+    """The day after the answer, with --recommit and a note: refused, and the
+    file keeps the hash and the date it had."""
+    path = tmp_path / "commitments.json"
+    P.dump(P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1)), path)
+    first = path.read_bytes()
+    moved = dict(ROW, lose=[])
+    with pytest.raises(P.PreregisterError, match="cannot re-commit"):
+        P.dump(P.entries([moved], {"mu_fq4": TEXT}, P.load(path),
+                         dt.date(2026, 10, 1), recommit={"mu_fq4"},
+                         note="loser removed"), path)
+    assert path.read_bytes() == first
+
+
+def test_a_recommit_without_a_note_is_refused():
+    prior = P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1))
+    for note in ("", "   \n "):
+        with pytest.raises(P.PreregisterError, match="one line"):
+            P.entries([dict(ROW, lose=[])], {"mu_fq4": TEXT}, prior, DAY,
+                      recommit={"mu_fq4"}, note=note)
+
+
+def test_a_recommit_keeps_the_hash_it_replaced():
+    first = P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1))
+    moved = dict(ROW, lose=[])
+    got = P.entries([moved], {"mu_fq4": TEXT}, first, DAY,
+                    recommit={"mu_fq4"}, note="loser\nremoved")[0]
+    assert tuple(got) == P.ENTRY_FIELDS + P.REVISION_FIELDS
+    assert got["revised_at"] == got["committed_at"] == "2026-09-13"
+    assert got["revision_note"] == "loser removed", "one line"
+    assert got["history"] == [{"sha256": P.digest(ROW, TEXT),
+                               "committed_at": "2026-09-01"}]
+    assert P.check([moved], {"mu_fq4": TEXT}, [got]) == []
+    # A later build keeps all of it; a second re-commit adds to the history.
+    assert P.entries([moved], {"mu_fq4": TEXT}, [got],
+                     dt.date(2026, 9, 20))[0] == got
+    again = P.entries([dict(moved, kind="tide")], {"mu_fq4": TEXT}, [got],
+                      dt.date(2026, 9, 20), recommit={"mu_fq4"},
+                      note="kind")[0]
+    assert [h["committed_at"] for h in again["history"]] == [
+        "2026-09-01", "2026-09-13"]
+    assert again["history"][-1]["sha256"] == got["sha256"]
+
+
+def test_check_names_a_malformed_revision():
+    first = P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1))
+    moved = dict(ROW, lose=[])
+    good = P.entries([moved], {"mu_fq4": TEXT}, first, DAY,
+                     recommit={"mu_fq4"}, note="loser removed")[0]
+    for bad, words in [
+            (dict(good, revised_at="2026-09-12"), "revised_at"),
+            (dict(good, revision_note="two\nlines"), "revision_note"),
+            (dict(good, history=[]), "history"),
+            (dict(good, history=[{"sha256": good["sha256"],
+                                  "committed_at": "2026-09-01"}]),
+             "still in force")]:
+        got = P.check([moved], {"mu_fq4": TEXT}, [bad])
+        assert got and words in got[0], (words, got)
+
+
+def test_the_reveal_carries_the_revision():
+    first = P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1))
+    moved = dict(ROW, lose=[])
+    e = P.entries([moved], {"mu_fq4": TEXT}, first, DAY,
+                  recommit={"mu_fq4"}, note="loser removed")[0]
+    r = P.reveal(moved, TEXT, e)
+    assert {k: r[k] for k in P.REVISION_FIELDS} == {
+        k: e[k] for k in P.REVISION_FIELDS}
+    assert hashlib.sha256(r["contract"].encode("utf-8")).hexdigest() \
+        == e["sha256"], "the hash checked is the one in force"
+    assert "revised_at" not in P.reveal(ROW, TEXT, first[0])
 
 
 def test_a_moved_answer_date_keeps_the_commit_date_and_rechecks_validity():
@@ -246,7 +320,12 @@ def test_every_question_has_a_commitment_observation_only_included():
 def test_each_committed_entry_is_well_formed_and_honest():
     assert len(BY) == len(COMMITTED), "one commitment per question"
     for e in COMMITTED:
-        assert tuple(e) == P.ENTRY_FIELDS, e["qid"]
+        assert tuple(e) in (P.ENTRY_FIELDS,
+                            P.ENTRY_FIELDS + P.REVISION_FIELDS), e["qid"]
+        if "revised_at" in e:
+            assert P._revision_problems(e) == [], e["qid"]
+            assert e["revised_at"] < e["answer_date"], (
+                f"{e['qid']}: revised on or after its answer date")
         assert re.fullmatch(r"[0-9a-f]{64}", e["sha256"]), e["qid"]
         dt.date.fromisoformat(e["committed_at"])
         dt.date.fromisoformat(e["answer_date"])

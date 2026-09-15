@@ -529,11 +529,20 @@
     const p = r.prereg;
     if(!p || !p.contract || !ANSWERED(r)) return '';
     const ok = !!p.valid_preregistration;
+    // A contract re-committed before its answer date says when and why. Verify
+    // checks the hash in force; the ones it replaced are folded away below.
+    const hist = Array.isArray(p.history) ? p.history : [];
+    const revised = p.revised_at
+      ? `<div style="margin-top:4px;color:#e8ecf2">Revised ${esc(p.revised_at)} — ${String(p.revised_at) < String(p.answer_date) ? 'before' : 'not before'} the answer date${p.revision_note ? ' · '+esc(p.revision_note) : ''}</div>`
+      : '';
+    const previous = hist.length
+      ? `<details style="margin-top:6px"><summary>Previous commitment${hist.length>1?'s':''}</summary>${hist.slice().reverse().map(h=>`<div style="word-break:break-all;color:#7d8797">SHA-256 ${esc(h.sha256)} · committed ${esc(h.committed_at)} · replaced</div>`).join('')}</details>`
+      : '';
     return `<div class="prereg" data-prereg="${esc(r.qid)}" data-sha="${esc(p.sha256)}" data-valid="${ok?'1':'0'}" data-committed="${esc(p.committed_at)}" data-answer="${esc(p.answer_date)}" data-contract="${esc(p.contract)}" style="margin-top:12px;padding:10px 12px;border:1px solid #222a36;border-radius:6px;font-family:IBM Plex Mono,monospace;font-size:.7rem;color:#b3bccb">
-      <div>Pre-registered ${esc(p.committed_at)} · answer date ${esc(p.answer_date)} · primary horizon ${esc(p.primary_horizon)} sessions${ok?'':' · <b style="color:#f2b632">not a valid preregistration</b>'}</div>
+      <div>Pre-registered ${esc(p.committed_at)} · answer date ${esc(p.answer_date)} · primary horizon ${esc(p.primary_horizon)} sessions${ok?'':' · <b style="color:#f2b632">not a valid preregistration</b>'}</div>${revised}
       <div style="word-break:break-all;margin:6px 0;color:#7d8797">SHA-256 ${esc(p.sha256)} · ${p.hash_source==='commitments.json'?'read from commitments.json':'as carried in this page'}</div>
       <button type="button" data-verify style="font:inherit;color:#e8ecf2;background:#141922;border:1px solid #31405a;border-radius:4px;padding:4px 10px;cursor:pointer">Verify preregistration</button>
-      <span class="pr-result" role="status" style="margin-left:8px"></span>
+      <span class="pr-result" role="status" style="margin-left:8px"></span>${previous}
       <details style="margin-top:6px"><summary>Scoring contract — the exact bytes that were hashed</summary><pre style="white-space:pre-wrap;word-break:break-all">${esc(p.contract)}</pre></details>
     </div>`;
   }

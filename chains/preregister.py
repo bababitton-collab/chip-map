@@ -41,6 +41,13 @@ be re-committed with --recommit, which stamps today, and only while the answer
 date is still ahead. Once the answer date has come nothing can be re-committed.
 A question dropped from the watch list keeps its commitment in the file -- a
 published hash is not withdrawn by deleting the row it came from.
+
+A RE-COMMIT KEEPS WHAT IT REPLACED
+----------------------------------
+A re-committed entry says so: revised_at is the day, revision_note says why in
+one line (--note), and history lists every hash it replaced with the day each
+was committed. The hash in force is the one checked; the replaced ones stay in
+the file, because a hash once published is not taken back.
 """
 from __future__ import annotations
 
@@ -64,6 +71,9 @@ CONTRACT_FIELDS = ("qid", "win", "lose", "kind", "yes_criteria",
                    "sign_convention", "observe_only")
 ENTRY_FIELDS = ("qid", "answer_date", "committed_at", "sha256",
                 "primary_horizon", "valid_preregistration")
+# Only on an entry that was re-committed, after the fields above.
+REVISION_FIELDS = ("revised_at", "revision_note", "history")
+HISTORY_FIELDS = ("sha256", "committed_at")
 
 
 class PreregisterError(ValueError):
@@ -131,19 +141,28 @@ def commitment(row: dict, text: dict | None = None) -> dict:
 
 
 # ------------------------------------------------------------- the entries
-def _entry(qid: str, answer_date: str, committed_at: str, sha: str) -> dict:
-    return {"qid": qid, "answer_date": answer_date,
-            "committed_at": committed_at, "sha256": sha,
-            "primary_horizon": PRIMARY_HORIZON,
-            # Strictly before. Committed on the answer date itself is not a
-            # preregistration: the answer may already have been public.
-            "valid_preregistration": committed_at < answer_date}
+def _entry(qid: str, answer_date: str, committed_at: str, sha: str,
+           revision: dict | None = None) -> dict:
+    e = {"qid": qid, "answer_date": answer_date,
+         "committed_at": committed_at, "sha256": sha,
+         "primary_horizon": PRIMARY_HORIZON,
+         # Strictly before. Committed on the answer date itself is not a
+         # preregistration: the answer may already have been public.
+         "valid_preregistration": committed_at < answer_date}
+    if revision:
+        e.update({k: revision[k] for k in REVISION_FIELDS})
+    return e
 
 
 def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
             today: dt.date | None = None,
-            recommit: frozenset | set = frozenset()) -> list[dict]:
-    """The commitments file as it should now read. Sticky on (qid, sha256)."""
+            recommit: frozenset | set = frozenset(),
+            note: str = "") -> list[dict]:
+    """The commitments file as it should now read. Sticky on (qid, sha256).
+
+    ``note`` is the one line published beside every contract re-committed in
+    this run; a re-commit without one is refused.
+    """
     day = (today or dt.datetime.now(dt.timezone.utc).date()).isoformat()
     by = {e["qid"]: e for e in (prior or [])}
     out, seen = [], set()
@@ -152,10 +171,13 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
         seen.add(qid)
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         old = by.get(qid)
+        revision = None
         if old is None:
             committed = day
         elif old["sha256"] == sha:
             committed = old["committed_at"]
+            if "revised_at" in old:
+                revision = old
         elif qid not in recommit:
             raise PreregisterError(
                 f"{qid}: its contract no longer hashes to the value committed "
@@ -168,11 +190,43 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
                 f"{qid}: cannot re-commit -- its answer date {r['d']} has come. "
                 f"A contract changed after its answer is not a preregistration.")
         else:
+            line = " ".join(str(note or "").split())
+            if not line:
+                raise PreregisterError(
+                    f"{qid}: a re-commit says why, in one line: --note TEXT. "
+                    f"It is published beside the new hash.")
             committed = day
-        out.append(_entry(qid, r["d"], committed, sha))
+            revision = {"revised_at": day, "revision_note": line,
+                        "history": list(old.get("history") or []) + [
+                            {"sha256": old["sha256"],
+                             "committed_at": old["committed_at"]}]}
+        out.append(_entry(qid, r["d"], committed, sha, revision))
     for e in prior or []:
         if e["qid"] not in seen:
             out.append(dict(e))
+    return out
+
+
+def _revision_problems(e: dict) -> list[str]:
+    """What is wrong with a re-committed entry's record of the revision."""
+    out = []
+    if e["revised_at"] != e["committed_at"]:
+        out.append("revised_at is not the day the contract in force was "
+                   "committed")
+    note = e["revision_note"]
+    if not isinstance(note, str) or not note.strip() or "\n" in note:
+        out.append("revision_note is not one line of text")
+    hist = e["history"]
+    if not isinstance(hist, list) or not hist or any(
+            not isinstance(h, dict) or tuple(h) != HISTORY_FIELDS
+            for h in hist):
+        out.append("history is not a list of {sha256, committed_at}")
+    else:
+        days = [h["committed_at"] for h in hist] + [e["committed_at"]]
+        if days != sorted(days):
+            out.append("history is not in the order it was committed")
+        if hist[-1]["sha256"] == e["sha256"]:
+            out.append("history's last hash is the one still in force")
     return out
 
 
@@ -187,8 +241,10 @@ def check(rows: list[dict], texts: dict | None,
         if e is None:
             problems.append(f"{qid}: no commitment")
             continue
-        if tuple(e) != ENTRY_FIELDS:
+        if tuple(e) not in (ENTRY_FIELDS, ENTRY_FIELDS + REVISION_FIELDS):
             problems.append(f"{qid}: entry fields are {list(e)}")
+        elif "revised_at" in e:
+            problems += [f"{qid}: {p}" for p in _revision_problems(e)]
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         if e["sha256"] != sha:
             problems.append(f"{qid}: contract changed since it was committed "
@@ -206,12 +262,14 @@ def check(rows: list[dict], texts: dict | None,
 
 def reveal(row: dict, text: dict | None, entry: dict) -> dict:
     """What a resolved card carries: the commitment, and the exact bytes that
-    were hashed for it, as text."""
-    return {"sha256": entry["sha256"], "committed_at": entry["committed_at"],
-            "answer_date": entry["answer_date"],
-            "primary_horizon": entry["primary_horizon"],
-            "valid_preregistration": entry["valid_preregistration"],
-            "contract": canonical(row, text).decode("utf-8")}
+    were hashed for it, as text. A re-committed entry brings its revision."""
+    out = {"sha256": entry["sha256"], "committed_at": entry["committed_at"],
+           "answer_date": entry["answer_date"],
+           "primary_horizon": entry["primary_horizon"],
+           "valid_preregistration": entry["valid_preregistration"],
+           "contract": canonical(row, text).decode("utf-8")}
+    out.update({k: entry[k] for k in REVISION_FIELDS if k in entry})
+    return out
 
 
 def reveals(rows: list[dict], texts: dict | None,
@@ -253,6 +311,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--recommit", nargs="*", default=[],
                     help="re-commit these changed contracts (before their "
                          "answer date only)")
+    ap.add_argument("--note", default="",
+                    help="one line, required with --recommit: why the "
+                         "contracts changed; published beside them")
     a = ap.parse_args(argv)
 
     rows = json.loads(watch_path().read_text(encoding="utf-8"))
@@ -262,15 +323,20 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.write:
         try:
-            got = entries(rows, texts, prior, recommit=frozenset(a.recommit))
+            got = entries(rows, texts, prior, recommit=frozenset(a.recommit),
+                          note=a.note)
         except PreregisterError as e:
             print(f"preregister: {e}")
             return 1
         dump(got, path)
         known = {e["qid"] for e in prior}
+        was = {e["qid"]: e["sha256"] for e in prior}
         new = [e["qid"] for e in got if e["qid"] not in known]
         late = [e["qid"] for e in got if not e["valid_preregistration"]]
-        print(f"wrote {path}  ({len(got)} commitments, {len(new)} new)")
+        redone = [e["qid"] for e in got
+                  if e["qid"] in known and e["sha256"] != was[e["qid"]]]
+        print(f"wrote {path}  ({len(got)} commitments, {len(new)} new, "
+              f"{len(redone)} re-committed)")
         print(f"  not a valid preregistration: {', '.join(late) or 'none'}")
         print("  commit this file: the commit is the timestamp")
         return 0
@@ -297,5 +363,6 @@ if __name__ == "__main__":
 
 __all__ = ["contract", "canonical", "digest", "commitment", "entries",
            "check", "reveal", "reveals", "load", "dump", "PreregisterError",
-           "CONTRACT_FIELDS", "ENTRY_FIELDS", "CONTRACT_HORIZONS",
+           "CONTRACT_FIELDS", "ENTRY_FIELDS", "REVISION_FIELDS",
+           "HISTORY_FIELDS", "CONTRACT_HORIZONS",
            "BENCHMARKS", "SIGN_CONVENTION"]

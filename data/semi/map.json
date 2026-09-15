@@ -152,6 +152,91 @@
    "short": "GlobalWafers"
   },
   {
+   "id": "wacker",
+   "name": "Wacker Chemie",
+   "ticker": "WCH.DE",
+   "exchange": "XETRA",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Semiconductor-grade polysilicon; with Hemlock ~75% of world supply",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "Wacker + Hemlock ~75% of semiconductor-grade polysilicon",
+    "source": "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf",
+    "as_of": "2025-08-06"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [
+    "Hemlock",
+    "Tokuyama",
+    "OCI"
+   ],
+   "notes": "Country: DE (Burghausen, Nünchritz). \"A long-standing supplier of ultrapure polysilicon to all major wafer manufacturers in the semiconductor industry\" (Wacker, 2024-02-22).",
+   "price_symbol": "WCH.XETRA",
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "Wacker"
+  },
+  {
+   "id": "siltronic",
+   "name": "Siltronic",
+   "ticker": "WAF.DE",
+   "exchange": "XETRA",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "300mm and 200mm silicon wafers; one of the five makers of most of the world's wafers",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "One of five suppliers representing the majority of semiconductor wafer production",
+    "source": "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf",
+    "as_of": "2025-08-06"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [
+    "Shin-Etsu",
+    "SUMCO",
+    "GlobalWafers",
+    "SK Siltron"
+   ],
+   "notes": "Country: DE (Burghausen, Freiberg) / SG. Customer base includes Samsung and TSMC; top 10 customers ~80% of 2019 sales (Siltronic Factbook, Mar-2020).",
+   "price_symbol": "WAF.XETRA",
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "Siltronic"
+  },
+  {
+   "id": "nsig",
+   "name": "National Silicon Industry Group (NSIG)",
+   "ticker": "688126.SS",
+   "exchange": "SSE STAR",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "China's largest 300mm silicon wafer maker; challenger to the CP6 holders",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "12-inch wafer shipments up over 90% YoY in 1Q26; supplies major domestic foundries and IDMs",
+    "source": "https://www.trendforce.com/news/2026/08/12/news-chinas-12-inch-silicon-wafers-hit-the-accelerator-with-billions-in-new-capacity-investments/",
+    "as_of": "2026-08-12"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [
+    "Shin-Etsu",
+    "SUMCO",
+    "GlobalWafers"
+   ],
+   "notes": "Country: CN (Shanghai, Taiyuan). State-backed. Its customers, China's domestic foundries and IDMs, are not stations on the map, so it carries no supply edge; its one edge is competes.",
+   "price_symbol": "688126.SHG",
+   "price_symbol_kind": "primary",
+   "line": "logic",
+   "short": "NSIG"
+  },
+  {
    "id": "ajinomoto",
    "name": "Ajinomoto",
    "ticker": "2802.T",
@@ -330,6 +415,33 @@
    "price_note": "US line for Hoya Corp; home listing 7741.T is not on EODHD",
    "line": "packaging",
    "short": "HOYA"
+  },
+  {
+   "id": "agc",
+   "name": "AGC Inc.",
+   "ticker": "5201.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": true,
+   "layer": "L1",
+   "role": "EUV mask blanks, glass to coating in-house",
+   "market_cap_usd_b": null,
+   "segment_share": {
+    "value": "With HOYA, ~93% of EUV mask blanks",
+    "source": "https://siliconanalysts.com/tools/supply-chain",
+    "as_of": "2026-08-06"
+   },
+   "customer_concentration": [],
+   "key_suppliers": [],
+   "competitors": [
+    "HOYA"
+   ],
+   "notes": "Country: JP. Its EUV blanks \"have been adopted by several logic and memory semiconductor manufacturers\" (AGC, 2023-04-27), none named, so no customer edge. Subnode agc_blanks carries the CP9 supplier detail.",
+   "price_symbol": "ASGLY.US",
+   "price_symbol_kind": "adr",
+   "price_note": "US line for AGC Inc ADR; home listing 5201.T is not on EODHD",
+   "line": "logic",
+   "short": "AGC"
   },
   {
    "id": "asml",
@@ -2898,6 +3010,88 @@
    "what": "TCB bonders for advanced packaging",
    "criticality": "medium",
    "source": "https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/"
+  },
+  {
+   "from": "wacker",
+   "to": "shinetsu",
+   "type": "supplies",
+   "what": "semiconductor-grade polysilicon; Wacker supplies \"all major wafer manufacturers\" (2024) and SIA names Shin-Etsu, SUMCO and GlobalWafers among the five majors (2025)",
+   "share": null,
+   "criticality": "high",
+   "source": [
+    "https://www.wacker.com/cms/en-us/press-and-media/press/press-releases/2024/detail-228484.html",
+    "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf"
+   ],
+   "as_of": "2025-08-06"
+  },
+  {
+   "from": "wacker",
+   "to": "sumco",
+   "type": "supplies",
+   "what": "semiconductor-grade polysilicon; Wacker supplies \"all major wafer manufacturers\" (2024) and SIA names Shin-Etsu, SUMCO and GlobalWafers among the five majors (2025)",
+   "share": null,
+   "criticality": "high",
+   "source": [
+    "https://www.wacker.com/cms/en-us/press-and-media/press/press-releases/2024/detail-228484.html",
+    "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf"
+   ],
+   "as_of": "2025-08-06"
+  },
+  {
+   "from": "wacker",
+   "to": "globalwafers",
+   "type": "supplies",
+   "what": "semiconductor-grade polysilicon; Wacker supplies \"all major wafer manufacturers\" (2024) and SIA names Shin-Etsu, SUMCO and GlobalWafers among the five majors (2025)",
+   "share": null,
+   "criticality": "high",
+   "source": [
+    "https://www.wacker.com/cms/en-us/press-and-media/press/press-releases/2024/detail-228484.html",
+    "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf"
+   ],
+   "as_of": "2025-08-06"
+  },
+  {
+   "from": "siltronic",
+   "to": "tsmc",
+   "type": "supplies",
+   "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+   "share": null,
+   "criticality": "medium",
+   "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
+   "as_of": "2020-03-23"
+  },
+  {
+   "from": "siltronic",
+   "to": "samsung",
+   "type": "supplies",
+   "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+   "share": null,
+   "criticality": "medium",
+   "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
+   "as_of": "2020-03-23"
+  },
+  {
+   "from": "nsig",
+   "to": "shinetsu",
+   "type": "competes",
+   "what": "300mm silicon wafers: China's challenger to the CP6 holders; 12-inch shipments up over 90% YoY in 1Q26",
+   "share": null,
+   "criticality": "low",
+   "source": [
+    "https://www.trendforce.com/news/2026/08/12/news-chinas-12-inch-silicon-wafers-hit-the-accelerator-with-billions-in-new-capacity-investments/",
+    "https://www.digitimes.com/news/a20260820VL212/nsig-300mm-capacity-silicon-wafer-silicon.html"
+   ],
+   "as_of": "2026-08-12"
+  },
+  {
+   "from": "agc",
+   "to": "hoya",
+   "type": "competes",
+   "what": "EUV mask blanks: the other half of the duopoly (AGC + HOYA ~93%)",
+   "share": null,
+   "criticality": "high",
+   "source": "https://siliconanalysts.com/tools/supply-chain",
+   "as_of": "2026-08-06"
   }
  ],
  "chokepoints": [
@@ -8172,20 +8366,6 @@
    "chokepoint_id": "CP6"
   },
   {
-   "from": "wacker",
-   "to": "sumco",
-   "what": "semi-grade polysilicon",
-   "criticality": "high",
-   "chokepoint_id": "CP6"
-  },
-  {
-   "from": "wacker",
-   "to": "shinetsu",
-   "what": "semi-grade polysilicon",
-   "criticality": "high",
-   "chokepoint_id": "CP6"
-  },
-  {
    "from": "tokuyama",
    "to": "shinetsu",
    "what": "semi-grade polysilicon",
@@ -9053,7 +9233,8 @@
     "stage": "volume",
     "signal": "FabNext utilization / 300mm volume disclosure in quarterly results showing leading-edge (N3/N2) wafer qualification share gains; Q2-2026 sales up on improving demand",
     "signal_source": "https://www.investing.com/news/transcripts/earnings-call-transcript-siltronic-posts-q2-2026-sales-gain-as-demand-improves-93CH-4822904",
-    "as_of": "2026-07"
+    "as_of": "2026-07",
+    "sponsor": "siltronic"
    },
    {
     "name": "SK Siltron (being sold by SK to Doosan)",
@@ -9079,7 +9260,8 @@
      "https://www.digitimes.com/news/a20260820VL212/nsig-300mm-capacity-silicon-wafer-silicon.html",
      "https://www.trendforce.com/news/2026/08/12/news-chinas-12-inch-silicon-wafers-hit-the-accelerator-with-billions-in-new-capacity-investments/"
     ],
-    "as_of": "2026-08-20"
+    "as_of": "2026-08-20",
+    "sponsor": "nsig"
    },
    {
     "name": "ESWIN Materials / TCL Zhonghuan (China 300mm)",

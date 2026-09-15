@@ -497,7 +497,7 @@ function satArc(n, R, m, force){
 // Greedy, in ring order. For each satellite: the four spots beside its dot --
 // right, left, above, below; left first on the right-to-left map -- and the
 // first whose text box is clear wins. None clear: the spot moves out along the
-// satellite's radial, 12px at a time, up to three times, and a leader line
+// satellite's radial, 12px at a time, up to five times, and a leader line
 // joins it to its dot. Still none: the label is shortened with an ellipsis
 // until it fits. Two label boxes never touch; a label with no room is not drawn.
 function satLabels(n, all){
@@ -519,7 +519,7 @@ function satLabels(n, all){
   all.forEach(s=>{
     const dx=s.tx-n.x, dy=s.ty-n.y, d=Math.hypot(dx,dy)||1;
     const fit=text=>{ const w=ctx.measureText(text).width;
-      for(let k=0;k<=3;k++){ const ax=s.tx+dx/d*12*k, ay=s.ty+dy/d*12*k;
+      for(let k=0;k<=5;k++){ const ax=s.tx+dx/d*12*k, ay=s.ty+dy/d*12*k;
         for(const side of sides){ const b=boxAt(ax,ay,side,w); if(clear(b)) return {b,k}; } }
       return null; };
     let text=s.label, got=fit(text);

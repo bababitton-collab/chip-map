@@ -49,18 +49,17 @@
    "CP3"
   ],
   "win": [
-   "samsung"
-  ],
-  "lose": [
+   "samsung",
    "skhynix",
    "mu"
   ],
+  "lose": [],
   "leaks": [
    "mu_fq4"
   ],
   "lane": "hbm",
   "lbl": "Samsung (prelim)",
-  "kind": "share"
+  "kind": "tide"
  },
  {
   "id": "asml_q3",
@@ -77,7 +76,9 @@
    "tsmc",
    "samsung",
    "intc",
-   "skhynix"
+   "skhynix",
+   "lasertec",
+   "hoya"
   ],
   "lose": [],
   "leaks": [],
@@ -97,7 +98,10 @@
   ],
   "win": [
    "tsmc",
-   "asml"
+   "asml",
+   "nvda",
+   "avgo",
+   "amd"
   ],
   "lose": [
    "intc",
@@ -141,10 +145,13 @@
    "CP3"
   ],
   "win": [
-   "intc"
+   "intc",
+   "asml",
+   "ibiden"
   ],
   "lose": [
-   "tsmc"
+   "tsmc",
+   "samsung"
   ],
   "leaks": [],
   "lane": "fab",
@@ -162,11 +169,13 @@
    "CP7"
   ],
   "win": [
-   "shinetsu"
+   "shinetsu",
+   "sumco",
+   "globalwafers",
+   "wacker",
+   "tok"
   ],
-  "lose": [
-   "globalwafers"
-  ],
+  "lose": [],
   "leaks": [
    "asml_q3",
    "tsm_q3"
@@ -185,7 +194,8 @@
    "CP5"
   ],
   "win": [
-   "skhynix"
+   "skhynix",
+   "hanmi"
   ],
   "lose": [
    "mu",
@@ -212,6 +222,7 @@
    "amkr"
   ],
   "lose": [
+   "ase",
    "tsmc"
   ],
   "leaks": [
@@ -274,13 +285,12 @@
    "CP11"
   ],
   "win": [
-   "gev"
+   "gev",
+   "siemensenergy",
+   "hwm",
+   "etn"
   ],
-  "lose": [
-   "msft",
-   "amzn",
-   "googl"
-  ],
+  "lose": [],
   "leaks": [
    "clf_q3"
   ],
@@ -300,10 +310,9 @@
   ],
   "win": [
    "lrcx",
-   "samsung",
-   "tsmc",
-   "skhynix",
-   "mu"
+   "amat",
+   "klac",
+   "tel"
   ],
   "lose": [],
   "leaks": [
@@ -444,16 +453,14 @@
    "nvda",
    "amd"
   ],
-  "lose": [
-   "tsmc"
-  ],
+  "lose": [],
   "leaks": [
    "tsm_q3",
    "amkr_q3"
   ],
   "lane": "fab",
   "lbl": "ASE",
-  "kind": "share"
+  "kind": "tide"
  },
  {
   "id": "axti_q3",
@@ -518,7 +525,8 @@
   ],
   "lane": "cloud",
   "lbl": "Amazon",
-  "kind": "share"
+  "kind": "share",
+  "internal_note": "mixed wording: capex + Trainium; split next time"
  },
  {
   "id": "hwm_q3",
@@ -572,17 +580,18 @@
    "CP9"
   ],
   "win": [
-   "hoya",
-   "tsmc"
+   "hoya"
   ],
-  "lose": [],
+  "lose": [
+   "agc"
+  ],
   "leaks": [
    "asml_q3",
    "tsm_q3"
   ],
   "lane": "litho",
   "lbl": "HOYA",
-  "kind": "tide"
+  "kind": "share"
  },
  {
   "id": "cohr_q1",
@@ -595,7 +604,8 @@
   ],
   "win": [
    "cohr",
-   "fn"
+   "fn",
+   "lite"
   ],
   "lose": [],
   "leaks": [
@@ -618,7 +628,8 @@
   ],
   "win": [
    "ajinomoto",
-   "unimicron"
+   "unimicron",
+   "ibiden"
   ],
   "lose": [],
   "leaks": [
@@ -640,8 +651,9 @@
   ],
   "win": [
    "sumco",
-   "tsmc",
-   "shinetsu"
+   "shinetsu",
+   "globalwafers",
+   "wacker"
   ],
   "lose": [],
   "leaks": [
@@ -704,7 +716,9 @@
   "win": [
    "amat",
    "lrcx",
-   "klac"
+   "klac",
+   "tel",
+   "asml"
   ],
   "lose": [],
   "leaks": [
@@ -728,11 +742,11 @@
   ],
   "win": [
    "siemensenergy",
-   "amzn"
+   "msft",
+   "amzn",
+   "googl"
   ],
-  "lose": [
-   "gev"
-  ],
+  "lose": [],
   "leaks": [
    "clf_q3",
    "gev_q3",
@@ -754,9 +768,13 @@
    "CP4"
   ],
   "win": [
+   "nvda",
    "tsmc",
    "skhynix",
-   "mu"
+   "mu",
+   "samsung",
+   "mpwr",
+   "fn"
   ],
   "lose": [],
   "leaks": [
@@ -803,12 +821,13 @@
    "CP6"
   ],
   "win": [
-   "globalwafers"
-  ],
-  "lose": [
    "shinetsu",
-   "sumco"
+   "sumco",
+   "globalwafers",
+   "wacker",
+   "siltronic"
   ],
+  "lose": [],
   "leaks": [
    "shecy_h1",
    "sumco_q3"
@@ -853,7 +872,8 @@
   ],
   "win": [
    "lasertec",
-   "hoya"
+   "hoya",
+   "asml"
   ],
   "lose": [],
   "leaks": [

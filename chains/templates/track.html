@@ -240,6 +240,8 @@ __CARDS_JS__
         Object.assign(r.prereg, {sha256:e.sha256, committed_at:e.committed_at,
           answer_date:e.answer_date, valid_preregistration:e.valid_preregistration,
           hash_source:'commitments.json'});
+        if(e.revised_at) Object.assign(r.prereg, {revised_at:e.revised_at,
+          revision_note:e.revision_note, history:e.history});
       });
     })
     .catch(() => {})

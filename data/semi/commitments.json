@@ -18,26 +18,50 @@
  {
   "qid": "smsg_pre",
   "answer_date": "2026-10-08",
-  "committed_at": "2026-09-13",
-  "sha256": "70d69183fc6fde63b72a1cbf37831aa81f56239b2d905bef8bbcf2ea7d0edfa5",
+  "committed_at": "2026-09-15",
+  "sha256": "218241cbddb69644142393e0ffc15d5da2de3e9bfc38008044af855c5b3ab7f9",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "70d69183fc6fde63b72a1cbf37831aa81f56239b2d905bef8bbcf2ea7d0edfa5",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "asml_q3",
   "answer_date": "2026-10-14",
-  "committed_at": "2026-09-13",
-  "sha256": "fa90dc7c1fdc549d84b92df14d86104258bf827acd36fc1415dc6180c19d643e",
+  "committed_at": "2026-09-15",
+  "sha256": "2bdec87d0f59b9c700369852597e68978448648fad90c0fcf14df3aa166bc862",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "fa90dc7c1fdc549d84b92df14d86104258bf827acd36fc1415dc6180c19d643e",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "tsm_q3",
   "answer_date": "2026-10-15",
-  "committed_at": "2026-09-13",
-  "sha256": "24a1602b68279707d99121b5b728ed4437317601c5750df50972f7fb0081cfb2",
+  "committed_at": "2026-09-15",
+  "sha256": "e94a620fb4bdb20956e2a33ae1804355076d3eb8bc3143dcf2a503dd8365fc3a",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "24a1602b68279707d99121b5b728ed4437317601c5750df50972f7fb0081cfb2",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "clf_q3",
@@ -50,34 +74,66 @@
  {
   "qid": "intc_q3",
   "answer_date": "2026-10-22",
-  "committed_at": "2026-09-13",
-  "sha256": "ba89c4c49b432aef3fe56eb08bbfae30b910e833e42724dd30a4cc59c4d77891",
+  "committed_at": "2026-09-15",
+  "sha256": "97048de792a44dbd381abfbcc89b317de6805b74f50352bf60673ff51fc492a6",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "ba89c4c49b432aef3fe56eb08bbfae30b910e833e42724dd30a4cc59c4d77891",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "shecy_h1",
   "answer_date": "2026-10-23",
-  "committed_at": "2026-09-13",
-  "sha256": "f1d751037f4436856be1ad6520a46a7d2bbab06ebc9960299d769d30b9bfed2d",
+  "committed_at": "2026-09-15",
+  "sha256": "b2e5e1324782915bc08fa56861641b9e0e8d04a64b5b0f5324cacd8d97d85525",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "f1d751037f4436856be1ad6520a46a7d2bbab06ebc9960299d769d30b9bfed2d",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "skh_q3",
   "answer_date": "2026-10-23",
-  "committed_at": "2026-09-13",
-  "sha256": "8f8d5b742a28bc4013fd4749eef00d020b06aabe0f19c476a7bf08ec10484c16",
+  "committed_at": "2026-09-15",
+  "sha256": "878b287dfd97f511ed7e4a43d4c0097788b21577e5cd3fc4be731fdbe7309d3c",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "8f8d5b742a28bc4013fd4749eef00d020b06aabe0f19c476a7bf08ec10484c16",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "amkr_q3",
   "answer_date": "2026-10-26",
-  "committed_at": "2026-09-13",
-  "sha256": "80187461160ac835a5ac343c329624b8ea0b2287f14207f53efc2e73647815f6",
+  "committed_at": "2026-09-15",
+  "sha256": "e79bd05d5406256e6fad07d8d64aca488ae41084dc7bbd424732c949454984a6",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "80187461160ac835a5ac343c329624b8ea0b2287f14207f53efc2e73647815f6",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "cdns_q3",
@@ -98,18 +154,34 @@
  {
   "qid": "gev_q3",
   "answer_date": "2026-10-28",
-  "committed_at": "2026-09-13",
-  "sha256": "373c4817910f2ac4d126ae77c6a41dc0dbe9a3802a03c88824fda670cc59c0a6",
+  "committed_at": "2026-09-15",
+  "sha256": "b05fcb14d83f88c3e520f9724c5877291eb373e129368e3c408d05c52fc9e543",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "373c4817910f2ac4d126ae77c6a41dc0dbe9a3802a03c88824fda670cc59c0a6",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "lrcx_q1",
   "answer_date": "2026-10-28",
-  "committed_at": "2026-09-13",
-  "sha256": "f01523f02f1ffc9112b6e596761625fbec6c3004b91cfeced8b39e579f31d266",
+  "committed_at": "2026-09-15",
+  "sha256": "ecd2e6d7479776f0c141287471dd77a977c3346f19b66689ef9642d51081f194",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "f01523f02f1ffc9112b6e596761625fbec6c3004b91cfeced8b39e579f31d266",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "teck_q3",
@@ -154,10 +226,18 @@
  {
   "qid": "asx_q3",
   "answer_date": "2026-10-29",
-  "committed_at": "2026-09-13",
-  "sha256": "9f5a0c7df4b0ef7bdd94937b7c2466940a1a8ba3eb3b5dda9dbbf0d27f05ca66",
+  "committed_at": "2026-09-15",
+  "sha256": "98b8d08a1e1596019905dc5da63bae432fa340f78ca6aec062fe2a6b5a96b632",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "9f5a0c7df4b0ef7bdd94937b7c2466940a1a8ba3eb3b5dda9dbbf0d27f05ca66",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "axti_q3",
@@ -202,34 +282,66 @@
  {
   "qid": "hoya_h1",
   "answer_date": "2026-10-30",
-  "committed_at": "2026-09-13",
-  "sha256": "83fea0cb945358d5d86e6e65f58f2fcd5842be4e4c1c5e5474f15314926a8771",
+  "committed_at": "2026-09-15",
+  "sha256": "d6ad8b30360fdeccb1f099781c1acd12b78599fb6fc0398c986674ad6cc5029e",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "83fea0cb945358d5d86e6e65f58f2fcd5842be4e4c1c5e5474f15314926a8771",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "cohr_q1",
   "answer_date": "2026-11-05",
-  "committed_at": "2026-09-13",
-  "sha256": "64b8a87dd1f8efec9aac64ee0a9de5e8096663ff0387cf98251716290d2dba7d",
+  "committed_at": "2026-09-15",
+  "sha256": "f3c1b226627646f58871bc2ad36c10553fed23d22a0bf523ebcd00b73df5872e",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "64b8a87dd1f8efec9aac64ee0a9de5e8096663ff0387cf98251716290d2dba7d",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "ajin_h1",
   "answer_date": "2026-11-05",
-  "committed_at": "2026-09-13",
-  "sha256": "251084ae2cfe8e336012963c2f6de312f8e08b40e855e86222cbdb8f42e2ba4a",
+  "committed_at": "2026-09-15",
+  "sha256": "4a8fc7934c2f23a711638959704b9ba124e6b6c2726fda7e248a82839e2a5395",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "251084ae2cfe8e336012963c2f6de312f8e08b40e855e86222cbdb8f42e2ba4a",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "sumco_q3",
   "answer_date": "2026-11-06",
-  "committed_at": "2026-09-13",
-  "sha256": "867f32d0ab090c48a78c7c8b786a41de239d68abfe0520d957949e905d8473e0",
+  "committed_at": "2026-09-15",
+  "sha256": "f7a3e3b043e1af99f5ca4a7da4270c1900cdb450d20412667d876ef24561a2d1",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "867f32d0ab090c48a78c7c8b786a41de239d68abfe0520d957949e905d8473e0",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "mofcom_re",
@@ -250,26 +362,50 @@
  {
   "qid": "amat_q4",
   "answer_date": "2026-11-12",
-  "committed_at": "2026-09-13",
-  "sha256": "896056aa0391f6f04da9378202ef0b849cfac19a0f9744bca94450428773d670",
+  "committed_at": "2026-09-15",
+  "sha256": "0e9f2b44510f67ec0f9fe3f4a12b4562ea13cff571b92a764d41f914af05e032",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "896056aa0391f6f04da9378202ef0b849cfac19a0f9744bca94450428773d670",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "sie_fy",
   "answer_date": "2026-11-12",
-  "committed_at": "2026-09-13",
-  "sha256": "791684665c43de3e7e7d749ba6bb721795cbba62bd5e32fe3be568634bd1f62b",
+  "committed_at": "2026-09-15",
+  "sha256": "971c04e9b937d6c076b6edd39a4c4a869167e7303b62112db64bb83b0bba376c",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "791684665c43de3e7e7d749ba6bb721795cbba62bd5e32fe3be568634bd1f62b",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "nvda_q3",
   "answer_date": "2026-11-19",
-  "committed_at": "2026-09-13",
-  "sha256": "c69e935cb9f43efe2ee84546a58f2e00219bc70ba1bc877515be31fc53b67c16",
+  "committed_at": "2026-09-15",
+  "sha256": "0960b4550bcee9af7364099bce086c48920e82fb73a8cf88071ae5ac701869ed",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "c69e935cb9f43efe2ee84546a58f2e00219bc70ba1bc877515be31fc53b67c16",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "mofcom_ga",
@@ -282,10 +418,18 @@
  {
   "qid": "semi_smg",
   "answer_date": "2026-12-10",
-  "committed_at": "2026-09-13",
-  "sha256": "0f8168690664f04f8b973aabc1c53515eeec687a7648117db22ddde07e166848",
+  "committed_at": "2026-09-15",
+  "sha256": "0b286b9f611551ad6a91fa2a6ed801c0d365ab406755dffb2c04b40d77cca7e5",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "0f8168690664f04f8b973aabc1c53515eeec687a7648117db22ddde07e166848",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "absolics",
@@ -298,10 +442,18 @@
  {
   "qid": "lsrc_q2",
   "answer_date": "2027-01-27",
-  "committed_at": "2026-09-13",
-  "sha256": "2f2d52249417125c7b93acb2d5f1b387d8799e38dabe554d1038ba8ba049f032",
+  "committed_at": "2026-09-15",
+  "sha256": "5d183e4e770f3e13d6e29840a73ff889e82d402c60acee1c6786222870a77723",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "history": [
+   {
+    "sha256": "2f2d52249417125c7b93acb2d5f1b387d8799e38dabe554d1038ba8ba049f032",
+    "committed_at": "2026-09-13"
+   }
+  ]
  },
  {
   "qid": "spie",

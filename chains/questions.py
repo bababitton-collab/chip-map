@@ -214,6 +214,12 @@ def open_ids(rows: list[dict], today: dt.date | None = None) -> set[str]:
     return past | ({upcoming[0]["id"]} if upcoming else set())
 
 
+# Row fields that are for the people curating the list and never for a page,
+# a brief or a snapshot. The watch files are public in the repository; what is
+# kept off the site is kept off it here.
+INTERNAL_FIELDS = ("internal_note",)
+
+
 def merge(rows: list[dict], text: dict[str, dict], lang: str,
           today: dt.date | None = None,
           unlock_all: bool = False) -> list[dict]:
@@ -238,7 +244,9 @@ def merge(rows: list[dict], text: dict[str, dict], lang: str,
         unlocked = {r["id"] for r in rows}
     out = []
     for r in rows:
-        row = dict(r)
+        # A note for whoever edits the list next. Every published row comes
+        # through here, so here is where it stops.
+        row = {k: v for k, v in r.items() if k not in INTERNAL_FIELDS}
         is_open = r["id"] in unlocked
         # ``open`` keeps meaning "free on the site" even in the paid mail, so a
         # brief can mark which rows its reader is paying for.

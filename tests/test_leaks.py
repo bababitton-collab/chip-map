@@ -172,6 +172,17 @@ def test_a_share_question_names_a_loser():
                        + chr(10) + chr(10).join(bad))
 
 
+def test_a_tide_question_names_no_loser():
+    """The converse. A tide lifts the whole lane, so nobody in it loses: a
+    tide question with a lose list is a share claim under the tide tag, and it
+    is scored as a spread the tag says it is not making."""
+    bad = ["%s (%s) lose=%s" % (r["id"], r.get("who"), r.get("lose"))
+           for r in WATCH
+           if r.get("kind") == "tide" and (r.get("lose") or [])]
+    assert bad == [], ("a tide question with somebody on the losing side:"
+                       + chr(10) + chr(10).join(bad))
+
+
 def test_every_row_is_tagged_tide_or_share():
     """The tag decides which rule above applies, so an untagged row is a row
     that quietly escapes both."""

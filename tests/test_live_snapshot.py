@@ -366,9 +366,15 @@ def test_the_ledger_is_present_even_with_nothing_marked():
 @needs_build
 def test_the_snapshot_stays_under_the_ceiling_with_a_ledger():
     """The assertion the whole trim ladder exists for. write() refuses to
-    produce an oversized file; this states the invariant at the call site."""
+    produce an oversized file; this states the invariant at the call site.
+
+    Measured as published: after the ladder has shortened what it shortens,
+    exactly as write() does. The untrimmed build is allowed past the ceiling
+    -- that is what the ladder is for -- and the file that ships is not."""
     for lang in ("he", "en"):
-        blob = ls._dump(ls.build(lang=lang))
+        live = ls.build(lang=lang)
+        ls.shrink_to_fit(live)
+        blob = ls._dump(live)
         assert len(blob) < ls.MAX_BYTES, f"{lang} is {len(blob):,} bytes"
 
 

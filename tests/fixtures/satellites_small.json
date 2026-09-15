@@ -1,44 +1,44 @@
 {
  "en/900/hoya": [
   {
-   "x": 154.726,
-   "y": 472.881,
+   "x": 114.466,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 166.106,
-   "y": 498.364,
+   "x": 137.488,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 170,
-   "y": 526,
+   "x": 155.252,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 166.106,
-   "y": 553.636,
+   "x": 166.377,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 154.726,
-   "y": 579.119,
+   "x": 169.995,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 233.386,
-   "y": 502.975,
+   "x": 197.256,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 233.386,
-   "y": 549.025,
+   "x": 221.325,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -46,49 +46,49 @@
  "en/900/tok": [
   {
    "x": 154.726,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 166.106,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 170,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 166.106,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 154.726,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 228.574,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 235,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 228.574,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -196,81 +196,81 @@
  "en/900/ajinomoto": [
   {
    "x": 146.484,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 161.309,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 169.022,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 169.022,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 161.309,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 146.484,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }
  ],
  "en/1280/hoya": [
   {
-   "x": 154.726,
-   "y": 472.881,
+   "x": 114.466,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 166.106,
-   "y": 498.364,
+   "x": 137.488,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 170,
-   "y": 526,
+   "x": 155.252,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 166.106,
-   "y": 553.636,
+   "x": 166.377,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 154.726,
-   "y": 579.119,
+   "x": 169.995,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 233.386,
-   "y": 502.975,
+   "x": 197.256,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 233.386,
-   "y": 549.025,
+   "x": 221.325,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -278,49 +278,49 @@
  "en/1280/tok": [
   {
    "x": 154.726,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 166.106,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 170,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 166.106,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 154.726,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 228.574,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 235,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 228.574,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -428,81 +428,81 @@
  "en/1280/ajinomoto": [
   {
    "x": 146.484,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 161.309,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 169.022,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 169.022,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 161.309,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 146.484,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }
  ],
  "en/1920/hoya": [
   {
-   "x": 154.726,
-   "y": 472.881,
+   "x": 114.466,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 166.106,
-   "y": 498.364,
+   "x": 137.488,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 170,
-   "y": 526,
+   "x": 155.252,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 166.106,
-   "y": 553.636,
+   "x": 166.377,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 154.726,
-   "y": 579.119,
+   "x": 169.995,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 233.386,
-   "y": 502.975,
+   "x": 197.256,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 233.386,
-   "y": 549.025,
+   "x": 221.325,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -510,49 +510,49 @@
  "en/1920/tok": [
   {
    "x": 154.726,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 166.106,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 170,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 166.106,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 154.726,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 228.574,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 235,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 228.574,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -660,81 +660,81 @@
  "en/1920/ajinomoto": [
   {
    "x": 146.484,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 161.309,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 169.022,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 169.022,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 161.309,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 146.484,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }
  ],
  "en/2560/hoya": [
   {
-   "x": 154.726,
-   "y": 472.881,
+   "x": 114.466,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 166.106,
-   "y": 498.364,
+   "x": 137.488,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 170,
-   "y": 526,
+   "x": 155.252,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 166.106,
-   "y": 553.636,
+   "x": 166.377,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 154.726,
-   "y": 579.119,
+   "x": 169.995,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 233.386,
-   "y": 502.975,
+   "x": 197.256,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 233.386,
-   "y": 549.025,
+   "x": 221.325,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -742,49 +742,49 @@
  "en/2560/tok": [
   {
    "x": 154.726,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 166.106,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 170,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 166.106,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 154.726,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 228.574,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 235,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 228.574,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -892,81 +892,81 @@
  "en/2560/ajinomoto": [
   {
    "x": 146.484,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 161.309,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 169.022,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 169.022,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 161.309,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 146.484,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }
  ],
  "he/900/hoya": [
   {
-   "x": 745.274,
-   "y": 472.881,
+   "x": 785.534,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 733.894,
-   "y": 498.364,
+   "x": 762.512,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 730,
-   "y": 526,
+   "x": 744.748,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 733.894,
-   "y": 553.636,
+   "x": 733.623,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 745.274,
-   "y": 579.119,
+   "x": 730.005,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 666.614,
-   "y": 502.975,
+   "x": 702.744,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 666.614,
-   "y": 549.025,
+   "x": 678.675,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -974,49 +974,49 @@
  "he/900/tok": [
   {
    "x": 745.274,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 733.894,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 730,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 733.894,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 745.274,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 671.426,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 665,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 671.426,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -1124,81 +1124,81 @@
  "he/900/ajinomoto": [
   {
    "x": 753.516,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 738.691,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 730.978,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 730.978,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 738.691,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 753.516,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }
  ],
  "he/1280/hoya": [
   {
-   "x": 1125.274,
-   "y": 472.881,
+   "x": 1165.534,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 1113.894,
-   "y": 498.364,
+   "x": 1142.512,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 1110,
-   "y": 526,
+   "x": 1124.748,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 1113.894,
-   "y": 553.636,
+   "x": 1113.623,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 1125.274,
-   "y": 579.119,
+   "x": 1110.005,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 1046.614,
-   "y": 502.975,
+   "x": 1082.744,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 1046.614,
-   "y": 549.025,
+   "x": 1058.675,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -1206,49 +1206,49 @@
  "he/1280/tok": [
   {
    "x": 1125.274,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 1113.894,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 1110,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 1113.894,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 1125.274,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 1051.426,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 1045,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 1051.426,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -1356,81 +1356,81 @@
  "he/1280/ajinomoto": [
   {
    "x": 1133.516,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 1118.691,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 1110.978,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 1110.978,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 1118.691,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 1133.516,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }
  ],
  "he/1920/hoya": [
   {
-   "x": 1765.274,
-   "y": 472.881,
+   "x": 1805.534,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 1753.894,
-   "y": 498.364,
+   "x": 1782.512,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 1750,
-   "y": 526,
+   "x": 1764.748,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 1753.894,
-   "y": 553.636,
+   "x": 1753.623,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 1765.274,
-   "y": 579.119,
+   "x": 1750.005,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 1686.614,
-   "y": 502.975,
+   "x": 1722.744,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 1686.614,
-   "y": 549.025,
+   "x": 1698.675,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -1438,49 +1438,49 @@
  "he/1920/tok": [
   {
    "x": 1765.274,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 1753.894,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 1750,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 1753.894,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 1765.274,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 1691.426,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 1685,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 1691.426,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -1588,81 +1588,81 @@
  "he/1920/ajinomoto": [
   {
    "x": 1773.516,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 1758.691,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 1750.978,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 1750.978,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 1758.691,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 1773.516,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }
  ],
  "he/2560/hoya": [
   {
-   "x": 2405.274,
-   "y": 472.881,
+   "x": 2445.534,
+   "y": 469.002,
    "tier": 1,
    "label": "AGC Inc."
   },
   {
-   "x": 2393.894,
-   "y": 498.364,
+   "x": 2422.512,
+   "y": 484.778,
    "tier": 1,
    "label": "Mitsui Chemicals"
   },
   {
-   "x": 2390,
-   "y": 526,
+   "x": 2404.748,
+   "y": 506.303,
    "tier": 1,
    "label": "NuFlare Technolo"
   },
   {
-   "x": 2393.894,
-   "y": 553.636,
+   "x": 2393.623,
+   "y": 531.898,
    "tier": 1,
    "label": "IMS Nanofabricat"
   },
   {
-   "x": 2405.274,
-   "y": 579.119,
+   "x": 2390.005,
+   "y": 559.571,
    "tier": 1,
    "label": "Lasertec"
   },
   {
-   "x": 2326.614,
-   "y": 502.975,
+   "x": 2362.744,
+   "y": 453.543,
    "tier": 2,
    "label": "Corning Inc."
   },
   {
-   "x": 2326.614,
-   "y": 549.025,
+   "x": 2338.675,
+   "y": 492.801,
    "tier": 2,
    "label": "SCHOTT AG"
   }
@@ -1670,49 +1670,49 @@
  "he/2560/tok": [
   {
    "x": 2405.274,
-   "y": 415.881,
+   "y": 464.739,
    "tier": 1,
    "label": "JSR Corporation"
   },
   {
    "x": 2393.894,
-   "y": 441.364,
+   "y": 490.222,
    "tier": 1,
    "label": "FUJIFILM Electro"
   },
   {
    "x": 2390,
-   "y": 469,
+   "y": 517.857,
    "tier": 1,
    "label": "Sumitomo Chemica"
   },
   {
    "x": 2393.894,
-   "y": 496.636,
+   "y": 545.493,
    "tier": 1,
    "label": "Stella Chemifa"
   },
   {
    "x": 2405.274,
-   "y": 522.119,
+   "y": 570.976,
    "tier": 1,
    "label": "Morita Chemical"
   },
   {
    "x": 2331.426,
-   "y": 423.401,
+   "y": 472.258,
    "tier": 2,
    "label": "Toyo Gosei"
   },
   {
    "x": 2325,
-   "y": 469,
+   "y": 517.857,
    "tier": 2,
    "label": "Maruzen Petroche"
   },
   {
    "x": 2331.426,
-   "y": 514.599,
+   "y": 563.456,
    "tier": 2,
    "label": "Inpria (JSR)"
   }
@@ -1820,37 +1820,37 @@
  "he/2560/ajinomoto": [
   {
    "x": 2413.516,
-   "y": 176.578,
+   "y": 290.578,
    "tier": 1,
    "label": "Epoxy resin"
   },
   {
    "x": 2398.691,
-   "y": 200.224,
+   "y": 314.224,
    "tier": 1,
    "label": "Sub-micron spher"
   },
   {
    "x": 2390.978,
-   "y": 227.046,
+   "y": 341.046,
    "tier": 1,
    "label": "PET carrier"
   },
   {
    "x": 2390.978,
-   "y": 254.954,
+   "y": 368.954,
    "tier": 1,
    "label": "Ajinomoto Fine-T"
   },
   {
    "x": 2398.691,
-   "y": 281.776,
+   "y": 395.776,
    "tier": 1,
    "label": "Ibiden (ABF"
   },
   {
    "x": 2413.516,
-   "y": 305.422,
+   "y": 419.422,
    "tier": 1,
    "label": "AT&S"
   }

@@ -128,6 +128,16 @@ def test_the_paid_mail_unlocks_every_row_but_still_says_which_were_free():
     assert merged["next"]["open"] is True
 
 
+@pytest.mark.parametrize("unlock_all", [False, True])
+def test_an_internal_note_never_reaches_a_merged_row(unlock_all):
+    """Open, locked, the paid mail: no merged row carries the curator's note,
+    and the row it came from is not changed by the merge."""
+    rows = [dict(r, internal_note="split next time") for r in ROWS]
+    merged = questions.merge(rows, TEXT, "en", TODAY, unlock_all=unlock_all)
+    assert not [r["id"] for r in merged if set(questions.INTERNAL_FIELDS) & set(r)]
+    assert all(r["internal_note"] == "split next time" for r in rows)
+
+
 def test_next_open_is_the_nearest_upcoming():
     assert questions.next_open(ROWS, TODAY)["id"] == "next"
 

@@ -48,6 +48,15 @@ A re-committed entry says so: revised_at is the day, revision_note says why in
 one line (--note), and history lists every hash it replaced with the day each
 was committed. The hash in force is the one checked; the replaced ones stay in
 the file, because a hash once published is not taken back.
+
+EVERY LEG HAS TO TRADE
+----------------------
+A question is committed or re-committed only if every basket leg passes
+chains/liquidity.py: three months of average daily traded value at or above
+its minimum, and a close within the last few sessions, read from EODHD on the
+day. A failing leg stops --write with the leg and the reason. The figures the
+gate passed on are stored beside the entry as ``liquidity`` -- informational,
+outside the hashed contract.
 """
 from __future__ import annotations
 
@@ -56,7 +65,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from chains import forecast
+from chains import forecast, liquidity
 from chains.answers import HORIZONS, HORIZONS_R2, PRIMARY_HORIZON
 
 # Every horizon any order is read at. The primary one is the headline; the rest
@@ -74,6 +83,11 @@ ENTRY_FIELDS = ("qid", "answer_date", "committed_at", "sha256",
 # Only on an entry that was re-committed, after the fields above.
 REVISION_FIELDS = ("revised_at", "revision_note", "history")
 HISTORY_FIELDS = ("sha256", "committed_at")
+# Only on an entry committed since the liquidity gate, after everything else.
+LIQUIDITY_FIELDS = ("liquidity",)
+ENTRY_SHAPES = (ENTRY_FIELDS, ENTRY_FIELDS + REVISION_FIELDS,
+                ENTRY_FIELDS + LIQUIDITY_FIELDS,
+                ENTRY_FIELDS + REVISION_FIELDS + LIQUIDITY_FIELDS)
 
 
 class PreregisterError(ValueError):
@@ -142,7 +156,7 @@ def commitment(row: dict, text: dict | None = None) -> dict:
 
 # ------------------------------------------------------------- the entries
 def _entry(qid: str, answer_date: str, committed_at: str, sha: str,
-           revision: dict | None = None) -> dict:
+           revision: dict | None = None, liq: dict | None = None) -> dict:
     e = {"qid": qid, "answer_date": answer_date,
          "committed_at": committed_at, "sha256": sha,
          "primary_horizon": PRIMARY_HORIZON,
@@ -151,17 +165,51 @@ def _entry(qid: str, answer_date: str, committed_at: str, sha: str,
          "valid_preregistration": committed_at < answer_date}
     if revision:
         e.update({k: revision[k] for k in REVISION_FIELDS})
+    if liq:
+        e["liquidity"] = liq
     return e
+
+
+def _liquidity_for(qid: str, results: dict, day: str) -> dict:
+    """The gate's record for a question about to be committed, or a refusal."""
+    res = results.get(qid)
+    if res is None:
+        raise PreregisterError(
+            f"{qid}: no liquidity check ran for it, so it is not committed.")
+    if not res["ok"]:
+        raise PreregisterError(liquidity.blocking_message(qid, res))
+    return liquidity.stored(res, day)
+
+
+def to_commit(rows: list[dict], texts: dict | None, prior: list[dict] | None,
+              recommit: frozenset | set = frozenset()) -> list[str]:
+    """The questions a --write would commit now: new ones, and changed ones
+    named for re-commit. These, and only these, go through the gate."""
+    by = {e["qid"]: e for e in (prior or [])}
+    out = []
+    for r in rows:
+        qid = _qid(r)
+        old = by.get(qid)
+        if old is None:
+            out.append(qid)
+        elif qid in recommit and old["sha256"] != commitment(
+                r, (texts or {}).get(qid))["sha256"]:
+            out.append(qid)
+    return out
 
 
 def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
             today: dt.date | None = None,
             recommit: frozenset | set = frozenset(),
-            note: str = "") -> list[dict]:
+            note: str = "", notes: dict | None = None,
+            liquidity: dict | None = None) -> list[dict]:
     """The commitments file as it should now read. Sticky on (qid, sha256).
 
     ``note`` is the one line published beside every contract re-committed in
-    this run; a re-commit without one is refused.
+    this run, and ``notes`` a line per question that overrides it; a re-commit
+    without one is refused. ``liquidity`` maps each question being committed
+    to its gate result (chains/liquidity.check_rows): a failing or missing one
+    is refused. None skips the gate -- the command line never passes None.
     """
     day = (today or dt.datetime.now(dt.timezone.utc).date()).isoformat()
     by = {e["qid"]: e for e in (prior or [])}
@@ -171,13 +219,14 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
         seen.add(qid)
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         old = by.get(qid)
-        revision = None
+        revision, liq, fresh = None, None, False
         if old is None:
-            committed = day
+            committed, fresh = day, True
         elif old["sha256"] == sha:
             committed = old["committed_at"]
             if "revised_at" in old:
                 revision = old
+            liq = old.get("liquidity")
         elif qid not in recommit:
             raise PreregisterError(
                 f"{qid}: its contract no longer hashes to the value committed "
@@ -190,17 +239,20 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
                 f"{qid}: cannot re-commit -- its answer date {r['d']} has come. "
                 f"A contract changed after its answer is not a preregistration.")
         else:
-            line = " ".join(str(note or "").split())
+            line = " ".join(str((notes or {}).get(qid) or note or "").split())
             if not line:
                 raise PreregisterError(
-                    f"{qid}: a re-commit says why, in one line: --note TEXT. "
-                    f"It is published beside the new hash.")
-            committed = day
+                    f"{qid}: a re-commit says why, in one line: --note TEXT "
+                    f"or --note-for {qid} TEXT. It is published beside the "
+                    f"new hash.")
+            committed, fresh = day, True
             revision = {"revised_at": day, "revision_note": line,
                         "history": list(old.get("history") or []) + [
                             {"sha256": old["sha256"],
                              "committed_at": old["committed_at"]}]}
-        out.append(_entry(qid, r["d"], committed, sha, revision))
+        if fresh and liquidity is not None:
+            liq = _liquidity_for(qid, liquidity, day)
+        out.append(_entry(qid, r["d"], committed, sha, revision, liq))
     for e in prior or []:
         if e["qid"] not in seen:
             out.append(dict(e))
@@ -241,10 +293,14 @@ def check(rows: list[dict], texts: dict | None,
         if e is None:
             problems.append(f"{qid}: no commitment")
             continue
-        if tuple(e) not in (ENTRY_FIELDS, ENTRY_FIELDS + REVISION_FIELDS):
+        if tuple(e) not in ENTRY_SHAPES:
             problems.append(f"{qid}: entry fields are {list(e)}")
-        elif "revised_at" in e:
-            problems += [f"{qid}: {p}" for p in _revision_problems(e)]
+        else:
+            if "revised_at" in e:
+                problems += [f"{qid}: {p}" for p in _revision_problems(e)]
+            if "liquidity" in e:
+                problems += [f"{qid}: {p}" for p in liquidity.record_problems(
+                    e["liquidity"], e["committed_at"])]
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         if e["sha256"] != sha:
             problems.append(f"{qid}: contract changed since it was committed "
@@ -314,6 +370,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--note", default="",
                     help="one line, required with --recommit: why the "
                          "contracts changed; published beside them")
+    ap.add_argument("--note-for", nargs=2, action="append", default=[],
+                    metavar=("QID", "TEXT"),
+                    help="a note for one re-committed question; overrides --note")
     a = ap.parse_args(argv)
 
     rows = json.loads(watch_path().read_text(encoding="utf-8"))
@@ -322,9 +381,22 @@ def main(argv: list[str] | None = None) -> int:
     prior = load(path)
 
     if a.write:
+        from chains import mapfile
+        recommit = frozenset(a.recommit)
+        pending = to_commit(rows, texts, prior, recommit)
+        gate: dict = {}
+        if pending:
+            try:
+                gate = liquidity.check_rows(
+                    [r for r in rows if _qid(r) in pending], mapfile.load())
+            except liquidity.LiquidityError as e:
+                print(f"preregister: nothing written -- {e}")
+                return 1
+            print("\n".join(liquidity.describe(gate[q]) for q in pending))
         try:
-            got = entries(rows, texts, prior, recommit=frozenset(a.recommit),
-                          note=a.note)
+            got = entries(rows, texts, prior, recommit=recommit, note=a.note,
+                          notes={q: t for q, t in a.note_for},
+                          liquidity=gate)
         except PreregisterError as e:
             print(f"preregister: {e}")
             return 1
@@ -364,5 +436,6 @@ if __name__ == "__main__":
 __all__ = ["contract", "canonical", "digest", "commitment", "entries",
            "check", "reveal", "reveals", "load", "dump", "PreregisterError",
            "CONTRACT_FIELDS", "ENTRY_FIELDS", "REVISION_FIELDS",
-           "HISTORY_FIELDS", "CONTRACT_HORIZONS",
+           "HISTORY_FIELDS", "LIQUIDITY_FIELDS", "ENTRY_SHAPES", "to_commit",
+           "CONTRACT_HORIZONS",
            "BENCHMARKS", "SIGN_CONVENTION"]

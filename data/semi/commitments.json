@@ -91,17 +91,47 @@
   "qid": "shecy_h1",
   "answer_date": "2026-10-23",
   "committed_at": "2026-09-15",
-  "sha256": "b2e5e1324782915bc08fa56861641b9e0e8d04a64b5b0f5324cacd8d97d85525",
+  "sha256": "28d638aba8482f0186c02f19a2ed349748d1f001f90b48f531dd6d8f6bff7e83",
   "primary_horizon": 20,
   "valid_preregistration": true,
   "revised_at": "2026-09-15",
-  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "revision_note": "TOK removed: no liquid price line (TOKCF ~US$8.5k/day, stale)",
   "history": [
    {
     "sha256": "f1d751037f4436856be1ad6520a46a7d2bbab06ebc9960299d769d30b9bfed2d",
     "committed_at": "2026-09-13"
+   },
+   {
+    "sha256": "b2e5e1324782915bc08fa56861641b9e0e8d04a64b5b0f5324cacd8d97d85525",
+    "committed_at": "2026-09-15"
    }
-  ]
+  ],
+  "liquidity": {
+   "checked_at": "2026-09-15",
+   "min_adv_usd": 250000,
+   "legs": {
+    "shinetsu": {
+     "symbol": "SHECY.US",
+     "adv_usd": 10343752,
+     "last_close": "2026-09-14"
+    },
+    "sumco": {
+     "symbol": "SUOPY.US",
+     "adv_usd": 750496,
+     "last_close": "2026-09-14"
+    },
+    "globalwafers": {
+     "symbol": "6488.TWO",
+     "adv_usd": 294199085,
+     "last_close": "2026-09-14"
+    },
+    "wacker": {
+     "symbol": "WCH.XETRA",
+     "adv_usd": 6590592,
+     "last_close": "2026-09-14"
+    }
+   }
+  }
  },
  {
   "qid": "skh_q3",
@@ -283,17 +313,37 @@
   "qid": "hoya_h1",
   "answer_date": "2026-10-30",
   "committed_at": "2026-09-15",
-  "sha256": "d6ad8b30360fdeccb1f099781c1acd12b78599fb6fc0398c986674ad6cc5029e",
+  "sha256": "491b79eb17c4e7525e5d9a418a9c4e97c28957c90dafa5762d44a45450abd6e2",
   "primary_horizon": 20,
   "valid_preregistration": true,
   "revised_at": "2026-09-15",
-  "revision_note": "Baskets revised before the answer date: first-order legs; a tide question carries no losers.",
+  "revision_note": "AGC removed: ADR too thin (~US$38k/day); reverted to tide with HOYA + Lasertec",
   "history": [
    {
     "sha256": "83fea0cb945358d5d86e6e65f58f2fcd5842be4e4c1c5e5474f15314926a8771",
     "committed_at": "2026-09-13"
+   },
+   {
+    "sha256": "d6ad8b30360fdeccb1f099781c1acd12b78599fb6fc0398c986674ad6cc5029e",
+    "committed_at": "2026-09-15"
    }
-  ]
+  ],
+  "liquidity": {
+   "checked_at": "2026-09-15",
+   "min_adv_usd": 250000,
+   "legs": {
+    "hoya": {
+     "symbol": "HOCPY.US",
+     "adv_usd": 5612093,
+     "last_close": "2026-09-14"
+    },
+    "lasertec": {
+     "symbol": "LSRCY.US",
+     "adv_usd": 6221532,
+     "last_close": "2026-09-14"
+    }
+   }
+  }
  },
  {
   "qid": "cohr_q1",
@@ -458,9 +508,33 @@
  {
   "qid": "spie",
   "answer_date": "2027-02-22",
-  "committed_at": "2026-09-13",
-  "sha256": "2c0eaf0c4c2d300baca282fe38323a65a8b999ac7bb0b44557e3f092aa4407c3",
+  "committed_at": "2026-09-15",
+  "sha256": "02e9b30daedceb40cf11023f354e9b369e51317560ab54adc3e2674558a60ee0",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-15",
+  "revision_note": "TOK removed: no liquid price line",
+  "history": [
+   {
+    "sha256": "2c0eaf0c4c2d300baca282fe38323a65a8b999ac7bb0b44557e3f092aa4407c3",
+    "committed_at": "2026-09-13"
+   }
+  ],
+  "liquidity": {
+   "checked_at": "2026-09-15",
+   "min_adv_usd": 250000,
+   "legs": {
+    "lrcx": {
+     "symbol": "LRCX.US",
+     "adv_usd": 3629423236,
+     "last_close": "2026-09-14"
+    },
+    "shinetsu": {
+     "symbol": "SHECY.US",
+     "adv_usd": 10343752,
+     "last_close": "2026-09-14"
+    }
+   }
+  }
  }
 ]

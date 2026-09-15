@@ -108,6 +108,7 @@ canvas{display:block;width:100%;height:720px;cursor:crosshair}
 .badge.sole{background:#3a1e15;color:var(--tight)}
 .badge.priv{border:1px solid var(--rule);color:var(--ink3)}
 .badge.r13{font-family:"IBM Plex Mono",monospace;border:1px solid var(--rule);color:var(--ink2);direction:ltr}
+.badge.thin{border:1px solid var(--amber);color:var(--amber)}
 .ch{padding:9px 0;border-bottom:1px solid var(--rule);font-size:1rem}
 .ch b{direction:ltr;display:block;text-align:start;font-weight:600}
 .ch .st{display:flex;gap:4px;align-items:center;margin-top:3px}
@@ -846,6 +847,9 @@ cv.addEventListener('mousemove',ev=>{ const r=cv.getBoundingClientRect(); const 
 cv.addEventListener('mouseleave',()=>{hover=null;hoverEdge=null;tip.style.display='none';});
 cv.addEventListener('click',ev=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(ev.clientX-r.left, ev.clientY-r.top); if(n) open(n); else close(); });
 
+// A price line too thin to read a move from, or gone quiet, says so beside the
+// ticker. The chart under it is still drawn; it is just not taken at face value.
+function priceBadge(n){ const d=n.px?n.px.stale_days:null; if(!n.thin && !(d>5)) return ''; return `<span class="badge thin" title="${n.thin?'קו מחיר דליל: מעט מסחר':'אין סגירה עדכנית'}">${n.thin?'קו מחיר דליל':'מחיר ישן'}${d>1?' · '+d+' ימים':''}</span>`; }
 function spark(px){ if(!px||!px.spark||px.spark.length<2) return '<p class="role">אין קו מחיר.</p>'; const s=px.spark, W=340,H=52; const lo=Math.min(...s),hi=Math.max(...s); const y=v=>4+(1-(v-lo)/((hi-lo)||1))*(H-8); const d=s.map((v,i)=>(i?'L':'M')+(i/(s.length-1)*W).toFixed(1)+' '+y(v).toFixed(1)).join(''); const col=s[s.length-1]>=100?tok('--erode'):tok('--tight'); return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr"><path d="${d}" fill="none" stroke="${col}" stroke-width="1.8"/><line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="#ffffff22" stroke-dasharray="3 3"/></svg><div class="r"><span>1w <b class="${cls(px.r1w)}">${pct(px.r1w)}</b></span><span>4w <b class="${cls(px.r4w)}">${pct(px.r4w)}</b></span><span>13w <b class="${cls(px.r13w)}">${pct(px.r13w)}</b></span><span>52w <b class="${cls(px.r52w)}">${pct(px.r52w)}</b></span><span style="color:var(--ink3)">${px.cur} · ${px.last}</span></div></div>`; }
 function stageBar(st){ const lv={research:1,pilot:2,qualified:3,volume:4}[st]||0; const he={research:'מחקר',pilot:'פיילוט',qualified:'הסמכה',volume:'ייצור'}[st]||''; return `<div class="st">${[0,1,2,3].map(i=>`<i class="${i<lv?'on':''}"></i>`).join('')}<em>${he}</em></div>`; }
 function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>מהדוחות (EDGAR)</h3><table class="ftab"><tr><th>FY</th><th>revenue $B</th><th>YoY</th><th>op margin</th></tr>${f.annual.map(r=>`<tr><td>${r.fy}</td><td>${r.rev}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td class="${r.om<0?'neg':''}">${r.om==null?'—':r.om+'%'}</td></tr>`).join('')}${f.q.length?`<tr><th>quarter</th><th>revenue $B</th><th>YoY</th><th></th></tr>${f.q.map(r=>`<tr><td>${r.pe}</td><td>${r.rev??'—'}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td></td></tr>`).join('')}`:''}</table>`; }
@@ -853,7 +857,7 @@ function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>מה
 function open(n){
   selected=n; stage.classList.add('open');
   const cps=n.cp||[];
-  let h=`<div class="pin"><button class="close" id="pclose">סגור</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span><p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):esc(n.role||'')}</p>${spark(n.px)}`;
+  let h=`<div class="pin"><button class="close" id="pclose">סגור</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span>${priceBadge(n)}<p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):esc(n.role||'')}</p>${spark(n.px)}`;
   sats=[];
   cps.forEach(c=>{
     const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');

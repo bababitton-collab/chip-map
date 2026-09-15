@@ -292,9 +292,9 @@
     "Samsung Electro-Mechanics"
    ],
    "notes": null,
-   "price_symbol": "IBIDF.US",
+   "price_symbol": "IBIDY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD",
+   "price_note": "US ADR line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD",
    "line": "packaging",
    "short": "Ibiden"
   },
@@ -385,7 +385,8 @@
    "notes": "JSR was taken private by Japan Investment Corp; no longer independently listed.",
    "price_symbol": "TOKCF.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Tokyo Ohka Kogyo Co. Ltd; home listing 4186.T is not on EODHD",
+   "price_note": "US line for Tokyo Ohka Kogyo Co. Ltd; home listing 4186.T is not on EODHD. Thin: about US$8,500 a day over three months, and weeks without a close (EODHD, 2026-09-15) -- not usable as a basket leg",
+   "price_quality": "thin",
    "line": "packaging",
    "short": "TOK"
   },
@@ -439,7 +440,8 @@
    "notes": "Country: JP. Its EUV blanks \"have been adopted by several logic and memory semiconductor manufacturers\" (AGC, 2023-04-27), none named, so no customer edge. Subnode agc_blanks carries the CP9 supplier detail.",
    "price_symbol": "ASGLY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for AGC Inc ADR; home listing 5201.T is not on EODHD",
+   "price_note": "US line for AGC Inc ADR; home listing 5201.T is not on EODHD. Thin: about US$38,000 a day over three months (EODHD, 2026-09-15) -- not usable as a basket leg",
+   "price_quality": "thin",
    "line": "logic",
    "short": "AGC"
   },
@@ -5448,9 +5450,9 @@
    "chokepoint_ids": [
     "CP4"
    ],
-   "price_symbol": "IBIDF.US",
+   "price_symbol": "IBIDY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD"
+   "price_note": "US ADR line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD"
   },
   {
    "id": "unimicron",
@@ -6025,9 +6027,9 @@
    "chokepoint_ids": [
     "CP8"
    ],
-   "price_symbol": "IBIDF.US",
+   "price_symbol": "IBIDY.US",
    "price_symbol_kind": "adr",
-   "price_note": "US line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD"
+   "price_note": "US ADR line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD"
   },
   {
    "id": "ats",

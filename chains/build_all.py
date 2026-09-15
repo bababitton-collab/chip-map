@@ -2,8 +2,12 @@
 
     python -m chains.build_all [--domain semi] [--skip-prices]
 
-    prices -> repair -> page -> fundamentals -> preregister -> live -> pages
-          -> brief, brief_free -> brief_he, brief_he_free
+    prices -> repair -> legs -> page -> fundamentals -> preregister -> live
+          -> pages -> brief, brief_free -> brief_he, brief_he_free
+
+``legs`` is the one step that never stops the run: it prints the basket legs
+that have gone more than a few sessions without a close (chains/liquidity.py)
+and changes nothing.
 
 NOTHING DOWNSTREAM RUNS ON STALE UPSTREAM
 -----------------------------------------
@@ -57,6 +61,9 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
     out = [
         ("prices", ["chains/scripts/build_prices.py"]),
         ("repair", ["chains/scripts/repair_prices.py"]),
+        # A report line on the fresh prices: a basket leg gone quiet for more
+        # than three sessions. It exits 0 whatever it finds.
+        ("legs", ["-m", "chains.liquidity", "--stale"]),
         ("page", ["chains/scripts/build_page_json.py"]),
         ("fundamentals", ["chains/scripts/build_fundamentals.py"]),
         # Before anything is published: a question with no commitment, or

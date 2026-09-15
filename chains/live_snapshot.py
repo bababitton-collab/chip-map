@@ -287,6 +287,9 @@ def build(today: dt.date | None = None, lang: str = "he",
             "sym": n.get("price_symbol"), "kind": n.get("price_symbol_kind"),
             "px": px,
             "cps": [c["id"] for c in m["chokepoints"] if n["id"] in c["node_ids"]],
+            # A price line the map marks thin: the panel badges it. Only
+            # where it is true, so fifty rows do not each carry a false.
+            **({"thin": True} if n.get("price_quality") == "thin" else {}),
         })
     node_by = {n["id"]: n for n in nodes}
 

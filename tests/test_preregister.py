@@ -265,6 +265,103 @@ def test_the_reveal_carries_the_revision():
     assert "revised_at" not in P.reveal(ROW, TEXT, first[0])
 
 
+# -- the liquidity gate ---------------------------------------------------------
+
+def _gate(ok=True, qid="mu_fq4"):
+    legs = [{"leg": "mu", "symbol": "MU.US", "ok": True, "why": "",
+             "adv_usd": 9_000_000, "last_close": "2026-09-11",
+             "sessions_missing": 0}]
+    if not ok:
+        legs.append({"leg": "tok", "symbol": "TOKCF.US", "ok": False,
+                     "why": "three-month average daily traded value US$8,522 "
+                            "is under US$250,000",
+                     "adv_usd": 8522, "last_close": "2026-08-24",
+                     "sessions_missing": 14})
+    return {qid: {"qid": qid, "ok": ok, "legs": legs}}
+
+
+def test_a_failing_leg_blocks_a_new_commitment():
+    with pytest.raises(P.PreregisterError, match="liquidity gate") as e:
+        P.entries([ROW], {"mu_fq4": TEXT}, [], DAY, liquidity=_gate(ok=False))
+    assert "tok (TOKCF.US)" in str(e.value) and "US$8,522" in str(e.value)
+
+
+def test_a_failing_leg_blocks_a_recommit_and_nothing_moves(tmp_path):
+    path = tmp_path / "commitments.json"
+    P.dump(P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1)), path)
+    first = path.read_bytes()
+    with pytest.raises(P.PreregisterError, match="liquidity gate"):
+        P.dump(P.entries([dict(ROW, lose=[])], {"mu_fq4": TEXT}, P.load(path),
+                         DAY, recommit={"mu_fq4"}, note="x",
+                         liquidity=_gate(ok=False)), path)
+    assert path.read_bytes() == first
+
+
+def test_a_commitment_with_no_gate_result_is_refused():
+    with pytest.raises(P.PreregisterError, match="no liquidity check"):
+        P.entries([ROW], {"mu_fq4": TEXT}, [], DAY, liquidity={})
+
+
+def test_a_passing_gate_is_stored_outside_the_contract():
+    e = P.entries([ROW], {"mu_fq4": TEXT}, [], DAY, liquidity=_gate())[0]
+    assert tuple(e) == P.ENTRY_FIELDS + P.LIQUIDITY_FIELDS
+    assert e["liquidity"] == {
+        "checked_at": "2026-09-13", "min_adv_usd": 250_000,
+        "legs": {"mu": {"symbol": "MU.US", "adv_usd": 9_000_000,
+                        "last_close": "2026-09-11"}}}
+    assert e["sha256"] == P.digest(ROW, TEXT), "the gate's figures are not hashed"
+    assert P.check([ROW], {"mu_fq4": TEXT}, [e]) == []
+    later = P.entries([ROW], {"mu_fq4": TEXT}, [e], dt.date(2026, 9, 20),
+                      liquidity={})
+    assert later[0] == e, "an unchanged commitment keeps its record, ungated"
+
+
+def test_a_recommit_through_the_gate_keeps_history_and_the_new_figures():
+    first = P.entries([ROW], {"mu_fq4": TEXT}, [], dt.date(2026, 9, 1))
+    got = P.entries([dict(ROW, lose=[])], {"mu_fq4": TEXT}, first, DAY,
+                    recommit={"mu_fq4"}, notes={"mu_fq4": "loser removed"},
+                    liquidity=_gate())[0]
+    assert tuple(got) == (P.ENTRY_FIELDS + P.REVISION_FIELDS
+                          + P.LIQUIDITY_FIELDS)
+    assert got["history"] == [{"sha256": first[0]["sha256"],
+                               "committed_at": "2026-09-01"}]
+    assert got["revision_note"] == "loser removed"
+    assert P.check([dict(ROW, lose=[])], {"mu_fq4": TEXT}, [got]) == []
+
+
+def test_only_new_and_recommitted_questions_go_through_the_gate():
+    rows, texts = _rows()
+    prior = P.entries(rows, texts, [], DAY)
+    assert P.to_commit(rows, texts, [], set()) == ["orcl_q1", "mu_fq4"]
+    assert P.to_commit(rows, texts, prior, {"mu_fq4"}) == []
+    moved = [rows[0], dict(ROW, lose=[])]
+    assert P.to_commit(moved, texts, prior, {"mu_fq4"}) == ["mu_fq4"]
+    assert P.to_commit(moved, texts, prior, set()) == []
+
+
+def test_a_note_per_question_overrides_the_shared_one():
+    other = dict(ROW, id="b", d="2026-10-01")
+    texts = {"mu_fq4": TEXT, "b": TEXT}
+    prior = P.entries([ROW, other], texts, [], dt.date(2026, 9, 1))
+    got = P.entries([dict(ROW, lose=[]), dict(other, lose=[])], texts, prior,
+                    DAY, recommit={"mu_fq4", "b"}, note="shared",
+                    notes={"b": "TOK removed"})
+    assert [e["revision_note"] for e in got] == ["shared", "TOK removed"]
+
+
+def test_check_names_a_malformed_liquidity_record():
+    e = P.entries([ROW], {"mu_fq4": TEXT}, [], DAY, liquidity=_gate())[0]
+    rec = e["liquidity"]
+    for bad, words in [
+            (dict(rec, checked_at="2026-09-12"), "not checked on the day"),
+            ({"legs": {}}, "is not {checked_at"),
+            (dict(rec, legs={"mu": {"symbol": "MU.US", "adv_usd": 10,
+                                    "last_close": "2026-09-11"}}),
+             "under the minimum")]:
+        got = P.check([ROW], {"mu_fq4": TEXT}, [dict(e, liquidity=bad)])
+        assert got and words in got[0], (words, got)
+
+
 def test_a_moved_answer_date_keeps_the_commit_date_and_rechecks_validity():
     prior = P.entries([ROW], {"mu_fq4": TEXT}, [], DAY)
     got = P.entries([dict(ROW, d="2026-09-12")], {"mu_fq4": TEXT}, prior,
@@ -320,12 +417,15 @@ def test_every_question_has_a_commitment_observation_only_included():
 def test_each_committed_entry_is_well_formed_and_honest():
     assert len(BY) == len(COMMITTED), "one commitment per question"
     for e in COMMITTED:
-        assert tuple(e) in (P.ENTRY_FIELDS,
-                            P.ENTRY_FIELDS + P.REVISION_FIELDS), e["qid"]
+        assert tuple(e) in P.ENTRY_SHAPES, e["qid"]
         if "revised_at" in e:
             assert P._revision_problems(e) == [], e["qid"]
             assert e["revised_at"] < e["answer_date"], (
                 f"{e['qid']}: revised on or after its answer date")
+        if "liquidity" in e:
+            from chains import liquidity
+            assert liquidity.record_problems(e["liquidity"],
+                                             e["committed_at"]) == [], e["qid"]
         assert re.fullmatch(r"[0-9a-f]{64}", e["sha256"]), e["qid"]
         dt.date.fromisoformat(e["committed_at"])
         dt.date.fromisoformat(e["answer_date"])

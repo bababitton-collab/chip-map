@@ -1635,8 +1635,9 @@ def test_every_card_draws_every_leg_of_its_basket(tmp_path):
         assert sorted(i for i, *_ in labels) == sorted(c["win"] + c["lose"]), c["qid"]
         _check_layout(c["qid"], legs, labels)
     shecy = next(c for c in cards if c["qid"] == "shecy_h1")
-    assert {i for i, *_ in _drawn(html["shecy_h1"])[0]} >= {"wacker", "tok"}
-    assert len(shecy["win"]) == 5
+    drawn = {i for i, *_ in _drawn(html["shecy_h1"])[0]}
+    assert drawn == set(shecy["win"]) and "wacker" in drawn, "past the old three-a-side cap"
+    assert len(shecy["win"]) > 3
 
 
 def test_a_long_basket_is_drawn_whole_on_both_arcs(tmp_path):
@@ -1665,7 +1666,9 @@ def test_every_revised_card_shows_its_revision_under_the_pre_registered_line(
     cards = _watch_cards()
     html = _render_cards(tmp_path, cards)
     revised = [c for c in cards if (c["commitment"] or {}).get("revised_at")]
-    assert len(revised) == 19
+    from chains import preregister
+    on_file = {e["qid"] for e in preregister.load() if e.get("revised_at")}
+    assert {c["qid"] for c in revised} == on_file and len(on_file) >= 19
     for c in revised:
         h, e = html[c["qid"]], c["commitment"]
         line = (f"Revised {e['revised_at']} — before the answer date · "

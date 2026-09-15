@@ -172,8 +172,7 @@
    "shinetsu",
    "sumco",
    "globalwafers",
-   "wacker",
-   "tok"
+   "wacker"
   ],
   "lose": [],
   "leaks": [
@@ -580,18 +579,17 @@
    "CP9"
   ],
   "win": [
-   "hoya"
+   "hoya",
+   "lasertec"
   ],
-  "lose": [
-   "agc"
-  ],
+  "lose": [],
   "leaks": [
    "asml_q3",
    "tsm_q3"
   ],
   "lane": "litho",
   "lbl": "HOYA",
-  "kind": "share"
+  "kind": "tide"
  },
  {
   "id": "cohr_q1",
@@ -898,7 +896,6 @@
    "lrcx"
   ],
   "lose": [
-   "tok",
    "shinetsu"
   ],
   "leaks": [

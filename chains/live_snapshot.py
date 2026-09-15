@@ -380,6 +380,9 @@ def build(today: dt.date | None = None, lang: str = "he",
             "hr13": (sum(hr) / len(hr)) if hr else None,
             "cr13": (sum(cr) / len(cr)) if cr else None,
             "n_chal_priced": len(cr), "subs": subs,
+            # Stations exposed to a chokepoint they do not hold -- CP12 is held
+            # by nobody -- open its panel from their own.
+            **({"exposed": [i for i in c["exposed"] if i in node_by]} if c.get("exposed") else {}),
         })
 
     fund = {}

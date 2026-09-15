@@ -164,6 +164,7 @@ TRANSLATIONS = [
  ('<button class="close" id="pclose">סגור</button>', '<button class="close" id="pclose">close</button>'),
  ("'<span class=\"badge sole\">ספק יחיד</span>'", "'<span class=\"badge sole\">sole source</span>'"),
  ("'<span class=\"badge priv\">פרטית</span>'", "'<span class=\"badge priv\">private</span>'"),
+ ("const EXPOSED='חשופה ל־';", "const EXPOSED='Exposed to';"),
  ("'קו מחיר דליל: מעט מסחר':'אין סגירה עדכנית'", "'thin price line: little trading':'no recent close'"),
  ("n.thin?'קו מחיר דליל':'מחיר ישן'", "n.thin?'thin price line':'stale price'"),
  ("' · '+d+' ימים'", "' · '+d+' days'"),

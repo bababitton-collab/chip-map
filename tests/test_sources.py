@@ -151,7 +151,9 @@ def test_no_row_puts_a_source_straight_into_an_href():
 
 
 def test_the_supplier_and_challenger_rows_cite_one_link_per_reference():
-    i = TPL.index("const row=s=>")
+    # One builder, shared by the rows of a chokepoint a station holds and one it
+    # is exposed to.
+    i = TPL.index("const subRow=s=>")
     row = TPL[i:TPL.index("\n", i)]
     assert "srcCited(s.share,s.src)" in row and "srcLinks(s.refs,' · ')" in row
     assert "${srcCited(s.signal,s.src)}" in TPL

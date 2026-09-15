@@ -3529,6 +3529,10 @@
    "id": "CP12",
    "name": "Critical minerals: gallium, germanium, rare earths",
    "node_ids": [],
+   "exposed": [
+    "teck",
+    "axti"
+   ],
    "concentration": "China 98% of primary gallium, 68% of germanium. Sunresin holds ~90% of the gallium extraction resins non-Chinese producers would need.",
    "geography": "China",
    "dependents": [

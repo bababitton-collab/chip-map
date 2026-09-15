@@ -248,18 +248,20 @@ def test_every_subnode_with_a_note_shows_it_in_its_panel_row(pages, browser, lan
     from chains.paths import map_path
     doc = json.loads(map_path().read_text(encoding="utf-8"))
     live = json.loads(LIVE[lang].read_text(encoding="utf-8"))
-    # A chokepoint no station holds has no panel to open; see the next test.
-    held = {s["id"] for c in live["cps"] if c["holders"] for s in c["subs"]}
-    noted = {s["id"]: s for s in doc["subnodes"] if s.get("note") and s["id"] in held}
+    noted = {s["id"]: s for s in doc["subnodes"] if s.get("note")}
     nodes = nodes_for(lang)
     shown = set()
     page = open_page(browser, pages[lang], 1920, 1080)
     try:
         for c in live["cps"]:
             ids = {s["id"] for s in c["subs"]} & set(noted)
-            if not ids or not c["holders"]:
+            if not ids:
                 continue
-            holder = c["holders"][0]["id"]
+            # A holder's panel, or -- for a chokepoint nobody holds -- the panel of
+            # a station exposed to it.
+            openers = [h["id"] for h in c["holders"]] + list(c.get("exposed") or [])
+            assert openers, f"{c['id']} has notes and no station to open its panel from"
+            holder = openers[0]
             click_station(page, holder, nodes[holder])
             page.keyboard.press("Enter")
             page.wait_for_timeout(300)
@@ -277,19 +279,53 @@ def test_every_subnode_with_a_note_shows_it_in_its_panel_row(pages, browser, lan
     assert shown == set(noted), f"never shown: {sorted(set(noted) - shown)}"
 
 
-def test_the_notes_with_no_panel_to_show_in_are_the_known_seven():
-    """KNOWN GAP, awaiting a decision. CP12 (critical minerals) is held by no
-    station, so nothing on the map opens its panel and its supplier rows -- and
-    the notes under them -- are shown nowhere. That was already so before the
-    names were cleaned. Pinned so the gap cannot quietly grow."""
+@pytest.mark.parametrize("lang", LANGS)
+@pytest.mark.parametrize("station", ["teck", "axti"])
+def test_the_critical_minerals_panel_opens_from_teck_and_axt(pages, browser, lang, station):
+    """CP12 is held by no station. The two stations exposed to it open its panel:
+    a heading that says exposed, not holds, and every supplier row with its note
+    and its sources."""
     from chains.paths import map_path
     doc = json.loads(map_path().read_text(encoding="utf-8"))
-    live = json.loads(LIVE["en"].read_text(encoding="utf-8"))
-    held = {s["id"] for c in live["cps"] if c["holders"] for s in c["subs"]}
-    orphans = {s["id"] for s in doc["subnodes"] if s.get("note") and s["id"] not in held}
-    assert orphans == {"cn_antimony", "cn_gallium_primary", "cn_rare_earth_magnets", "cn_tungsten",
-                       "sunresin", "teck_trail", "umicore_ge"}
-    assert {c["id"] for c in live["cps"] if not c["holders"]} == {"CP12"}
+    live = json.loads(LIVE[lang].read_text(encoding="utf-8"))
+    cp12 = next(c for c in live["cps"] if c["id"] == "CP12")
+    assert cp12["holders"] == [] and cp12["exposed"] == ["teck", "axti"]
+    subs = {s["id"]: s for s in doc["subnodes"]}
+    page = open_page(browser, pages[lang], 1920, 1080)
+    try:
+        click_station(page, station, nodes_for(lang)[station])
+        page.keyboard.press("Enter")
+        page.wait_for_timeout(300)
+        got = page.evaluate("""() => {
+            const p = document.getElementById('panel'), h = p.querySelector('h3.exposed');
+            const rows = [];
+            let el = h && h.nextElementSibling;
+            while (el && el.classList.contains('sub')) {
+              rows.push({name: (el.querySelector('b') || {}).innerText || '',
+                         note: (el.querySelector('.nt') || {}).innerText || '',
+                         links: el.querySelectorAll('a, .ref').length});
+              el = el.nextElementSibling;
+            }
+            return {heading: h ? h.innerText : null, box: !!p.querySelector('.cpbox[data-exposed="CP12"]'), rows};
+        }""")
+    finally:
+        page.close()
+    assert got["box"], "the CP12 box is in the panel"
+    if lang == "en":
+        assert got["heading"] == "Exposed to CP12 · critical minerals"
+    else:
+        assert got["heading"].startswith("חשופה ל־ CP12 · ")
+    assert "hold" not in got["heading"].lower() and "שולט" not in got["heading"]
+    assert [r["name"] for r in got["rows"]] == [subs[s["id"]]["name"] for s in cp12["subs"]]
+    for r, s in zip(got["rows"], cp12["subs"]):
+        note = subs[s["id"]].get("note")
+        assert r["note"] == (note or ""), (s["id"], r["note"])
+        # A share the map marks as an unsourced estimate is shown as an estimate
+        # with no citation (see live_snapshot); every other row cites its source.
+        unsourced = "unsourced" in str((subs[s["id"]].get("share") or {}).get("value", "")).lower()
+        if not unsourced:
+            assert r["links"] >= 1, (s["id"], "cites its source")
+    assert sum(1 for r in got["rows"] if r["note"]) == 7
 
 
 @pytest.mark.parametrize("lang,width,sid", CASES)

@@ -1486,6 +1486,7 @@ function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>From
 
 // The curator's note on a subnode -- the member list, the product, the cross-
 // reference -- under its row. Its name is kept to a name; this is where the rest is.
+const EXPOSED='Exposed to';
 const noteOf=id=>{ const t=(((typeof FOCUS!=='undefined'&&FOCUS)||{}).notes||{})[id];
   return t?`<div class="w nt">${escHtml(t)}</div>`:''; };
 function open(n){
@@ -1495,6 +1496,8 @@ function open(n){
   selected=n; if(!REC) stage.classList.add('open');
   const cps=n.cp||[];
   let h=`<div class="pin"><button class="close" id="pclose">close</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span>${priceBadge(n)}<p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):escHtml(n.role||'')}</p>${spark(n.px)}`;
+  // One supplier row, for a chokepoint the station holds or one it is exposed to.
+  const subRow=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">sole source</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">private</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">estimate</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div>${noteOf(s.id)}</div>`;
   cps.forEach(c=>{
     const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');
     const sent = pu==null ? (c.n_chal_priced? 'The company that controls it has no price line.':'Nobody listed is trying to replace them. Amber ring: the market pressure cannot be measured.') : (pu>0? 'The lock is tightening: the company in control is outrunning the ones trying to replace it.' : 'The lock is eroding: the ones trying to replace it are outrunning the company in control.');
@@ -1503,7 +1506,7 @@ function open(n){
     // sub-suppliers
     const t1=c.subs.filter(s=>s.tier===1), t2=c.subs.filter(s=>s.tier===2);
     h+=`<h3>Who supplies the company that ${WORDS.holder} · ${t1.length} direct, ${t2.length} beneath them</h3>`;
-    const row=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">sole source</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">private</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">estimate</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div>${noteOf(s.id)}</div>`;
+    const row=subRow;
     t1.forEach(s=>{ h+=row(s); t2.filter(x=>x.to===s.id).forEach(x=>h+=row(x)); });
     t2.filter(x=>!t1.some(s=>s.id===x.to)).forEach(x=>h+=row(x));
     // challengers
@@ -1517,6 +1520,14 @@ function open(n){
     // question -- it is what the reader needs to know here anyway.
     const nx=(D.cal||[]).filter(e=>(e.cps||[]).includes(c.id)&&e.days>=0).sort((a,b)=>a.days-b.days)[0];
     if(nx) h+=`<div class="nextcp">Next checkpoint: <b>${nx.who}</b> · ${nx.d} · in ${nx.days} days</div>`;
+  });
+  // A chokepoint held by no station, opened from the stations exposed to it: its
+  // supplier rows with their notes and sources, under a heading that says
+  // exposed, never holds.
+  (D.cps||[]).filter(c=>(c.exposed||[]).includes(n.id) && !(c.holders||[]).some(x=>x.id===n.id)).forEach(c=>{
+    h+=`<div class="cpbox" data-exposed="${c.id}"><span class="cpid">${c.id}</span><span class="cpn">${c.he}</span><p>${c.blurb}</p></div>`;
+    h+=`<h3 class="exposed">${EXPOSED} ${c.id} · ${c.he.toLowerCase()}</h3>`;
+    (c.subs||[]).forEach(x=>{ h+=subRow(x); });
   });
   if(!cps.length){
     // A station that holds no chokepoint used to get two bare lists and

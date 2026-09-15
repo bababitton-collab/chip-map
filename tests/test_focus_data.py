@@ -121,6 +121,16 @@ def test_every_note_rides_to_the_page():
     assert len(f["notes"]) >= 51
 
 
+def test_the_critical_minerals_chokepoint_is_exposed_to_teck_and_axt():
+    """Held by no station, so its panel opens from the two that are exposed to it."""
+    c = next(c for c in MAP["chokepoints"] if c["id"] == "CP12")
+    assert c["node_ids"] == [] and c["exposed"] == ["teck", "axti"]
+    nodes = {n["id"] for n in MAP["nodes"]}
+    assert set(c["exposed"]) <= nodes
+    noted = [s["id"] for s in MAP["subnodes"] if "CP12" in (s.get("chokepoint_ids") or []) and s.get("note")]
+    assert len(noted) == 7
+
+
 def test_the_focus_files_are_published_and_gated():
     from chains import publish_site
     assert ("focus_en.json", "focus_en.json") in publish_site.COPIES

@@ -326,8 +326,14 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
            row2: dict | None, mark: dict | None, book, cal: list[dt.date],
            doc: dict, symbol_of: dict, node_symbols: list[str],
            today: dt.date, ring2: dict, centre: str | None = None,
-           prereg: dict | None = None) -> dict:
-    """One dated question, in whatever state it is in."""
+           prereg: dict | None = None,
+           commitment: dict | None = None) -> dict:
+    """One dated question, in whatever state it is in.
+
+    ``commitment`` is the question's entry in commitments.json -- a hash and
+    its dates, and the revision when there is one. Public in git already, so
+    every card carries it, answered or not.
+    """
     status = (mark or {}).get("status")
     direction = f["direction"] if f else 1
     entry = forecast.entry_session(f["marked_at"], cal) if f else None
@@ -350,11 +356,20 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
         "lose2": list(ring2.get("lose2") or []),
         "ring2_edges": list(ring2.get("ring2_edges") or []),
         # What each ring-1 station's edge carries, for the grey line beside it.
+        # Every leg: the constellation draws every leg.
         "ring1_edges": [{"id": i, "label": reason_for(doc, centre, i)}
-                        for i in (list(w.get("win") or [])[:3]
-                                  + list(w.get("lose") or [])[:3])],
+                        for i in (list(w.get("win") or [])
+                                  + list(w.get("lose") or []))],
+        # A name for every leg from the map itself, so a station the drawing
+        # names does not depend on it having a price in the book.
+        "labels": {i: label_of(doc, i)
+                   for i in (list(w.get("win") or []) + list(w.get("lose") or [])
+                             + list(ring2.get("win2") or [])
+                             + list(ring2.get("lose2") or []))},
     }
     out["has_r2"] = bool(out["win2"] or out["lose2"])
+    if commitment:
+        out["commitment"] = {k: v for k, v in commitment.items() if k != "qid"}
 
     # The findings, verbatim from the mark. The build never writes a word of
     # this: it is the sentence the marking task recorded with its source and
@@ -648,12 +663,15 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
           marks: dict | None = None, book=None,
           cal: list[dt.date] | None = None,
           today: dt.date | None = None,
-          prereg: dict | None = None) -> dict:
+          prereg: dict | None = None,
+          commitments: list[dict] | None = None) -> dict:
     """``{summary, forecasts}`` -- one record per dated question.
 
     ``prereg`` maps a question id to its revealed commitment, from
-    chains/preregister.py. Only a resolved card carries it.
+    chains/preregister.py. Only a resolved card carries it. ``commitments`` is
+    commitments.json as loaded; every card carries its own entry.
     """
+    by_commit = {e["qid"]: e for e in (commitments or [])}
     doc = doc or mapfile.load()
     forecasts = forecasts or []
     ledger = ledger or {"rows": []}
@@ -695,7 +713,8 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
                      marks.get(w["id"]), book, cal, doc, symbol_of,
                      node_symbols, today, r2,
                      by_ticker.get(str(w.get("tk") or "").upper()),
-                     (prereg or {}).get(w["id"]))
+                     (prereg or {}).get(w["id"]),
+                     by_commit.get(w["id"]))
         rec["primary_horizon"] = PRIMARY_HORIZON
         rec["official"] = official(rec)
         out.append(rec)
@@ -1072,7 +1091,7 @@ def build_files(plain: bool = False) -> dict:
     data = build(forecasts, live.get("ledger"), rows,
                  marks=live.get("answers"),
                  today=dt.date.fromisoformat(live["as_of"]),
-                 prereg=prereg)
+                 prereg=prereg, commitments=preregister.load())
     out_dir().mkdir(parents=True, exist_ok=True)
     wrote = {}
 

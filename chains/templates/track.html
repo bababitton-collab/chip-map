@@ -229,23 +229,31 @@ __CARDS_JS__
     window.renderTrack(root, {as_of:P.as_of, summary:P.summary||{},
                               glossary:P.glossary||{}, forecasts:resolved});
   }
-  fetch('../commitments.json', {cache:'no-store'})
+  // Read once and applied to every card drawn, resolved or unlocked: the
+  // commitment on the card -- its hash, and when a contract was re-committed,
+  // when, why and what it replaced -- is the one in the published file.
+  const COMMIT_FIELDS = ['sha256','committed_at','answer_date',
+    'valid_preregistration','revised_at','revision_note','history'];
+  const commits = fetch('../commitments.json', {cache:'no-store'})
     .then(res => res.ok ? res.json() : [])
-    .then(list => {
-      const by = {};
-      (list||[]).forEach(e => { by[e.qid] = e; });
-      resolved.forEach(r => {
-        const e = by[r.qid];
-        if(!r.prereg || !e) return;
-        Object.assign(r.prereg, {sha256:e.sha256, committed_at:e.committed_at,
-          answer_date:e.answer_date, valid_preregistration:e.valid_preregistration,
-          hash_source:'commitments.json'});
-        if(e.revised_at) Object.assign(r.prereg, {revised_at:e.revised_at,
-          revision_note:e.revision_note, history:e.history});
-      });
-    })
-    .catch(() => {})
-    .then(drawResolved);
+    .then(list => { const by = {}; (list||[]).forEach(e => { by[e.qid] = e; }); return by; })
+    .catch(() => ({}));
+  function applyCommits(cards, by){
+    cards.forEach(r => {
+      const e = by[r.qid];
+      if(!e) return;
+      const c = {};
+      COMMIT_FIELDS.forEach(k => { if(e[k] !== undefined) c[k] = e[k]; });
+      r.commitment = c;
+      if(!r.prereg) return;
+      Object.assign(r.prereg, {sha256:e.sha256, committed_at:e.committed_at,
+        answer_date:e.answer_date, valid_preregistration:e.valid_preregistration,
+        hash_source:'commitments.json'});
+      if(e.revised_at) Object.assign(r.prereg, {revised_at:e.revised_at,
+        revision_note:e.revision_note, history:e.history});
+    });
+  }
+  commits.then(by => applyCommits(resolved, by)).then(drawResolved);
 
   // ---- the locked panel -------------------------------------------------
   // Only what is still ahead. The placeholder under the blur is generic on
@@ -291,8 +299,9 @@ __CARDS_JS__
 
   // A key opens what is still ahead. The resolved cards are already on the
   // page above it and are not drawn twice, and neither is the scoreboard.
-  function show(data){
+  async function show(data){
     const ahead = (data.forecasts||[]).filter(r => !resolvedIds.has(r.qid));
+    applyCommits(ahead, await commits);
     const n = window.renderTrack(document.getElementById('full'),
       Object.assign({}, data, {forecasts: ahead}), {tiles:false});
     document.getElementById('locked').style.display = 'none';
@@ -306,7 +315,7 @@ __CARDS_JS__
     try {
       const data = await open(k);
       try { localStorage.setItem('track_key', k); } catch(e) {}
-      show(data);
+      await show(data);
       // A count and nothing else: no props, so nothing of the key or the
       // reader leaves the browser with it.
       window.plausible&&plausible('unlock_success');

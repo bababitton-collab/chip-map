@@ -65,35 +65,39 @@
     return `<div class="cons policy"><div class="pband">${POLICY_STATE}</div></div>`;
   }
 
+  // Every leg is drawn, on two arcs about the reporting company: up if yes to
+  // the upper right, down if yes to the lower right. Spacing sets the radius,
+  // so a long basket widens its arc and the drawing grows taller instead of
+  // leaving legs out. Names come from the record's own labels, so a station
+  // is named whether or not it has a price yet. Labels are placed the way the
+  // map places its satellites: beside the dot, then out along its radial with
+  // a leader, then without the reason, then shortened -- never over another
+  // label, a dot or the centre. data-leg and data-box are read by the check
+  // that every leg is drawn and no two labels touch.
+  const R1MIN=125, LEG_GAP=30, ARC=Math.PI*0.36, ARC0=0.14, DOT=7, HUB=34, LAB_FS=12.5;
+  const textW = (t, fs, bold) => String(t).length*fs*(bold?0.6:0.57);
   function constellation(r){
     if(r.observe_only) return policyState();
-    const lab = {};
-    (r.members||[]).forEach(m=>{ lab[m.id]=m.label; });
+    const lab = Object.assign({}, r.labels||{});
+    (r.members||[]).forEach(m=>{ if(!lab[m.id]) lab[m.id]=m.label; });
     const nameOf = i => lab[i] || String(i).toUpperCase();
     const why = {};
     (r.ring1_edges||[]).forEach(e=>{ why[e.id]=e.label||''; });
-    const wins=(r.win||[]).slice(0,3), loses=(r.lose||[]).slice(0,3);
-    const all=[...wins.map(i=>({id:i,win:true})),...loses.map(i=>({id:i,win:false}))];
-    const total=(r.win||[]).length+(r.lose||[]).length;
-    if(!all.length) return '';
-    const ys = all.length===1 ? [CY] : all.map((_,i)=>45+i*(130/(all.length-1)));
-    let g='', drawn=[];
-    all.forEach((o,i)=>{
-      const y=ys[i], col=o.win?UP:DN;
-      const t=clip(nameOf(o.id),6), rr=t.length<=4?16:15;
-      const fs=Math.max(7.5,Math.min(11,(rr*1.9)/Math.max(1,t.length)*1.35));
-      drawn.push({id:o.id,y:y,col:col,r:rr});
-      g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
-      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${rr}" fill="#0b0e14" stroke="${col}" stroke-width="2"/>`;
-      g+=`<text x="${R1X}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(t)}</text>`;
-      const full=why[o.id];
-      if(full){
-        g+=`<text x="${R1X+rr+6}" y="${(y+4).toFixed(1)}" font-family="Inter,sans-serif" font-size="11" fill="${MAP}">${esc(clip(full,REASON_MAX))}<title>${esc(full)}</title></text>`;
-      }
-    });
-    if(total>6) g+=`<text x="${R1X}" y="215" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="${MAP}">+${total-6} more</text>`;
+    const wins=r.win||[], loses=r.lose||[];
+    if(!wins.length && !loses.length) return '';
+    const R=Math.max(R1MIN, (Math.max(wins.length, loses.length)-1)*LEG_GAP/ARC);
+    const VH=Math.max(VBH, Math.ceil(2*(R*Math.sin(ARC0+ARC)+26)));
+    const CY=VH/2;
+    const place=(ids, win)=>{
+      const step=LEG_GAP/R, span=Math.max(0, ids.length-1)*step;
+      const start=(win ? -(ARC0+ARC) : ARC0) + (ARC-span)/2;
+      return ids.map((id,i)=>{ const th=start+i*step;
+        return {id:id, win:win, th:th, x:CX+Math.cos(th)*R, y:CY+Math.sin(th)*R,
+                col:win?UP:DN, r:DOT}; });
+    };
+    const legs=[...place(wins,true), ...place(loses,false)];
 
-    const at={}; drawn.forEach(d=>{ at[d.id]=d; });
+    const at={}; legs.forEach(d=>{ at[d.id]=d; });
     const side={}; (r.win2||[]).forEach(i=>{side[i]='win';});
     (r.lose2||[]).forEach(i=>{side[i]='lose';});
     const by={}, kids=[];
@@ -113,13 +117,64 @@
     let prev=-1e9; show.forEach(k=>{ k.y=Math.max(k.y,prev+GAP); prev=k.y; });
     if(show.length){
       const lift=22-show[0].y; if(lift>0) show.forEach(k=>{k.y+=lift;});
-      const drop=show[show.length-1].y-(VBH-22); if(drop>0) show.forEach(k=>{k.y-=drop;});
+      const drop=show[show.length-1].y-(VH-22); if(drop>0) show.forEach(k=>{k.y-=drop;});
     }
+
+    // Ring-1 labels, greedy in leg order, kept left of the second ring.
+    const maxX = show.length ? R2X-R2R-8 : VBW-2;
+    const placed=[], dots=legs.map(d=>({x:d.x, y:d.y, r:DOT+2})), hub={x:CX, y:CY, r:HUB};
+    const onC=(b,c)=>{ const dx=c.x-Math.max(b.x0,Math.min(c.x,b.x1)), dy=c.y-Math.max(b.y0,Math.min(c.y,b.y1));
+      return dx*dx+dy*dy<c.r*c.r; };
+    const clear=b=>b.x0>=2 && b.x1<=maxX && b.y0>=2 && b.y1<=VH-2
+      && !placed.some(p=>b.x0<p.x1+2 && p.x0<b.x1+2 && b.y0<p.y1+2 && p.y0<b.y1+2)
+      && !dots.some(c=>onC(b,c)) && !onC(b,hub);
+    const boxAt=(ax,ay,s,w)=> s==='right'
+      ? {x0:ax+DOT+4, x1:ax+DOT+4+w, y0:ay-8, y1:ay+7, tx:ax+DOT+4, ty:ay+4.5, anchor:'start'}
+      : s==='left'
+      ? {x0:ax-DOT-4-w, x1:ax-DOT-4, y0:ay-8, y1:ay+7, tx:ax-DOT-4, ty:ay+4.5, anchor:'end'}
+      : s==='above'
+        ? {x0:ax-w/2, x1:ax+w/2, y0:ay-DOT-18, y1:ay-DOT-3, tx:ax, ty:ay-DOT-6.5, anchor:'middle'}
+        : {x0:ax-w/2, x1:ax+w/2, y0:ay+DOT+3, y1:ay+DOT+18, tx:ax, ty:ay+DOT+14.5, anchor:'middle'};
+    legs.forEach(d=>{
+      const name=nameOf(d.id), full=why[d.id]||'';
+      const cands=full ? [{name:name, reason:true}] : [];
+      cands.push({name:name, reason:false});
+      for(let cut=name.length-1; cut>=3; cut--) cands.push({name:name.slice(0,cut).trimEnd()+'…', reason:false});
+      const sides=d.win ? ['right','above','left','below'] : ['right','below','left','above'];
+      let got=null;
+      for(const c of cands){
+        const w=textW(c.name,LAB_FS,true)+(c.reason ? 6+textW(clip(full,REASON_MAX),LAB_FS,false) : 0);
+        for(let k=0; k<=6 && !got; k++){
+          const ax=d.x+Math.cos(d.th)*10*k, ay=d.y+Math.sin(d.th)*10*k;
+          for(const s of sides){ const b=boxAt(ax,ay,s,w); if(clear(b)){ got=Object.assign(b,{c:c, k:k}); break; } }
+        }
+        if(got) break;
+      }
+      d.forced=!got;
+      if(!got){ const c={name:name.slice(0,3)+'…', reason:false};
+        got=Object.assign(boxAt(d.x,d.y,'right',textW(c.name,LAB_FS,true)), {c:c, k:0}); }
+      placed.push(got);
+      d.lab=got;
+    });
+    let g='', gl='';
+    legs.forEach(d=>{
+      const L=d.lab;
+      g+=`<path d="M${CX},${CY} C${(CX+R*0.45).toFixed(1)},${CY} ${(d.x-R*0.3).toFixed(1)},${d.y.toFixed(1)} ${d.x.toFixed(1)},${d.y.toFixed(1)}" fill="none" stroke="${d.col}" stroke-width="1.6" opacity=".8"/>`;
+      if(L.k>0) g+=`<line x1="${d.x.toFixed(1)}" y1="${d.y.toFixed(1)}" x2="${Math.max(L.x0,Math.min(d.x,L.x1)).toFixed(1)}" y2="${Math.max(L.y0,Math.min(d.y,L.y1)).toFixed(1)}" stroke="${MAP}" stroke-width=".8" opacity=".6"/>`;
+    });
+    legs.forEach(d=>{
+      g+=`<circle data-leg="${esc(d.id)}" cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="${DOT}" fill="#0b0e14" stroke="${d.col}" stroke-width="2"><title>${esc(nameOf(d.id))}</title></circle>`;
+      const L=d.lab, full=why[d.id]||'';
+      gl+=`<text data-lab="${esc(d.id)}" data-box="${[L.x0,L.y0,L.x1,L.y1].map(v=>v.toFixed(1)).join(',')}"${d.forced?' data-forced="1"':''} x="${L.tx.toFixed(1)}" y="${L.ty.toFixed(1)}" text-anchor="${L.anchor}" font-family="Inter,sans-serif" font-size="${LAB_FS}"><tspan font-weight="600" fill="#e8ecf2">${esc(L.c.name)}</tspan>`;
+      if(L.c.reason) gl+=`<tspan dx="6" fill="${MAP}">${esc(clip(full,REASON_MAX))}<title>${esc(full)}</title></tspan>`;
+      gl+=`</text>`;
+    });
+
     let g2='';
     show.forEach(k=>{
       const y=k.y, col=k.parents[0].col, two=k.parents.length>1;
       k.parents.forEach(p=>{
-        g2+=`<path d="M${R1X+p.r},${p.y.toFixed(1)} C${R1X+55},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${p.col}" stroke-width="1" opacity=".45"/>`;
+        g2+=`<path d="M${(p.x+p.r).toFixed(1)},${p.y.toFixed(1)} C${(p.x+p.r+55).toFixed(1)},${p.y.toFixed(1)} ${R2X-55},${y.toFixed(1)} ${R2X-R2R},${y.toFixed(1)}" fill="none" stroke="${p.col}" stroke-width="1" opacity=".45"/>`;
       });
       g2+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${R2R}" fill="#0b0e14" stroke="${col}" stroke-width="${two?2:1.4}" opacity="${two?.95:.7}"/>`;
       const tip=(k.labels||[]).filter(Boolean).join(' · ');
@@ -128,9 +183,9 @@
     if(hidden>0) g2+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="${MAP}">+${hidden}</text>`;
 
     const m = leg(r);
-    return `<div class="cons"><svg viewBox="0 0 ${VBW} ${VBH}">
+    return `<div class="cons"><svg viewBox="0 0 ${VBW} ${VH}">
       <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
-      ${g2}${g}
+      ${g2}${g}${gl}
       <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2"/>
       <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${esc(r.tk||'')}</text>
     </svg><div class="cap">
@@ -160,6 +215,27 @@
   };
   const R2_NOTE = 'second ring · shown as a number';
   const drawnLines = s => DRAWN.filter(k=>hasPoints(s[k])).map(k=>({k:k, v:s[k]}));
+
+  // A member whose last close is old says so, in words, after the separator.
+  // The separator is written only with something after it: a bare "·" after a
+  // name read as a suffix that failed to print.
+  const staleNote = x => {
+    const s = x.stale ? `${x.stale} sessions stale` : '';
+    return s ? ` <span class="stale" title="last close ${esc(x.stale)} sessions old">· ${esc(s)}</span>` : '';
+  };
+
+  // The commitment on file, as commitments.json has it. A contract
+  // re-committed before its answer date says when and why on one line, and
+  // each hash it replaced is folded away beneath.
+  function revisedLine(c){
+    if(!c || !c.revised_at) return '';
+    const before = String(c.revised_at) < String(c.answer_date);
+    return `<div class="rev" data-revised="${esc(c.revised_at)}" style="margin-top:4px;font-family:IBM Plex Mono,monospace;font-size:.66rem;line-height:1.5;color:#e8ecf2">Revised ${esc(c.revised_at)} — ${before?'before':'not before'} the answer date${c.revision_note?' · '+esc(c.revision_note):''}</div>`;
+  }
+  function previousCommitments(c){
+    const hist = c && c.revised_at && Array.isArray(c.history) ? c.history : [];
+    return hist.slice().reverse().map(h=>`<details class="prev" style="margin-top:6px;font-family:IBM Plex Mono,monospace;font-size:.66rem;color:#7d8797"><summary>Previous commitment: ${esc(String(h.sha256||'').slice(0,12))}…, committed ${esc(h.committed_at)}</summary><div style="word-break:break-all">SHA-256 ${esc(h.sha256)} · replaced</div></details>`).join('');
+  }
 
   // Every drawn line, then a filled dot where it ends with its value beside
   // it, so each line can be traced to a number. Painted map-first so the
@@ -265,7 +341,7 @@
         const col = (x.since_report||0) >= 0 ? UP : DN;
         const bar = x.since_report==null ? ''
           : `<span class="bar" style="width:${w}px;background:${col}"></span>`;
-        rows += `<tr><td>${esc(x.label)}${x.stale?` <span class="stale" title="last close ${x.stale} sessions old">·</span>`:''}</td>
+        rows += `<tr><td>${esc(x.label)}${staleNote(x)}</td>
           <td class="arrow">${x.expected_dir>0?'▲':'▼'}</td>
           <td>${n2(x.report_close)}</td>
           <td>${n2(x.last)}</td>
@@ -357,7 +433,7 @@
         const col = (x.since_pct||0) >= 0 ? UP : DN;
         const bar = x.since_pct==null ? ''
           : `<span class="bar" style="width:${w}px;background:${col}"></span>`;
-        rows += `<tr><td>${esc(x.label)}${x.stale?` <span class="stale" title="last close ${x.stale} sessions old">·</span>`:''}</td>
+        rows += `<tr><td>${esc(x.label)}${staleNote(x)}</td>
           <td class="arrow">${x.expected_dir>0?'▲':'▼'}</td>
           <td>${n2(x.report_close)}</td>
           <td>${n2(x.entry_close)}</td>
@@ -481,6 +557,9 @@
           + `</div>`
         : `<div class="day">not entered yet</div>`;
     }
+    // Not answered yet, so no Verify box: the revision sits under the
+    // pre-registered line itself. An answered card carries it in that box.
+    if(!ANSWERED(r)) line += revisedLine(r.commitment) + previousCommitments(r.commitment);
     const t = r.today||{};
     const nums = r.entry_date ? `<div class="big">
         <div><b class="${sgn(t.win_lose)}">${p2(t.win_lose)}</b><span>up − down today</span></div>
@@ -531,13 +610,10 @@
     const ok = !!p.valid_preregistration;
     // A contract re-committed before its answer date says when and why. Verify
     // checks the hash in force; the ones it replaced are folded away below.
-    const hist = Array.isArray(p.history) ? p.history : [];
-    const revised = p.revised_at
-      ? `<div style="margin-top:4px;color:#e8ecf2">Revised ${esc(p.revised_at)} — ${String(p.revised_at) < String(p.answer_date) ? 'before' : 'not before'} the answer date${p.revision_note ? ' · '+esc(p.revision_note) : ''}</div>`
-      : '';
-    const previous = hist.length
-      ? `<details style="margin-top:6px"><summary>Previous commitment${hist.length>1?'s':''}</summary>${hist.slice().reverse().map(h=>`<div style="word-break:break-all;color:#7d8797">SHA-256 ${esc(h.sha256)} · committed ${esc(h.committed_at)} · replaced</div>`).join('')}</details>`
-      : '';
+    const c = p.revised_at ? p
+      : (r.commitment && r.commitment.revised_at ? r.commitment : null);
+    const revised = revisedLine(c);
+    const previous = previousCommitments(c);
     return `<div class="prereg" data-prereg="${esc(r.qid)}" data-sha="${esc(p.sha256)}" data-valid="${ok?'1':'0'}" data-committed="${esc(p.committed_at)}" data-answer="${esc(p.answer_date)}" data-contract="${esc(p.contract)}" style="margin-top:12px;padding:10px 12px;border:1px solid #222a36;border-radius:6px;font-family:IBM Plex Mono,monospace;font-size:.7rem;color:#b3bccb">
       <div>Pre-registered ${esc(p.committed_at)} · answer date ${esc(p.answer_date)} · primary horizon ${esc(p.primary_horizon)} sessions${ok?'':' · <b style="color:#f2b632">not a valid preregistration</b>'}</div>${revised}
       <div style="word-break:break-all;margin:6px 0;color:#7d8797">SHA-256 ${esc(p.sha256)} · ${p.hash_source==='commitments.json'?'read from commitments.json':'as carried in this page'}</div>

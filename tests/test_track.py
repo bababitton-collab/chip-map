@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import re
 
 import pytest
 
@@ -607,11 +608,31 @@ def test_a_reason_longer_than_the_cap_is_cut_not_dropped(book):
 
 
 def test_the_record_carries_a_reason_for_every_drawn_ring_one_station(book):
-    """Three a side is what the constellation draws, so three a side is what
-    rides in the payload."""
+    """The constellation draws every leg, so every leg's reason rides in the
+    payload, and every leg has a name that does not depend on a price."""
     r = one(book, [q("a", "2026-06-01", ["up", "flat", "s1", "s2"], ["down"])])
-    assert [e["id"] for e in r["ring1_edges"]] == ["up", "flat", "s1", "down"]
+    assert [e["id"] for e in r["ring1_edges"]] == ["up", "flat", "s1", "s2",
+                                                    "down"]
     assert all(set(e) == {"id", "label"} for e in r["ring1_edges"])
+    assert {"up", "flat", "s1", "s2", "down"} <= set(r["labels"])
+    unpriced = one(book, [q("b", "2026-06-01", ["up", "nobody"], [])])
+    assert unpriced["labels"]["nobody"] == "NOBODY"
+
+
+def test_every_card_carries_its_commitment(book):
+    entry = {"qid": "a", "answer_date": "2026-06-01", "committed_at": "2026-05-01",
+             "sha256": "ab" * 32, "primary_horizon": 20,
+             "valid_preregistration": True, "revised_at": "2026-05-01",
+             "revision_note": "why", "history": [{"sha256": "cd" * 32,
+                                                  "committed_at": "2026-04-01"}]}
+    data = track.build([], forecast.build([], DOC, [], CAL),
+                       [q("a", "2026-06-01", ["up"], []),
+                        q("b", "2026-06-02", ["down"], [])],
+                       DOC, {}, book, CAL, TODAY, commitments=[entry])
+    by = {r["qid"]: r for r in data["forecasts"]}
+    assert by["a"]["commitment"] == {k: v for k, v in entry.items() if k != "qid"}
+    assert "commitment" not in by["b"]
+    assert "commitment" not in json.dumps(track.slim(data))
 
 
 def test_the_reasons_do_not_ride_in_the_slim_copy(book):
@@ -1523,8 +1544,160 @@ def test_a_revised_card_says_so_and_verifies_the_hash_in_force(tmp_path):
     assert html.count("Revised 2026-09-15 — before the answer date") == 1
     assert note in html
     assert html.count(old) == 1, "the replaced hash is shown once"
-    assert html.index("<summary>Previous commitment</summary>") < html.index(old)
+    summary = f"<summary>Previous commitment: {old[:12]}…, committed 2026-09-13</summary>"
+    assert html.index("data-verify") < html.index(summary) < html.index(old)
     assert f'data-sha="{old}"' not in html, "Verify never checks the old hash"
+
+
+# -- the constellation, the revision line and the station labels, as drawn ------
+
+def _render_cards(tmp_path, forecasts, name="cards.js"):
+    import shutil
+    import subprocess
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    payload = {"as_of": "2026-09-15", "summary": {}, "forecasts": forecasts}
+    js = tmp_path / name
+    js.write_text(
+        "globalThis.window = {};\n" + cards_source() + "\n"
+        "const root = {};\n"
+        f"window.renderTrack(root, {json.dumps(payload)});\n"
+        "process.stdout.write(root.innerHTML);\n", encoding="utf-8")
+    html = subprocess.run(["node", str(js)], capture_output=True,
+                          check=True).stdout.decode("utf-8")
+    parts = re.split(r'(?=<article class="fc )', html)
+    return {re.search(r'data-id="([^"]*)"', p).group(1): p
+            for p in parts if p.startswith("<article")}
+
+
+def _watch_cards():
+    """One upcoming card per row of the real watch list, with the map's own
+    second ring, reasons and names, and its entry from commitments.json."""
+    from chains import mapfile, preregister, rings
+    from chains.paths import watch_en_path
+    doc = mapfile.load()
+    by_ticker = {str(n.get("ticker", "")).upper(): n["id"]
+                 for n in doc["nodes"] if n.get("ticker")}
+    commits = {e["qid"]: e for e in preregister.load()}
+    cards = []
+    for w in json.loads(watch_en_path().read_text(encoding="utf-8")):
+        centre = by_ticker.get(str(w.get("tk") or "").upper())
+        win, lose = list(w.get("win") or []), list(w.get("lose") or [])
+        r2 = rings.second_ring(doc, win, lose, centre)
+        ring2 = list(r2.get("win2") or []) + list(r2.get("lose2") or [])
+        cards.append({
+            "qid": w["id"], "who": w["who"], "tk": w.get("tk"), "d": w["d"],
+            "confirmed": True, "state": "upcoming", "status": None,
+            "win": win, "lose": lose, "observe_only": bool(w.get("observe_only")),
+            "members": [], "win2": r2.get("win2") or [],
+            "lose2": r2.get("lose2") or [],
+            "ring2_edges": r2.get("ring2_edges") or [],
+            "ring1_edges": [{"id": i, "label": track.reason_for(doc, centre, i)}
+                            for i in win + lose],
+            "labels": {i: track.label_of(doc, i) for i in win + lose + ring2},
+            "commitment": {k: v for k, v in commits[w["id"]].items()
+                           if k != "qid"}})
+    return cards
+
+
+def _drawn(card_html):
+    legs = [(m.group(1), float(m.group(2)), float(m.group(3)), float(m.group(4)))
+            for m in re.finditer(r'<circle data-leg="([^"]*)" cx="([-\d.]+)" '
+                                 r'cy="([-\d.]+)" r="([\d.]+)"', card_html)]
+    labels = [(m.group(1), [float(v) for v in m.group(2).split(",")], bool(m.group(3)))
+              for m in re.finditer(r'<text data-lab="([^"]*)" data-box="([^"]*)"'
+                                   r'( data-forced="1")?', card_html)]
+    return legs, labels
+
+
+def _check_layout(qid, legs, labels):
+    assert not [i for i, _b, forced in labels if forced], f"{qid}: a label had no room"
+    boxes = [(i, b) for i, b, _f in labels]
+    for n, (i, a) in enumerate(boxes):
+        for j, b in boxes[n + 1:]:
+            assert not (a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]), \
+                (qid, i, j)
+        for j, x, y, r in legs:
+            dx = x - max(a[0], min(x, a[2]))
+            dy = y - max(a[1], min(y, a[3]))
+            assert dx * dx + dy * dy >= r * r, (qid, "label", i, "on dot", j)
+
+
+def test_every_card_draws_every_leg_of_its_basket(tmp_path):
+    """Satellites drawn == win ∪ lose, for every question on the real list,
+    with no two labels touching and no label over a dot."""
+    cards = _watch_cards()
+    html = _render_cards(tmp_path, cards)
+    assert set(html) == {c["qid"] for c in cards}
+    for c in cards:
+        legs, labels = _drawn(html[c["qid"]])
+        assert sorted(i for i, *_ in legs) == sorted(c["win"] + c["lose"]), c["qid"]
+        assert sorted(i for i, *_ in labels) == sorted(c["win"] + c["lose"]), c["qid"]
+        _check_layout(c["qid"], legs, labels)
+    shecy = next(c for c in cards if c["qid"] == "shecy_h1")
+    assert {i for i, *_ in _drawn(html["shecy_h1"])[0]} >= {"wacker", "tok"}
+    assert len(shecy["win"]) == 5
+
+
+def test_a_long_basket_is_drawn_whole_on_both_arcs(tmp_path):
+    names = ["Very Long Station Name %d" % i for i in range(14)]
+    win, lose = [f"w{i}" for i in range(9)], [f"l{i}" for i in range(5)]
+    card = {"qid": "big", "who": "BIG", "tk": "BIG", "d": "2026-12-01",
+            "state": "upcoming", "status": None, "win": win, "lose": lose,
+            "members": [], "win2": ["r"], "lose2": [],
+            "ring2_edges": [{"from": "r", "to": "w0", "label": "parts"}],
+            "ring1_edges": [{"id": i, "label": "a long reason here"}
+                            for i in win + lose],
+            "labels": dict(zip(win + lose, names))}
+    legs, labels = _drawn(_render_cards(tmp_path, [card])["big"])
+    assert sorted(i for i, *_ in legs) == sorted(win + lose)
+    _check_layout("big", legs, labels)
+    ups = [y for i, _x, y, _r in legs if i in win]
+    downs = [y for i, _x, y, _r in legs if i in lose]
+    assert max(ups) < min(downs), "up to the upper arc, down to the lower"
+    assert "more</text>" not in _render_cards(tmp_path, [card], "b.js")["big"]
+
+
+def test_every_revised_card_shows_its_revision_under_the_pre_registered_line(
+        tmp_path):
+    """All nineteen, from commitments.json as committed: the line with its
+    note under PRE-REGISTERED, and the replaced hash folded beneath it."""
+    cards = _watch_cards()
+    html = _render_cards(tmp_path, cards)
+    revised = [c for c in cards if (c["commitment"] or {}).get("revised_at")]
+    assert len(revised) == 19
+    for c in revised:
+        h, e = html[c["qid"]], c["commitment"]
+        line = (f"Revised {e['revised_at']} — before the answer date · "
+                f"{e['revision_note']}")
+        prev = e["history"][-1]
+        summary = (f"<summary>Previous commitment: {prev['sha256'][:12]}…, "
+                   f"committed {prev['committed_at']}</summary>")
+        assert h.index('class="pre"') < h.index(line) < h.index(summary), c["qid"]
+        assert h.rfind("<details", 0, h.index(summary)) > h.index(line), "folded"
+    for c in cards:
+        if c not in revised:
+            assert "Revised " not in html[c["qid"]], c["qid"]
+
+
+def test_no_station_label_ends_with_a_separator(tmp_path):
+    """A separator is written only with something after it."""
+    assert "·</span>" not in cards_source()
+    card = dict(_watch_cards()[0], qid="stale", members=[
+        {"id": "tok", "label": "TOK", "group": "win", "expected_dir": 1,
+         "stale": 10},
+        {"id": "sumco", "label": "SUMCO", "group": "win", "expected_dir": 1,
+         "stale": 0}])
+    html = _render_cards(tmp_path, _watch_cards() + [card])
+    strip = lambda s: re.sub(r"<[^>]+>", "", s).strip()  # noqa: E731
+    cells = [strip(m.group(1)) for h in html.values()
+             for m in re.finditer(r"<tr><td>(.*?)</td>", h, re.S)]
+    texts = [strip(m.group(1)) for h in html.values()
+             for m in re.finditer(r"<text data-lab=[^>]*>(.*?)</text>", h, re.S)]
+    assert "TOK · 10 sessions stale" in cells and "SUMCO" in cells
+    assert texts, "the constellation labels were read"
+    bad = [t for t in cells + texts if t.endswith("·")]
+    assert bad == [], bad
 
 
 # -- resolved is public, upcoming is paid ---------------------------------------

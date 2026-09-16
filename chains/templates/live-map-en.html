@@ -27,7 +27,7 @@ a{color:inherit}
 .ev.soon i{color:var(--tight)}
 .stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0px;min-height:720px}
 .stage.open{grid-template-columns:minmax(0,1fr) 460px}
-canvas{display:block;width:100%;height:720px;cursor:crosshair}
+canvas{display:block;width:100%;height:720px;cursor:crosshair;touch-action:manipulation}
 /* A portrait viewport needs a portrait canvas: at a fixed 720px a 1080-wide
    phone frame is still a 1.5:1 letterbox, and layout() -- which reads the
    canvas, not the window -- would go on drawing columns in it. Recording mode
@@ -1109,6 +1109,22 @@ function layoutLandscape(){
   const g9=(groups['L9']||[]); const x7=xOf['L7'], x4=xOf['L4'];
   g9.forEach((nd,i)=>{ nd.x=x7+(i/(g9.length-1||1))*(x4-x7); nd.y=H-34; });
   nodes.forEach(n=>{ n.r = n.cap? Math.max(7, Math.min(24, 6+18*Math.sqrt(n.cap/5516))) : 7; });
+  // No two rings in a column come within 6px of each other. The column may use
+  // the whole canvas height for it, and is lifted back only if it ran past the
+  // bottom -- a row of stations pushed off the canvas would be worse than the
+  // crowding it was fixing.
+  cols.forEach(L=>{
+    const g=(groups[L]||[]).slice().sort((a,b)=>a.y-b.y);
+    for(let i=1;i<g.length;i++){
+      const a=g[i-1], b=g[i], need=a.y+ringR(a)+LBL_GAP+ringR(b);
+      if(b.y<need) b.y=need;
+    }
+    const last=g[g.length-1], first=g[0];
+    if(!last) return;
+    const over=last.y+ringR(last)+LBL_H+6-H;
+    if(over>0){ const room=Math.max(0, first.y-ringR(first)-6);
+      const shift=Math.min(over, room); if(shift) g.forEach(n=>n.y-=shift); }
+  });
   // The column geometry, kept for the header chips alone. Nothing is painted
   // behind the map: the ground stays one colour the whole way across.
   bands = cols.map(L=>({L:L, x0:xOf[L]-colW/2, x1:xOf[L]+colW/2, cx:xOf[L]}));
@@ -1119,6 +1135,15 @@ function layoutLandscape(){
   l9y = H-34;
   ctx.font='600 14px "Assistant", sans-serif';
   nodes.forEach(n=>{ n.lw = ctx.measureText(n.short||n.name.split(' ')[0]).width; });
+  // A name stays under its dot unless that box would reach the ring of the next
+  // station down the column; then it goes beside the dot, where nothing else is
+  // drawn, on a plate dark enough to read over an arc.
+  nodes.forEach(n=>{ n.lside=false; });
+  cols.forEach(L=>{
+    const g=(groups[L]||[]).slice().sort((a,b)=>a.y-b.y);
+    g.forEach((n,i)=>{ const next=g[i+1]; if(!next) return;
+      if(n.y+n.r+5+LBL_H > next.y-ringR(next)-2) n.lside=true; });
+  });
   // The L9 chip names the row from above it, centred on ETN, its bottom edge
   // 10px over the top of ETN's ring. layerBar() measures the chip and lifts it
   // straight up if a station, a ring or a label would touch it there. Without
@@ -1130,6 +1155,23 @@ function layoutLandscape(){
 // How far a station's drawing reaches: the chokepoint ring at r+5 with its
 // 2.5px stroke, or the station's own 2px outline.
 function ringR(n){ return pulseOf(n) ? n.r+5+1.25 : n.r+1; }
+// Which way the page runs. A name that moves off its dot moves outward from the
+// column: right where the text runs left to right, left where it runs right to
+// left.
+const RTL = (document.documentElement.dir||'').toLowerCase()==='rtl'
+  || getComputedStyle(document.documentElement).direction==='rtl';
+const LBL_PAD=3, LBL_H=14, LBL_GAP=6;
+// Where a station's name is painted. Under the dot, as always; beside it when
+// the box under it would land on the next station's ring -- NVIDIA's name sat
+// on AVGO's ring in L4 at every width, and on a phone that is the one column a
+// reader starts from. Drawn from here, published from here and hit-tested from
+// here, so the three can never disagree about where a name is.
+function labelBox(n){
+  const w=n.lw||0;
+  if(n.lside) return {x: RTL ? n.x-n.r-LBL_GAP-(w+2*LBL_PAD) : n.x+n.r+LBL_GAP,
+                      y: n.y-LBL_H/2, w: w+2*LBL_PAD, h: LBL_H, side:true};
+  return {x:n.x-w/2, y:n.y+n.r+5, w, h:LBL_H, side:false};
+}
 function resize(){
   // Up to 3, not 2: a phone at devicePixelRatio 3 was being drawn at two
   // thirds of its own resolution, which is exactly where a thin edge and a
@@ -1228,8 +1270,8 @@ function layerBar(){
     const y0=bottom-th-1, y1=bottom+1;
     const dx=n.x-Math.max(x0,Math.min(n.x,x1)), dy=n.y-Math.max(y0,Math.min(n.y,y1));
     if(dx*dx+dy*dy<=ringR(n)*ringR(n)) return true;
-    const lx=n.x-(n.lw||0)/2, ly=n.y+n.r+5;
-    return lx<=x1 && x0<=lx+(n.lw||0) && ly<=y1 && y0<=ly+14;
+    const lb=labelBox(n);
+    return lb.x<=x1 && x0<=lb.x+lb.w && lb.y<=y1 && y0<=lb.y+lb.h;
   });
   let bottom=l9y;
   while(touches(bottom) && bottom-th>1) bottom-=1;
@@ -1240,9 +1282,15 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(W)
 
 // The node labels are painted, so they have no box the DOM can measure. Their
 // rectangles are published for the check that no chip lands on one.
-window.__labelBoxes = () => nodes.map(n=>({
-  id:n.id, x:n.x-(n.lw||0)/2, y:n.y+n.r+16-11, w:n.lw||0, h:14,
-}));
+// nx/ny are the station's own centre. A check that wants it must not work
+// backwards from the box: the box moves to the side of the dot when the name
+// would land on the ring below, and its width changes the moment the web font
+// lands -- so an inverted box can be a station's width out of date.
+window.__labelBoxes = () => nodes.map(n=>{
+  const b=labelBox(n);
+  return {id:n.id, x:b.x, y:b.y, w:b.w, h:b.h, nx:n.x, ny:n.y,
+          side: b.side ? (RTL?'left':'right') : 'below'};
+});
 
 function edgePath(e){ const a=byId[e.from], b=byId[e.to];
   if(MODE==='portrait'){
@@ -1417,7 +1465,22 @@ function draw(now){
     const lfs=n.lfs||14;
     ctx.font=(n===selected||n===hover?'700 ':'600 ')+lfs+'px "Assistant", sans-serif'; ctx.fillStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink2'); ctx.textAlign='center';
     const lbl=n.lbl||n.short||n.name.split(' ')[0];
-    ctx.fillText(lbl, n.x, n.y+n.r+(MODE==='portrait'?lfs+3:16)+(n.ldy||0));
+    const lb=labelBox(n);
+    if(lb.side){
+      // On a plate: beside the dot the arcs, the rings and the flow all run
+      // through, and a bare name over them cannot be read.
+      ctx.fillStyle='rgba(11,14,20,.85)';
+      ctx.beginPath();
+      if(ctx.roundRect) ctx.roundRect(lb.x, lb.y, lb.w, lb.h, 3);
+      else ctx.rect(lb.x, lb.y, lb.w, lb.h);
+      ctx.fill();
+      ctx.fillStyle=(n===selected||n===hover)?tok('--ink'):tok('--ink2');
+      ctx.textAlign=RTL?'right':'left'; ctx.textBaseline='middle';
+      ctx.fillText(lbl, RTL?lb.x+lb.w-LBL_PAD:lb.x+LBL_PAD, lb.y+lb.h/2);
+      ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+    } else {
+      ctx.fillText(lbl, n.x, n.y+n.r+(MODE==='portrait'?lfs+3:16)+(n.ldy||0));
+    }
   });
   if(camOn) ctx.restore();
   drawFocus(now);
@@ -1468,14 +1531,58 @@ cv.addEventListener('mousemove',ev=>{ const r=cv.getBoundingClientRect(); const 
   if(!n&&hoverEdge){ tip.innerHTML=edgeSentence(hoverEdge); tip.style.display='block'; const px0=Math.min(mx+14,W-260); tip.style.left=px0+'px'; tip.style.top=(my+14)+'px'; return; }
   if(n){ const px=n.px; tip.innerHTML=`<b>${n.name}${n.ticker?' · '+n.ticker:''}</b>${px?`13 weeks <span dir="ltr">${pct(px.r13w)}</span> · 1 year <span dir="ltr">${pct(px.r52w)}</span>`:'no price line'}${n.cp?'<br>'+n.cp.map(c=>c.he).join(' · '):''}`; tip.style.display='block'; const lx=ev.clientX-r.left, ly=ev.clientY-r.top; tip.style.left=Math.min(lx+14, W-290)+'px'; tip.style.top=(ly+12)+'px'; } else tip.style.display='none'; });
 cv.addEventListener('mouseleave',()=>{hover=null;hoverEdge=null;tip.style.display='none';});
-cv.addEventListener('click',ev=>{ const r=cv.getBoundingClientRect(); const x=ev.clientX-r.left, y=ev.clientY-r.top;
+// What a click and a tap both do, in canvas coordinates. One path, so a finger
+// and a mouse can never open different things.
+// How many times a click or a tap has been acted on, for the touch check in
+// tests/test_labels_mobile.py: a device that reports both must still act once.
+window.__acts = 0;
+function actAt(x,y){
+  window.__acts++;
   // Legacy recording keeps the old click: select the station and light its edges.
   if(LEGACY){ const n=nodeAt(x,y); if(n) open(n); else close(); return; }
   // In focus mode a supplier that is a station takes the focus; the dim map
   // around the arcs lets go of it.
   if(focusN){ const s=focusHit(x,y); if(s){ if(s.st) enterFocus(s.st, {x:s.x, y:s.y}); return; }
     if(!focusOnSelf(x,y)) exitFocus(); return; }
-  const n=nodeAt(x,y); if(n) enterFocus(n); else close(); });
+  const n=nodeAt(x,y); if(n) enterFocus(n); else close();
+}
+// Touch. The canvas sits inside a sideways scroll container on a phone, where a
+// browser may swallow the click it would otherwise synthesise after a pan, so
+// the tap is acted on directly -- but only when the finger did not travel and
+// did not rest. A device that reports both a touch and a mouse must not act
+// twice, so a click arriving in the wake of a tap is ignored.
+const TAP_SLOP=12, TAP_MS=600, SYNTH_MS=500;
+// -Infinity, not 0: performance.now() counts from the page's own start, so a
+// zero here reads as "a tap happened at load" and swallows every click in the
+// first half second -- the half second in which somebody who came to click
+// something clicks it.
+let tapFrom=null, tapAt=0, tappedAt=-Infinity;
+function tapPoint(ev){ const r=cv.getBoundingClientRect();
+  const t=(ev.changedTouches&&ev.changedTouches[0])||ev;
+  return {x:t.clientX-r.left, y:t.clientY-r.top}; }
+function tapStart(ev){ if(ev.pointerType==='mouse') return;
+  tapFrom=tapPoint(ev); tapAt=performance.now(); }
+function tapEnd(ev){
+  if(ev.pointerType==='mouse' || !tapFrom) return;
+  const p=tapPoint(ev), moved=Math.hypot(p.x-tapFrom.x, p.y-tapFrom.y);
+  tapFrom=null;
+  if(moved>TAP_SLOP || performance.now()-tapAt>TAP_MS) return;   // a pan or a hold
+  tappedAt=performance.now();
+  if(ev.cancelable) ev.preventDefault();
+  hover=null; hoverEdge=null; tip.style.display='none';          // no hover on a phone
+  actAt(p.x, p.y);
+}
+cv.addEventListener('pointerdown', tapStart, {passive:true});
+cv.addEventListener('pointerup', tapEnd);
+cv.addEventListener('pointercancel', ()=>{ tapFrom=null; }, {passive:true});
+// Where pointer events are missing, the touch events themselves.
+if(!window.PointerEvent){
+  cv.addEventListener('touchstart', tapStart, {passive:true});
+  cv.addEventListener('touchend', tapEnd);
+}
+cv.addEventListener('click',ev=>{
+  if(performance.now()-tappedAt < SYNTH_MS) return;               // the tap already acted
+  const r=cv.getBoundingClientRect(); actAt(ev.clientX-r.left, ev.clientY-r.top); });
 
 // A price line too thin to read a move from, or gone quiet, says so beside the
 // ticker. The chart under it is still drawn; it is just not taken at face value.

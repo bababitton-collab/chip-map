@@ -15,7 +15,7 @@ LAYERS = json.loads(map_path().read_text(encoding="utf-8"))["labels"]["layers"]
 
 
 def test_l3_names_tools_and_licences():
-    assert LAYERS["L3"] == {"he": "כלי תכנון וקניין רוחני", "en": "design tools & IP"}
+    assert LAYERS["L3"] == {"he": "כלי תכנון", "en": "design tools & IP"}
 
 
 def test_l4_names_chipmakers():

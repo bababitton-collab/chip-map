@@ -169,6 +169,15 @@ def test_the_header_chips_keep_a_twelve_pixel_gap():
     assert "document.fonts.ready.then(()=>{ if(W) layerBar(); })" in TPL
 
 
+def test_a_click_is_never_swallowed_by_the_tap_guard():
+    """A click in the wake of a tap is ignored, so a phone that reports both
+    acts once. The clock it is measured against starts at the page's own start,
+    so the "last tap" cannot begin at zero: that reads as a tap at load and
+    swallows every click in the first half second."""
+    assert "let tapFrom=null, tapAt=0, tappedAt=-Infinity;" in TPL
+    assert "if(performance.now()-tappedAt < SYNTH_MS) return;" in TPL
+
+
 def test_the_shut_panel_carries_no_border():
     """The stage's second column is 0px when the panel is shut, but a 1px
     border made that element 1px wide -- one pixel past the viewport, and a
@@ -188,7 +197,13 @@ def test_the_node_label_boxes_are_published_for_the_collision_check():
     browser check reads these and asserts no chip lands on one."""
     assert "window.__labelBoxes = () => nodes.map(" in TPL
     assert "n.lw = ctx.measureText(" in TPL
-    assert "x:n.x-(n.lw||0)/2, y:n.y+n.r+16-11" in TPL
+    # One function answers where a name is: the draw, the published box and the
+    # chip's hit test all call it, so they cannot drift apart. A name that would
+    # land on the next ring goes beside its dot, and the box says which side.
+    assert "function labelBox(n){" in TPL
+    assert "const b=labelBox(n);" in TPL
+    assert "side: b.side ? (RTL?'left':'right') : 'below'" in TPL
+    assert "return {x:n.x-w/2, y:n.y+n.r+5, w, h:LBL_H, side:false};" in TPL
 
 
 # -- sticky, and mobile ------------------------------------------------------

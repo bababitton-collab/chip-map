@@ -82,6 +82,13 @@ def reach(node: dict, r: float, holders: set[str]) -> float:
     return r + 5 + 1.25 if node["id"] in holders else r + 1
 
 
+def centre(box: dict) -> dict:
+    """The station's own centre, published beside its name box. Not derived from
+    the box: a name moves beside its dot when it would land on the ring below,
+    and its width changes when the web font lands -- see test_labels_mobile.py."""
+    return {"x": box["nx"], "y": box["ny"]}
+
+
 def overlaps(a: dict, b: dict) -> bool:
     """Strict: boxes that only touch along an edge do not overlap."""
     return (a["x"] < b["x"] + b["w"] and b["x"] < a["x"] + a["w"]
@@ -140,7 +147,7 @@ def measured(pages):
                         r = radius(n)
                         stations[b["id"]] = {
                             "power": n.get("layer") == "L9",
-                            "x": b["x"] + b["w"] / 2, "y": b["y"] - 5 - r,
+                            **centre(b),
                             "reach": reach(n, r, holders), "label": b}
                     m["cols"] = {c["L"]: c["cx"] for c in m["chips"]}
                     out[(lang, w)] = dict(m, stations=stations)

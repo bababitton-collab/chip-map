@@ -60,8 +60,10 @@ def click_station(page, sid: str, node: dict) -> None:
     """A real click on the station's centre, scrolled into view first, then
     long enough for the 300ms focus animation to land."""
     g = page.evaluate(GEOMETRY, sid)
-    b = g["box"]
-    cx, cy = b["x"] + b["w"] / 2, b["y"] - 5 - radius(node)
+    # The dot's own centre, as the page publishes it. Working it back out of the
+    # name's box goes wrong the moment the box moves beside the dot or the web
+    # font changes the name's width.
+    cx, cy = g["box"]["nx"], g["box"]["ny"]
     vh = page.viewport_size["height"]
     if not 20 <= g["top"] + cy <= vh - 20:
         page.evaluate("dy => window.scrollBy(0, dy)", g["top"] + cy - vh / 2)
@@ -400,11 +402,15 @@ def test_every_focus_label_sits_on_a_solid_box_and_the_satellites_are_gone():
 def test_recording_films_focus_mode_unless_legacy_is_asked_for():
     tpl = _template()
     assert "const LEGACY = REC && /[?&]legacy=1(?:&|$)/.test(location.search);" in tpl
-    i = tpl.index("cv.addEventListener('click'")
-    end = "const n=nodeAt(x,y); if(n) enterFocus(n); else close(); });"
-    click = tpl[i:tpl.index(end, i) + len(end)]
-    assert "if(LEGACY){ const n=nodeAt(x,y); if(n) open(n); else close(); return; }" in click
-    assert "if(REC){" not in click, "a plain ?rec=1 click goes to focus mode"
+    # A click and a tap go through one function now, so what a click does is
+    # read there -- and a tap cannot open something a click would not.
+    i = tpl.index("function actAt(x,y){")
+    end = "const n=nodeAt(x,y); if(n) enterFocus(n); else close();"
+    act = tpl[i:tpl.index(end, i) + len(end)]
+    assert "if(LEGACY){ const n=nodeAt(x,y); if(n) open(n); else close(); return; }" in act
+    assert "if(REC){" not in act, "a plain ?rec=1 click goes to focus mode"
+    assert "cv.addEventListener('pointerup', tapEnd);" in tpl
+    assert "if(performance.now()-tappedAt < SYNTH_MS) return;" in tpl
 
 
 def test_details_enter_escape_and_refocus(pages, browser):

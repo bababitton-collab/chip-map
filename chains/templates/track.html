@@ -165,6 +165,28 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
   .fc,.ghost{grid-template-columns:minmax(0,1fr);gap:22px 0}
   h2{font-size:1.6rem}
 }
+/* The track record: one block per closed question, and the master table.
+   "trec" rather than "rec": the site nav already owns .rec for its own link. */
+.trec{margin-top:14px;padding:12px 14px;border:1px solid var(--rule);border-radius:8px;background:#10151d}
+.trec h4{margin:0 0 8px;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:#b3bccb;font-weight:500}
+.trec .bench{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 10px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:#7d8797}
+.trec .bench b{font-weight:600;margin-inline-start:4px}
+.trec table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.7rem}
+.trec th{text-align:right;color:#7d8797;font-weight:500;padding:3px 6px;border-bottom:1px solid var(--rule);white-space:nowrap}
+.trec td{text-align:right;padding:3px 6px;border-bottom:1px solid #182029;white-space:nowrap}
+.trec th:first-child,.trec td:first-child,.trec th:nth-child(2),.trec td:nth-child(2){text-align:left}
+.trec tr.nos td{color:#7d8797;font-style:italic}
+.trec .via{margin-inline-start:6px;padding:0 5px;border:1px solid #3a3320;border-radius:3px;color:#f2b632;font-size:.6rem;text-transform:uppercase}
+.trec .cand{margin-top:10px}
+.trec .cand svg{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:6px}
+.trec .cap{margin:6px 0 0;color:#7d8797;font-size:.68rem;line-height:1.5}
+.tw2{overflow-x:auto}
+#record-table table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.72rem}
+#record-table th{cursor:pointer;text-align:right;color:#b3bccb;font-weight:500;padding:6px 8px;border-bottom:1px solid var(--rule);white-space:nowrap;user-select:none}
+#record-table th[aria-sort]{color:#f2b632}
+#record-table td{text-align:right;padding:6px 8px;border-bottom:1px solid #182029;white-space:nowrap}
+#record-table th:first-child,#record-table td:first-child,#record-table th:nth-child(3),#record-table td:nth-child(3){text-align:left}
+#record-table .empty{color:#7d8797}
 __SITE_NAV_CSS__
 </style>
 </head>
@@ -177,6 +199,10 @@ __SITE_NAV__
 
 <h3 id="sbh">Resolved · free, in full, verifiable</h3>
 <div id="resolved"></div>
+
+<h3 id="rth">Track record · every question that has closed</h3>
+<p class="lede">One row per closed question, from the day its contract was signed to the last close: what the signed basket did, the same window for the equal-weight map and for SOX, and the excess over the map. Every number is EODHD end-of-day data. Sort by any column. Research and analysis only. Not investment advice.</p>
+<div id="record-table"></div>
 
 <h3>Upcoming · pre-registered, not yet answered</h3>
 <div class="locked" id="locked"></div>
@@ -226,8 +252,11 @@ __CARDS_JS__
         first one lands here, whole and verifiable, the day it is.</p>`;
       return;
     }
+    // record_table rides along: the master table of everything that has closed
+    // is drawn by the same call, into its own section below the cards.
     window.renderTrack(root, {as_of:P.as_of, summary:P.summary||{},
-                              glossary:P.glossary||{}, forecasts:resolved});
+                              glossary:P.glossary||{}, forecasts:resolved,
+                              record_table:P.record_table||[]});
   }
   // Read once and applied to every card drawn, resolved or unlocked: the
   // commitment on the card -- its hash, and when a contract was re-committed,

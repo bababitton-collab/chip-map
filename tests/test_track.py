@@ -1368,6 +1368,60 @@ def _render(payload, tmp_path):
     return cards
 
 
+# -- the master table, in the same renderer ----------------------------------
+RT_ROW = {"qid": "q1", "who": "Acme Q3", "tk": "ACME",
+          "answer_date": "2026-09-10", "verdict": "mixed",
+          "basket": -3.19, "ew": -3.68, "sox": -5.83, "excess_ew": 0.49,
+          "sessions": 3, "committed_at": "2026-09-13",
+          "sha": "6a02cce2d486", "scored": False}
+
+
+def _render_table(payload, tmp_path):
+    """The renderer with a page under it: a document carrying the section the
+    public page has. The other harness has no document, on purpose."""
+    import shutil
+    import subprocess
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    js = tmp_path / "table.js"
+    js.write_text(
+        "globalThis.window = {};\n"
+        "const box = {innerHTML:'', addEventListener(){ box.wired = true; }};\n"
+        "globalThis.document = {getElementById: id =>"
+        " id === 'record-table' ? box : null};\n"
+        + cards_source()
+        + "\nconst root = {};\nwindow.renderTrack(root, "
+        + json.dumps(payload) + ");\n"
+        + "process.stdout.write(box.innerHTML);\n", encoding="utf-8")
+    return subprocess.run(["node", str(js)], capture_output=True,
+                          check=True).stdout.decode("utf-8")
+
+
+def test_the_master_table_carries_one_row_per_closed_question(tmp_path):
+    html = _render_table({"as_of": SES[-1], "summary": {}, "forecasts": [],
+                          "record_table": [RT_ROW]}, tmp_path)
+    assert 'data-qid="q1"' in html
+    for cell in ("Acme Q3", "2026-09-10", "mixed", "-3.19%", "-3.68%",
+                 "-5.83%", "+0.49%", "2026-09-13", "6a02cce2d486"):
+        assert cell in html, cell
+    assert "vs EW_MAP" in html and "Sessions" in html
+
+
+def test_with_nothing_closed_the_table_says_so_rather_than_drawing_zeros(tmp_path):
+    html = _render_table({"as_of": SES[-1], "summary": {}, "forecasts": [],
+                          "record_table": []}, tmp_path)
+    assert "No question has closed yet" in html and "<table" not in html
+
+
+def test_the_cards_still_draw_where_there_is_no_document_at_all(tmp_path):
+    """The private map and this file's other harness have no document. Reaching
+    for the table's section unguarded took every card down with it."""
+    cards = _render({"as_of": SES[-1], "summary": {},
+                     "record_table": [RT_ROW],
+                     "forecasts": [_obs("obs", None)]}, tmp_path)
+    assert "obs" in cards
+
+
 def test_both_charts_draw_only_their_lines_each_traced_to_a_number(tmp_path):
     cards = _render({"as_of": SES[-1], "summary": {}, "forecasts": [
         _obs("obs", [0.0, 1.0, 2.2]),

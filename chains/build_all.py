@@ -61,6 +61,10 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
     out = [
         ("prices", ["chains/scripts/build_prices.py"]),
         ("repair", ["chains/scripts/repair_prices.py"]),
+        # The four raw prices of a session, for the legs of every signed
+        # basket, from the day each question was signed. Cached: a window
+        # already carrying candles costs no request at all.
+        ("daily", ["chains/scripts/build_daily.py"]),
         # A report line on the fresh prices: a basket leg gone quiet for more
         # than three sessions. It exits 0 whatever it finds.
         ("legs", ["-m", "chains.liquidity", "--stale"]),

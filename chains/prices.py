@@ -72,12 +72,23 @@ OVERLAP_DAYS = 10
 # floats wobble in the last place; a split moves them by a factor of 2 or more.
 ADJ_TOLERANCE = 0.001
 
+# The adjusted close is what every chart and every score reads. The raw OHLC
+# beside it is what a candle needs, and the vendor already sends both in the
+# same response -- so keeping it costs four columns and not one extra request.
+# A parquet written before these columns existed loads with them null rather
+# than missing; see _conform.
 SCHEMA = {
     "date": pl.Date,
     "symbol": pl.Utf8,
     "adj_close": pl.Float64,
     "currency": pl.Utf8,
+    "open": pl.Float64,
+    "high": pl.Float64,
+    "low": pl.Float64,
+    "close": pl.Float64,
+    "volume": pl.Float64,
 }
+OHLC = ("open", "high", "low", "close")
 
 # EODHD exchange code -> trading currency. Deterministic: the exchange decides
 # it, so it is a lookup and not a per-symbol field to fetch.
@@ -131,10 +142,17 @@ def frame(symbol: str, rows: list[dict]) -> pl.DataFrame:
                                    r.get("adjClose", r.get("close"))))
                           for r in rows],
             "currency": [currency_for(symbol)] * len(rows),
+            # The raw bar, exactly as sent. Not adjusted: a candle is one day's
+            # own trading, and adjusting its four prices by a later split would
+            # draw a session that never printed. A bar missing any of the four
+            # is null here, and nothing downstream draws a candle for it.
+            **{k: [_f(r.get(k)) for r in rows] for k in OHLC},
+            "volume": [_f(r.get("volume")) for r in rows],
         }
     ).with_columns(
         pl.col("date").cast(pl.Utf8).str.to_date(),
         pl.col("adj_close").cast(pl.Float64),
+        *[pl.col(k).cast(pl.Float64) for k in (*OHLC, "volume")],
     ).drop_nulls("adj_close").unique(subset=["date"], keep="last").sort("date")
     return df.select(list(SCHEMA))
 
@@ -195,11 +213,57 @@ def append(symbol: str, rows: list[dict]) -> tuple[int, bool]:
     return _write(symbol, merged), False
 
 
+def _conform(df: pl.DataFrame) -> pl.DataFrame:
+    """A stored frame in today's schema.
+
+    A cache written before the OHLC columns existed is missing them, and a
+    concat of two frames with different columns fails. They are filled with
+    nulls rather than triggering a refetch: the adjusted close in that file is
+    still correct, and a null candle is honest about what was never stored.
+    """
+    missing = [k for k in SCHEMA if k not in df.columns]
+    if missing:
+        df = df.with_columns([pl.lit(None, dtype=SCHEMA[k]).alias(k)
+                              for k in missing])
+    return df.select(list(SCHEMA))
+
+
 def load(symbol: str) -> pl.DataFrame:
     p = path_for(symbol)
     if not p.exists():
         return pl.DataFrame(schema=SCHEMA)
-    return pl.read_parquet(p)
+    return _conform(pl.read_parquet(p))
+
+
+def bars(symbol: str, start: date | None = None,
+         end: date | None = None) -> list[dict]:
+    """Daily bars in a window, oldest first, as plain dicts.
+
+    Only bars carrying all four raw prices come back. Half a candle is a wrong
+    candle, and a caller that has to say "no clean series" needs to see nothing
+    rather than a shape drawn from two prices and two guesses.
+    """
+    df = load(symbol)
+    if df.is_empty():
+        return []
+    if start is not None:
+        df = df.filter(pl.col("date") >= start)
+    if end is not None:
+        df = df.filter(pl.col("date") <= end)
+    df = df.drop_nulls(list(OHLC)).sort("date")
+    return [{"date": d, "open": o, "high": h, "low": lo, "close": c,
+             "adj_close": a, "volume": v}
+            for d, o, h, lo, c, a, v in zip(
+                df["date"].to_list(), df["open"].to_list(),
+                df["high"].to_list(), df["low"].to_list(),
+                df["close"].to_list(), df["adj_close"].to_list(),
+                df["volume"].to_list())]
+
+
+def has_ohlc(symbol: str, start: date | None = None,
+             end: date | None = None) -> bool:
+    """Whether a window has any drawable bar at all."""
+    return bool(bars(symbol, start, end))
 
 
 def load_many(symbols) -> pl.DataFrame:

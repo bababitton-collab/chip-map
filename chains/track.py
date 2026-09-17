@@ -720,13 +720,20 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
         out.append(rec)
     out.sort(key=sort_key)
     from chains import glossary as _gl
-    return {"summary": summarise(out), "forecasts": out,
+    data = {"summary": summarise(out), "forecasts": out,
             "as_of": today.isoformat(),
             # Free tier, and it rides with the cards it explains so a
             # decrypted payload needs nothing else to render.
             "glossary": {t["id"]: {"label": t["label"], "def": t["en"],
                                    "match": list(t["match"])}
                          for t in _gl.load()}}
+    # The track record: for every question whose answer is in, what each leg
+    # did from the day the contract was signed, against the same two
+    # benchmarks the ledger uses. Only a resolved card gets one, so nothing a
+    # reader has not paid for can arrive through it.
+    from chains import record as _record
+    _record.attach(data, doc, book, node_symbols, cal, today)
+    return data
 
 
 # ------------------------------------------------------------------- slimming
@@ -842,6 +849,10 @@ def public(data: dict) -> dict:
         "primary_horizon": PRIMARY_HORIZON,
         # Aggregates over what has happened, plus the calendar: all free.
         "summary": dict(data.get("summary") or {}),
+        # One row per question that has closed: the same numbers the cards
+        # carry, in a table a reader can sort. Free for the same reason the
+        # cards are -- the past is the proof.
+        "record_table": list(data.get("record_table") or []),
         # Narrowed to the free text: see _terms_on. The sealed payload keeps
         # the whole glossary, because behind the key every card is readable.
         "glossary": _terms_on(data.get("glossary") or {},

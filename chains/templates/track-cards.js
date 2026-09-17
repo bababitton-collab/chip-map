@@ -623,6 +623,93 @@
     </div>`;
   }
 
+  // The record of a question whose answer is in: every leg of the signed
+  // basket from the day the contract was signed, the same window measured for
+  // the equal-weight map and for SOX, and a candle chart the build drew as SVG.
+  // Nothing here computes a number; it draws what chains/record.py measured.
+  function recordBlock(r){
+    const R = r.record;
+    if(!R) return '';
+    const b = R.benchmarks || {};
+    const via = x => (x.priced_via && x.priced_via !== 'primary')
+      ? ` <span class="via" title="priced through the ${esc(String(x.priced_via).toUpperCase())} line ${esc(x.symbol||'')}">${esc(x.priced_via)}</span>`
+      : '';
+    const side = g => g === 'win' ? 'win' : 'lose';
+    const rows = (R.legs||[]).map(x => x.no_series
+      ? `<tr class="nos"><td>${esc(x.tk)}${via(x)}</td><td>${side(x.group)}</td>`
+        + `<td colspan="5">${esc(x.no_series)}</td></tr>`
+      : `<tr><td>${esc(x.tk)}${via(x)}</td><td>${side(x.group)}</td>`
+        + `<td>${esc(x.entry_date || R.baseline)}</td>`
+        + `<td>${n2(x.entry_close != null ? x.entry_close : x.commit_close)}</td>`
+        + `<td>${n2(x.last)}</td>`
+        + `<td class="${sgn(x.day_pct)}">${p2(x.day_pct)}</td>`
+        + `<td class="${sgn(x.since_commit)}">${p2(x.since_commit)}</td></tr>`).join('');
+    const c = R.candle || {};
+    const cand = c.svg
+      ? `<div class="cand">${c.svg}<p class="cap">${esc(c.tk)} · ${c.sessions} session${c.sessions===1?'':'s'} of daily open, high, low and close from ${esc(R.baseline)}</p></div>`
+      : `<p class="cap">${esc(c.why || 'no clean daily series in the window')}</p>`;
+    const o = R.official || r.official || {};
+    // "trec", not "rec": the site nav already owns .rec for its own link, and
+    // a shared class name would style a navigation item like a table.
+    return `<div class="trec" data-record="${esc(r.qid)}">
+      <h4>Track record · signed ${esc(R.committed_at)} → ${esc(R.last_session)}</h4>
+      <div class="bench">
+        <span>basket<b class="${sgn(b.win)}">${p2(b.win)}</b></span>
+        <span>EW_MAP<b class="${sgn(b.ew)}">${p2(b.ew)}</b></span>
+        <span>SOX<b class="${sgn(b.sox)}">${p2(b.sox)}</b></span>
+        <span>vs EW_MAP<b class="${sgn(b.win_ew)}">${p2(b.win_ew)}</b></span>
+        <span>${b.sessions==null?'—':b.sessions} session${b.sessions===1?'':'s'}</span>
+      </div>
+      <div class="tw2"><table><tr><th>Leg</th><th>Side</th><th>From</th>
+        <th>Price</th><th>Last</th><th>Day</th><th>Since signed</th></tr>${rows}</table></div>
+      ${cand}
+      <p class="cap">${o.counts ? 'In the official score' : 'Not in the official score'} — ${esc(o.reason||'')}</p>
+    </div>`;
+  }
+
+  // The master table: one row per question that has closed. Sorted in the
+  // browser only -- the numbers are the build's.
+  const RT_COLS = [['qid','Question',0], ['who','Company',0],
+                   ['answer_date','Answered',0], ['verdict','Verdict',0],
+                   ['basket','Basket',1], ['ew','EW_MAP',1], ['sox','SOX',1],
+                   ['excess_ew','vs EW_MAP',1], ['sessions','Sessions',2],
+                   ['committed_at','Signed',0], ['sha','Hash',0]];
+  function recordTable(rows){
+    if(!rows || !rows.length)
+      return '<p class="empty">No question has closed yet.</p>';
+    const cell = (r, k, kind) =>
+      kind === 1 ? `<td class="${sgn(r[k])}">${p2(r[k])}</td>`
+      : kind === 2 ? `<td>${r[k]==null?'—':r[k]}</td>`
+      : `<td>${esc(r[k]==null?'—':r[k])}</td>`;
+    const head = RT_COLS.map(([k,l]) =>
+      `<th data-col="${esc(k)}" scope="col">${esc(l)}</th>`).join('');
+    const body = rows.map(r =>
+      `<tr data-qid="${esc(r.qid)}">`
+      + RT_COLS.map(([k,,kind]) => cell(r, k, kind)).join('') + `</tr>`).join('');
+    return `<div class="tw2"><table data-record-table><tr>${head}</tr>${body}</table></div>`;
+  }
+  function wireSort(box){
+    if(!box || box.__sortWired) return;
+    box.__sortWired = true;
+    box.addEventListener('click', ev => {
+      const th = ev.target && ev.target.closest ? ev.target.closest('th[data-col]') : null;
+      if(!th) return;
+      const table = th.closest('table'), rows = [...table.rows].slice(1);
+      const i = [...th.parentNode.children].indexOf(th);
+      const dir = th.getAttribute('aria-sort') === 'ascending' ? -1 : 1;
+      table.querySelectorAll('th[data-col]').forEach(h => h.removeAttribute('aria-sort'));
+      th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+      const val = tr => {
+        const t = tr.cells[i].textContent.trim().replace(/[%,+]/g, '');
+        const n = parseFloat(t);
+        return isNaN(n) ? t.toLowerCase() : n;
+      };
+      rows.sort((a, b) => { const x = val(a), y = val(b);
+                            return (x > y ? 1 : x < y ? -1 : 0) * dir; });
+      rows.forEach(tr => table.appendChild(tr));
+    });
+  }
+
   function card(r, today){
     // A reported card plots from the report's close. It has no forecast
     // series -- it was never entered -- so it cannot use chart(), and the
@@ -632,7 +719,7 @@
       : (r.state==='reported' && r.observed ? observedChart(r)
                                             : constellation(r));
     return `<article class="fc ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
-      ${head(r, today)}<div>${mid}</div><div>${table(r)}${prereg(r)}</div></article>`;
+      ${head(r, today)}<div>${mid}</div><div>${table(r)}${recordBlock(r)}${prereg(r)}</div></article>`;
   }
 
   function closedRow(r, today){
@@ -728,6 +815,19 @@
       + open.map(r=>card(r, today)).join('')
       + (shut.length ? `<div class="sect">Closed · every checkpoint scored</div>`
           + shut.map(r=>closedRow(r, today)).join('') : '');
+    // The master table lives outside the cards, in its own section. The
+    // private map inlines this file and has no such element; it simply is not
+    // drawn there.
+    // Three hosts run this renderer: the public page, which has the section;
+    // the private map, which does not; and the node harness in
+    // tests/test_track.py, which has no document at all. Reaching for one
+    // unguarded took every card down with it.
+    const rt = (typeof document !== 'undefined' && document.getElementById)
+      ? document.getElementById('record-table') : null;
+    if(rt){
+      rt.innerHTML = recordTable((data && data.record_table) || []);
+      wireSort(rt);
+    }
     // One listener per root, however many times the cards are redrawn.
     if(root.addEventListener && !root.__preregWired){
       root.__preregWired = true;

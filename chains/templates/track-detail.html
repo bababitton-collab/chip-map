@@ -55,9 +55,24 @@ table.legs tr.nos td{color:var(--ink3);font-style:italic}
 .side{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
 .via{margin-inline-start:6px;padding:0 5px;border:1px solid #3a3320;border-radius:3px;color:var(--amber);font-size:.58rem;text-transform:uppercase}
 
-/* one chart per company, big enough to read */
+/* every chart on one axis convention: rebased to 100 at the first session */
 .charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.chartbox{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:12px 14px}
+.chartbox{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:12px 14px;margin:0 0 8px}
+.chartbox.hero .lw{height:380px}
+/* the contribution bars: no canvas, so they read with no script running */
+.csub{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:6px 0 10px}
+.csub span{display:block;text-transform:none;letter-spacing:0;font-size:.68rem;color:var(--ink3);opacity:.8;margin-top:4px;max-width:70ch}
+.cbars{margin:0 0 14px}
+.crow{display:grid;grid-template-columns:minmax(64px,110px) minmax(0,1fr) 92px;align-items:center;gap:10px;padding:3px 0}
+.cname{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctrack{position:relative;height:16px;background:rgba(34,42,54,.42);border-radius:3px}
+/* the zero line the bars grow out of, in both directions */
+.ctrack::before{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:#3a4658}
+.ctrack i{position:absolute;top:2px;bottom:2px;border-radius:2px;min-width:1px}
+.ctrack i.pos{background:var(--erode)} .ctrack i.neg{background:var(--tight)}
+.cval{font-family:"IBM Plex Mono",monospace;font-size:.72rem;text-align:right}
+table.legs tr.grp td{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding:14px 0 6px;border-bottom:1px solid var(--rule)}
+.credit{color:var(--ink3);font-size:.72rem}
 .chartbox h3{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.06em;color:var(--ink2);font-weight:500;margin:0 0 8px}
 .chartbox h3 em{font-style:normal;color:var(--ink3);font-size:.64rem;margin-inline-start:8px}
 .chartbox svg{display:block;width:100%;height:auto;border-radius:6px}

@@ -113,6 +113,23 @@ def test_one_list_of_assets_is_copied_and_the_other_is_published():
             f"{name} would ship unscanned for a locked question's text"
 
 
+def test_each_group_of_contribution_bars_is_scaled_to_itself():
+    """A share of the basket's return and a ring-2 leg's own move are
+    different measures. Sizing both against one maximum lets a reader compare
+    them by length, which is the one thing they cannot do -- and it squashes
+    the basket's own bars to slivers beside a bigger ring-2 number."""
+    import re
+    from chains import record_page
+    rec = {"legs": [
+        {"tk": "IN", "ring": 1, "contribution": -1.0, "since_commit": -2.0},
+        {"tk": "OUT", "ring": 2, "contribution": None, "since_commit": -10.0}]}
+    out = record_page._contrib(rec)
+    assert re.findall(r"width:([\d.]+)%", out) == ["50.00", "50.00"], \
+        "the widest bar of each group fills its own half of the track"
+    assert "cannot be compared by length" in out
+    assert "1.00 percentage points" in out and "10.00 percentage points" in out
+
+
 def test_the_chart_leaves_vertical_touch_to_the_page():
     """The crosshair has to work under a thumb, and the page has to keep
     scrolling under the same thumb. That is one axis each: horizontal touch
@@ -130,17 +147,6 @@ def test_the_chart_leaves_vertical_touch_to_the_page():
     assert "addEventListener('touchstart'" in js
     assert "coordinateToLogical" in js
     assert "{passive:true}" in js, "a blocking listener would eat the scroll"
-
-
-def test_the_moving_average_is_promised_only_once_it_can_be_drawn():
-    """Three sessions and a five-session average is no line at all. The
-    caption has to say what is on the chart, not what the code would draw with
-    more data."""
-    from chains import record_page
-    assert record_page._ma_note({"sessions": 3}) == ""
-    assert record_page._ma_note({"sessions": record_page.MA_N - 1}) == ""
-    assert "moving average" in record_page._ma_note(
-        {"sessions": record_page.MA_N})
 
 
 def test_the_library_carries_no_hebrew_into_the_english_pages():

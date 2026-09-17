@@ -173,23 +173,67 @@ def test_a_legs_contribution_is_its_share_of_its_own_side(book):
     assert priv["weight"] is None and priv["contribution"] is None
 
 
-def test_there_is_one_candle_per_company_that_has_a_series(book):
-    """One chart per company, in the order the basket was signed. They belong
-    to the question's own page, which has room to draw them large."""
+def test_the_second_ring_is_a_row_with_a_move_and_no_contribution(book):
+    """It is measured over the same window and reported separately. A ring-2
+    leg contributed nothing to a basket it was never in, so it carries a move
+    and no weight -- and it must not dilute the shares of the legs that are
+    in it."""
     w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
-    rows = record.leg_rows({"win": ["private", "up", "flat"], "lose": ["down"]},
-                           DOC, book, KINDS, w, None, CAL)
-    cs = record.candles_for(rows, w)
-    assert [c["id"] for c in cs] == ["up", "flat", "down"]
-    assert all(c["svg"].startswith("<svg") and c["sessions"] == 3 for c in cs)
-    assert [c["group"] for c in cs] == ["win", "win", "lose"]
+    rows = record.leg_rows({"win": ["up"], "lose": [], "win2": ["flat"],
+                            "lose2": ["down"]}, DOC, book, KINDS, w, None, CAL)
+    assert [(r["tk"], r["ring"]) for r in rows] == [
+        ("UP", 1), ("FLAT", 2), ("DOWN", 2)]
+    up, flat, down = rows
+    assert up["weight"] == 1.0 and up["contribution"] == pytest.approx(21.0)
+    for leg in (flat, down):
+        assert leg["weight"] is None and leg["contribution"] is None
+    assert down["since_commit"] == pytest.approx(-19.0), "measured all the same"
 
 
-def test_with_nothing_drawable_there_are_no_candles(book):
+def test_a_second_ring_leg_never_reaches_the_basket_number(book):
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    b = record.benchmarks({"win": ["up"], "lose": []}, book, NODE_SYMS, KINDS, w)
+    with_ring2 = record.benchmarks({"win": ["up"], "lose": [], "win2": ["down"]},
+                                   book, NODE_SYMS, KINDS, w)
+    assert b["win"] == with_ring2["win"] == pytest.approx(21.0)
+
+
+# -- the company lines -------------------------------------------------------
+def test_every_basket_company_is_rebased_to_one_hundred_on_day_one(book):
+    """One axis for all of them, so the lines can be read against each other."""
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    rows = record.leg_rows({"win": ["up"], "lose": ["down"]}, DOC, book, KINDS,
+                           w, None, CAL)
+    up, down = record.companies(rows, book, w)
+    assert up["values"][0] == 100.0 and down["values"][0] == 100.0
+    assert up["values"] == pytest.approx([100.0, 110.0, 121.0])
+    assert down["values"] == pytest.approx([100.0, 90.0, 81.0])
+
+
+def test_the_lines_come_from_closes_not_from_candles(book, monkeypatch):
+    """A bar needs all four raw prices; a close does not. ARM had complete
+    closes and no drawable bar at all, and dropping it would have quietly
+    shortened the basket."""
+    monkeypatch.setattr(record.prices, "bars", lambda *a, **k: [])
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    rows = record.leg_rows({"win": ["up"], "lose": []}, DOC, book, KINDS, w,
+                           None, CAL)
+    (up,) = record.companies(rows, book, w)
+    assert up["values"] == pytest.approx([100.0, 110.0, 121.0])
+
+
+def test_the_second_ring_is_not_drawn_among_the_basket_lines(book):
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    rows = record.leg_rows({"win": ["up"], "win2": ["down"]}, DOC, book, KINDS,
+                           w, None, CAL)
+    assert [c["tk"] for c in record.companies(rows, book, w)] == ["UP"]
+
+
+def test_with_nothing_priced_there_are_no_company_lines(book):
     w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
     rows = record.leg_rows({"win": ["private"], "lose": []}, DOC, book, KINDS,
                            w, None, CAL)
-    assert record.candles_for(rows, w) == []
+    assert record.companies(rows, book, w) == []
 
 
 def test_a_resolved_card_gets_a_record_and_an_unresolved_one_does_not(book):
@@ -235,22 +279,6 @@ def test_a_side_with_no_priced_leg_gets_no_line_at_all(book):
                           KINDS, w)["series"]
     assert "win" not in s, "an absent basket drawn flat at zero would be a lie"
     assert len(s["ew"]) == 3, "the benchmark still has its line"
-
-
-def test_each_candle_carries_the_bars_the_browser_draws(book):
-    """The page draws these in the browser; the SVG stays beside them for a
-    reader running no script. Both are the same bars."""
-    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
-    rows = record.leg_rows({"win": ["up"], "lose": []}, DOC, book, KINDS, w,
-                           None, CAL)
-    (c,) = record.candles_for(rows, w)
-    assert [b["time"] for b in c["bars"]] == \
-        ["2026-09-14", "2026-09-15", "2026-09-16"]
-    first = c["bars"][0]
-    assert set(first) == {"time", "open", "high", "low", "close"}
-    assert first["close"] == pytest.approx(133.1)
-    assert first["high"] == pytest.approx(133.1 * 1.01)
-    assert c["svg"].startswith("<svg")
 
 
 def test_a_card_that_was_never_signed_gets_no_record(book):

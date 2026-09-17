@@ -703,9 +703,13 @@
     // SOX is the card's signature, and a card without it is a paragraph. What
     // it loses is the heavy member table, which its own page draws properly
     // with every leg's prices beside it.
+    // The forecast map belongs on every card, answered or not: it is the
+    // claim itself -- who was named to rise, who to fall, and which second
+    // ring hangs off them -- and a reader comparing a closed question with an
+    // open one has to see the same picture. Under it goes what happened.
     if(r.record)
       return `<article class="fc light ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
-      ${head(r, today)}<div>${mid}</div><div>${recordLine(r)}${prereg(r)}</div></article>`;
+      ${head(r, today)}<div>${constellation(r)}${mid}</div><div>${recordLine(r)}${prereg(r)}</div></article>`;
     return `<article class="fc ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
       ${head(r, today)}<div>${mid}</div><div>${table(r)}${recordLine(r)}${prereg(r)}</div></article>`;
   }

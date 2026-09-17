@@ -35,14 +35,18 @@ from __future__ import annotations
 
 import datetime as dt
 
-from chains import candles, forecast, prices
+from chains import forecast, prices
 
 # The candle window is drawn from the signature, like every other number here.
 # Big enough to read a session off. The page lays them two to a row on a
 # desktop and one to a row on a phone, and the SVG scales to its box.
-CANDLE_W = 880
-CANDLE_H = 300
 GROUPS = ("win", "lose")
+# The second ring is measured and shown, never averaged into the basket: the
+# ledger reports the two separately and so does this page. A ring-2 leg gets a
+# row and a bar of its own move, and no weight and no contribution, because it
+# contributed nothing to a basket it was never in.
+RING2 = ("win2", "lose2")
+ALL_GROUPS = GROUPS + RING2
 
 
 def _round(v, n=4):
@@ -117,12 +121,13 @@ def leg_rows(legs: dict, doc: dict, book, kinds: dict,
                      and book.has(kinds[nid]["symbol"]))
               for g in GROUPS}
     rows = []
-    for group in GROUPS:
+    for group in ALL_GROUPS:
+        ring = 1 if group in GROUPS else 2
         for nid in legs.get(group) or []:
             info = kinds.get(nid) or {}
             sym = info.get("symbol")
             row = {"id": nid, "tk": info.get("ticker") or nid.upper(),
-                   "group": group, "symbol": sym,
+                   "group": group, "ring": ring, "symbol": sym,
                    "priced_via": info.get("kind") or "primary",
                    "currency": prices.currency_for(sym) if sym else None}
             if not sym or not book.has(sym):
@@ -139,14 +144,15 @@ def leg_rows(legs: dict, doc: dict, book, kinds: dict,
             entry_close = book.at(sym, entry) if entry else None
             since = (None if not commit_close or last is None
                      else last / commit_close - 1.0)
-            n = priced[group] or 1
+            n = priced.get(group) or 1
             rows.append({
                 **row,
-                "weight": round(1.0 / n, 4),
+                "weight": round(1.0 / n, 4) if ring == 1 else None,
                 # What this leg put into its side's number, in percentage
                 # points: its own move over the window, divided by the number
                 # of legs sharing that side.
-                "contribution": _pct(None if since is None else since / n),
+                "contribution": (None if ring == 2 or since is None
+                                 else _pct(since / n)),
                 "commit_close": _round(commit_close),
                 "entry_date": entry.isoformat() if entry else None,
                 "entry_close": _round(entry_close),
@@ -210,38 +216,31 @@ def benchmarks(legs: dict, book, node_symbols: list[str], kinds: dict,
     return out
 
 
-def candles_for(rows: list[dict], window: list[dt.date]) -> list[dict]:
-    """One candle chart per company in the basket, in the order it was signed.
+def companies(rows: list[dict], book, window: list[dt.date]) -> list[dict]:
+    """Every basket company as one line, rebased to 100 at the first session.
 
-    The card does not carry these -- it stays a card. They belong on the
-    question's own page, where there is room to draw each company big enough
-    to read rather than eight thumbnails nobody can use.
+    Read from adjusted closes -- the same source the basket and both
+    benchmarks are measured from -- and not from the raw OHLC bars. A bar
+    needs all four prices to count, and over a window this short several
+    companies have none: ARM had no drawable bar at all here while its closes
+    were complete. Rebasing each line on whatever day it first had a bar would
+    put them on different first days and make lines that are not comparable
+    look as though they were.
     """
     if not window:
         return []
     out = []
     for r in rows:
-        if r.get("no_series") or not r.get("symbol"):
+        sym = r.get("symbol")
+        if r.get("ring") != 1 or not sym or not book.has(sym):
             continue
-        bars = prices.bars(r["symbol"], window[0], window[-1])
-        if not bars:
+        base = book.at(sym, window[0])
+        if not base:
             continue
-        svg = candles.svg(bars, width=CANDLE_W, height=CANDLE_H,
-                          title=f"{r['tk']} · {r['symbol']}")
-        if svg:
-            out.append({"id": r["id"], "tk": r["tk"], "symbol": r["symbol"],
-                        "group": r.get("group"), "sessions": len(bars),
-                        # The bars themselves, for the chart the page draws in
-                        # the browser. The SVG stays beside them as the
-                        # no-script fallback: the same bars, drawn at build
-                        # time, so a reader without JavaScript still sees them.
-                        "bars": [{"time": str(b["date"])[:10],
-                                  "open": _round(b["open"], 6),
-                                  "high": _round(b["high"], 6),
-                                  "low": _round(b["low"], 6),
-                                  "close": _round(b["close"], 6)}
-                                 for b in bars],
-                        "svg": svg})
+        out.append({"id": r["id"], "tk": r["tk"], "symbol": sym,
+                    "group": r.get("group"),
+                    "values": [None if (v := book.at(sym, d)) is None
+                               else _round(100.0 * v / base) for d in window]})
     return out
 
 
@@ -255,9 +254,13 @@ def for_card(rec: dict, doc: dict, book, node_symbols: list[str],
     window = window_from(signed, cal, today)
     if not window:
         return None
-    legs = {g: list(rec.get(g) or []) for g in GROUPS}
+    # Every ring is a row; only the first ring is the basket. The benchmarks
+    # below are handed the first ring alone, so the number on the tile stays
+    # the number the ledger scored.
+    all_legs = {g: list(rec.get(g) or []) for g in ALL_GROUPS}
+    legs = {g: all_legs[g] for g in GROUPS}
     entry = _day(rec.get("entry_date"))
-    rows = leg_rows(legs, doc, book, kinds, window, entry, cal)
+    rows = leg_rows(all_legs, doc, book, kinds, window, entry, cal)
     missing = [r["tk"] for r in rows if r.get("no_series")]
     return {
         "committed_at": commitment.get("committed_at"),
@@ -269,9 +272,10 @@ def for_card(rec: dict, doc: dict, book, node_symbols: list[str],
         "legs": rows,
         "no_series": missing,
         "benchmarks": benchmarks(legs, book, node_symbols, kinds, window),
-        # One chart per company, for the question's own page. Empty is a fact
-        # about the data and says so rather than drawing an empty frame.
-        "candles": candles_for(rows, window),
+        # One line per basket company, rebased to a common first session.
+        # Empty is a fact about the data and says so rather than drawing an
+        # empty frame.
+        "companies": companies(rows, book, window),
         # Untouched: whether this question counts, and the horizons it was
         # scored at, are track.official() and the ledger. Repeated here only so
         # the block can be rendered on its own.

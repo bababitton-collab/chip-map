@@ -111,20 +111,48 @@ def main() -> int:
     ap.add_argument("--skip-prices", action="store_true",
                     help="build from the price cache; needs no token")
     ap.add_argument("--domain", default=None,
-                    help="which map under data/ to build (default: semi)")
+                    help="which map under data/ to build")
+    ap.add_argument("--all-domains", action="store_true",
+                    help="build every domain found under data/, in order")
     args = ap.parse_args()
-    if args.domain:
-        # Set for this process and every step it spawns: the steps are separate
-        # interpreters and each one asks chains.paths which domain it is in.
-        os.environ["CHIP_MAP_DOMAIN"] = args.domain
+    if args.domain and args.all_domains:
+        print("--domain names one map and --all-domains means every map; "
+              "pass one or the other.")
+        return 2
+
+    from chains import domains as registry
+    if args.all_domains:
+        todo = registry.discover()
+        if not todo:
+            print(f"no buildable domain under {registry.root()}: each one is "
+                  f"a directory holding {', '.join(registry.REQUIRED)}.")
+            return 1
+    elif args.domain:
+        todo = [registry.require(args.domain)]
+    else:
+        todo = [None]          # whatever the environment already says
 
     today = date.today()
-    from chains.paths import domain
-    print(f"domain: {domain()}")
     started = time.monotonic()
-    timings: list[tuple[str, float, int]] = []
+    for dom in todo:
+        if dom:
+            # Set for this process and every step it spawns: the steps are
+            # separate interpreters and each asks chains.paths which domain
+            # it is in. Set per iteration, so a run of several leaves each
+            # step reading the one it is actually building.
+            os.environ["CHIP_MAP_DOMAIN"] = dom
+        rc = _one(today, args.skip_prices, started)
+        if rc:
+            return rc
+    return 0
 
-    for name, argv in steps(today, args.skip_prices):
+
+def _one(today: date, skip_prices: bool, started: float) -> int:
+    """One domain, start to finish. The caller has already selected it."""
+    from chains.paths import domain
+    print(f"\ndomain: {domain()}")
+    timings: list[tuple[str, float, int]] = []
+    for name, argv in steps(today, skip_prices):
         t = time.monotonic()
         print(f"\n=== {name} " + "=" * (60 - len(name)))
         # Streamed, not captured. In CI the log IS the debugging material, and
@@ -137,7 +165,6 @@ def main() -> int:
                   f"Nothing downstream runs on stale upstream.")
             _summary(timings, today, started)
             return 1
-
     _summary(timings, today, started)
     return 0
 

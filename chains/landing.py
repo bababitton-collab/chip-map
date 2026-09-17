@@ -40,7 +40,7 @@ from chains.answers import PRIMARY_HORIZON
 TEMPLATE = "landing.html"
 
 # Filled without escaping: markup and JSON this module builds itself.
-RAW = frozenset({"site_nav", "site_nav_css", "jsonld", "subscribe",
+RAW = frozenset({"domains", "site_nav", "site_nav_css", "jsonld", "subscribe",
                  "analytics"})
 
 
@@ -139,9 +139,26 @@ def _jsonld(brand: str, url: str) -> str:
     return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
 
+def _domain_links(live: list[str], dom: str) -> str:
+    """One link per map the site actually serves, the current one marked."""
+    out = []
+    for name in live:
+        cur = ' aria-current="page"' if name == dom else ""
+        out.append(f'<a href="/{html.escape(name, quote=True)}/"{cur}>'
+                   f'{html.escape(name)}</a>')
+    return "".join(out)
+
+
 def render(dom_dir: Path, dom: str, site_url: str,
-           template: str | None = None) -> str:
-    """The page. ``dom_dir`` is the published directory it describes."""
+           template: str | None = None,
+           live: list[str] | None = None) -> str:
+    """The page. ``dom_dir`` is the published directory it describes.
+
+    ``live`` is every map the site serves. The index of them is drawn only
+    when there is more than one: with a single map a list of one is furniture
+    that says nothing, and leaving it out keeps the page a reader already
+    knows byte-for-byte what it was.
+    """
     from chains.paths import subscribe_embed_url, templates_dir
     check_access()
     f = facts(dom_dir)
@@ -152,7 +169,10 @@ def render(dom_dir: Path, dom: str, site_url: str,
     # The FAQ's "subscribe" sentence, like the form, only with a form to use.
     subscribe = subscribe_embed_url()
     t = _blocks(t, "subscribe", bool(subscribe))
+    names = list(live or [])
+    t = _blocks(t, "domains", len(names) > 1)
     values = {
+        "domains": _domain_links(names, dom),
         "brand": f["brand"],
         "companies": str(f["companies"]),
         "chokepoints": str(f["chokepoints"]),

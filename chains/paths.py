@@ -132,25 +132,26 @@ def prices_dir() -> Path:
             else _dir("CHIP_MAP_OUT", "out") / "prices")
 
 
-def map_path() -> Path:
+def map_path(dom: str | None = None) -> Path:
     """The curated map.
 
     ``CHIP_MAP_PATH`` overrides it for a one-off -- reading a candidate v3
     before it is committed, say -- but the default is always the tracked copy,
-    so a run is reproducible from a commit hash alone.
+    so a run is reproducible from a commit hash alone. The override names one
+    file and therefore one map, so it wins over ``dom`` as it always has.
     """
     override = os.environ.get("CHIP_MAP_PATH")
     if override:
         return Path(override)
-    return data_dir() / MAP_FILENAME
+    return data_dir(dom) / MAP_FILENAME
 
 
-def watch_path() -> Path:
+def watch_path(dom: str | None = None) -> Path:
     """The dated-questions list. Curated input, tracked beside the map."""
-    return data_dir() / WATCH_FILENAME
+    return data_dir(dom) / WATCH_FILENAME
 
 
-def watch_en_path() -> Path:
+def watch_en_path(dom: str | None = None) -> Path:
     """The English dated-questions list, generated beside the Hebrew one.
 
     Two files rather than one file with two language columns: the public page
@@ -158,7 +159,7 @@ def watch_en_path() -> Path:
     cheapest way to guarantee that is for the English build never to open the
     Hebrew file at all.
     """
-    return data_dir() / WATCH_EN_FILENAME
+    return data_dir(dom) / WATCH_EN_FILENAME
 
 
 def marks_path(dom: str | None = None) -> Path:
@@ -184,9 +185,9 @@ def commitments_path(dom: str | None = None) -> Path:
     return data_dir(dom) / COMMITMENTS_FILENAME
 
 
-def answers_path() -> Path:
+def answers_path(dom: str | None = None) -> Path:
     """A local override, for a by-hand run. Not written by anything."""
-    return out_dir() / ANSWERS_FILENAME
+    return out_dir(dom) / ANSWERS_FILENAME
 
 
 def templates_dir() -> Path:

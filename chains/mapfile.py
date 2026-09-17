@@ -85,11 +85,18 @@ class Entry:
         return self.ticker is not None
 
 
-def load(path: Path | str | None = None) -> dict:
-    p = Path(path) if path else map_path()
+def load(path: Path | str | None = None, dom: str | None = None) -> dict:
+    """One domain's map. ``path`` names a file, ``dom`` names a directory.
+
+    Both are optional and the default is the domain this process is building,
+    which is what every scheduled step wants. ``dom`` exists so one process
+    can read a second map without changing the environment underneath itself.
+    """
+    p = Path(path) if path else map_path(dom)
     if not p.exists():
         raise FileNotFoundError(
-            f"chain map not found at {p}. Drop semi_chain_v2.json there."
+            f"no map at {p}. A domain is a directory under the data root "
+            f"holding {p.name} and its two question lists."
         )
     return json.loads(p.read_text(encoding="utf-8"))
 

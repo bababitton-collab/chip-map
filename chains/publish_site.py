@@ -151,25 +151,34 @@ FIELDS_CHECKED = QUESTION_FIELDS
 MIN_NEEDLE = 25
 
 
-def latest(pattern: str) -> Path | None:
+def latest(pattern: str, dom: str | None = None) -> Path | None:
     """The newest brief matching the pattern.
 
     ``brief-free-*.md`` cannot match a Hebrew one, but the guard stays: the
     two families differ by one infix and a glob that drifted would publish the
     wrong language rather than failing.
     """
-    hits = [p for p in out_dir().glob(pattern)
+    hits = [p for p in out_dir(dom).glob(pattern)
             if pattern.startswith("brief-he") or not p.name.startswith("brief-he")]
     return max(hits, key=lambda p: p.name) if hits else None
 
 
-DEFAULT_DOMAIN_FOR_ROOT = "semi"
+def root_domain() -> str:
+    """Which map the site's front door describes.
+
+    The first domain there is, which is the default one while it exists. Not
+    a name written here: the engine should not have to be edited to add an
+    industry, and that includes learning which one is the front page.
+    """
+    from chains import domains
+    found = domains.discover()
+    return found[0] if found else domain()
 
 # The custom domain, served from the root of the site rather than per map.
 CUSTOM_DOMAIN = "linchpinsignal.com"
 
 
-def write_landing(src: Path, dom: str) -> Path:
+def write_landing(src: Path, dom: str, live: list[str] | None = None) -> Path:
     """site/index.html: the front door, built from the files in ``src``.
 
     Called after they are copied, so every number on it and every capability it
@@ -178,7 +187,8 @@ def write_landing(src: Path, dom: str) -> Path:
     from chains import landing
     p = site_root() / "index.html"
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(landing.render(src, dom, f"https://{CUSTOM_DOMAIN}/"),
+    p.write_text(landing.render(src, dom, f"https://{CUSTOM_DOMAIN}/",
+                                live=live),
                  encoding="utf-8", newline="\n")
     return p
 
@@ -202,14 +212,21 @@ def copy_detail_pages(built: Path, track: Path) -> list[str]:
     return out
 
 
-def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
-    """Copy everything in, then gate. Returns (site dir, what was written)."""
-    site = dst or site_dir()
+def publish(dst: Path | None = None,
+            dom: str | None = None) -> tuple[Path, list[str]]:
+    """Copy one domain in, then gate it. Returns (site dir, what was written).
+
+    ``dom`` is threaded rather than read from the environment inside each
+    helper, so one process can publish several maps in turn without editing
+    the environment underneath itself between them.
+    """
+    dom = dom or domain()
+    site = dst or site_dir(dom)
     site.mkdir(parents=True, exist_ok=True)
     written: list[str] = []
 
     for src_name, dst_name in COPIES:
-        src = out_dir() / src_name
+        src = out_dir(dom) / src_name
         if not src.exists():
             raise SystemExit(
                 f"{src} is missing. Run python -m chains.build_all first; "
@@ -219,7 +236,7 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
         written.append(dst_name)
 
     for pattern, dst_name in BRIEFS:
-        src = latest(pattern)
+        src = latest(pattern, dom)
         if src is None:
             raise SystemExit(f"no {pattern} in {out_dir()}")
         shutil.copyfile(src, site / dst_name)
@@ -230,7 +247,7 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
     track = site / "track"
     track.mkdir(parents=True, exist_ok=True)
     for src_name, dst_name in TRACK_FILES:
-        src = out_dir() / src_name
+        src = out_dir(dom) / src_name
         if not src.exists():
             raise SystemExit(
                 f"{src} is missing. Run python -m chains.track first.")
@@ -238,7 +255,7 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
         written.append(f"track/{dst_name}")
 
     for name in TRACK_ASSETS:
-        src = out_dir() / "track" / name
+        src = out_dir(dom) / "track" / name
         if not src.exists():
             raise SystemExit(
                 f"{src} is missing. Run python -m chains.track first; the "
@@ -247,7 +264,7 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
         shutil.copyfile(src, track / name)
         written.append(f"track/{name}")
 
-    detail_pages = copy_detail_pages(out_dir() / "track", track)
+    detail_pages = copy_detail_pages(out_dir(dom) / "track", track)
     written.extend(detail_pages)
 
     (site_root() / ".nojekyll").write_text("", encoding="utf-8")
@@ -257,8 +274,9 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
                                        newline="\n")
     written.append("../CNAME")
     # The front door, read from the files just copied beside it.
-    if site.name == DEFAULT_DOMAIN_FOR_ROOT:
-        write_landing(site, site.name)
+    if site.name == root_domain():
+        from chains import domains as registry
+        write_landing(site, site.name, registry.discover())
         written.append("../index.html  (landing page)")
 
     # Nothing unsealed, ever. Checked on the directory about to be served
@@ -287,7 +305,7 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
                 f"site/{name}: {len(runs)} Hebrew string(s) in a file served "
                 f"to English readers. Not published.\n  "
                 + "\n  ".join(runs[:10]))
-    leaked = locked_text_in_site(site)
+    leaked = locked_text_in_site(site, dom)
     if leaked:
         raise SystemExit(
             f"a locked question's text reached the site: {leaked[:3]}. "
@@ -295,8 +313,13 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
     return site, written
 
 
-def locked_text_in_site(site: Path) -> list[str]:
+def locked_text_in_site(site: Path, dom: str | None = None) -> list[str]:
     """Any locked question whose sentence appears in a published file.
+
+    ``dom`` names the map being gated. It matters: the marks file scanned
+    below is that domain's, and reading the default domain's instead would
+    clear a second industry's site against the wrong file -- a gate that
+    passes by looking somewhere else is worse than no gate.
 
     The paywall is a negative property, and negative properties rot quietly.
     So it is checked on the bytes about to be served rather than inferred from
@@ -339,7 +362,7 @@ def locked_text_in_site(site: Path) -> list[str]:
     # question back would put a locked sentence in git for good. Same scan,
     # same sentences, one more file.
     from chains.paths import REPO_ROOT, marks_path
-    mp = marks_path()
+    mp = marks_path(dom)
     if mp.exists():
         # Keyed by a repo-relative name: the hit is reported as "<name>", and
         # an absolute Windows path inside a message that already says "site/"

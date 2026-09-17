@@ -1,7 +1,7 @@
 """One page per question whose answer is in, at /<domain>/track/<qid>/.
 
     from chains import record_page
-    record_page.render(card, dom="semi")
+    record_page.render(card, dom)
 
 WHY IT IS ITS OWN PAGE
 ----------------------
@@ -435,7 +435,7 @@ CHART_JS = """
 """
 
 
-def main_html(card: dict, dom: str = "semi") -> str:
+def main_html(card: dict, dom: str) -> str:
     rec = card.get("record") or {}
     b = rec.get("benchmarks") or {}
     verdict = esc(rec.get("verdict") or card.get("status") or "")
@@ -481,8 +481,13 @@ def main_html(card: dict, dom: str = "semi") -> str:
         f'<script>{CHART_JS}</script>')
 
 
-def render(card: dict, dom: str = "semi", template: str | None = None) -> str:
-    """The whole page for one closed question."""
+def render(card: dict, dom: str, template: str | None = None) -> str:
+    """The whole page for one closed question.
+
+    ``dom`` is passed, never defaulted: this page links back to its own
+    domain's track record, and a default would silently point a second
+    industry's page at the first one's.
+    """
     from chains import sitenav
     from chains.paths import templates_dir
     t = template if template is not None else (

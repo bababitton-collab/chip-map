@@ -356,7 +356,11 @@
   // the chart itself rather than in a caption underneath: a chart travels --
   // into a screenshot, into a slide -- and the disclaimer has to travel with
   // it.
-  function observedChart(r){
+  function observedChart(r, withNums){
+    // withNums === false keeps the lines and drops the four numbers under
+    // them. A card whose question has closed says its number once, in the
+    // record line, and says it since the contract was signed rather than
+    // since the report -- two numbers for one basket read as a discrepancy.
     const o = r.observed;
     if(!o || !o.dates || !o.dates.length) return '';
     if(o.dates.length < 2){
@@ -392,16 +396,17 @@
     const w2 = o.win2 || [];
     const li2 = w2.reduce((a,y,i)=>y==null?a:i,-1);
     const up2 = li2>=0 ? w2[li2] : null;
-    return `<div class="chart obschart">
-      <span class="obsband">Observation · no position</span>
-      <svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
-      ${legend(lines, 'yes', up2!=null)}
-      <div class="obsnums">
+    const nums = withNums === false ? '' : `<div class="obsnums">
         <div><b class="${sgn(o.up)}">${p2(o.up)}</b><span>up basket since the report</span></div>
         <div><b class="${sgn(o.up_ew)}">${p2(o.up_ew)}</b><span>up − map since the report</span></div>
         <div><b class="${sgn(o.up_sox)}">${p2(o.up_sox)}</b><span>up − SOX since the report</span></div>
         ${up2!=null?`<div><b class="${sgn(up2)}">${p2(up2)}</b><span>up · second ring since the report</span></div>`:''}
-      </div>
+      </div>`;
+    return `<div class="chart obschart">
+      <span class="obsband">Observation · no position</span>
+      <svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
+      ${legend(lines, 'yes', up2!=null)}
+      ${nums}
       <p class="obsfoot">${o.sessions} session${o.sessions===1?'':'s'} since ${esc(o.from)} · not scored, not in the hit rate</p>`;
   }
 
@@ -571,7 +576,9 @@
       </div>`:'') : '';
     return `<div>
       ${badge}
-      <div class="who" style="margin-top:12px">${esc(r.who)}${r.tk?' · '+esc(r.tk):''}</div>
+      <div class="who" style="margin-top:12px">${r.record
+        ? `<a class="trecname" href="${esc(r.qid)}/">${esc(r.who)}${r.tk?' · '+esc(r.tk):''}</a>`
+        : `${esc(r.who)}${r.tk?' · '+esc(r.tk):''}`}</div>
       <div class="dt">${esc(when)}</div>
       ${question(r)}
       ${findings(r)}
@@ -623,48 +630,20 @@
     </div>`;
   }
 
-  // The record of a question whose answer is in: every leg of the signed
-  // basket from the day the contract was signed, the same window measured for
-  // the equal-weight map and for SOX, and a candle chart the build drew as SVG.
-  // Nothing here computes a number; it draws what chains/record.py measured.
-  function recordBlock(r){
+  // One line on the card, and a door. The legs, the charts and the benchmark
+  // table live on the question's own page -- a card that carried them stopped
+  // being a card. chains/record.py measured every number here.
+  function recordLine(r){
     const R = r.record;
     if(!R) return '';
     const b = R.benchmarks || {};
-    const via = x => (x.priced_via && x.priced_via !== 'primary')
-      ? ` <span class="via" title="priced through the ${esc(String(x.priced_via).toUpperCase())} line ${esc(x.symbol||'')}">${esc(x.priced_via)}</span>`
-      : '';
-    const side = g => g === 'win' ? 'win' : 'lose';
-    const rows = (R.legs||[]).map(x => x.no_series
-      ? `<tr class="nos"><td>${esc(x.tk)}${via(x)}</td><td>${side(x.group)}</td>`
-        + `<td colspan="5">${esc(x.no_series)}</td></tr>`
-      : `<tr><td>${esc(x.tk)}${via(x)}</td><td>${side(x.group)}</td>`
-        + `<td>${esc(x.entry_date || R.baseline)}</td>`
-        + `<td>${n2(x.entry_close != null ? x.entry_close : x.commit_close)}</td>`
-        + `<td>${n2(x.last)}</td>`
-        + `<td class="${sgn(x.day_pct)}">${p2(x.day_pct)}</td>`
-        + `<td class="${sgn(x.since_commit)}">${p2(x.since_commit)}</td></tr>`).join('');
-    const c = R.candle || {};
-    const cand = c.svg
-      ? `<div class="cand">${c.svg}<p class="cap">${esc(c.tk)} · ${c.sessions} session${c.sessions===1?'':'s'} of daily open, high, low and close from ${esc(R.baseline)}</p></div>`
-      : `<p class="cap">${esc(c.why || 'no clean daily series in the window')}</p>`;
-    const o = R.official || r.official || {};
-    // "trec", not "rec": the site nav already owns .rec for its own link, and
-    // a shared class name would style a navigation item like a table.
-    return `<div class="trec" data-record="${esc(r.qid)}">
-      <h4>Track record · signed ${esc(R.committed_at)} → ${esc(R.last_session)}</h4>
-      <div class="bench">
-        <span>basket<b class="${sgn(b.win)}">${p2(b.win)}</b></span>
-        <span>EW_MAP<b class="${sgn(b.ew)}">${p2(b.ew)}</b></span>
-        <span>SOX<b class="${sgn(b.sox)}">${p2(b.sox)}</b></span>
-        <span>vs EW_MAP<b class="${sgn(b.win_ew)}">${p2(b.win_ew)}</b></span>
-        <span>${b.sessions==null?'—':b.sessions} session${b.sessions===1?'':'s'}</span>
-      </div>
-      <div class="tw2"><table><tr><th>Leg</th><th>Side</th><th>From</th>
-        <th>Price</th><th>Last</th><th>Day</th><th>Since signed</th></tr>${rows}</table></div>
-      ${cand}
-      <p class="cap">${o.counts ? 'In the official score' : 'Not in the official score'} — ${esc(o.reason||'')}</p>
-    </div>`;
+    const n = b.sessions;
+    return `<p class="trecline" data-record="${esc(r.qid)}">
+      <span class="trecnums">basket <b class="${sgn(b.win)}">${p2(b.win)}</b>
+        · EW_MAP <b class="${sgn(b.ew)}">${p2(b.ew)}</b>
+        · <b class="${sgn(b.win_ew)}">${p2(b.win_ew)}</b> vs the map
+        over ${n==null?'—':n} session${n===1?'':'s'}</span>
+      <a class="trecmore" href="${esc(r.qid)}/">Full record →</a></p>`;
   }
 
   // The master table: one row per question that has closed. Sorted in the
@@ -677,8 +656,10 @@
   function recordTable(rows){
     if(!rows || !rows.length)
       return '<p class="empty">No question has closed yet.</p>';
+    // The index links into the detail page; everything heavy lives there.
     const cell = (r, k, kind) =>
-      kind === 1 ? `<td class="${sgn(r[k])}">${p2(r[k])}</td>`
+      k === 'qid' ? `<td><a href="${esc(r.qid)}/">${esc(r.qid)}</a></td>`
+      : kind === 1 ? `<td class="${sgn(r[k])}">${p2(r[k])}</td>`
       : kind === 2 ? `<td>${r[k]==null?'—':r[k]}</td>`
       : `<td>${esc(r[k]==null?'—':r[k])}</td>`;
     const head = RT_COLS.map(([k,l]) =>
@@ -716,10 +697,17 @@
     // constellation it used to show said nothing about what happened after.
     const mid = (r.state==='tracking'||r.state==='closed'||r.state==='marked')
       ? chart(r)
-      : (r.state==='reported' && r.observed ? observedChart(r)
+      : (r.state==='reported' && r.observed ? observedChart(r, !r.record)
                                             : constellation(r));
+    // A closed question keeps its chart -- the basket against the map and
+    // SOX is the card's signature, and a card without it is a paragraph. What
+    // it loses is the heavy member table, which its own page draws properly
+    // with every leg's prices beside it.
+    if(r.record)
+      return `<article class="fc light ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
+      ${head(r, today)}<div>${mid}</div><div>${recordLine(r)}${prereg(r)}</div></article>`;
     return `<article class="fc ${esc(r.state)}" data-id="${esc(r.qid)}" data-state="${esc(r.state)}">
-      ${head(r, today)}<div>${mid}</div><div>${table(r)}${recordBlock(r)}${prereg(r)}</div></article>`;
+      ${head(r, today)}<div>${mid}</div><div>${table(r)}${recordLine(r)}${prereg(r)}</div></article>`;
   }
 
   function closedRow(r, today){

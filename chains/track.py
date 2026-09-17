@@ -1126,6 +1126,29 @@ def build_files(plain: bool = False) -> dict:
     _write(h, render(pub))
     wrote["track.html"] = h
 
+    # One page per question whose answer is in, at track/<qid>/. The card is a
+    # card again -- a summary and a door -- and the evidence behind it lives
+    # here, with room for a chart per company. Built from the same free object
+    # the cards are, so a page can only exist for a question already public.
+    from chains import record_page
+    from chains.paths import domain, templates_dir
+    # The chart library those pages draw with, copied next to them so each one
+    # loads it from this host and not from a CDN. Vendored in the repo; the
+    # Apache-2.0 notice travels inside the file and the licence beside it.
+    for name in record_page.VENDOR:
+        v = out_dir() / "track" / name
+        v.parent.mkdir(parents=True, exist_ok=True)
+        _write(v, (templates_dir() / "vendor" / name).read_text(encoding="utf-8"))
+        wrote[f"track/{name}"] = v
+    for r in pub.get("forecasts", []):
+        if not r.get("record"):
+            continue
+        d = out_dir() / "track" / r["qid"]
+        d.mkdir(parents=True, exist_ok=True)
+        page = d / "index.html"
+        _write(page, record_page.render(r, domain()))
+        wrote[f"track/{r['qid']}/index.html"] = page
+
     enc = out_dir() / "track.enc.json"
     if plain:
         # A local build with no secret. The file is REMOVED rather than left

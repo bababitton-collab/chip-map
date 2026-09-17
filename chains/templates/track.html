@@ -165,21 +165,16 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
   .fc,.ghost{grid-template-columns:minmax(0,1fr);gap:22px 0}
   h2{font-size:1.6rem}
 }
-/* The track record: one block per closed question, and the master table.
-   "trec" rather than "rec": the site nav already owns .rec for its own link. */
-.trec{margin-top:14px;padding:12px 14px;border:1px solid var(--rule);border-radius:8px;background:#10151d}
-.trec h4{margin:0 0 8px;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:#b3bccb;font-weight:500}
-.trec .bench{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 10px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:#7d8797}
-.trec .bench b{font-weight:600;margin-inline-start:4px}
-.trec table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.7rem}
-.trec th{text-align:right;color:#7d8797;font-weight:500;padding:3px 6px;border-bottom:1px solid var(--rule);white-space:nowrap}
-.trec td{text-align:right;padding:3px 6px;border-bottom:1px solid #182029;white-space:nowrap}
-.trec th:first-child,.trec td:first-child,.trec th:nth-child(2),.trec td:nth-child(2){text-align:left}
-.trec tr.nos td{color:#7d8797;font-style:italic}
-.trec .via{margin-inline-start:6px;padding:0 5px;border:1px solid #3a3320;border-radius:3px;color:#f2b632;font-size:.6rem;text-transform:uppercase}
-.trec .cand{margin-top:10px}
-.trec .cand svg{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:6px}
-.trec .cap{margin:6px 0 0;color:#7d8797;font-size:.68rem;line-height:1.5}
+/* A closed question's card keeps one line and a door. Everything heavy --
+   the legs, the charts, both benchmarks -- lives at track/<qid>/, which has
+   its own stylesheet. A card that carried all of it stopped being a card. */
+.trecline{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink3)}
+.trecline b{font-weight:600;margin-inline-start:3px}
+.trecline .pos{color:var(--erode)} .trecline .neg{color:var(--tight)} .trecline .flat{color:var(--ink2)}
+.trecmore{margin-inline-start:auto;color:var(--amber);text-decoration:none;border-bottom:1px solid #3a3320;white-space:nowrap}
+.trecmore:hover{color:#ffd77a}
+a.trecname{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule)}
+a.trecname:hover{border-color:var(--amber);color:#fff}
 .tw2{overflow-x:auto}
 #record-table table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.72rem}
 #record-table th{cursor:pointer;text-align:right;color:#b3bccb;font-weight:500;padding:6px 8px;border-bottom:1px solid var(--rule);white-space:nowrap;user-select:none}

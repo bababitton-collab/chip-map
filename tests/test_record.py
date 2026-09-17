@@ -160,20 +160,36 @@ def test_a_basket_with_no_priced_leg_reports_nothing_rather_than_zero(book):
 
 
 # -- the drawing and the table ----------------------------------------------
-def test_the_candle_is_the_first_leg_with_a_drawable_series(book):
+def test_a_legs_contribution_is_its_share_of_its_own_side(book):
+    """Two priced legs on the win side, so each put in half of its own move.
+    A leg with no series does not dilute the ones that have one."""
     w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
-    rows = record.leg_rows({"win": ["private", "up"], "lose": []}, DOC, book,
-                           KINDS, w, None, CAL)
-    c = record.candle_for(rows, w)
-    assert c["id"] == "up" and c["sessions"] == 3 and c["svg"].startswith("<svg")
+    up, flat, priv = record.leg_rows(
+        {"win": ["up", "flat", "private"], "lose": []}, DOC, book, KINDS, w,
+        None, CAL)
+    assert up["weight"] == 0.5 and flat["weight"] == 0.5
+    assert up["contribution"] == pytest.approx(10.5)     # half of +21.0%
+    assert flat["contribution"] == pytest.approx(0.0)
+    assert priv["weight"] is None and priv["contribution"] is None
 
 
-def test_with_nothing_drawable_the_chart_says_why(book, tmp_path, monkeypatch):
+def test_there_is_one_candle_per_company_that_has_a_series(book):
+    """One chart per company, in the order the basket was signed. They belong
+    to the question's own page, which has room to draw them large."""
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    rows = record.leg_rows({"win": ["private", "up", "flat"], "lose": ["down"]},
+                           DOC, book, KINDS, w, None, CAL)
+    cs = record.candles_for(rows, w)
+    assert [c["id"] for c in cs] == ["up", "flat", "down"]
+    assert all(c["svg"].startswith("<svg") and c["sessions"] == 3 for c in cs)
+    assert [c["group"] for c in cs] == ["win", "win", "lose"]
+
+
+def test_with_nothing_drawable_there_are_no_candles(book):
     w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
     rows = record.leg_rows({"win": ["private"], "lose": []}, DOC, book, KINDS,
                            w, None, CAL)
-    c = record.candle_for(rows, w)
-    assert c["id"] is None and "no clean daily series" in c["why"]
+    assert record.candles_for(rows, w) == []
 
 
 def test_a_resolved_card_gets_a_record_and_an_unresolved_one_does_not(book):
@@ -194,6 +210,47 @@ def test_the_table_row_carries_what_the_page_sorts_by(book):
     assert row["scored"] is False and row["official_excess"] is None
     assert row["excess_ew"] == pytest.approx(row["basket"] - row["ew"])
     assert row["no_series"] == 0
+
+
+# -- the lines the question's own page draws ---------------------------------
+def test_the_benchmark_series_has_one_point_per_session_in_the_window(book):
+    """A crosshair reads a date off this series. A value that did not line up
+    with its own day would be a wrong number under a right label."""
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    b = record.benchmarks({"win": ["up"], "lose": ["down"]}, book, NODE_SYMS,
+                          KINDS, w)
+    s = b["series"]
+    assert s["dates"] == ["2026-09-14", "2026-09-15", "2026-09-16"]
+    for key in ("win", "lose", "ew", "sox"):
+        assert len(s[key]) == len(s["dates"]), key
+    assert s["win"][0] == pytest.approx(0.0), "the window opens at its baseline"
+    # The last point of the line and the number on the tile are one measure.
+    assert s["win"][-1] == pytest.approx(b["win"])
+    assert s["sox"][-1] == pytest.approx(b["sox"])
+
+
+def test_a_side_with_no_priced_leg_gets_no_line_at_all(book):
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    s = record.benchmarks({"win": ["private"], "lose": []}, book, NODE_SYMS,
+                          KINDS, w)["series"]
+    assert "win" not in s, "an absent basket drawn flat at zero would be a lie"
+    assert len(s["ew"]) == 3, "the benchmark still has its line"
+
+
+def test_each_candle_carries_the_bars_the_browser_draws(book):
+    """The page draws these in the browser; the SVG stays beside them for a
+    reader running no script. Both are the same bars."""
+    w = record.window_from(dt.date(2026, 9, 14), CAL, TODAY)
+    rows = record.leg_rows({"win": ["up"], "lose": []}, DOC, book, KINDS, w,
+                           None, CAL)
+    (c,) = record.candles_for(rows, w)
+    assert [b["time"] for b in c["bars"]] == \
+        ["2026-09-14", "2026-09-15", "2026-09-16"]
+    first = c["bars"][0]
+    assert set(first) == {"time", "open", "high", "low", "close"}
+    assert first["close"] == pytest.approx(133.1)
+    assert first["high"] == pytest.approx(133.1 * 1.01)
+    assert c["svg"].startswith("<svg")
 
 
 def test_a_card_that_was_never_signed_gets_no_record(book):

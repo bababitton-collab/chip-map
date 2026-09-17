@@ -18,6 +18,12 @@ SUBSCRIBE_LABEL = "Get the key — subscribe to the weekly mail (free)"
 # confirmed reader gets the welcome email that carries the key.
 SUBSCRIBE_CONFIRM = ("Confirm in the first email — the key arrives in the "
                      "welcome email right after.")
+# The signup is a link out, not an embedded frame. Substack serves its embed as
+# its own white page inside the iframe, and a cross-origin frame cannot be
+# restyled from here, so on a dark page it landed as a white rectangle. A link
+# carries the reader to the same form on Substack's own page, where the white
+# belongs, and leaves this page dark all the way down.
+SUBSCRIBE_CTA = "Subscribe on Substack →"
 
 # Plausible: cookie-less page analytics, in the <head> of every public page and
 # of nothing private. Site-specific but public -- it is in every page's source
@@ -66,11 +72,17 @@ def html(dom: str, current: str | None = None) -> str:
     return "".join(parts)
 
 
+def subscribe_link(url: str) -> str:
+    """The publication's own page, from the embed URL the site is configured
+    with. Only a trailing ``/embed`` is dropped -- no path is invented."""
+    return url[: -len("/embed")] if url.endswith("/embed") else url
+
+
 def subscribe_html(url: str | None) -> str:
-    """The mail service's subscribe form under its one-line label, or nothing.
+    """The mail service's subscribe call under its one-line label, or nothing.
 
     Drawn on the landing and beside the track page's key field. With no URL it
-    is the empty string -- not a placeholder, not a disabled form -- so a page
+    is the empty string -- not a placeholder, not a disabled link -- so a page
     built before the mail service exists makes no claim about a signup. Styled
     inline so an unconfigured page carries no trace of it, not even a class.
     """
@@ -82,13 +94,15 @@ def subscribe_html(url: str | None) -> str:
             f'{label}</p>'
             '<p style="margin:0 0 8px;font-size:.85rem;color:#7d8797">'
             f'{_html.escape(SUBSCRIBE_CONFIRM)}</p>'
-            f'<iframe src="{_html.escape(url, quote=True)}" title="{label}" '
-            'width="480" height="320" loading="lazy" frameborder="0" '
-            'scrolling="no" style="display:block;width:100%;max-width:480px;'
-            'border:1px solid #222a36;border-radius:8px;background:#fff">'
-            '</iframe>'
-            # Once, when the form is drawn -- not on the iframe's load, which
-            # fires again every time Substack navigates inside it.
+            f'<a href="{_html.escape(subscribe_link(url), quote=True)}" '
+            f'title="{label}" target="_blank" rel="noopener" '
+            'style="display:block;box-sizing:border-box;width:100%;'
+            'max-width:480px;padding:12px 16px;text-align:center;'
+            'text-decoration:none;font-family:\'IBM Plex Mono\',monospace;'
+            'font-size:.85rem;letter-spacing:.04em;border:1px solid #2d3a4d;'
+            'border-radius:8px;background:#141a24;color:#e6ebf2">'
+            f'{_html.escape(SUBSCRIBE_CTA)}</a>'
+            # Once, when the call is drawn.
             f'<script>{event_js("subscribe_form_view")}</script></div>')
 
 

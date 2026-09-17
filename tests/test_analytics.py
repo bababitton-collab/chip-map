@@ -112,7 +112,8 @@ def test_subscribe_form_view_fires_only_with_the_form():
     assert sitenav.subscribe_html(None) == ""
     block = sitenav.subscribe_html("https://linchpinsignal.substack.com/embed")
     assert block.count(sitenav.event_js("subscribe_form_view")) == 1
-    assert block.index("</iframe>") < block.index("subscribe_form_view")
+    assert block.index("</a>") < block.index("subscribe_form_view")
+    assert "<iframe" not in block, "a framed embed is a white page on a dark one"
     with pytest.raises(ValueError):
         sitenav.event_js("page_view_with_email")
 

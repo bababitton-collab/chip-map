@@ -108,6 +108,16 @@ TRACK_FILES = [("track.html", "index.html"),
                ("track.enc.json", "track.enc.json")]
 TRACK_PLAINTEXT = "track.json"
 
+# The chart library the per-question pages draw with, vendored in the repo and
+# served from this host: the pages pull no script from a CDN, so a reader's
+# browser talks to nobody but this site and the charts keep working when a CDN
+# does not. Apache-2.0 -- the notice is inside the file and the licence ships
+# beside it. Kept out of TRACK_FILES because these are assets, not pages: they
+# carry no analytics and no question text, and they are gated below on exactly
+# the same terms as everything else that is published.
+TRACK_ASSETS = ["lightweight-charts.standalone.production.js",
+                "lightweight-charts.LICENSE.txt"]
+
 GATED = ("index.html", "live_en.json", "focus_en.json", "track_public.json",
          # the landing page, at the site root
          "../index.html")
@@ -122,7 +132,12 @@ PAYWALLED = ("index.html", "he.html", "live.json", "live_en.json",
              # scanned on the same terms as the map and the letter. The sealed
              # payload is scanned too -- ciphertext cannot contain a sentence,
              # and the day somebody publishes it plain the scan says so.
-             "track/index.html", "track/track.enc.json")
+             "track/index.html", "track/track.enc.json",
+             # The vendored library ships inside the same directory. Scanned
+             # too: a script is exactly the sort of file nobody reads, and a
+             # question's sentence must not be able to ride into the site
+             # inside one.
+             *(f"track/{a}" for a in TRACK_ASSETS))
 
 # Every sentence a locked question owns, in both languages. All four parts
 # count: "what no sounds like" is as much the product as the question itself,
@@ -168,6 +183,25 @@ def write_landing(src: Path, dom: str) -> Path:
     return p
 
 
+def copy_detail_pages(built: Path, track: Path) -> list[str]:
+    """The per-question pages, at /<domain>/track/<qid>/.
+
+    Named after their question, so they are found rather than listed the way
+    index.html is -- and every one that is found goes through the same two
+    gates as the page above it: no Hebrew, and no locked question's sentence.
+    A directory with no index.html in it is not a page and is not copied.
+    """
+    out: list[str] = []
+    if not built.is_dir():
+        return out
+    for src in sorted(built.glob("*/index.html")):
+        qdir = track / src.parent.name
+        qdir.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, qdir / "index.html")
+        out.append(f"track/{src.parent.name}/index.html")
+    return out
+
+
 def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
     """Copy everything in, then gate. Returns (site dir, what was written)."""
     site = dst or site_dir()
@@ -203,6 +237,19 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
         shutil.copyfile(src, track / dst_name)
         written.append(f"track/{dst_name}")
 
+    for name in TRACK_ASSETS:
+        src = out_dir() / "track" / name
+        if not src.exists():
+            raise SystemExit(
+                f"{src} is missing. Run python -m chains.track first; the "
+                f"question pages load it, and publishing without it would "
+                f"serve pages whose charts cannot draw.")
+        shutil.copyfile(src, track / name)
+        written.append(f"track/{name}")
+
+    detail_pages = copy_detail_pages(out_dir() / "track", track)
+    written.extend(detail_pages)
+
     (site_root() / ".nojekyll").write_text("", encoding="utf-8")
     written.append("../.nojekyll")
     (site_root() / "CNAME").write_text(CUSTOM_DOMAIN + "\n",
@@ -222,7 +269,8 @@ def publish(dst: Path | None = None) -> tuple[Path, list[str]]:
                 f"{stray} is the unencrypted tracking payload and it is about "
                 f"to be published. Remove it; only track.enc.json ships.")
 
-    for name in ("track/index.html", "track/track.enc.json"):
+    for name in ("track/index.html", "track/track.enc.json",
+                 *(f"track/{a}" for a in TRACK_ASSETS), *detail_pages):
         text = (site / name).read_text(encoding="utf-8")
         runs = hebrew_runs(text)
         if runs:
@@ -280,6 +328,12 @@ def locked_text_in_site(site: Path) -> list[str]:
         for f in FIELDS_CHECKED if r["id"] in text)
     blobs = {n: (site / n).read_text(encoding="utf-8")
              for n in PAYWALLED if (site / n).exists()}
+    # The per-question pages carry a resolved question's whole text, and they
+    # are named after the question -- so they cannot be listed in PAYWALLED
+    # ahead of time. They are found here instead: belonging to a resolved
+    # question is what makes them legal, and this scan is what proves it.
+    for p in sorted((site / "track").glob("*/index.html")):
+        blobs[f"track/{p.parent.name}/index.html"] = p.read_text(encoding="utf-8")
     # marks.json is not served, but it IS committed to a public repository by
     # the mark workflow, and an evidence line or a note that quoted the
     # question back would put a locked sentence in git for good. Same scan,

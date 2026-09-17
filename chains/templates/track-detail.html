@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<meta name="description" content="__DESC__">
+__ANALYTICS__
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#7d8797; --rule:#222a36;
+  --tight:#ff5a3c; --erode:#3fd18b; --amber:#f2b632;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding:30px 24px 70px}
+a{color:inherit}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin:22px 0 8px}
+h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.05rem;line-height:1.2;margin:0 0 10px}
+h2{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:34px 0 12px}
+.back{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);text-decoration:none;border-bottom:1px solid var(--rule);margin-bottom:6px}
+.back:hover{color:var(--ink2)}
+.pill{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--rule);border-radius:4px;padding:2px 9px;margin-inline-start:8px;color:var(--ink2)}
+.pill.yes{color:var(--erode);border-color:#24503c} .pill.no{color:var(--tight);border-color:#5a2a20}
+.pill.mixed,.pill.none{color:var(--amber);border-color:#3a3320}
+.sub{color:var(--ink2);max-width:76ch;margin:0 0 6px}
+
+/* the question, as it was written before the answer existed */
+.q{font-family:"Source Serif 4",serif;font-size:1.25rem;line-height:1.45;margin:0 0 14px;max-width:70ch}
+.yn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 16px;max-width:80ch}
+.yn .y,.yn .n{border-inline-start:2px solid var(--rule);padding:2px 0 2px 12px;color:var(--ink2);font-size:.95rem}
+.yn .y{border-color:#24503c} .yn .n{border-color:#5a2a20}
+.yn b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
+.said{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;margin:0 0 6px;max-width:80ch}
+.said b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+
+/* the numbers */
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 8px}
+.tile{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:13px 15px}
+.tile b{display:block;font-family:"IBM Plex Mono",monospace;font-size:1.4rem;font-weight:500;line-height:1.1}
+.tile span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin-top:7px;line-height:1.5}
+.pos{color:var(--erode)} .neg{color:var(--tight)} .flat{color:var(--ink2)}
+
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:4px 16px 10px}
+table.legs{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.74rem}
+table.legs th{text-align:right;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);padding:12px 0 7px;border-bottom:1px solid var(--rule);white-space:nowrap;font-size:.62rem}
+table.legs th:first-child,table.legs td:first-child,table.legs th:nth-child(2),table.legs td:nth-child(2){text-align:left}
+table.legs th+th,table.legs td+td{padding-left:16px}
+table.legs td{padding:7px 0;border-bottom:1px solid rgba(34,42,54,.55);text-align:right;white-space:nowrap}
+table.legs tr:last-child td{border-bottom:0}
+table.legs td:first-child{color:var(--ink)}
+table.legs tr.nos td{color:var(--ink3);font-style:italic}
+.side{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.via{margin-inline-start:6px;padding:0 5px;border:1px solid #3a3320;border-radius:3px;color:var(--amber);font-size:.58rem;text-transform:uppercase}
+
+/* one chart per company, big enough to read */
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.chartbox{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:12px 14px}
+.chartbox h3{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.06em;color:var(--ink2);font-weight:500;margin:0 0 8px}
+.chartbox h3 em{font-style:normal;color:var(--ink3);font-size:.64rem;margin-inline-start:8px}
+.chartbox svg{display:block;width:100%;height:auto;border-radius:6px}
+.chartbox p{margin:8px 0 0;color:var(--ink3);font-size:.7rem;font-family:"IBM Plex Mono",monospace}
+/* the interactive charts: a mount the library draws into, and the readout
+   that follows the crosshair. Positioned so the tooltip cannot push the
+   layout around as it changes width. */
+.lw{position:relative;width:100%;height:300px}
+.chartbox.wide{grid-column:1/-1}
+.chartbox.wide .lw{height:340px}
+.lwtip{position:absolute;top:8px;left:8px;z-index:3;pointer-events:none;background:rgba(11,14,20,.93);border:1px solid var(--rule);border-radius:6px;padding:6px 9px;font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--ink2);white-space:nowrap}
+.lwtip b{display:block;color:var(--ink);margin-bottom:3px;font-weight:500}
+.legendrow{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 8px}
+.legendrow .chip{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.legendrow .chip i{width:14px;height:2px;border-radius:2px}
+
+.meta{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:14px 16px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink2);line-height:1.8}
+.meta .k{color:var(--ink3);display:inline-block;min-width:16ch}
+.meta .hash{word-break:break-all;color:var(--ink2)}
+.note{color:var(--ink3);font-size:.9rem;max-width:80ch;line-height:1.65}
+.foot{margin-top:38px;padding-top:16px;border-top:1px solid var(--rule);color:var(--ink3);font-size:.85rem;max-width:80ch}
+
+@media (max-width:900px){
+  .wrap{padding:20px 14px 50px}
+  h1{font-size:1.55rem}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .charts{grid-template-columns:minmax(0,1fr)}
+  /* One chart per row on a phone, so the candles get the height instead of
+     the width: the SVG is drawn with preserveAspectRatio="none", and a body
+     stretched tall reads where a 113px strip did not. */
+  .chartbox svg{height:260px}
+  .lw,.chartbox.wide .lw{height:320px}
+  .yn{grid-template-columns:minmax(0,1fr)}
+  .meta .k{min-width:0;display:block;margin-top:8px}
+}
+__SITE_NAV_CSS__
+</style>
+</head>
+<body>
+<div class="wrap">
+__SITE_NAV__
+__MAIN__
+</div>
+</body>
+</html>

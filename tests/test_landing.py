@@ -304,29 +304,42 @@ def test_without_the_embed_url_neither_page_offers_a_signup(tmp_path,
         assert "subscribe" not in build_pages.visible_text(html).lower()
 
 
-def test_with_the_embed_url_both_pages_frame_the_form_under_the_label(
+def test_the_signup_links_to_the_publication_not_to_the_embed():
+    """The embed path is what the site is configured with; the link is the page
+    a reader can actually open. No path is invented on the way."""
+    assert sitenav.subscribe_link(EMBED) == "https://linchpinsignal.substack.com"
+    assert sitenav.subscribe_link("https://x.example/") == "https://x.example/"
+
+
+def test_with_the_embed_url_both_pages_call_out_under_the_label(
         tmp_path, monkeypatch):
     monkeypatch.setenv("SUBSCRIBE_EMBED_URL", EMBED)
     assert sitenav.SUBSCRIBE_LABEL == \
         "Get the key — subscribe to the weekly mail (free)"
-    # The embed is double opt-in: the confirm step is said before the form.
+    # The embed is double opt-in: the confirm step is said before the call.
     assert sitenav.SUBSCRIBE_CONFIRM == ("Confirm in the first email — the key "
                                          "arrives in the welcome email right after.")
     land, trk = _page(tmp_path), _track_page()
+    link = 'href="https://linchpinsignal.substack.com"'
     for html in (land, trk):
-        assert html.count("<iframe") == 1
-        assert f'<iframe src="{EMBED}"' in html
-        assert 'height="320"' in html and 'frameborder="0"' in html
+        # Not a frame. Substack serves the embed as its own white page, and a
+        # cross-origin frame cannot be restyled from here, so on these dark
+        # pages it landed as a white rectangle. A link keeps the page dark.
+        assert "<iframe" not in html
+        assert link in html
+        assert 'target="_blank" rel="noopener"' in html
+        assert "background:#fff" not in html
         assert "max-width:480px" in html
         assert sitenav.SUBSCRIBE_LABEL in _text(html)
         assert sitenav.SUBSCRIBE_CONFIRM in _text(html)
+        assert sitenav.SUBSCRIBE_CTA in _text(html)
         assert (html.index(sitenav.SUBSCRIBE_LABEL)
-                < html.index(sitenav.SUBSCRIBE_CONFIRM) < html.index("<iframe"))
+                < html.index(sitenav.SUBSCRIBE_CONFIRM) < html.index(link))
     assert SUBSCRIBE_FAQ.strip() in _text(land)
     # Beside the call to the track record, and beside the key field.
-    assert (land.index("See the track record</a>") < land.index("<iframe")
+    assert (land.index("See the track record</a>") < land.index(link)
             < land.index("</header>"))
-    assert (trk.index('placeholder="Key from the mail"') < trk.index("<iframe")
+    assert (trk.index('placeholder="Key from the mail"') < trk.index(link)
             < trk.index('<div id="full">'))
 
 

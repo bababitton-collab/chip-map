@@ -38,8 +38,10 @@ import datetime as dt
 from chains import candles, forecast, prices
 
 # The candle window is drawn from the signature, like every other number here.
-CANDLE_W = 720
-CANDLE_H = 200
+# Big enough to read a session off. The page lays them two to a row on a
+# desktop and one to a row on a phone, and the SVG scales to its box.
+CANDLE_W = 880
+CANDLE_H = 300
 GROUPS = ("win", "lose")
 
 
@@ -107,6 +109,13 @@ def leg_rows(legs: dict, doc: dict, book, kinds: dict,
         return []
     base_day, last_day = window[0], window[-1]
     prev_day = window[-2] if len(window) > 1 else None
+    # A basket is the equal weight of the legs that actually have a series, so
+    # a leg's share of it is 1/n of that side -- counted first, because a leg
+    # with no series must not dilute the ones that have one.
+    priced = {g: sum(1 for nid in (legs.get(g) or [])
+                     if (kinds.get(nid) or {}).get("symbol")
+                     and book.has(kinds[nid]["symbol"]))
+              for g in GROUPS}
     rows = []
     for group in GROUPS:
         for nid in legs.get(group) or []:
@@ -120,14 +129,24 @@ def leg_rows(legs: dict, doc: dict, book, kinds: dict,
                 rows.append({**row, "no_series": "no clean series",
                              "commit_close": None, "entry_close": None,
                              "last": None, "day_pct": None,
-                             "since_commit": None, "entry_date": None})
+                             "since_commit": None, "since_entry": None,
+                             "entry_date": None, "weight": None,
+                             "contribution": None})
                 continue
             commit_close = book.at(sym, base_day)
             last = book.at(sym, last_day)
             prev = book.at(sym, prev_day) if prev_day else None
             entry_close = book.at(sym, entry) if entry else None
+            since = (None if not commit_close or last is None
+                     else last / commit_close - 1.0)
+            n = priced[group] or 1
             rows.append({
                 **row,
+                "weight": round(1.0 / n, 4),
+                # What this leg put into its side's number, in percentage
+                # points: its own move over the window, divided by the number
+                # of legs sharing that side.
+                "contribution": _pct(None if since is None else since / n),
                 "commit_close": _round(commit_close),
                 "entry_date": entry.isoformat() if entry else None,
                 "entry_close": _round(entry_close),
@@ -160,15 +179,27 @@ def benchmarks(legs: dict, book, node_symbols: list[str], kinds: dict,
 
     out = {"from": base.isoformat(), "to": window[-1].isoformat(),
            "sessions": len(window) - 1}
+    lines: dict[str, list] = {}
     for group in GROUPS:
         ids = legs.get(group) or []
         series = (forecast.basket_returns(book, syms(ids), base, window)
                   if syms(ids) else None)
         out[group] = _pct(series[-1]) if series else None
+        if series:
+            lines[group] = [_pct(v) for v in series]
     ew = forecast.ew_map(book, node_symbols, base, window)
     sox = forecast.basket_returns(book, [forecast.SOX_SYMBOL], base, window)
     out["ew"] = _pct(ew[-1]) if ew else None
     out["sox"] = _pct(sox[-1]) if sox else None
+    if ew:
+        lines["ew"] = [_pct(v) for v in ew]
+    if sox:
+        lines["sox"] = [_pct(v) for v in sox]
+    # The same numbers as above, kept for every session instead of only the
+    # last one, so the question's page can draw the three lines. Every measure
+    # here returns one point per session in the window, so the dates and the
+    # values are the same length and a crosshair cannot read a day out.
+    out["series"] = {"dates": [d.isoformat() for d in window], **lines}
     # Both sides are already percentages here, so the difference is taken in
     # percentage points and not converted a second time.
     win = out.get("win")
@@ -179,15 +210,16 @@ def benchmarks(legs: dict, book, node_symbols: list[str], kinds: dict,
     return out
 
 
-def candle_for(rows: list[dict], window: list[dt.date]) -> dict | None:
-    """A candle chart of the leading leg: the win side's first drawable leg.
+def candles_for(rows: list[dict], window: list[dt.date]) -> list[dict]:
+    """One candle chart per company in the basket, in the order it was signed.
 
-    One chart, not one per leg: the page is a record of a basket, and eight
-    charts side by side say less than one that a reader can actually read. The
-    leg it drew is named beside it.
+    The card does not carry these -- it stays a card. They belong on the
+    question's own page, where there is room to draw each company big enough
+    to read rather than eight thumbnails nobody can use.
     """
     if not window:
-        return None
+        return []
+    out = []
     for r in rows:
         if r.get("no_series") or not r.get("symbol"):
             continue
@@ -197,9 +229,20 @@ def candle_for(rows: list[dict], window: list[dt.date]) -> dict | None:
         svg = candles.svg(bars, width=CANDLE_W, height=CANDLE_H,
                           title=f"{r['tk']} · {r['symbol']}")
         if svg:
-            return {"id": r["id"], "tk": r["tk"], "symbol": r["symbol"],
-                    "sessions": len(bars), "svg": svg}
-    return {"id": None, "why": "no clean daily series for any leg in the window"}
+            out.append({"id": r["id"], "tk": r["tk"], "symbol": r["symbol"],
+                        "group": r.get("group"), "sessions": len(bars),
+                        # The bars themselves, for the chart the page draws in
+                        # the browser. The SVG stays beside them as the
+                        # no-script fallback: the same bars, drawn at build
+                        # time, so a reader without JavaScript still sees them.
+                        "bars": [{"time": str(b["date"])[:10],
+                                  "open": _round(b["open"], 6),
+                                  "high": _round(b["high"], 6),
+                                  "low": _round(b["low"], 6),
+                                  "close": _round(b["close"], 6)}
+                                 for b in bars],
+                        "svg": svg})
+    return out
 
 
 def for_card(rec: dict, doc: dict, book, node_symbols: list[str],
@@ -226,7 +269,9 @@ def for_card(rec: dict, doc: dict, book, node_symbols: list[str],
         "legs": rows,
         "no_series": missing,
         "benchmarks": benchmarks(legs, book, node_symbols, kinds, window),
-        "candle": candle_for(rows, window),
+        # One chart per company, for the question's own page. Empty is a fact
+        # about the data and says so rather than drawing an empty frame.
+        "candles": candles_for(rows, window),
         # Untouched: whether this question counts, and the horizons it was
         # scored at, are track.official() and the ledger. Repeated here only so
         # the block can be rendered on its own.

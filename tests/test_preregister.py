@@ -128,6 +128,27 @@ def test_changing_any_frozen_term_changes_the_hash(attr, value, monkeypatch):
     assert P.digest(ROW, TEXT) != before, attr
 
 
+def test_a_domains_own_benchmark_is_inside_the_hash_too(monkeypatch):
+    """There are two routes to the benchmark block: the frozen constant above,
+    which the first domain takes, and a market line a map names for itself.
+    The test above can only see the first. This one walks the second, because
+    a route into the hashed bytes that nothing guards is a term that can move
+    without anybody noticing."""
+    before = P.digest(ROW, TEXT)
+    monkeypatch.setattr(P.forecast, "benchmark_for",
+                        lambda dom=None: {"key": "grid", "symbol": "GRID.US",
+                                          "label": "GRID"})
+    assert P.benchmarks_for() == {"ew": P.BENCHMARKS["ew"],
+                                  "grid": "GRID.US"}
+    assert P.digest(ROW, TEXT) != before
+
+
+def test_the_default_benchmark_block_is_the_constant_itself():
+    """Not a copy rebuilt from its parts: the constant is what the frozen-term
+    test changes, so the default path has to be the thing it changes."""
+    assert P.benchmarks_for() == P.BENCHMARKS
+
+
 # -- the entries --------------------------------------------------------------
 
 def _rows():

@@ -1,0 +1,1502 @@
+{
+  "chain": "energy-grid-ai-power",
+  "as_of": "2026-09-17",
+  "version": "1.0",
+  "note_on_method": "Structure and chokepoints from domain-energy-grid-spec.md and domain-energy-nodes-pack.md. Every price symbol was verified against EODHD before it was written here: a symbol with no daily series is not used. market_cap_usd_b is absent throughout -- the price feed carries no market capitalisation and the fundamentals path reads revenue, operating income and capital expenditure only, so the field is left empty rather than estimated.",
+  "benchmark": {
+    "key": "grid",
+    "symbol": "GRID.US",
+    "label": "GRID"
+  },
+  "labels": {
+    "languages": [
+      "en"
+    ],
+    "copy": {
+      "chokepoint_kind": "power and grid",
+      "chokepoint_examples": "gas turbines, grid transformers, HVDC cable and nuclear fuel"
+    },
+    "brand": {
+      "name": "Linchpin Signal",
+      "title": {
+        "he": "מפת החשמל החיה",
+        "en": "The Living Power Map"
+      },
+      "value": {
+        "en": "The physical power behind AI compute — who supplies the electricity, where the bottlenecks are, and which dated questions come next."
+      },
+      "story": {
+        "he": "לינצ'פין הוא הפין הקטן שמחזיק את הגלגל על הציר. מוציאים אותו — והכל נעצר. אנחנו מוצאים את הפינים האלה בשרשרת האספקה, ומודדים מה קורה להם, כל יום.",
+        "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."
+      },
+      "footer": {
+        "he": "לינצ'פין סיגנל · לא ייעוץ השקעות · לכל מספר יש מקור",
+        "en": "Linchpin Signal · not investment advice · every number carries a source"
+      }
+    },
+    "layers": {
+      "E1": {
+        "he": "דלק ראשוני",
+        "en": "fuel"
+      },
+      "E2": {
+        "he": "טורבינות",
+        "en": "turbines"
+      },
+      "E3": {
+        "he": "ציוד רשת",
+        "en": "grid equipment"
+      },
+      "E4": {
+        "he": "הולכה ו-HVDC",
+        "en": "transmission & HVDC"
+      },
+      "E5": {
+        "he": "הספק ומרכזי נתונים",
+        "en": "power & data center"
+      },
+      "E6": {
+        "he": "ייצור חשמל",
+        "en": "generation / IPP"
+      },
+      "E7": {
+        "he": "דלק גרעיני",
+        "en": "nuclear fuel"
+      },
+      "E8": {
+        "he": "כורים ו-SMR",
+        "en": "reactors & SMR"
+      }
+    },
+    "lines": {
+      "turbine": {
+        "he": "טורבינות",
+        "en": "turbines",
+        "color": "#c08878"
+      },
+      "gridgear": {
+        "he": "ציוד רשת",
+        "en": "grid gear",
+        "color": "#7d93b8"
+      },
+      "conductor": {
+        "he": "הולכה",
+        "en": "transmission",
+        "color": "#7aa894"
+      },
+      "datacenter": {
+        "he": "מרכזי נתונים",
+        "en": "data center",
+        "color": "#a9a396"
+      },
+      "generator": {
+        "he": "ייצור",
+        "en": "generation",
+        "color": "#9b90bd"
+      },
+      "atom": {
+        "he": "גרעין",
+        "en": "nuclear",
+        "color": "#b39a6a"
+      },
+      "fuel": {
+        "he": "דלק",
+        "en": "fuel",
+        "color": "#8fae87"
+      },
+      "reactor": {
+        "he": "כורים",
+        "en": "reactors",
+        "color": "#c9a227"
+      }
+    },
+    "line_order": [
+      "fuel",
+      "turbine",
+      "gridgear",
+      "conductor",
+      "datacenter",
+      "generator",
+      "atom",
+      "reactor"
+    ],
+    "lanes": {
+      "turbines": {
+        "he": "טורבינות",
+        "en": "turbines"
+      },
+      "grid": {
+        "he": "רשת",
+        "en": "grid"
+      },
+      "cable": {
+        "he": "כבלים",
+        "en": "cable"
+      },
+      "nuclear": {
+        "he": "גרעין",
+        "en": "nuclear"
+      },
+      "datacenter": {
+        "he": "מרכזי נתונים",
+        "en": "data centers"
+      },
+      "steel": {
+        "he": "פלדה",
+        "en": "steel"
+      }
+    },
+    "stages": {
+      "research": {
+        "he": "מחקר",
+        "en": "research"
+      },
+      "pilot": {
+        "he": "פיילוט",
+        "en": "pilot"
+      },
+      "qualified": {
+        "he": "הסמכה",
+        "en": "qualified"
+      },
+      "volume": {
+        "he": "ייצור",
+        "en": "volume"
+      }
+    },
+    "size_unknown_r": 13
+  },
+  "layers": [
+    {
+      "id": "E1",
+      "name": "Primary fuel",
+      "order": 1,
+      "description": "Uranium mining: the feedstock the enrichment layer draws on."
+    },
+    {
+      "id": "E2",
+      "name": "Turbines",
+      "order": 2,
+      "description": "Gas turbines: the hardest bottleneck for new firm capacity."
+    },
+    {
+      "id": "E3",
+      "name": "Grid equipment",
+      "order": 3,
+      "description": "Transformers, switchgear and the steel inside them."
+    },
+    {
+      "id": "E4",
+      "name": "Transmission & HVDC",
+      "order": 4,
+      "description": "Cable, HVDC links and the contractors that build the grid."
+    },
+    {
+      "id": "E5",
+      "name": "Power & data center",
+      "order": 5,
+      "description": "Power management and cooling inside the data hall."
+    },
+    {
+      "id": "E6",
+      "name": "Generation / IPP",
+      "order": 6,
+      "description": "The producers selling firm power to hyperscalers."
+    },
+    {
+      "id": "E7",
+      "name": "Nuclear fuel",
+      "order": 7,
+      "description": "Enrichment, fuel and small modular reactors."
+    },
+    {
+      "id": "E8",
+      "name": "Reactors & SMR",
+      "order": 8,
+      "description": "Pressure vessels, forgings and the reactor builders themselves."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "gev",
+      "name": "GE Vernova",
+      "short": "GEV",
+      "ticker": "GEV",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E2",
+      "line": "turbine",
+      "role": "Gas turbine maker; backlog booked years out",
+      "price_symbol": "GEV.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "siemens_energy",
+        "baker_hughes"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "siemens_energy",
+      "name": "Siemens Energy",
+      "short": "ENR",
+      "ticker": "ENR",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E2",
+      "line": "turbine",
+      "role": "Turbines and grid technologies",
+      "price_symbol": "ENR.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "gev",
+        "baker_hughes"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "baker_hughes",
+      "name": "Baker Hughes",
+      "short": "BKR",
+      "ticker": "BKR",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E2",
+      "line": "turbine",
+      "role": "Industrial gas turbines",
+      "price_symbol": "BKR.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "gev",
+        "siemens_energy"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "eaton",
+      "name": "Eaton",
+      "short": "ETN",
+      "ticker": "ETN",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E3",
+      "line": "gridgear",
+      "role": "Power management for the data hall and the grid",
+      "price_symbol": "ETN.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "abb",
+        "schneider"
+      ],
+      "key_suppliers": [
+        "clf",
+        "posco"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "abb",
+      "name": "ABB",
+      "short": "ABB",
+      "ticker": "ABB",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": true,
+      "layer": "E3",
+      "line": "gridgear",
+      "role": "Electrification and switchgear",
+      "price_symbol": "ABBNY.US",
+      "price_symbol_kind": "adr",
+      "price_note": "Priced through the US ADR: the plain ABB.US line returns no series from the price vendor.",
+      "competitors": [
+        "eaton",
+        "schneider"
+      ],
+      "key_suppliers": [
+        "clf",
+        "posco"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "schneider",
+      "name": "Schneider Electric",
+      "short": "SU",
+      "ticker": "SU",
+      "exchange": "PARIS",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E3",
+      "line": "gridgear",
+      "role": "Electrification and data-center power",
+      "price_symbol": "SU.PA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "eaton",
+        "abb"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "powell",
+      "name": "Powell Industries",
+      "short": "POWL",
+      "ticker": "POWL",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E3",
+      "line": "gridgear",
+      "role": "Switchgear and electrical houses",
+      "price_symbol": "POWL.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "eaton",
+        "hubbell"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "hubbell",
+      "name": "Hubbell",
+      "short": "HUBB",
+      "ticker": "HUBB",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E3",
+      "line": "gridgear",
+      "role": "Grid components and utility hardware",
+      "price_symbol": "HUBB.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "eaton",
+        "powell"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "clf",
+      "name": "Cleveland-Cliffs",
+      "short": "CLF",
+      "ticker": "CLF",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E3",
+      "line": "gridgear",
+      "role": "Grain-oriented electrical steel for transformer cores",
+      "price_symbol": "CLF.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "posco"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "posco",
+      "name": "POSCO Holdings",
+      "short": "PKX",
+      "ticker": "PKX",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": true,
+      "layer": "E3",
+      "line": "gridgear",
+      "role": "Grain-oriented electrical steel",
+      "price_symbol": "PKX.US",
+      "price_symbol_kind": "adr",
+      "competitors": [
+        "clf"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "prysmian",
+      "name": "Prysmian",
+      "short": "PRY",
+      "ticker": "PRY",
+      "exchange": "MILAN",
+      "us_listed": false,
+      "adr": true,
+      "layer": "E4",
+      "line": "conductor",
+      "role": "Subsea and HVDC cable",
+      "price_symbol": "PRYMY.US",
+      "price_symbol_kind": "adr",
+      "price_note": "Priced through the US ADR: the Milan line returns no series from the price vendor.",
+      "competitors": [
+        "nexans",
+        "nkt"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "nexans",
+      "name": "Nexans",
+      "short": "NEX",
+      "ticker": "NEX",
+      "exchange": "PARIS",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E4",
+      "line": "conductor",
+      "role": "Subsea and HVDC cable",
+      "price_symbol": "NEX.PA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "prysmian",
+        "nkt"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "nkt",
+      "name": "NKT",
+      "short": "NKT",
+      "ticker": "NKT",
+      "exchange": "COPENHAGEN",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E4",
+      "line": "conductor",
+      "role": "HVDC cable systems",
+      "price_symbol": "NKT.CO",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "prysmian",
+        "nexans"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "quanta",
+      "name": "Quanta Services",
+      "short": "PWR",
+      "ticker": "PWR",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E4",
+      "line": "conductor",
+      "role": "Builds and upgrades transmission",
+      "price_symbol": "PWR.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [
+        "prysmian",
+        "nexans",
+        "nkt"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "vertiv",
+      "name": "Vertiv",
+      "short": "VRT",
+      "ticker": "VRT",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E5",
+      "line": "datacenter",
+      "role": "Data-center power and cooling",
+      "price_symbol": "VRT.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "nvent"
+      ],
+      "key_suppliers": [
+        "eaton"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "nvent",
+      "name": "nVent Electric",
+      "short": "NVT",
+      "ticker": "NVT",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E5",
+      "line": "datacenter",
+      "role": "Electrical protection and liquid cooling",
+      "price_symbol": "NVT.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "vertiv"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "constellation",
+      "name": "Constellation Energy",
+      "short": "CEG",
+      "ticker": "CEG",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E6",
+      "line": "generator",
+      "role": "Nuclear fleet selling firm power to hyperscalers",
+      "price_symbol": "CEG.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "vistra",
+        "talen"
+      ],
+      "key_suppliers": [
+        "centrus"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "vistra",
+      "name": "Vistra",
+      "short": "VST",
+      "ticker": "VST",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E6",
+      "line": "generator",
+      "role": "Independent power producer with nuclear",
+      "price_symbol": "VST.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "constellation",
+        "talen"
+      ],
+      "key_suppliers": [
+        "centrus"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "talen",
+      "name": "Talen Energy",
+      "short": "TLN",
+      "ticker": "TLN",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E6",
+      "line": "generator",
+      "role": "Nuclear IPP contracted to a hyperscaler",
+      "price_symbol": "TLN.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "constellation",
+        "vistra"
+      ],
+      "key_suppliers": [
+        "centrus"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "nextera",
+      "name": "NextEra Energy",
+      "short": "NEE",
+      "ticker": "NEE",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E6",
+      "line": "generator",
+      "role": "Utility and renewable generation at scale",
+      "price_symbol": "NEE.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "constellation",
+        "vistra"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "centrus",
+      "name": "Centrus Energy",
+      "short": "LEU",
+      "ticker": "LEU",
+      "exchange": "NYSE-A",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E7",
+      "line": "atom",
+      "role": "Uranium enrichment, including HALEU",
+      "price_symbol": "LEU.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [
+        "cameco"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "cameco",
+      "name": "Cameco",
+      "short": "CCJ",
+      "ticker": "CCJ",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": true,
+      "layer": "E1",
+      "line": "fuel",
+      "role": "Uranium miner: the feedstock of the nuclear chain",
+      "price_symbol": "CCJ.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "bwxt",
+      "name": "BWX Technologies",
+      "short": "BWXT",
+      "ticker": "BWXT",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E8",
+      "line": "reactor",
+      "role": "Nuclear components and fuel",
+      "price_symbol": "BWXT.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "oklo",
+      "name": "Oklo",
+      "short": "OKLO",
+      "ticker": "OKLO",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E8",
+      "line": "reactor",
+      "role": "Small modular reactor developer",
+      "price_symbol": "OKLO.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "nuscale"
+      ],
+      "key_suppliers": [
+        "bwxt",
+        "centrus"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "nuscale",
+      "name": "NuScale Power",
+      "short": "SMR",
+      "ticker": "SMR",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "E8",
+      "line": "reactor",
+      "role": "Small modular reactor developer",
+      "price_symbol": "SMR.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "oklo"
+      ],
+      "key_suppliers": [
+        "bwxt"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "exchange": "KRX",
+      "us_listed": false,
+      "adr": false,
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_symbol_kind": "none",
+      "id": "doosan",
+      "name": "Doosan Enerbility",
+      "short": "DOOSAN",
+      "ticker": "034020.KS",
+      "layer": "E8",
+      "line": "reactor",
+      "role": "Ultra-large reactor pressure-vessel forgings",
+      "price_symbol": null,
+      "price_note": "No usable daily line: neither the Seoul listing nor an over-the-counter line is carried by the price vendor."
+    },
+    {
+      "exchange": "LSE",
+      "us_listed": false,
+      "adr": true,
+      "competitors": [
+        "nuscale",
+        "oklo"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_symbol_kind": "adr",
+      "id": "rolls_royce",
+      "name": "Rolls-Royce Holdings",
+      "short": "RR",
+      "ticker": "RR",
+      "layer": "E8",
+      "line": "reactor",
+      "role": "Small modular reactor programme",
+      "price_symbol": "RYCEY.US",
+      "price_note": "Priced through the US ADR: the London line returns no series from the price vendor."
+    },
+    {
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "competitors": [
+        "doosan"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_symbol_kind": "primary",
+      "id": "fluor",
+      "name": "Fluor",
+      "short": "FLR",
+      "ticker": "FLR",
+      "layer": "E8",
+      "line": "reactor",
+      "role": "Engineering and construction for reactor projects",
+      "price_symbol": "FLR.US"
+    },
+    {
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "competitors": [
+        "oklo",
+        "nuscale"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_symbol_kind": "primary",
+      "id": "nano_nuclear",
+      "name": "Nano Nuclear Energy",
+      "short": "NNE",
+      "ticker": "NNE",
+      "layer": "E8",
+      "line": "reactor",
+      "role": "Microreactor developer",
+      "price_symbol": "NNE.US"
+    }
+  ],
+  "edges": [
+    {
+      "from": "clf",
+      "to": "eaton",
+      "type": "supplies",
+      "what": "Grain-oriented electrical steel for transformer cores",
+      "group": "steel",
+      "criticality": "high",
+      "source": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/"
+    },
+    {
+      "from": "clf",
+      "to": "abb",
+      "type": "supplies",
+      "what": "Grain-oriented electrical steel for transformer cores",
+      "group": "steel",
+      "criticality": "high",
+      "source": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/"
+    },
+    {
+      "from": "posco",
+      "to": "eaton",
+      "type": "supplies",
+      "what": "Grain-oriented electrical steel",
+      "group": "steel",
+      "criticality": "medium",
+      "source": "https://www.manufacturingmag.com/article/grid-transformer-shortage-three-year-backlog-coil-winding-labor"
+    },
+    {
+      "from": "posco",
+      "to": "abb",
+      "type": "supplies",
+      "what": "Grain-oriented electrical steel",
+      "group": "steel",
+      "criticality": "medium",
+      "source": "https://www.manufacturingmag.com/article/grid-transformer-shortage-three-year-backlog-coil-winding-labor"
+    },
+    {
+      "from": "clf",
+      "to": "posco",
+      "type": "competes",
+      "what": "Grain-oriented electrical steel capacity",
+      "group": "steel",
+      "criticality": "medium",
+      "source": "https://www.manufacturingmag.com/article/grid-transformer-shortage-three-year-backlog-coil-winding-labor"
+    },
+    {
+      "from": "gev",
+      "to": "siemens_energy",
+      "type": "competes",
+      "what": "Heavy-duty gas turbines",
+      "group": "turbines",
+      "criticality": "high",
+      "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/"
+    },
+    {
+      "from": "gev",
+      "to": "baker_hughes",
+      "type": "competes",
+      "what": "Industrial gas turbines",
+      "group": "turbines",
+      "criticality": "medium",
+      "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/"
+    },
+    {
+      "from": "siemens_energy",
+      "to": "baker_hughes",
+      "type": "competes",
+      "what": "Industrial gas turbines",
+      "group": "turbines",
+      "criticality": "medium",
+      "source": "https://energynewsbeat.co/electrical-generation/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/"
+    },
+    {
+      "from": "prysmian",
+      "to": "quanta",
+      "type": "supplies",
+      "what": "HVDC and subsea cable for transmission projects",
+      "group": "cable",
+      "criticality": "high",
+      "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market"
+    },
+    {
+      "from": "nexans",
+      "to": "quanta",
+      "type": "supplies",
+      "what": "HVDC and subsea cable",
+      "group": "cable",
+      "criticality": "high",
+      "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market"
+    },
+    {
+      "from": "nkt",
+      "to": "quanta",
+      "type": "supplies",
+      "what": "HVDC cable systems",
+      "group": "cable",
+      "criticality": "high",
+      "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market"
+    },
+    {
+      "from": "prysmian",
+      "to": "nexans",
+      "type": "competes",
+      "what": "Subsea cable capacity",
+      "group": "cable",
+      "criticality": "medium",
+      "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market"
+    },
+    {
+      "from": "nexans",
+      "to": "nkt",
+      "type": "competes",
+      "what": "HVDC cable capacity",
+      "group": "cable",
+      "criticality": "medium",
+      "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market"
+    },
+    {
+      "from": "centrus",
+      "to": "constellation",
+      "type": "supplies",
+      "what": "Enriched uranium fuel",
+      "group": "fuel",
+      "criticality": "high",
+      "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/"
+    },
+    {
+      "from": "centrus",
+      "to": "vistra",
+      "type": "supplies",
+      "what": "Enriched uranium fuel",
+      "group": "fuel",
+      "criticality": "high",
+      "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/"
+    },
+    {
+      "from": "centrus",
+      "to": "talen",
+      "type": "supplies",
+      "what": "Enriched uranium fuel",
+      "group": "fuel",
+      "criticality": "high",
+      "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/"
+    },
+    {
+      "from": "cameco",
+      "to": "centrus",
+      "type": "supplies",
+      "what": "Uranium feed for enrichment",
+      "group": "fuel",
+      "criticality": "high",
+      "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
+    },
+    {
+      "from": "bwxt",
+      "to": "nuscale",
+      "type": "supplies",
+      "what": "Nuclear components",
+      "group": "fuel",
+      "criticality": "medium",
+      "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
+    },
+    {
+      "from": "bwxt",
+      "to": "oklo",
+      "type": "supplies",
+      "what": "Nuclear components",
+      "group": "fuel",
+      "criticality": "medium",
+      "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
+    },
+    {
+      "from": "eaton",
+      "to": "vertiv",
+      "type": "supplies",
+      "what": "Power distribution for the data hall",
+      "group": "datacenter",
+      "criticality": "high",
+      "source": "https://www.eaton.com/us/en-us/company/news-insights/news-releases/2026/eaton-reports-record-second-quarter-2026-results.html"
+    },
+    {
+      "from": "gev",
+      "to": "constellation",
+      "type": "supplies",
+      "what": "Generation equipment",
+      "group": "turbines",
+      "criticality": "medium",
+      "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/"
+    },
+    {
+      "from": "gev",
+      "to": "vistra",
+      "type": "supplies",
+      "what": "Generation equipment",
+      "group": "turbines",
+      "criticality": "medium",
+      "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/"
+    },
+    {
+      "from": "constellation",
+      "to": "vistra",
+      "type": "competes",
+      "what": "Firm power contracts with hyperscalers",
+      "group": "generation",
+      "criticality": "medium",
+      "source": "https://enkiai.com/nuclear/microsoft-constellation-ai-data-centers/"
+    },
+    {
+      "from": "vistra",
+      "to": "talen",
+      "type": "competes",
+      "what": "Firm power contracts with hyperscalers",
+      "group": "generation",
+      "criticality": "medium",
+      "source": "https://investor.vistracorp.com/2026-01-09-Vistra-and-Meta-Announce-Agreements-to-Support-Nuclear-Plants-in-PJM-and-Add-New-Nuclear-Generation-to-the-Grid"
+    },
+    {
+      "from": "eaton",
+      "to": "abb",
+      "type": "competes",
+      "what": "Electrification and switchgear",
+      "group": "gridgear",
+      "criticality": "medium",
+      "source": "https://www.eaton.com/us/en-us/company/news-insights/news-releases/2026/eaton-reports-record-second-quarter-2026-results.html"
+    },
+    {
+      "from": "abb",
+      "to": "schneider",
+      "type": "competes",
+      "what": "Electrification and data-center power",
+      "group": "gridgear",
+      "criticality": "medium",
+      "source": "https://www.eaton.com/us/en-us/company/news-insights/news-releases/2026/eaton-reports-record-second-quarter-2026-results.html"
+    },
+    {
+      "from": "vertiv",
+      "to": "nvent",
+      "type": "competes",
+      "what": "Data-center power and thermal",
+      "group": "datacenter",
+      "criticality": "medium",
+      "source": "https://techjacksolutions.com/ai-brief/vertiv-raises-2026-guidance-to-14b-as-ai-data-center-backlog/"
+    },
+    {
+      "from": "oklo",
+      "to": "nuscale",
+      "type": "competes",
+      "what": "Small modular reactor designs",
+      "group": "fuel",
+      "criticality": "low",
+      "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
+    },
+    {
+      "from": "doosan",
+      "to": "nuscale",
+      "type": "supplies",
+      "what": "Reactor forgings and modules",
+      "group": "reactor",
+      "criticality": "high",
+      "source": "https://www.world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/heavy-manufacturing-of-power-plants"
+    }
+  ],
+  "chokepoints": [
+    {
+      "id": "CPE1",
+      "name": "Gas turbines",
+      "label": {
+        "he": "טורבינות גז",
+        "en": "gas turbines"
+      },
+      "blurb": {
+        "he": "שלישייה סגורה של יצרנים; צבר ההזמנות מכור שנים קדימה.",
+        "en": "A three-maker oligopoly whose order slots are booked years ahead, and the first hard limit on new firm capacity for AI compute."
+      },
+      "node_ids": [
+        "gev",
+        "siemens_energy",
+        "baker_hughes"
+      ],
+      "concentration": "Three-maker oligopoly; GE Vernova backlog 116 GW, Siemens Energy approaching 70 GW",
+      "geography": "United States, Germany, Italy",
+      "dependents": [
+        "constellation",
+        "vistra",
+        "talen"
+      ],
+      "substitute": "None at scale within the window; reciprocating engines and renewables plus storage cover different duty cycles",
+      "substitution_time": "4+ years",
+      "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/"
+    },
+    {
+      "id": "CPE2",
+      "name": "Large power transformers",
+      "label": {
+        "he": "שנאי כוח גדולים",
+        "en": "large power transformers"
+      },
+      "blurb": {
+        "he": "זמני אספקה של שלוש עד ארבע שנים; הצוואר הוא פלדת GOES וכוח אדם לליפוף.",
+        "en": "Lead times of three to four years, with grain-oriented electrical steel and coil-winding labour as the binding constraints."
+      },
+      "node_ids": [
+        "eaton",
+        "abb",
+        "clf",
+        "posco"
+      ],
+      "concentration": "US lead times 3-4 years; GOES supply and winding capacity both tight",
+      "geography": "United States, Europe, South Korea",
+      "dependents": [
+        "quanta",
+        "constellation",
+        "vistra"
+      ],
+      "substitute": "Refurbishment and mobile units only; no new-build substitute",
+      "substitution_time": "3-4 years",
+      "source": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/"
+    },
+    {
+      "id": "CPE3",
+      "name": "Subsea and HVDC cable",
+      "label": {
+        "he": "כבלי HVDC ימיים",
+        "en": "subsea and HVDC cable"
+      },
+      "blurb": {
+        "he": "קיבולת מכורה מראש לשנים; מעט מאוד מפעלים בעולם.",
+        "en": "Capacity sold out years in advance across a handful of plants, and the quiet limit on connecting new generation to the grid."
+      },
+      "node_ids": [
+        "prysmian",
+        "nexans",
+        "nkt"
+      ],
+      "concentration": "A small number of qualified plants; order books booked out for years",
+      "geography": "Italy, France, Denmark",
+      "dependents": [
+        "quanta",
+        "nextera"
+      ],
+      "substitute": "Overhead lines where the route allows; not a substitute offshore",
+      "substitution_time": "3+ years",
+      "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market"
+    },
+    {
+      "id": "CPE4",
+      "name": "Uranium enrichment and HALEU",
+      "label": {
+        "he": "העשרת אורניום ו-HALEU",
+        "en": "uranium enrichment and HALEU"
+      },
+      "blurb": {
+        "he": "הצוואר בשרשרת הגרעינית הוא הדלק, לא הכור.",
+        "en": "The choke in the nuclear chain is the fuel rather than the reactor: Western enrichment capacity is thin and HALEU thinner still."
+      },
+      "node_ids": [
+        "centrus",
+        "cameco"
+      ],
+      "concentration": "Western enrichment capacity concentrated in very few hands; HALEU effectively single-source",
+      "geography": "United States, Canada",
+      "dependents": [
+        "constellation",
+        "vistra",
+        "talen",
+        "oklo",
+        "nuscale"
+      ],
+      "substitute": "Russian supply, which is what the reshoring is meant to replace",
+      "substitution_time": "5+ years",
+      "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/"
+    },
+    {
+      "id": "CPE5",
+      "name": "Reactor forgings",
+      "label": {
+        "he": "יציקות לכורים",
+        "en": "reactor forgings"
+      },
+      "blurb": {
+        "he": "יציקות ענק לכלי לחץ של כורים.",
+        "en": "Ultra-large reactor pressure-vessel forgings: very few makers worldwide, with Japan Steel Works dominant."
+      },
+      "node_ids": [
+        "doosan"
+      ],
+      "concentration": "Very few plants can forge the largest vessels; JSW dominant",
+      "geography": "Japan, South Korea",
+      "dependents": [
+        "oklo",
+        "nuscale",
+        "rolls_royce",
+        "fluor"
+      ],
+      "substitute": "Segmented or additively manufactured vessels, unproven at scale",
+      "substitution_time": "5+ years",
+      "source": "https://www.world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/heavy-manufacturing-of-power-plants"
+    }
+  ],
+  "subnodes": [
+    {
+      "id": "nexgen",
+      "name": "NexGen Energy",
+      "ticker": "NXE",
+      "exchange": "NYSE",
+      "country_hq": "CA",
+      "country_factory": "CA",
+      "tier": 2,
+      "supplies_to": "cameco",
+      "chokepoint_ids": [
+        "CPE4"
+      ],
+      "share": "",
+      "sole_source": false,
+      "sole_source_basis": "",
+      "alternatives": "",
+      "what": "Uranium development",
+      "notes": "",
+      "price_symbol": "NXE.US",
+      "price_symbol_kind": "primary"
+    },
+    {
+      "id": "uec",
+      "name": "Uranium Energy",
+      "ticker": "UEC",
+      "exchange": "NYSE-A",
+      "country_hq": "US",
+      "country_factory": "US",
+      "tier": 2,
+      "supplies_to": "cameco",
+      "chokepoint_ids": [
+        "CPE4"
+      ],
+      "share": "",
+      "sole_source": false,
+      "sole_source_basis": "",
+      "alternatives": "",
+      "what": "Uranium mining",
+      "notes": "",
+      "price_symbol": "UEC.US",
+      "price_symbol_kind": "primary"
+    },
+    {
+      "id": "mhi",
+      "name": "Mitsubishi Heavy Industries",
+      "ticker": "7011.T",
+      "exchange": "TSE",
+      "country_hq": "JP",
+      "country_factory": "JP",
+      "tier": 2,
+      "supplies_to": "gev",
+      "chokepoint_ids": [
+        "CPE1"
+      ],
+      "share": "",
+      "sole_source": false,
+      "sole_source_basis": "",
+      "alternatives": "",
+      "what": "The third gas-turbine maker outside the two named above",
+      "notes": "No usable daily line: the Tokyo listing is not carried by the price vendor and both over-the-counter lines trade below the liquidity floor.",
+      "price_symbol": null,
+      "price_symbol_kind": "none"
+    },
+    {
+      "id": "hitachi_energy",
+      "name": "Hitachi Energy",
+      "ticker": "6501.T",
+      "exchange": "TSE",
+      "country_hq": "JP",
+      "country_factory": "CH",
+      "tier": 2,
+      "supplies_to": "eaton",
+      "chokepoint_ids": [
+        "CPE2"
+      ],
+      "share": "",
+      "sole_source": false,
+      "sole_source_basis": "",
+      "alternatives": "",
+      "what": "Transformers and grid technologies",
+      "notes": "No usable daily line: the Tokyo listing is not carried by the price vendor.",
+      "price_symbol": null,
+      "price_symbol_kind": "none"
+    },
+    {
+      "id": "jci",
+      "name": "Johnson Controls",
+      "ticker": "JCI",
+      "exchange": "NYSE",
+      "country_hq": "IE",
+      "country_factory": "US",
+      "tier": 2,
+      "supplies_to": "vertiv",
+      "chokepoint_ids": [],
+      "share": "",
+      "sole_source": false,
+      "sole_source_basis": "",
+      "alternatives": "",
+      "what": "Data-center cooling",
+      "notes": "",
+      "price_symbol": "JCI.US",
+      "price_symbol_kind": "primary"
+    },
+    {
+      "id": "trane",
+      "name": "Trane Technologies",
+      "ticker": "TT",
+      "exchange": "NYSE",
+      "country_hq": "IE",
+      "country_factory": "US",
+      "tier": 2,
+      "supplies_to": "vertiv",
+      "chokepoint_ids": [],
+      "share": "",
+      "sole_source": false,
+      "sole_source_basis": "",
+      "alternatives": "",
+      "what": "Data-center cooling",
+      "notes": "",
+      "price_symbol": "TT.US",
+      "price_symbol_kind": "primary"
+    },
+    {
+      "country_hq": "JP",
+      "country_factory": "JP",
+      "tier": 2,
+      "share": "",
+      "sole_source": true,
+      "sole_source_basis": "Dominant maker of the largest forgings; very few plants worldwide",
+      "alternatives": "",
+      "notes": "No usable daily line: the Tokyo listing is not carried by the price vendor.",
+      "chokepoint_ids": [
+        "CPE5"
+      ],
+      "price_symbol": null,
+      "price_symbol_kind": "none",
+      "id": "jsw",
+      "name": "Japan Steel Works",
+      "ticker": "5631.T",
+      "exchange": "TSE",
+      "supplies_to": "doosan",
+      "what": "Ultra-large reactor pressure-vessel forgings"
+    },
+    {
+      "country_hq": "US",
+      "country_factory": "US",
+      "tier": 2,
+      "share": "",
+      "sole_source": false,
+      "sole_source_basis": "",
+      "alternatives": "",
+      "notes": "Private. Cameco holds 49 per cent, so the exposure reaches the map through CCJ.",
+      "chokepoint_ids": [
+        "CPE5"
+      ],
+      "price_symbol": null,
+      "price_symbol_kind": "none",
+      "id": "westinghouse",
+      "name": "Westinghouse Electric",
+      "ticker": "private",
+      "supplies_to": "cameco",
+      "what": "Reactor design, fuel and services"
+    }
+  ],
+  "sub_edges": [
+    {
+      "from": "nexgen",
+      "to": "cameco",
+      "what": "Uranium development feeding the enrichment chain",
+      "group": "fuel",
+      "criticality": "medium",
+      "chokepoint_id": "CPE4"
+    },
+    {
+      "from": "uec",
+      "to": "cameco",
+      "what": "Uranium mining",
+      "group": "fuel",
+      "criticality": "medium",
+      "chokepoint_id": "CPE4"
+    },
+    {
+      "from": "mhi",
+      "to": "gev",
+      "what": "The third maker in the turbine oligopoly",
+      "group": "turbines",
+      "criticality": "high",
+      "chokepoint_id": "CPE1"
+    },
+    {
+      "from": "hitachi_energy",
+      "to": "eaton",
+      "what": "Transformers and grid technologies",
+      "group": "gridgear",
+      "criticality": "high",
+      "chokepoint_id": "CPE2"
+    },
+    {
+      "from": "jci",
+      "to": "vertiv",
+      "what": "Data-center cooling",
+      "group": "datacenter",
+      "criticality": "low",
+      "chokepoint_id": "CPE2"
+    },
+    {
+      "from": "trane",
+      "to": "vertiv",
+      "what": "Data-center cooling",
+      "group": "datacenter",
+      "criticality": "low",
+      "chokepoint_id": "CPE2"
+    },
+    {
+      "from": "jsw",
+      "to": "doosan",
+      "what": "The largest pressure-vessel forgings",
+      "group": "reactor",
+      "criticality": "high",
+      "chokepoint_id": "CPE5"
+    },
+    {
+      "from": "westinghouse",
+      "to": "cameco",
+      "what": "Reactor design and fuel services",
+      "group": "reactor",
+      "criticality": "medium",
+      "chokepoint_id": "CPE5"
+    }
+  ],
+  "flows": [],
+  "etfs": [],
+  "vulnerable": [],
+  "challengers": {},
+  "display_rules": {}
+}

@@ -58,7 +58,7 @@ jobs:
       - name: map version
         id: map
         run: |
-          echo "v=$(python -c 'import json;print(json.load(open("data/semi/map.json"))["version"])')" >> "$GITHUB_OUTPUT"
+          echo "v=$(python -c 'import glob,json;print("-".join(str(json.load(open(p))["version"]) for p in sorted(glob.glob("data/*/map.json"))))')" >> "$GITHUB_OUTPUT"
           echo "week=$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache@v4
@@ -94,14 +94,14 @@ jobs:
           # to write a plaintext file when this is missing, so an unset secret
           # fails the build instead of shipping the paid half unlocked.
           TRACK_KEY: ${{ secrets.TRACK_KEY }}
-        run: python -m chains.build_all
+        run: python -m chains.build_all --all-domains
 
       # Assembles site/ and runs both gates on what will actually be served:
       # no Hebrew in the English files, and no locked question's text anywhere.
       - name: publish
         env:
           QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
-        run: python -m chains.publish_site
+        run: python -m chains.publish_site --all-domains
 
       # Belt and braces on the one property that cannot be recovered once it
       # is wrong: the plaintext tracking payload must not be in the directory
@@ -115,8 +115,14 @@ jobs:
           if git ls-files | grep -q 'track\.json$'; then
             echo "track.json is tracked in git"; exit 1
           fi
-          test -f site/semi/track/track.enc.json
-          echo "sealed payload present, plaintext absent"
+          n=0
+          for d in site/*/; do
+            test -f "$d/track/track.enc.json" || {
+              echo "no sealed payload in $d"; exit 1; }
+            n=$((n+1))
+          done
+          test "$n" -gt 0 || { echo "no domain was published"; exit 1; }
+          echo "sealed payload present in $n domain(s), plaintext absent"
 
       # The snapshots on a branch of their own, so anything can read the
       # current one at a stable raw URL without going through Pages.
@@ -134,17 +140,32 @@ jobs:
         run: |
           set -euo pipefail
           tmp="$(mktemp -d)"
-          cp out/semi/live.json out/semi/live_en.json "$tmp/"
-          cp out/semi/track.enc.json "$tmp/"
+          # The first domain's files stay at the ROOT of the branch, byte for
+          # byte where they have always been: the 07:00 task fetches them from
+          # a stable raw URL, and moving them would break a consumer that is
+          # not in this repository. Every domain, including that one, also
+          # lands under its own directory.
+          first="$(ls -d out/*/ | head -1)"; first="$(basename "$first")"
+          mkdir -p "$tmp/payload"
+          for d in out/*/; do
+            dom="$(basename "$d")"
+            test -f "$d/live.json" || continue
+            mkdir -p "$tmp/payload/$dom"
+            cp "$d/live.json" "$d/live_en.json" "$tmp/payload/$dom/"
+            cp "$d/track.enc.json" "$tmp/payload/$dom/"
+            if [ "$dom" = "$first" ]; then
+              cp "$d/live.json" "$d/live_en.json" "$d/track.enc.json" "$tmp/payload/"
+            fi
+          done
           git worktree add --detach "$tmp/wt"
           cd "$tmp/wt"
           git checkout --orphan live
           git rm -rq --cached . || true
           find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
-          cp "$tmp/live.json" "$tmp/live_en.json" "$tmp/track.enc.json" .
+          cp -r "$tmp/payload/." .
           # The sealed payload rides along so the 07:00 task can fetch it from
           # a stable raw URL. It is ciphertext; the branch is public.
-          git add live.json live_en.json track.enc.json
+          git add -A
           git commit -qm "live snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push -f origin live
           wc -c live.json live_en.json

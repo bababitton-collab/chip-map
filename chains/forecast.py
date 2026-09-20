@@ -91,6 +91,29 @@ CAPITAL_RULE = f"no capital decision below N={MIN_N_FOR_CAPITAL}"
 SOX_SYMBOL = "SOXQ.US"
 SOX_AS_OF = "2026-09-13"
 
+# The line above is the first domain's, and it is a DEFAULT rather than a
+# rule: a second industry is measured against its own market line, named in
+# its own map. The fallback reproduces the first domain's three strings
+# exactly -- key, symbol and label -- because the key and the symbol are
+# hashed into every contract already committed, and a benchmark block that
+# serialised one character differently would invalidate every one of them.
+DEFAULT_BENCHMARK = {"key": "sox", "symbol": SOX_SYMBOL, "label": "SOX"}
+
+
+def benchmark_for(dom: str | None = None) -> dict:
+    """One domain's second benchmark: the key it is filed under, the symbol
+    that is priced, and the label a page prints beside the numbers."""
+    from chains import mapfile
+    try:
+        declared = (mapfile.load(dom=dom).get("benchmark") or {})
+    except (FileNotFoundError, ValueError):
+        declared = {}
+    sym = declared.get("symbol")
+    if not sym:
+        return dict(DEFAULT_BENCHMARK)
+    return {"key": declared.get("key") or "bench", "symbol": sym,
+            "label": declared.get("label") or sym}
+
 
 # ----------------------------------------------------------------- calendar
 def sessions(symbols: list[str] | None = None,

@@ -59,6 +59,7 @@ from __future__ import annotations
 import re
 
 from chains.paths import out_dir, templates_dir
+from chains.questions import languages_for
 
 # ---------------------------------------------------------------- the config
 # Every path this module touches. Templates are read from the repo, output goes
@@ -377,6 +378,21 @@ EN_FWD_LINK_FROM = '<a class="fwd inline" href="track/">Forward test →</a>'
 EN_FWD_H2_FROM = '<h2>Forward test</h2>'
 EN_VALUE = ("The physical supply chain behind AI — who supplies whom, where the "
             "chokepoints are, and which dated questions come next.")
+
+
+def value_line(dom: str | None = None) -> str:
+    """The sentence under the brand, from the domain's own map when it names
+    one. The line above is the first domain's and stays its exact wording, so
+    a map that declares nothing reads today exactly as it read yesterday."""
+    from chains import mapfile
+    try:
+        brand = ((mapfile.load(dom=dom).get("labels") or {}).get("brand") or {})
+    except (FileNotFoundError, ValueError):
+        return EN_VALUE
+    v = brand.get("value")
+    if isinstance(v, dict):
+        v = v.get("en")
+    return (str(v).strip() if v else "") or EN_VALUE
 EN_TOP_CSS = (
     ".top .value{font-family:'Source Serif 4',serif;font-size:1.25rem;"
     "line-height:1.35;color:var(--ink);max-width:62ch;margin:6px 0 10px}"
@@ -395,7 +411,7 @@ def en_top(dom: str) -> str:
     return (sitenav.html(dom, "map") + "\n"
             '<div class="top">\n'
             '  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div>\n'
-            f'  <p class="value">{EN_VALUE}</p>\n'
+            f'  <p class="value">{value_line(dom)}</p>\n'
             '  <div class="valuecta"><a class="cta1" href="#stage">Explore the map</a>'
             f'<a class="cta2" href="/{dom}/track/">See the live record</a></div>\n'
             '  <div class="story" id="story"></div><div class="sub">Raw materials on '
@@ -547,7 +563,25 @@ def main() -> int:
         print(f"  WARNING {len(left)} Hebrew string(s) survived translation:")
         for s in left[:10]:
             print(f"    {s[:100]}")
-    for fn in (build_public_he, build_public_en):
+    # The Hebrew page is built only for a map that declares Hebrew. A domain
+    # whose labels say languages: ["en"] has no Hebrew reader to serve, and a
+    # page built for nobody is a page nothing keeps in step: its own template
+    # would drift, and chains/publish_site.py would copy it to /he.html with
+    # no link anywhere pointing at it. The map's own declaration decides,
+    # because that is where every other per-domain vocabulary choice already
+    # lives -- semi declares both and is untouched.
+    langs = languages_for()
+    builders = [build_public_he] if "he" in langs else []
+    builders.append(build_public_en)
+    if "he" not in langs:
+        print(f"  no Hebrew page: this map declares languages {list(langs)}")
+        # A map that used to be bilingual leaves one behind otherwise, and a
+        # stale Hebrew page in out/ is a page publish_site would still copy.
+        stale = out_dir() / PUBLIC_HE
+        if stale.exists():
+            stale.unlink()
+            print(f"  removed {stale}  (stale Hebrew page)")
+    for fn in builders:
         p, size = fn()
         print(f"wrote {p}  ({size:,} bytes, {size / 1024:.0f} KB)")
     # The artifact copy: same template, database reads intact.

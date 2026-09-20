@@ -1025,6 +1025,10 @@ def cards_js() -> str:
         encoding="utf-8")
 
 
+BENCH_PLACEHOLDER = "__BENCH_LABEL__"
+BENCH_JS_PLACEHOLDER = "__BENCH_JS__"
+
+
 def render(data: dict, template: str | None = None) -> str:
     """The page, with its data inlined.
 
@@ -1054,6 +1058,15 @@ def render(data: dict, template: str | None = None) -> str:
     if ANALYTICS_PLACEHOLDER in t:
         from chains import sitenav
         t = t.replace(ANALYTICS_PLACEHOLDER, sitenav.ANALYTICS)
+    # The second benchmark, named in this domain's own words. The first
+    # domain's label is the default, so its page reads exactly as it did.
+    if BENCH_PLACEHOLDER in t:
+        from chains import forecast
+        from chains.paths import domain
+        label = forecast.benchmark_for(domain())["label"]
+        t = t.replace(BENCH_PLACEHOLDER, label)
+        t = t.replace(BENCH_JS_PLACEHOLDER,
+                      f"window.BENCH_LABEL={json.dumps(label)};")
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "

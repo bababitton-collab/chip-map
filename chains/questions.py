@@ -66,6 +66,29 @@ FIELDS = tuple(f"{part}_{lang}" for lang in LANGS for part in PARTS)
 # Only the question itself has to be there. The rest are a v1 file's gaps.
 REQUIRED = tuple(f"q_{lang}" for lang in LANGS)
 
+
+def languages_for(dom: str | None = None) -> tuple[str, ...]:
+    """Which languages a domain writes its questions in.
+
+    Both, unless a map says otherwise. A domain that publishes in one language
+    should not be made to invent the other: the yes/no wording IS the scoring
+    rule, and translating it to satisfy a check would be writing product text
+    to get past a gate. A row with no text in a language simply carries none,
+    and the pages already have a sentence for that case.
+    """
+    from chains import mapfile
+    try:
+        declared = (mapfile.load(dom=dom).get("labels") or {}).get("languages")
+    except (FileNotFoundError, ValueError):
+        declared = None
+    langs = tuple(a for a in (declared or LANGS) if a in LANGS)
+    return langs or LANGS
+
+
+def required_for(dom: str | None = None) -> tuple[str, ...]:
+    """The question fields that must be present and non-empty."""
+    return tuple(f"q_{lang}" for lang in languages_for(dom))
+
 # What a row carries in each language once merged.
 LANG_FIELDS = {lang: {part: f"{part}_{lang}" for part in PARTS}
                for lang in LANGS}
@@ -79,7 +102,7 @@ def questions_url() -> str | None:
     return os.environ.get(QUESTIONS_URL_ENV, "").strip() or None
 
 
-def fetch(url: str | None = None) -> dict[str, dict]:
+def fetch(url: str | None = None, dom: str | None = None) -> dict[str, dict]:
     """The question text, or raise. Never returns a partial answer.
 
     A value with no scheme that names an existing file is read as one. That is
@@ -95,7 +118,7 @@ def fetch(url: str | None = None) -> dict[str, dict]:
             raise QuestionsError(f"{QUESTIONS_URL_ENV} is {url!r}, which is "
                                  f"neither a URL nor a file that exists")
         try:
-            return validate(json.loads(p.read_text(encoding="utf-8")))
+            return validate(json.loads(p.read_text(encoding="utf-8")), dom=dom)
         except json.JSONDecodeError as e:
             raise QuestionsError(f"{p} is not valid JSON ({e})") from None
     if not url:
@@ -132,7 +155,7 @@ def fetch(url: str | None = None) -> dict[str, dict]:
     except ValueError:
         raise QuestionsError(f"{QUESTIONS_URL_ENV} returned unparseable "
                              f"JSON") from None
-    return validate(payload)
+    return validate(payload, dom=dom)
 
 
 def normalise(rec: dict) -> dict:
@@ -153,7 +176,40 @@ def normalise(rec: dict) -> dict:
     return out
 
 
-def validate(payload: object, ids: set[str] | None = None) -> dict[str, dict]:
+def for_domain(payload: object, dom: str | None = None) -> object:
+    """One domain's half of a corpus that may hold more than one.
+
+    Two shapes are allowed, and which one a file uses is read from the file
+    rather than configured: flat, keyed by question id, as it has always been;
+    or keyed by domain, whose values are those. One corpus then serves every
+    map without a second address to keep in step, and a corpus that has never
+    been split keeps working untouched.
+    """
+    if not isinstance(payload, dict):
+        return payload
+    from chains.paths import domain as _current
+    name = dom or _current()
+    # A domain's own section is looked for BEFORE the flat list is unwrapped.
+    # Two maps can name a question after the same company -- the first domain
+    # already owns gev_q3 -- and a flat corpus cannot hold both, so the domain
+    # section is what keeps their ids out of each other's way.
+    section = payload.get("domains")
+    if isinstance(section, dict) and isinstance(section.get(name), dict):
+        return section[name]
+    if isinstance(payload.get(name), dict) and all(
+            isinstance(v, dict) for v in payload[name].values()):
+        return payload[name]
+    if isinstance(payload.get("questions"), dict):
+        payload = payload["questions"]
+    inner = payload.get(name)
+    if isinstance(inner, dict) and all(isinstance(v, dict)
+                                       for v in inner.values()):
+        return inner
+    return payload
+
+
+def validate(payload: object, ids: set[str] | None = None,
+             dom: str | None = None) -> dict[str, dict]:
     """Every watch id present, every question a non-empty string. Or raise.
 
     Strict, unlike the answers file, and for the opposite reason: an answer
@@ -164,13 +220,16 @@ def validate(payload: object, ids: set[str] | None = None) -> dict[str, dict]:
     ``yes``, ``no`` and ``why`` may be empty -- a v1 file has no way to supply
     them -- and the card simply omits the part it has nothing for.
     """
-    if isinstance(payload, dict) and "questions" in payload:
-        payload = payload["questions"]
     if not isinstance(payload, dict):
         raise QuestionsError(
             f"expected an object keyed by question id, got "
             f"{type(payload).__name__}")
-    ids = known_ids() if ids is None else ids
+    payload = for_domain(payload, dom)
+    if not isinstance(payload, dict):
+        raise QuestionsError(
+            f"expected an object keyed by question id, got "
+            f"{type(payload).__name__}")
+    ids = known_ids(dom) if ids is None else ids
     missing = sorted(ids - set(payload))
     if missing:
         raise QuestionsError(f"no text for {len(missing)} question(s): "
@@ -185,16 +244,16 @@ def validate(payload: object, ids: set[str] | None = None) -> dict[str, dict]:
             if v is not None and not isinstance(v, str):
                 raise QuestionsError(f"{qid}: {f} must be a string")
         norm = normalise(rec)
-        for f in REQUIRED:
+        for f in required_for(dom):
             if not norm[f]:
                 raise QuestionsError(f"{qid}: {f} is missing or empty")
         out[qid] = norm
     return out
 
 
-def known_ids() -> set[str]:
+def known_ids(dom: str | None = None) -> set[str]:
     return {r["id"] for r in
-            json.loads(watch_path().read_text(encoding="utf-8"))}
+            json.loads(watch_path(dom).read_text(encoding="utf-8"))}
 
 
 # ------------------------------------------------------------------ the rule

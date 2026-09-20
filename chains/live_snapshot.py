@@ -134,6 +134,11 @@ def labels_for(m: dict, lang: str) -> dict:
                   for k, v in (lb.get("lines") or {}).items()},
         "lanes": {k: v.get(lang, k) for k, v in (lb.get("lanes") or {}).items()},
         "stages": {k: v.get(lang, k) for k, v in (lb.get("stages") or {}).items()},
+        # Drawing instructions the map may declare for itself: the order its
+        # lines are seated in, and the radius for a station whose size is not
+        # known. Emitted ONLY when declared -- a map that says nothing ships
+        # no key, so a snapshot already published does not grow a field.
+        **{k: lb[k] for k in ("line_order", "size_unknown_r") if k in lb},
     }
 
 

@@ -47,7 +47,9 @@ CREDIT = ("Charts drawn with TradingView Lightweight Charts™ "
 
 TITLE = "{who} · track record · Linchpin Signal"
 DESC = ("What the pre-registered basket did after {who} reported on {date}, "
-        "measured against the equal-weight map and SOX.")
+        "measured against the equal-weight map and {bench_label}.")
+
+
 NOT_ADVICE = "Research and analysis only. Not investment advice."
 METHOD = (
     "Every price is EODHD end-of-day. The window runs from the session the "
@@ -59,16 +61,41 @@ METHOD = (
     "ring is measured over the same window and reported separately -- it is "
     "never averaged into the basket, so its legs carry a move and no "
     "contribution. EW_MAP is the equal-weight return of every priced station "
-    "on the map, rebalanced daily; SOX is SOXQ.US. A leg priced through an "
-    "ADR or OTC line is marked, and the number is the line that actually "
-    "traded. Company lines are drawn from adjusted closes, the same source "
-    "the basket and the benchmarks are measured from.")
+    "on the map, rebalanced daily; {bench_label} is {bench_symbol}. A leg "
+    "priced through an ADR or OTC line is marked, and the number is the line "
+    "that actually traded. Company lines are drawn from adjusted closes, the "
+    "same source the basket and the benchmarks are measured from.")
+
+
+def method_text(dom: str | None = None) -> str:
+    """The methodology paragraph with this domain's benchmark named in it.
+
+    The comparison line is part of the method, so it cannot be a fixed word:
+    telling a reader of one industry's page that the second benchmark is
+    another industry's index would describe a measurement nobody made.
+    """
+    from chains import forecast
+    b = forecast.benchmark_for(dom)
+    return METHOD.format(bench_label=b["label"], bench_symbol=b["symbol"])
 
 # One axis, one convention: green is the basket and what rose, red is what
 # fell, amber is SOX, grey is the benchmark map.
 HERO_LINES = (("win", "Basket", "#3fd18b"),
               ("ew", "EW_MAP", "#7d8797"),
               ("sox", "SOX", "#f2b632"))
+
+
+def hero_lines(dom: str | None = None) -> tuple:
+    """The three lines and what to call them.
+
+    The key stays "sox" wherever the number is stored -- that is the series
+    name inside the record, and renaming it would move data nobody asked to
+    move. What changes per domain is the LABEL, because a reader of an energy
+    page must not be told the comparison line is a semiconductor index.
+    """
+    from chains import forecast
+    label = forecast.benchmark_for(dom)["label"]
+    return (HERO_LINES[0], HERO_LINES[1], ("sox", label, "#f2b632"))
 COMPANY_COLOURS = ("#3fd18b", "#f2b632", "#5aa9ff", "#c084fc", "#2dd4bf",
                    "#fb923c", "#94a3b8", "#f472b6")
 UP, DOWN = "#3fd18b", "#ff5a3c"
@@ -123,17 +150,19 @@ def _question(card: dict) -> str:
 
 
 # -- the charts --------------------------------------------------------------
-def _hero(rec: dict) -> str:
+def _hero(rec: dict, dom: str | None = None) -> str:
     """The basket against both benchmarks, all three rebased to 100."""
     b = rec.get("benchmarks") or {}
     s = b.get("series") or {}
+    lines = hero_lines(dom)
     if len(s.get("dates") or []) < 2:
         return ('<p class="note">One session in this window, so there is no '
                 'line to draw yet. It appears with the next close.</p>')
-    return (f'<div class="chartbox hero"><h3>Basket · EW_MAP · SOX'
+    return (f'<div class="chartbox hero">'
+            f'<h3>Basket · EW_MAP · {esc(lines[2][1])}'
             f'<em>rebased to 100 · {esc(b.get("from"))} → '
             f'{esc(b.get("to"))}</em></h3>'
-            f'{_legend([(lab, col) for key, lab, col in HERO_LINES if s.get(key)])}'
+            f'{_legend([(lab, col) for key, lab, col in lines if s.get(key)])}'
             f'<div class="lw" id="lw-hero"></div>'
             f'<p>Each line starts at 100 on the session the contract was '
             f'signed on. Hover or touch a session to read all three.</p></div>')
@@ -288,9 +317,10 @@ def _meta(card: dict, rec: dict) -> str:
         '</div>')
 
 
-def _payload(rec: dict) -> str:
+def _payload(rec: dict, dom: str | None = None) -> str:
     """Only what the two line charts draw, and nothing that is already text."""
     b = (rec.get("benchmarks") or {}).get("series") or {}
+    HERO = hero_lines(dom)
     data = {
         "dates": b.get("dates") or [],
         # Rebased here rather than in the browser: one convention, applied
@@ -298,7 +328,7 @@ def _payload(rec: dict) -> str:
         "hero": [{"label": label, "color": col,
                   "values": [None if v is None else round(100.0 + v, 4)
                              for v in b.get(key) or []]}
-                 for key, label, col in HERO_LINES if b.get(key)],
+                 for key, label, col in HERO if b.get(key)],
         "companies": [{"label": c.get("tk"),
                        "color": COMPANY_COLOURS[i % len(COMPANY_COLOURS)],
                        "values": c.get("values") or []}
@@ -442,7 +472,8 @@ def main_html(card: dict, dom: str) -> str:
     tiles = "".join([
         _tile(pct(b.get("win")), "basket, since signed", cls(b.get("win"))),
         _tile(pct(b.get("ew")), "EW_MAP, same window", cls(b.get("ew"))),
-        _tile(pct(b.get("sox")), "SOX, same window", cls(b.get("sox"))),
+        _tile(pct(b.get("sox")), f"{hero_lines(dom)[2][1]}, same window",
+              cls(b.get("sox"))),
         _tile(pct(b.get("win_ew")), "excess over EW_MAP", cls(b.get("win_ew"))),
         _tile(str(b.get("sessions") if b.get("sessions") is not None else "—"),
               "sessions measured"),
@@ -464,7 +495,7 @@ def main_html(card: dict, dom: str) -> str:
         f'<div class="tiles">{tiles}</div>'
         f'{missing_note}'
         '<h2>Cumulative performance</h2>'
-        f'{_hero(rec)}'
+        f'{_hero(rec, dom)}'
         '<h2>What moved the number</h2>'
         f'{_contrib(rec)}'
         '<h2>Every company in the basket</h2>'
@@ -472,11 +503,11 @@ def main_html(card: dict, dom: str) -> str:
         '<h2>Every leg</h2>'
         f'{_legs_table(rec)}'
         '<h2>How this was measured</h2>'
-        f'<p class="note">{esc(METHOD)}</p>'
+        f'<p class="note">{esc(method_text(dom))}</p>'
         f'{_meta(card, rec)}'
         f'<div class="foot">{esc(NOT_ADVICE)}<br>'
         f'<a class="credit" href="../{VENDOR[1]}">{esc(CREDIT)}</a></div>'
-        f'{_payload(rec)}'
+        f'{_payload(rec, dom)}'
         f'<script src="../{VENDOR[0]}"></script>'
         f'<script>{CHART_JS}</script>')
 
@@ -495,7 +526,9 @@ def render(card: dict, dom: str, template: str | None = None) -> str:
     who = card.get("who") or card.get("qid") or ""
     for token, fill in (
             ("__TITLE__", esc(TITLE.format(who=who))),
-            ("__DESC__", esc(DESC.format(who=who, date=card.get("d") or ""))),
+            ("__DESC__", esc(DESC.format(
+                who=who, date=card.get("d") or "",
+                bench_label=hero_lines(dom)[2][1]))),
             ("__ANALYTICS__", sitenav.ANALYTICS),
             ("__SITE_NAV_CSS__", sitenav.CSS),
             ("__SITE_NAV__", sitenav.html(dom, "track")),

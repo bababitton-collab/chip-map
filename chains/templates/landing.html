@@ -91,7 +91,7 @@ footer a{color:var(--ink2)}
   <p>{{brand}} maps the physical AI supply chain in {{n_layers}} layers: {{layers}}. It covers {{companies}} listed companies and who supplies whom among them — the AI infrastructure behind the models, from raw materials to data centers and the power that runs them.</p>
 
   <h3>Semiconductor chokepoints</h3>
-  <p>{{chokepoints}} chokepoints are marked on the map: highly concentrated dependencies with few viable alternatives, such as EUV lithography, HBM memory and advanced packaging. Where a listed challenger exists, a pulse compares the holder's 13-week return with the challengers'.</p>
+  <p>{{chokepoints}} chokepoints are marked on the map: highly concentrated dependencies with few viable alternatives, such as {{chokepoint_examples}}. Where a listed challenger exists, a pulse compares the holder's 13-week return with the challengers'.</p>
 
   <h3>Dated questions</h3>
   <p>The map is paired with {{questions}} dated questions across the chain — questions tied to upcoming reports, policy decisions and industry events. Each comes with pre-written yes/no criteria, and each scored question names an impact basket: the companies its answer bears on.<!--IF:observe--> Observation-only questions ({{observe_only}} today) carry no basket and are not scored.<!--END:observe--></p>
@@ -110,7 +110,7 @@ footer a{color:var(--ink2)}
   <h2>Questions</h2>
 
   <h3>What is Linchpin Signal?</h3>
-  <p>{{brand}} is a map of the physical supply chain behind AI — {{companies}} companies in {{n_layers}} layers, with {{chokepoints}} semiconductor chokepoints marked — paired with {{questions}} dated questions whose answers are measured forward against the market and published once they resolve.</p>
+  <p>{{brand}} is a map of the physical supply chain behind AI — {{companies}} companies in {{n_layers}} layers, with {{chokepoints}} {{chokepoint_kind}} chokepoints marked — paired with {{questions}} dated questions whose answers are measured forward against the market and published once they resolve.</p>
 <!--IF:prereg-->
   <h3>How are forecasts registered?</h3>
   <p>Each question's scoring contract is serialised canonically and hashed with SHA-256, and the hash is published with its commit date in <a href="{{commitments_href}}">commitments.json</a>. The build stops if a committed contract no longer matches its hash. When a question resolves, the exact contract text is published with its card, and the Verify button recomputes the SHA-256 in your browser with the Web Crypto API and compares it with the published hash. A commitment made on or after the answer date is marked as not a valid preregistration.</p>

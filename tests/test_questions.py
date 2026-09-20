@@ -34,6 +34,48 @@ TEXT = {r["id"]: {"q_he": f"HE q {r['id']}", "yes_he": f"HE yes {r['id']}",
         for r in ROWS}
 
 
+# -- which languages a domain has to write its questions in ------------------
+
+def _declaring(monkeypatch, languages):
+    """A map that declares a language list, or one that declares none."""
+    labels = {"layers": {"A": {}}, "lines": {}, "lanes": {}, "stages": {}}
+    if languages is not None:
+        labels["languages"] = languages
+    monkeypatch.setattr("chains.mapfile.load",
+                        lambda path=None, dom=None: {"labels": labels})
+
+
+def test_a_map_that_declares_nothing_still_needs_both_languages(monkeypatch):
+    """The first domain declares no list, and nothing about it may change:
+    a question with no Hebrew there is a Hebrew page with a blank line."""
+    _declaring(monkeypatch, None)
+    assert questions.required_for() == ("q_he", "q_en")
+    assert questions.languages_for() == questions.LANGS
+
+
+def test_a_domain_may_declare_one_language_and_is_held_to_that_one(monkeypatch):
+    """The yes/no wording IS the scoring rule. A domain that publishes in one
+    language must not be made to invent the other to get past this check."""
+    _declaring(monkeypatch, ["en"])
+    assert questions.required_for() == ("q_en",)
+    ok = {"only": {"q_en": "Q", "yes_en": "Y", "no_en": "N", "why_en": "W"}}
+    got = questions.validate(ok, ids={"only"})
+    assert got["only"]["q_en"] == "Q"
+    assert got["only"]["q_he"] == "", "the absent language stays absent"
+
+
+def test_an_empty_question_is_still_refused_in_a_declared_language(monkeypatch):
+    _declaring(monkeypatch, ["en"])
+    with pytest.raises(questions.QuestionsError):
+        questions.validate({"only": {"q_en": "  "}}, ids={"only"})
+
+
+def test_a_nonsense_declaration_falls_back_to_both(monkeypatch):
+    """A typo in the map must not silently switch a check off."""
+    _declaring(monkeypatch, ["klingon"])
+    assert questions.required_for() == ("q_he", "q_en")
+
+
 # -- the text is out of the repository --------------------------------------
 
 @pytest.mark.parametrize("rows,name", [(WATCH, "watch.json"),

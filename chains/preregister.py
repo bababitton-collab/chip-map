@@ -75,6 +75,26 @@ BENCHMARKS = {"ew": "EW_MAP: equal-weight of the map's priced nodes",
               "sox": forecast.SOX_SYMBOL}
 SIGN_CONVENTION = "yes -> win basket up / lose basket down; no -> inverted"
 
+
+def benchmarks_for(dom: str | None = None) -> dict:
+    """The benchmark block that goes inside a contract, for one domain.
+
+    For the first domain this returns BENCHMARKS above, key for key and byte
+    for byte. That is not a nicety: this block is hashed into every commitment
+    already published, so a domain layer that changed it would invalidate the
+    whole preregistration record. A domain that names its own market line in
+    its map gets that line, under its own key.
+    """
+    b = forecast.benchmark_for(dom)
+    # The default path returns the constant itself, not a copy rebuilt from
+    # its parts. BENCHMARKS is a frozen term of the contract and there is a
+    # test that proves it by changing it and watching the hash move; routing
+    # the default around it would leave that proof passing over a value it no
+    # longer controls.
+    if b == forecast.DEFAULT_BENCHMARK:
+        return dict(BENCHMARKS)
+    return {"ew": BENCHMARKS["ew"], b["key"]: b["symbol"]}
+
 CONTRACT_FIELDS = ("qid", "win", "lose", "kind", "yes_criteria",
                    "no_criteria", "horizons", "primary_horizon", "benchmarks",
                    "sign_convention", "observe_only")
@@ -131,7 +151,7 @@ def contract(row: dict, text: dict | None = None) -> dict:
         "no_criteria": _wording(row, text, "no"),
         "horizons": list(CONTRACT_HORIZONS),
         "primary_horizon": PRIMARY_HORIZON,
-        "benchmarks": dict(BENCHMARKS),
+        "benchmarks": benchmarks_for(),
         "sign_convention": SIGN_CONVENTION,
         "observe_only": bool(row.get("observe_only")),
     }

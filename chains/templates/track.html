@@ -190,13 +190,13 @@ __SITE_NAV_CSS__
 __SITE_NAV__
 <div class="eyebrow" style="margin-top:22px">05 · Forward test</div>
 <h2>What we said would move — and what moved</h2>
-<p class="lede">Every question is pre-registered before its answer date: its baskets, the yes/no rule it will be classified by, the horizons and the benchmarks are hashed, and the hash is published. Once a question is answered its whole card is public here — what was claimed, what was reported, how the baskets moved against the equal-weight map and SOX — and anyone can recompute the hash to check that nothing changed. The official score is the excess over the equal-weight map at 20 sessions. Nothing is added after the fact.</p>
+<p class="lede">Every question is pre-registered before its answer date: its baskets, the yes/no rule it will be classified by, the horizons and the benchmarks are hashed, and the hash is published. Once a question is answered its whole card is public here — what was claimed, what was reported, how the baskets moved against the equal-weight map and __BENCH_LABEL__ — and anyone can recompute the hash to check that nothing changed. The official score is the excess over the equal-weight map at 20 sessions. Nothing is added after the fact.</p>
 
 <h3 id="sbh">Resolved · free, in full, verifiable</h3>
 <div id="resolved"></div>
 
 <h3 id="rth">Track record · every question that has closed</h3>
-<p class="lede">One row per closed question, from the day its contract was signed to the last close: what the signed basket did, the same window for the equal-weight map and for SOX, and the excess over the map. Every number is EODHD end-of-day data. Sort by any column. Research and analysis only. Not investment advice.</p>
+<p class="lede">One row per closed question, from the day its contract was signed to the last close: what the signed basket did, the same window for the equal-weight map and for __BENCH_LABEL__, and the excess over the map. Every number is EODHD end-of-day data. Sort by any column. Research and analysis only. Not investment advice.</p>
 <div id="record-table"></div>
 
 <h3>Upcoming · pre-registered, not yet answered</h3>
@@ -223,6 +223,10 @@ __SUBSCRIBE__
 const PUBLIC = __TRACK__;
 </script>
 <script>
+/* This domain's benchmark label, set before the card renderer is parsed:
+   the master table builds its column headings at parse time, so a value
+   arriving later would be read after it was needed. */
+__BENCH_JS__
 __GLOSSARY_JS__
 </script>
 <script>
@@ -373,7 +377,7 @@ __CARDS_JS__
     + ' Report-day close is the close on the day the question is answered, or the last'
     + ' one before it. Direct and second-ring results are reported separately — never'
     + ' averaged together. The official score is the excess over the equal-weight map'
-    + ' at 20 sessions; 5, 10 and 40 sessions and SOX are diagnostics, and the official'
+    + ' at 20 sessions; 5, 10 and 40 sessions and __BENCH_LABEL__ are diagnostics, and the official'
     + ' N counts questions, not horizons. Not a recommendation and not investment advice.';
 })();
 </script>

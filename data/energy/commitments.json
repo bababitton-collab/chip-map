@@ -283,6 +283,35 @@
   }
  },
  {
+  "qid": "reactor_smr",
+  "answer_date": "2026-11-30",
+  "committed_at": "2026-09-20",
+  "sha256": "b2ca15bab25133aa5e4f8974ac3204d87e2aea92c8cd7cb37497660ba0e327b9",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-20",
+   "min_adv_usd": 250000,
+   "legs": {
+    "oklo": {
+     "symbol": "OKLO.US",
+     "adv_usd": 433529300,
+     "last_close": "2026-09-18"
+    },
+    "nuscale": {
+     "symbol": "SMR.US",
+     "adv_usd": 303033681,
+     "last_close": "2026-09-18"
+    },
+    "nano_nuclear": {
+     "symbol": "NNE.US",
+     "adv_usd": 38940517,
+     "last_close": "2026-09-18"
+    }
+   }
+  }
+ },
+ {
   "qid": "powl_q4",
   "answer_date": "2026-12-15",
   "committed_at": "2026-09-17",

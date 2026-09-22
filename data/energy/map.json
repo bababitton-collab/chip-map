@@ -792,7 +792,7 @@
       "customer_concentration": "",
       "notes": "",
       "segment_share": "",
-      "price_symbol_kind": "none",
+      "price_symbol_kind": "primary",
       "id": "doosan",
       "name": "Doosan Enerbility",
       "short": "DOOSAN",
@@ -800,8 +800,8 @@
       "layer": "E3",
       "line": "reactor",
       "role": "Ultra-large reactor pressure-vessel forgings",
-      "price_symbol": null,
-      "price_note": "No usable daily line: neither the Seoul listing nor an over-the-counter line is carried by the price vendor."
+      "price_symbol": "034020.KO",
+      "price_note": "Seoul listing under the vendor's own code: KRX is .KO here, not .KS."
     },
     {
       "exchange": "LSE",

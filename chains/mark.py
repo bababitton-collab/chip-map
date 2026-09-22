@@ -113,6 +113,23 @@ evidence at most 200 characters. note at most 300 characters and it must start
 with "auto: "."""
 
 
+class AskFailed(RuntimeError):
+    """The model call did not return an answer, and why.
+
+    Carries the HTTP status when there was one. The old handler printed the
+    exception CLASS and nothing else -- "HTTPStatusError" for a week, which
+    is every 4xx and every 5xx at once and tells nobody which. The status is
+    the one fact that separates "the key is wrong" from "this account cannot
+    use the search tool" from "slow down".
+    """
+
+    def __init__(self, why: str, status: int | None = None,
+                 detail: str = ""):
+        self.status = status
+        self.detail = detail
+        super().__init__(why)
+
+
 class MarkError(RuntimeError):
     """Something the run cannot proceed without."""
 
@@ -195,6 +212,12 @@ def expired(rows: list[dict], marks: dict, today: dt.date,
 
 
 # ---------------------------------------------------------------- evidence
+# Why the last news lookup returned what it did. Status and error CLASS
+# only: this endpoint takes its token as a query parameter, so neither the
+# URL nor the response body may be logged.
+LAST_NEWS: dict = {"status": None, "error": None, "n": 0}
+
+
 def headlines(ticker: str, day: dt.date, token: str | None) -> list[str]:
     """A few EODHD headlines around the date, if the plan serves them.
 
@@ -202,7 +225,9 @@ def headlines(ticker: str, day: dt.date, token: str | None) -> list[str]:
     that depends on it would fail for a reason that has nothing to do with
     what the company said.
     """
+    LAST_NEWS.update(status=None, error=None, n=0)
     if not token or not ticker:
+        LAST_NEWS["error"] = "no token" if not token else "no ticker"
         return []
     try:
         import httpx
@@ -213,6 +238,11 @@ def headlines(ticker: str, day: dt.date, token: str | None) -> list[str]:
                               "limit": 10, "api_token": token, "fmt": "json"},
                       timeout=20)
         if r.status_code != 200:
+            # The status, never the request: the token is a query parameter
+            # on this endpoint, so the URL itself is a secret and must not be
+            # logged. "0 headlines" told us nothing for a week.
+            LAST_NEWS.update(status=r.status_code,
+                             error=f"HTTP {r.status_code}")
             return []
         out = []
         for item in r.json()[:10]:
@@ -220,9 +250,11 @@ def headlines(ticker: str, day: dt.date, token: str | None) -> list[str]:
             d = str(item.get("date") or "")[:10]
             if t:
                 out.append(f"{d} {t}"[:180])
+        LAST_NEWS.update(status=200, error=None, n=len(out))
         return out
-    except Exception:
-        return []                          # quietly: this is a nice-to-have
+    except Exception as e:
+        LAST_NEWS.update(status=None, error=type(e).__name__)
+        return []                          # optional, but no longer silent
 
 
 # ------------------------------------------------------------------- model
@@ -245,8 +277,12 @@ def pick_model(key: str) -> str:
     return str(sonnets[0]["id"])
 
 
-def ask(row: dict, q: dict, news: list[str], key: str, model: str) -> str:
-    """One call, with the web search tool. Returns the model's raw text."""
+def ask(row: dict, q: dict, news: list[str], key: str, model: str,
+        tools: bool = True) -> str:
+    """One call, with the web search tool. Returns the model's raw text.
+
+    ``tools`` False drops the search tool: see the fallback below.
+    """
     import httpx
     lines = [
         f"id: {row['id']}",
@@ -268,10 +304,21 @@ def ask(row: dict, q: dict, news: list[str], key: str, model: str) -> str:
                    "max_uses": MAX_SEARCHES}],
         "messages": [{"role": "user", "content": "\n".join(lines)}],
     }
+    if not tools:
+        # The documented fallback. The search tool is a server tool the
+        # account has to be entitled to; without it the model still answers
+        # from the headlines it was handed, and a mark with a headline behind
+        # it is worth more than no mark at all. Recorded in the note either
+        # way, so a card never claims a search that did not happen.
+        body.pop("tools", None)
     r = httpx.post(f"{API}/messages", json=body, timeout=180,
                    headers={"x-api-key": key, "anthropic-version": VERSION,
                             "content-type": "application/json"})
-    r.raise_for_status()
+    if r.status_code != 200:
+        # The body, trimmed, never the headers: the key is in the headers.
+        raise AskFailed(f"the model call returned HTTP {r.status_code}",
+                        status=r.status_code,
+                        detail=str(r.text or "")[:300])
     content = r.json().get("content", [])
     LAST_CALL["searches"] = sum(1 for b in content
                                 if b.get("type") == "server_tool_use")
@@ -320,6 +367,32 @@ def parse(text: str, day: str) -> dict | None:
         if not ev or not DATE_RE.search(ev):
             return None
     return {"status": status, "basis": basis, "evidence": ev, "note": note}
+
+
+def no_source(failed: "AskFailed") -> str:
+    """Why nothing was read, for the note on the card.
+
+    Never "model output invalid": the model returned no output at all. A
+    card that blames the model for a network it never reached sends the next
+    reader looking in the wrong place.
+    """
+    if failed.status:
+        return f"no source found (model call HTTP {failed.status})"
+    return f"no source found ({failed})"
+
+
+def sourced(mark: dict | None) -> bool:
+    """Does this mark point at anything?
+
+    Evidence, or a basis that names one. An auto mark with neither is the
+    engine saying "I could not look"; it is not a finding, and it must never
+    stand in front of one.
+    """
+    if not isinstance(mark, dict):
+        return False
+    if str(mark.get("evidence") or "").strip():
+        return True
+    return str(mark.get("basis") or "").strip() not in ("", "unclear")
 
 
 def unresolved(day: str, why: str) -> dict:
@@ -435,17 +508,37 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
         q = text.get(row["id"]) or {}
         news = headlines(str(row.get("tk") or ""),
                          dt.date.fromisoformat(row["d"]), eod)
-        trail.append(f"  {row['id']}: {len(news)} EODHD headline(s)")
+        why_news = LAST_NEWS.get("error")
+        trail.append(f"  {row['id']}: {len(news)} EODHD headline(s)"
+                     + (f" ({why_news})" if why_news else ""))
         rec = None
-        for attempt in (1, 2):
+        failed: AskFailed | None = None
+        # Attempt 1 and 2 use the search tool. Attempt 3 drops it: if the
+        # account cannot use a server tool, every call with one attached
+        # fails identically, and retrying the same shape twice more only
+        # spends time to reach the same nothing.
+        for attempt, tools in ((1, True), (2, True), (3, False)):
+            if attempt == 3 and failed is None:
+                break                      # the tool worked; nothing to fall
             LAST_CALL.update(searches=0, sources=[])
             try:
-                rec = parse(ask(row, q, news, key, model), row["d"])
-            except Exception as e:
-                say(f"  {row['id']}: קריאה נכשלה ({type(e).__name__})")
+                rec = parse(ask(row, q, news, key, model, tools=tools),
+                            row["d"])
+                failed = None
+            except AskFailed as e:
+                failed = e
+                say(f"  {row['id']}: model call failed — HTTP {e.status}")
+                if e.detail:
+                    say(f"    {e.detail[:200]}")
+                rec = None
+            except Exception as e:                 # network, timeout, JSON
+                failed = AskFailed(type(e).__name__)
+                say(f"  {row['id']}: model call failed — {type(e).__name__}")
                 rec = None
             srcs = LAST_CALL["sources"]
-            trail.append(f"  {row['id']}: call {attempt}: "
+
+            trail.append(f"  {row['id']}: call {attempt}"
+                         f"{'' if tools else ' (no search tool)'}: "
                          f"{LAST_CALL['searches']} web search(es), "
                          f"{len(srcs)} source(s) read, "
                          f"{'valid' if rec else 'no valid'} decision")
@@ -453,12 +546,34 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
             if rec:
                 break
         if not rec:
-            rec = unresolved(day, "model output invalid")
+            # Two different failures, and they must not read alike. The call
+            # that never returned is not the model answering badly: a mark
+            # saying "model output invalid" when nothing was ever reached
+            # blames the model for the network, and the next reader looks in
+            # the wrong place. "Invalid" is reserved for a reply that came
+            # back and could not be used.
+            rec = unresolved(day, no_source(failed) if failed is not None
+                             else "model output invalid")
         trail.append(f"  {row['id']}: decision "
                      f"{json.dumps(rec, ensure_ascii=False)}")
 
         rec["auto"] = True
         rec["updated"] = when
+        old = marks["answers"].get(row["id"])
+        if sourced(old) and not sourced(rec):
+            # THE RULE: an unsourced automatic mark never replaces a mark
+            # that points at something. The job runs twice a day against the
+            # same file, and a bad afternoon -- a dead endpoint, a rate
+            # limit, an entitlement that lapsed -- would otherwise quietly
+            # erase the morning's finding and leave a card reading "open,
+            # no source found" over evidence somebody had already checked.
+            # Losing a day's attempt is cheap; losing the evidence is not.
+            say(f"  {row['id']}: kept the existing mark — "
+                f"{old.get('status')} with a source; this run found none")
+            trail.append(f"  {row['id']}: not overwritten "
+                         f"(existing mark is sourced, this one is not)")
+            marked.append((row, old))
+            continue
         marks["answers"][row["id"]] = rec
         changed = True
         marked.append((row, rec))

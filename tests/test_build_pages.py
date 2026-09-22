@@ -185,8 +185,27 @@ def test_the_hebrew_template_has_the_ledger_section():
 def test_the_english_template_has_the_ledger_in_english():
     t = EN_TEMPLATE.read_text(encoding="utf-8")
     assert "The Forecast Ledger" in t
-    assert "N=30 before any capital decision" in t
+    assert "N=__MIN_N__ before any capital decision" in t
     assert bp.hebrew_runs(t) == []
+
+
+def test_the_capital_gate_number_is_not_typed_into_either_template():
+    """The sentence lives in the templates, in each language; the number does
+    not. It was the same figure written in three files and provable in none:
+    a threshold raised in the scoring code would have left both pages
+    promising the old one, and the page is where a reader is told the rule."""
+    from chains.forecast import MIN_N_FOR_CAPITAL
+    for tpl in (HE_TEMPLATE, EN_TEMPLATE):
+        t = tpl.read_text(encoding="utf-8")
+        assert bp.MIN_N_PLACEHOLDER in t, tpl.name
+        assert f"N={MIN_N_FOR_CAPITAL}" not in t, tpl.name
+
+
+def test_the_built_page_carries_the_number_from_the_scoring_code():
+    from chains.forecast import MIN_N_FOR_CAPITAL
+    filled = bp._fill_min_n(f"gate:'N={bp.MIN_N_PLACEHOLDER} before'")
+    assert filled == f"gate:'N={MIN_N_FOR_CAPITAL} before'"
+    assert bp.MIN_N_PLACEHOLDER not in filled
 
 
 def test_the_ledger_never_prints_the_question_text():

@@ -1835,7 +1835,7 @@ function lockedHTML(){
   const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};
   const LT = {h2:'יומן התחזיות', none:'עוד לא סומנה אף תשובה. הרישום הראשון ייפתח כאן ברגע שתסומן.',
     scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',
-    entry:'כניסה', close:'אחרון', gate:'N=30 לפני כל החלטת הון', of:'מתוך',
+    entry:'כניסה', close:'אחרון', gate:'N=__MIN_N__ לפני כל החלטת הון', of:'מתוך',
     sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',
     pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',
     marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',
@@ -1845,13 +1845,41 @@ function lockedHTML(){
   const sgn = v => v==null? '' : (v>0?'pos':(v<0?'neg':''));
   if(!rows.length){
     tiles.innerHTML = `<p class="lede">${LT.none}</p>`;
-    if(S) tiles.innerHTML += gate(S);
+    if(S){ tiles.innerHTML += gate(S); poolGate(S); }
     cards.innerHTML=''; return;
   }
-  function gate(S){
-    const n = S.horizons['5'].n, pctv = Math.min(100, Math.round(100*n/S.min_n));
-    return `<div class="gate"><span>${LT.gate} — ${n} ${LT.of} ${S.min_n}</span>
+  // The meter counts the OFFICIAL record: events at the primary horizon,
+  // across every map the site serves. It used to count S.horizons['5'] --
+  // the five-session row of this one map's ledger, which is neither the
+  // horizon the rule is written about nor the population it is written
+  // about. That read high and early: a question counted toward the capital
+  // gate five sessions after its mark, fifteen before its official result
+  // existed, and the other map's questions never counted at all.
+  //
+  // The pooled figure is fetched, because a per-map static page cannot know
+  // what another map published. Until it arrives the primary horizon of THIS
+  // map is shown -- understated, never overstated, and never the 5.
+  function gate(S, pooled){
+    const local = (S.horizons[String(S.primary_horizon||20)]
+                   || S.horizons['20'] || S.horizons['5'] || {n:0}).n || 0;
+    const n = (pooled==null ? local : pooled);
+    const pctv = Math.min(100, Math.round(100*n/S.min_n));
+    return `<div class="gate" id="lgate"><span>${LT.gate} — ${n} ${LT.of} ${S.min_n}</span>
       <div class="bar"><i style="width:${pctv}%"></i></div></div>`;
+  }
+  // The site-wide record, written by chains/publish_site.py after every map
+  // is published. Absent on the private build and on a site serving one map;
+  // both simply keep the local figure.
+  function poolGate(S){
+    (async()=>{ try{
+      const r = await fetch('/record.json', {cache:'no-store'});
+      if(!r.ok) return;
+      const doc = await r.json();
+      const n = doc && doc.record ? doc.record.n : null;
+      if(n==null) return;
+      const el = document.getElementById('lgate');
+      if(el) el.outerHTML = gate(S, n);
+    }catch(e){} })();
   }
   // Two orders, two rows, one shape. Nothing here adds them together: a hit
   // rate over a mixed population of registered and derived baskets would
@@ -1866,10 +1894,12 @@ function lockedHTML(){
     </div>`;
   }
   const IND = S.indirect || null;
-  // The gate reads the direct row and only the direct row. N=30 was set for
+  // The gate reads the direct row and only the direct row. The threshold is
+  // forecast.MIN_N_FOR_CAPITAL, filled in above; it was set for
   // the claim somebody registered; the derived ring does not borrow its count.
   tiles.innerHTML = tileRow(S, LT.direct) + gate(S)
     + (IND ? tileRow(IND, LT.indirect) : '');
+  poolGate(S);
 
   const byQ = {}; (D.watch||LIVE.watch||[]).forEach(w=>byQ[w.id]=w);
   const nameOf = id => (byId[id]&&byId[id].short) || id.toUpperCase();

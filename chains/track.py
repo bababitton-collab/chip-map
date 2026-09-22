@@ -558,6 +558,58 @@ def _signed(r: dict, h: str, key: str = "spread") -> float | None:
     return -v if r.get("direction", 1) < 0 else v
 
 
+# The excess return is measured against the map's OWN equal-weight benchmark
+# -- every priced node on that map, and nothing from any other. Two maps
+# therefore report excess in two different units, and an average of the two
+# is a number with no referent: it would answer "excess over what?" with
+# "over a mixture of two markets nobody holds". The HIT is poolable, because
+# a hit is a yes/no outcome -- did the excess carry the predicted sign --
+# and that question means the same thing whatever benchmark defined it. So
+# the headline pools N and the hit rate, and the excess is reported per map,
+# in its own block, beside its own second benchmark.
+EXCESS_NOT_POOLED = ("excess is measured against each map's own equal-weight "
+                     "benchmark and is reported per map, never pooled")
+POOLED_EXCESS_KEYS = ("mean_excess", "median_excess", "mean_excess_interval")
+
+
+def pooled(by_domain: dict[str, dict]) -> dict:
+    """One record across every map the site serves.
+
+    ``by_domain`` maps a domain name to that map's published record payload.
+    Each card is tagged with the map it came from, and record_stats keys its
+    events on (domain, qid) -- so a question two maps happen to name alike is
+    two events, not one.
+
+    The pooled record carries N, the hits and the hit rate with its interval.
+    It does NOT carry an excess: see EXCESS_NOT_POOLED above.
+    """
+    cards, per = [], {}
+    for dom in sorted(by_domain):
+        payload = by_domain[dom] or {}
+        got = []
+        for r in payload.get("forecasts") or []:
+            r = dict(r, domain=dom)
+            got.append(r)
+        cards.extend(got)
+        per[dom] = {
+            "domain": dom,
+            "record": record_stats(got),
+            # This map's own second benchmark, named as its own. The block
+            # below prints this one and no other.
+            "benchmark": forecast.benchmark_for(dom),
+            "n_resolved": payload.get("n_resolved"),
+        }
+    record = record_stats(cards)
+    for k in POOLED_EXCESS_KEYS:
+        record.pop(k, None)
+    record["excess"] = EXCESS_NOT_POOLED
+    record["domains"] = sorted(by_domain)
+    return {"primary_horizon": PRIMARY_HORIZON,
+            "record": record,
+            "by_domain": per,
+            "domains": sorted(by_domain)}
+
+
 def record_stats(records: list[dict]) -> dict:
     """The official record, one row per scored QUESTION at the primary horizon.
 
@@ -567,17 +619,31 @@ def record_stats(records: list[dict]) -> dict:
     computed the same way and kept apart; none of them is the hit-rate basis.
     """
     ph = str(PRIMARY_HORIZON)
-    seen: set[str] = set()
+    # One event per question -- but a question is identified by its MAP and
+    # its id, not by its id alone. Two maps can name a question after the
+    # same company: semi and energy both own gev_q3 today, and they are
+    # different questions about different chains with different baskets.
+    # Keyed on the id alone, pooling the two records would silently drop one
+    # of them and report a smaller N than the site actually has. A record
+    # from a single map carries no domain, and (None, qid) is exactly the
+    # key it always had.
+    seen: set[tuple] = set()
     events = []
     for r in records:
         got = (r.get("horizons") or {}).get(ph)
-        if not got or got.get("spread") is None or r["qid"] in seen:
+        key = (r.get("domain"), r["qid"])
+        if not got or got.get("spread") is None or key in seen:
             continue
-        seen.add(r["qid"])
+        seen.add(key)
         events.append(r)
     n = len(events)
     out = {"primary_horizon": PRIMARY_HORIZON, "benchmark": "EW_MAP", "n": n,
-           "min_n_for_interval": MIN_N_FOR_INTERVAL}
+           "min_n_for_interval": MIN_N_FOR_INTERVAL,
+           # The capital gate travels WITH the record, from the one
+           # place it is defined, so no page has to know the number to
+           # print the rule beside the figure it qualifies.
+           "min_n_for_capital": forecast.MIN_N_FOR_CAPITAL,
+           "capital_rule": forecast.CAPITAL_RULE}
     if n == 0:
         out.update({"hits": 0, "hit_rate": None, "hit_rate_interval": None,
                     "mean_excess": None, "median_excess": None,
@@ -1226,7 +1292,7 @@ def main(argv: list[str] | None = None) -> int:
 
 __all__ = ["build", "record", "spread", "flip", "expected_dir", "summarise",
            "public", "public_leaks", "is_resolved", "official",
-           "record_stats", "wilson", "t_interval", "MIN_N_FOR_INTERVAL",
+           "record_stats", "pooled", "wilson", "t_interval", "MIN_N_FOR_INTERVAL",
            "build_files", "cards_js",
            "CARDS_PLACEHOLDER", "GLOSSARY_PLACEHOLDER", "glossary_js",
            "encrypt", "decrypt", "load_key", "TrackKeyError", "KEY_ENV",

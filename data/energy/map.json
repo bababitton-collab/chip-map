@@ -670,7 +670,9 @@
         "constellation",
         "vistra"
       ],
-      "key_suppliers": [],
+      "key_suppliers": [
+        "gev"
+      ],
       "customer_concentration": "",
       "notes": "",
       "segment_share": ""
@@ -774,7 +776,8 @@
         "oklo"
       ],
       "key_suppliers": [
-        "doosan"
+        "doosan",
+        "fluor"
       ],
       "customer_concentration": "",
       "notes": "",
@@ -808,7 +811,9 @@
         "nuscale",
         "oklo"
       ],
-      "key_suppliers": [],
+      "key_suppliers": [
+        "doosan"
+      ],
       "customer_concentration": "",
       "notes": "",
       "segment_share": "",
@@ -1119,6 +1124,33 @@
       "group": "reactor",
       "criticality": "high",
       "source": "https://www.gevernova.com/news/press-releases/ge-hitachi-awards-contract-bwrx-300-reactor-pressure-vessel-bwxt"
+    },
+    {
+      "from": "gev",
+      "to": "nextera",
+      "type": "supplies",
+      "what": "gas turbines — NextEra/GE Vernova gas-generation partnership",
+      "group": "turbines",
+      "criticality": "medium",
+      "source": "https://www.utilitydive.com/news/nextera-ge-vernova-gas-earnings/738316/"
+    },
+    {
+      "from": "doosan",
+      "to": "rolls_royce",
+      "type": "supplies",
+      "what": "key nuclear-island components for Rolls-Royce SMR",
+      "group": "reactor",
+      "criticality": "high",
+      "source": "https://www.world-nuclear-news.org/articles/skoda-js-doosan-enerbility-get-key-rolls-royce-smr-work"
+    },
+    {
+      "from": "fluor",
+      "to": "nuscale",
+      "type": "supplies",
+      "what": "FEED 2 engineering for RoPower NuScale plant, Romania",
+      "group": "reactor",
+      "criticality": "medium",
+      "source": "https://www.world-nuclear-news.org/articles/ropower-and-fluor-corporation-sign-feed-2-contract"
     }
   ],
   "chokepoints": [

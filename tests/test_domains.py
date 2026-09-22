@@ -416,3 +416,53 @@ def test_a_clean_second_domain_passes_the_gate(tmp_path, leak_gate):
     site = _leak_site(tmp_path, "beta", ["gev_q3", "beta_only"],
                       "<p>Nothing anybody paid for.</p>")
     assert publish_site.locked_text_in_site(site, "beta") == []
+
+
+# -- which map's snapshot sits at the root of the live branch -----------------
+# The build publishes every map under its own directory on the `live` branch,
+# and ALSO copies the first domain's three files to the root, where a task
+# outside this repository fetches them from a stable raw URL. The step chose
+# that domain with `ls -d out/*/ | head -1`.
+#
+# out/ is not a list of domains. It holds the shared price cache, and it holds
+# whatever else a local build has left there. Once a second map existed,
+# "energy" sorted ahead of both "prices" and "semi", so the root of the branch
+# carried the power map's snapshot under the chip map's URL. Nothing failed:
+# the files were valid JSON, the step was green, and the consumer was handed
+# the wrong chain. Found 2026-09-22, live since the energy domain merged.
+#
+# The rule is not "whatever sorts first in a build directory", it is "the
+# first domain", and the engine already knows which that is.
+
+def test_the_first_domain_is_not_whatever_sorts_first_in_out(tmp_path):
+    """The hazard, reproduced: a build directory holding the price cache and
+    two maps does NOT begin with the first domain."""
+    out = tmp_path / "out"
+    for name in ("prices", "energy", "semi"):
+        (out / name).mkdir(parents=True)
+    first_by_listing = sorted(p.name for p in out.iterdir() if p.is_dir())[0]
+    assert first_by_listing == "energy"
+    assert first_by_listing != paths.DEFAULT_DOMAIN, \
+        "this is the mistake: the build directory does not name the domains"
+
+
+def test_discover_names_the_first_domain_whatever_else_is_beside_it(tmp_path):
+    """And the fix: asked of the engine, the answer is the default domain,
+    with the price cache and any other directory irrelevant to it."""
+    _domain(tmp_path, paths.DEFAULT_DOMAIN)
+    _domain(tmp_path, "energy")
+    (tmp_path / "prices").mkdir(parents=True, exist_ok=True)
+    found = domains.discover(tmp_path)
+    assert found[0] == paths.DEFAULT_DOMAIN
+    assert "prices" not in found, "a cache is not a map"
+    assert set(found) == {paths.DEFAULT_DOMAIN, "energy"}
+
+
+def test_the_live_branch_step_asks_the_engine_for_the_first_domain():
+    """Pinned on the workflow itself: the glob must not come back."""
+    from pathlib import Path
+    yml = (Path(__file__).resolve().parents[1] / ".github" / "workflows"
+           / "build.yml").read_text(encoding="utf-8")
+    assert "domains.discover()[0]" in yml
+    assert 'first="$(ls -d out/*/ | head -1)"' not in yml, \
+        "the root of the live branch is a published URL, not a sort order"

@@ -151,7 +151,17 @@ jobs:
           # a stable raw URL, and moving them would break a consumer that is
           # not in this repository. Every domain, including that one, also
           # lands under its own directory.
-          first="$(ls -d out/*/ | head -1)"; first="$(basename "$first")"
+          # The FIRST DOMAIN, asked of the engine. Globbing out/*/ and taking
+          # the first directory read whatever sorted first -- out/ also holds
+          # the shared price cache, and once a second map existed "energy"
+          # sorted ahead of both it and "semi". The root of this branch then
+          # carried the second map's snapshot under the first map's stable
+          # URL, and nothing failed: the files were valid, the step was
+          # green, and the consumer outside this repository was simply handed
+          # the wrong chain. domains.discover() puts the default domain
+          # first by construction, which is what "first" was always meant to
+          # say.
+          first="$(python -c 'from chains import domains; print(domains.discover()[0])')"
           mkdir -p "$tmp/payload"
           for d in out/*/; do
             dom="$(basename "$d")"

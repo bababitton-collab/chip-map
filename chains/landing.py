@@ -189,6 +189,27 @@ def forecast_benchmark_symbol(dom: str | None = None) -> str:
     return forecast.benchmark_for(dom)["symbol"]
 
 
+# What the front door said while there was one map. Kept exactly, and used
+# exactly when there is still one: a site serving a single map must read
+# byte for byte as it read before any of this existed. With several maps
+# neither sentence is true of the site -- "the physical supply chain",
+# singular, describes one of them -- so the words come from data/site.json,
+# beside the maps they are about rather than typed into the engine.
+ONE_MAP_TITLE = "The physical supply chain behind AI — mapped."
+ONE_MAP_LEAD = "See who supplies whom — and where it breaks."
+
+
+def hero(many: bool) -> tuple[str, str]:
+    """The headline and its lead. Falls back to the one-map wording when the
+    site file says nothing, so adding the file is what changes the page --
+    never its absence."""
+    if not many:
+        return ONE_MAP_TITLE, ONE_MAP_LEAD
+    from chains import sitefile
+    return (sitefile.copy("hero", "title", default=ONE_MAP_TITLE),
+            sitefile.copy("hero", "lead", default=ONE_MAP_LEAD))
+
+
 def _brand(dom: str, key: str) -> str:
     """One sentence a map keeps about itself, in English."""
     from chains import mapfile
@@ -303,7 +324,10 @@ def render(dom_dir: Path, dom: str, site_url: str,
     t = _blocks(t, "onemap", not many)
     totals = {k: sum(c[k] for c in cards)
               for k in ("companies", "chokepoints", "questions")}
+    hero_title, hero_lead = hero(many)
     values = {
+        "hero_title": hero_title,
+        "hero_lead": hero_lead,
         "map_cards": _map_cards_html(cards, dom),
         "n_maps": str(len(cards)),
         "cur_title": _brand(dom, "title") or dom,
@@ -329,7 +353,11 @@ def render(dom_dir: Path, dom: str, site_url: str,
         "commitments_href": f"/{dom}/commitments.json",
         "track_public_href": f"/{dom}/track_public.json",
         "site_url": site_url,
-        "site_nav": sitenav.html(dom, "home"),
+        # The front door belongs to the site, not to the first map. With
+        # several maps its bar leads to the choice and to the pooled
+        # record; the condition is the one that already decides the cards.
+        "site_nav": sitenav.html(dom, "home", several=many,
+                                 site_wide=True),
         "site_nav_css": sitenav.CSS,
         "jsonld": _jsonld(f["brand"], site_url),
         "analytics": sitenav.ANALYTICS,

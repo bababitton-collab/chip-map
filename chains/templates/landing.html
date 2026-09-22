@@ -66,8 +66,8 @@ footer a{color:var(--ink2)}
 {{site_nav}}
 
 <header class="hero">
-  <h1>The physical supply chain behind AI — mapped.</h1>
-  <p class="sub">See who supplies whom — and where it breaks.<!--IF:prereg--> Every forecast's scoring rules are set before the answer.<!--END:prereg--> No backtests.</p>
+  <h1>{{hero_title}}</h1>
+  <p class="sub">{{hero_lead}}<!--IF:prereg--> Every forecast's scoring rules are set before the answer.<!--END:prereg--> No backtests.</p>
   <ul class="proof" aria-label="At a glance">
     <li><b>{{companies}}</b> companies</li>
     <li><b>{{chokepoints}}</b> chokepoints</li>
@@ -78,7 +78,7 @@ footer a{color:var(--ink2)}
     <li><b>No backtests</b></li>
   </ul>
   <div class="cta">
-    <a class="primary" href="{{map_href}}">Explore the map</a>
+<!--IF:onemap--><a class="primary" href="{{map_href}}">Explore the map</a><!--END:onemap--><!--IF:domains--><a class="primary" href="#maps">Explore the map</a><!--END:domains-->
 <!--IF:onemap--><a class="secondary" href="{{track_href}}">See the track record</a><!--END:onemap--><!--IF:domains--><a class="secondary" href="/track/">See the track record</a><!--END:domains-->
   </div>
 {{subscribe}}

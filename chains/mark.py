@@ -449,7 +449,8 @@ def check_no_question_text(blob: str, questions: dict) -> list[str]:
 
 # -------------------------------------------------------------------- run
 def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
-        say=print, force: str | None = None) -> int:
+        say=print, force: str | None = None,
+        no_model: bool = False) -> int:
     from chains.paths import marks_path
 
     if force and not dry:
@@ -477,6 +478,20 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
     # the key; only a row that is actually asked does.
     text: dict = {}
     key = model = ""
+    # Every mark this run decided, by qid. Written onto a FRESH read of the
+    # file at the end rather than onto the copy loaded at the top, so a
+    # writer that touched the file while this run was thinking is not
+    # silently discarded -- see the merge below.
+    changes: dict[str, dict] = {}
+    if todo and no_model:
+        # The marker of record is elsewhere. A due question is reported and
+        # left alone: no text is fetched, no key is read, no model is asked,
+        # and nothing is decided for it. Saying so per question matters --
+        # a job that skipped its work in silence is indistinguishable from a
+        # job that found nothing to do.
+        for row in todo:
+            say(f"  {row['id']}: due — left to the Cowork marker")
+        todo = []
     if todo:
         from chains import questions as Q
         # The corpus is keyed by domain, and this one's section is the only
@@ -575,6 +590,7 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
             marked.append((row, old))
             continue
         marks["answers"][row["id"]] = rec
+        changes[row["id"]] = rec
         changed = True
         marked.append((row, rec))
 
@@ -593,6 +609,7 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
         rec["auto"] = True
         rec["updated"] = when
         marks["answers"][row["id"]] = rec
+        changes[row["id"]] = rec
         changed = True
         marked.append((row, rec))
         trail.append(f"  {row['id']}: "
@@ -621,13 +638,80 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
         say("commit: לא נדרש (dry-run)")
         return 0
     if changed:
-        marks_path(domain).write_text(
-            json.dumps(marks, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8")
+        kept = merge_and_write(marks_path(domain), changes,
+                               marks.get("forecasts") or [])
+        for qid in kept:
+            say(f"  {qid}: kept the copy on disk — it has a source, "
+                f"this run's does not")
         say("commit: נדרש")
     else:
         say("commit: לא נדרש")
     return 0
+
+
+def merge_and_write(path: Path, changes: dict[str, dict],
+                    forecasts: list[dict]) -> list[str]:
+    """Apply this run's marks onto a FRESH read of the file, atomically.
+
+    Two reasons, and the second is the one that bites.
+
+    The file is re-read here rather than written from the copy loaded at the
+    start of the run. In between, this process fetched a corpus and made a
+    number of network calls -- seconds to minutes -- and the daily marker
+    writes to the same file. Writing the whole document from the older copy
+    silently discards whatever landed in the meantime, and no git conflict
+    catches it: by the time the commit step rebases, the content is already
+    decided.
+
+    And the sourced rule is applied again here, against what is actually on
+    disk. Checking it only against the copy read at the top answers a
+    question about the past. Returns the qids kept from disk, so the run can
+    say so out loud.
+    """
+    import tempfile
+
+    on_disk: dict = {"answers": {}, "forecasts": []}
+    if path.exists():
+        try:
+            on_disk = json.loads(path.read_text(encoding="utf-8"))
+        except ValueError:
+            # Unreadable is not empty. Overwriting it would turn a corrupt
+            # file into a lost one.
+            raise MarkError(f"{path} is not readable JSON; refusing to "
+                            f"overwrite it") from None
+    on_disk.setdefault("answers", {})
+    on_disk.setdefault("forecasts", [])
+
+    kept = []
+    for qid, rec in changes.items():
+        if sourced(on_disk["answers"].get(qid)) and not sourced(rec):
+            kept.append(qid)
+            continue
+        on_disk["answers"][qid] = rec
+
+    # A forecast is registered once and never rewritten, so only the ones the
+    # file does not already carry are added.
+    have = {f.get("qid") for f in on_disk["forecasts"]}
+    for f in forecasts:
+        if f.get("qid") not in have:
+            on_disk["forecasts"].append(f)
+            have.add(f.get("qid"))
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    blob = json.dumps(on_disk, indent=2, ensure_ascii=False) + "\n"
+    fd, tmp = tempfile.mkstemp(dir=str(path.parent), prefix=path.name,
+                               suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(blob)
+        os.replace(tmp, path)          # atomic: a reader sees one or the other
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+    return kept
 
 
 def summarise(lines: list[str]) -> None:
@@ -647,6 +731,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--only", default=None, metavar="QID")
     ap.add_argument("--force", default=None, metavar="QID",
                     help="ask this question whatever its date; needs --dry-run")
+    ap.add_argument("--no-model", action="store_true",
+                    help="never call the model: report a due question and "
+                         "leave it to the marker of record")
     args = ap.parse_args(argv)
     if args.force and not args.dry_run:
         ap.error("--force needs --dry-run")
@@ -665,7 +752,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         rc = run(args.domain, today, args.dry_run, args.only, say,
-                 force=args.force)
+                 force=args.force, no_model=args.no_model)
     except MarkError as e:
         print(f"mark: {e}", file=sys.stderr)
         return 1

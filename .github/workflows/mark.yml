@@ -1,9 +1,16 @@
 name: mark
 
-# 03:00 UTC Tuesday to Saturday: after each US session and its calls, and two
-# and a half hours before the 05:30 build, so the build of the same morning
+# 05:00 UTC Tuesday to Saturday: after each US session and its calls, and
+# half an hour before the 05:30 build, so the build of the same morning
 # already has the marks. Never on a Sunday or a Monday, because nothing was
 # said on the day before them.
+#
+# It was 03:00, which is when the daily Cowork marker writes to the same
+# data/<domain>/marks.json. Two writers in the same minute is a race no git
+# rebase can adjudicate: each writes the whole document, so the later write
+# wins on every key including the ones it never looked at. Moving to 05:00
+# is the cheap half of the fix; merge_and_write in chains/mark.py is the
+# half that holds even if the two ever meet again.
 #
 # This job runs here rather than in the scheduled cloud task it replaces for
 # one reason: that task could reason but could not commit. GitHub is
@@ -12,7 +19,7 @@ name: mark
 # record, so the job has to run where the write is.
 on:
   schedule:
-    - cron: "0 3 * * 2-6"
+    - cron: "0 5 * * 2-6"
     # 23:30 UTC Monday to Friday: after the US close (20:00 UTC in summer,
     # 21:00 in winter), so a call made that evening is marked the same day.
     # The 03:00 run stays for calls that finish later than that.
@@ -27,6 +34,10 @@ on:
         description: "Pretend it is this date (YYYY-MM-DD)"
         type: string
         required: false
+      use_model:
+        description: "Ask the model (default: leave due questions to the Cowork marker)"
+        type: boolean
+        default: false
       only:
         description: "One question id"
         type: string
@@ -64,7 +75,11 @@ jobs:
 
       # Named before anything runs, so a missing key fails on a sentence a
       # person can act on rather than inside an HTTP error.
+      # Only for the path that actually asks. A scheduled run makes no model
+      # call, and failing it for a key it will never read would be a red
+      # build about nothing.
       - name: the API key has to be here
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.use_model }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
@@ -99,6 +114,20 @@ jobs:
               exit 1
             fi
             args="$args --force ${FORCE_QID}"
+          fi
+          # The marker of record is the daily Cowork task; this job reports a
+          # due question and leaves it alone. Asking the model is opt-in, per
+          # dispatch, so re-enabling it later needs no edit here. A SCHEDULED
+          # run never asks, whatever the inputs default to.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.use_model }}" = "true" ]; then
+            echo "model: asking (dispatch, use_model=true)"
+          else
+            args="$args --no-model"
+            echo "model: not asked; due questions go to the Cowork marker"
+            if [ -n "${FORCE_QID}" ]; then
+              echo "::error::force_qid proves the model path; set use_model to true"
+              exit 1
+            fi
           fi
           # Every map, one process each. A subprocess per domain rather
           # than a loop inside mark.py: each one gets CHIP_MAP_DOMAIN set for

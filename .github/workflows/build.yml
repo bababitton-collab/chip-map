@@ -116,9 +116,15 @@ jobs:
             echo "track.json is tracked in git"; exit 1
           fi
           n=0
-          for d in site/*/; do
-            test -f "$d/track/track.enc.json" || {
-              echo "no sealed payload in $d"; exit 1; }
+          # The MAPS, asked of the engine -- not every directory under site/.
+          # The site root also holds pages that belong to no map (the pooled
+          # record at site/track/), and globbing site/*/ read one of those as
+          # a map with a missing sealed payload and stopped a good deploy.
+          # Build #78. The list comes from the same discovery the publish
+          # itself walks, so this cannot drift from what was published.
+          for dom in $(python -c "from chains import domains; print(' '.join(domains.discover()))"); do
+            test -f "site/$dom/track/track.enc.json" || {
+              echo "no sealed payload in site/$dom"; exit 1; }
             n=$((n+1))
           done
           test "$n" -gt 0 || { echo "no domain was published"; exit 1; }

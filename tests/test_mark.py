@@ -203,7 +203,7 @@ class Fake:
         self.replies = list(replies)
         self.calls = 0
 
-    def __call__(self, row, q, news, key, model):
+    def __call__(self, row, q, news, key, model, tools=True):
         self.calls += 1
         return self.replies[min(self.calls - 1, len(self.replies) - 1)]
 
@@ -414,7 +414,7 @@ def test_force_names_an_unknown_question(wired):
 
 
 def test_the_trail_shows_sources_read_but_no_question_text(wired, monkeypatch):
-    def reads(row, q, news, key, model):
+    def reads(row, q, news, key, model, tools=True):
         mark.LAST_CALL.update(searches=2, sources=["https://a.example/mu"])
         return GOOD
     monkeypatch.setattr(mark, "ask", reads)
@@ -613,7 +613,7 @@ def test_the_second_map_never_sees_the_first_maps_corpus(two_maps,
     root, asked = two_maps
     seen = {}
 
-    def spy(rw, q, news, key, model):
+    def spy(rw, q, news, key, model, tools=True):
         seen[rw["id"]] = q
         return GOOD
 
@@ -694,3 +694,159 @@ def test_the_workflow_walks_every_domain_in_its_own_process():
     assert 'CHIP_MAP_DOMAIN="$dom" python -m chains.mark --domain "$dom"' in yml
     assert "exit $rc" in yml, "a failed map must make the run red"
     assert "\n          python -m chains.mark $args" not in yml
+
+
+# -- the three rules the silent week exposed ---------------------------------
+# For a week every scheduled mark logged "קריאה נכשלה (HTTPStatusError)",
+# "0 EODHD headline(s)" and "0 web search(es)", then wrote
+# `auto: model output invalid`. Three separate faults behind one message:
+# the status code was thrown away, the note blamed the model for a call that
+# never returned, and the unsourced mark would have overwritten whatever was
+# already there.
+
+class Boom:
+    """A model call that fails the way the runner's did."""
+
+    def __init__(self, status=400, detail="tool not enabled"):
+        self.status = status
+        self.detail = detail
+        self.calls = 0
+        self.tools_seen = []
+
+    def __call__(self, row, q, news, key, model, tools=True):
+        self.calls += 1
+        self.tools_seen.append(tools)
+        raise mark.AskFailed(f"HTTP {self.status}", status=self.status,
+                             detail=self.detail)
+
+
+# -- rule 1: the status code reaches the log ---------------------------------
+
+def test_a_failed_call_reports_its_status_not_just_its_class(wired,
+                                                             monkeypatch):
+    boom = Boom(status=403)
+    monkeypatch.setattr(mark, "ask", boom)
+    said: list[str] = []
+    mark.run(None, TODAY, True, None, say=said.append)
+    out = "\n".join(said)
+    assert "HTTP 403" in out, out
+    assert "HTTPStatusError" not in out, \
+        "the class name alone is every 4xx and every 5xx at once"
+
+
+def test_the_failure_detail_never_carries_the_key(wired, monkeypatch):
+    monkeypatch.setattr(mark, "ask", Boom(status=401, detail="x" * 500))
+    said: list[str] = []
+    mark.run(None, TODAY, True, None, say=said.append)
+    out = "\n".join(said)
+    assert "not-a-real-key" not in out
+    # printed, but trimmed: a response body can be a page of HTML
+    longest = max((len(l) for l in out.splitlines()), default=0)
+    assert longest <= 220, longest
+
+
+def test_the_news_lookup_says_why_it_found_nothing(monkeypatch):
+    """"0 headlines" was true and useless for a week."""
+    monkeypatch.setattr(mark, "LAST_NEWS", dict(mark.LAST_NEWS))
+    assert mark.headlines("MU", dt.date(2026, 9, 30), None) == []
+    assert mark.LAST_NEWS["error"] == "no token"
+    assert mark.headlines("", dt.date(2026, 9, 30), "tok") == []
+    assert mark.LAST_NEWS["error"] == "no ticker"
+
+
+# -- rule 2: a call that never returned is not invalid model output ----------
+
+def test_a_failed_call_is_recorded_as_no_source_not_invalid_output(
+        wired, monkeypatch):
+    monkeypatch.setattr(mark, "ask", Boom(status=429))
+    mark.run(None, TODAY, False, None, say=lambda *_: None)
+    got = read_marks(wired)["answers"]["a"]
+    assert got["status"] == "open"
+    assert "no source found" in got["note"]
+    assert "HTTP 429" in got["note"]
+    assert "model output invalid" not in got["note"], \
+        "the model answered nothing; it did not answer badly"
+
+
+def test_a_reply_that_came_back_unusable_is_still_invalid_output(wired,
+                                                                 monkeypatch):
+    """The distinction has to cut both ways, or it is not a distinction."""
+    monkeypatch.setattr(mark, "ask", Fake("not json at all"))
+    mark.run(None, TODAY, False, None, say=lambda *_: None)
+    assert "model output invalid" in read_marks(wired)["answers"]["a"]["note"]
+
+
+def test_the_search_tool_is_dropped_once_before_giving_up(wired, monkeypatch):
+    """A server tool the account cannot use fails identically every time.
+    Retrying the same shape twice more spends time to reach the same
+    nothing, so the last attempt asks without it."""
+    boom = Boom(status=400)
+    monkeypatch.setattr(mark, "ask", boom)
+    mark.run(None, TODAY, True, None, say=lambda *_: None)
+    assert boom.tools_seen == [True, True, False]
+
+
+def test_a_call_that_works_never_reaches_the_fallback(wired, monkeypatch):
+    good = Fake(GOOD)
+    monkeypatch.setattr(mark, "ask", good)
+    mark.run(None, TODAY, True, None, say=lambda *_: None)
+    assert good.calls == 1, "the fallback is for a failure, not a habit"
+
+
+# -- rule 3: an unsourced automatic mark never replaces a sourced one --------
+
+# Open, and pointing at something: the morning run read a source and could
+# not settle the question on it. This is the only shape a later run can
+# overwrite, because a settled mark is never asked again — and it is exactly
+# the shape worth protecting. The first draft of these tests used a settled
+# mark, which is not due at all, so they passed without the rule they were
+# written to prove.
+SOURCED = {"status": "open", "basis": "yes", "auto": True,
+           "evidence": "2026-09-11 the company reported, wording ambiguous",
+           "note": "auto: open", "updated": "2026-09-11T00:00:00Z"}
+
+
+def test_an_unsourced_auto_mark_does_not_replace_a_sourced_one(wired,
+                                                               monkeypatch):
+    (wired / "marks.json").write_text(json.dumps(
+        {"answers": {"a": dict(SOURCED)}, "forecasts": []}), encoding="utf-8")
+    monkeypatch.setattr(mark, "ask", Boom(status=500))
+    mark.run(None, TODAY, False, None, say=lambda *_: None)
+    got = read_marks(wired)["answers"]["a"]
+    assert got["evidence"] == SOURCED["evidence"], \
+        "a dead endpoint erased a finding somebody had already checked"
+    assert got["basis"] == SOURCED["basis"]
+    assert "no source found" not in str(got.get("note"))
+
+
+def test_the_run_says_out_loud_that_it_kept_the_old_mark(wired, monkeypatch):
+    (wired / "marks.json").write_text(json.dumps(
+        {"answers": {"a": dict(SOURCED)}, "forecasts": []}), encoding="utf-8")
+    monkeypatch.setattr(mark, "ask", Boom(status=500))
+    said: list[str] = []
+    mark.run(None, TODAY, False, None, say=said.append)
+    assert "kept the existing mark" in "\n".join(said)
+
+
+def test_a_sourced_mark_does_replace_an_unsourced_one(wired, monkeypatch):
+    """The rule is about evidence, not about age: a run that finds something
+    must be able to improve on a run that found nothing."""
+    (wired / "marks.json").write_text(json.dumps(
+        {"answers": {"a": {"status": "open", "basis": "unclear",
+                           "evidence": "", "auto": True,
+                           "note": "auto: no source found (HTTP 400) on x"}},
+         "forecasts": []}), encoding="utf-8")
+    monkeypatch.setattr(mark, "ask", Fake(GOOD))
+    mark.run(None, TODAY, False, None, say=lambda *_: None)
+    assert read_marks(wired)["answers"]["a"]["status"] == "yes"
+
+
+@pytest.mark.parametrize("m,expected", [
+    ({"evidence": "2026-09-11 said so", "basis": "unclear"}, True),
+    ({"evidence": "", "basis": "filing"}, True),
+    ({"evidence": "", "basis": "unclear"}, False),
+    ({"evidence": "   ", "basis": ""}, False),
+    (None, False),
+])
+def test_what_counts_as_sourced(m, expected):
+    assert mark.sourced(m) is expected

@@ -10523,6 +10523,9 @@
     "he": "מפת השבבים החיה",
     "en": "The Living Chip Map"
    },
+   "value": {
+    "en": "The physical supply chain behind AI — who supplies whom, where the chokepoints are, and which dated questions come next."
+   },
    "story": {
     "he": "לינצ'פין הוא הפין הקטן שמחזיק את הגלגל על הציר. מוציאים אותו — והכל נעצר. אנחנו מוצאים את הפינים האלה בשרשרת האספקה, ומודדים מה קורה להם, כל יום.",
     "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."

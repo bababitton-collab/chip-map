@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{{brand}} — AI supply chain map, semiconductor chokepoints and forward-tested questions</title>
-<meta name="description" content="A semiconductor supply chain map of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--IF:prereg--> Each question's scoring rules are published as a dated SHA-256 commitment.<!--END:prereg--> No backtests.">
+<title>{{brand}} —<!--IF:onemap--> AI supply chain map, semiconductor chokepoints and forward-tested questions<!--END:onemap--><!--IF:domains--> AI supply chain maps, chokepoints and forward-tested questions<!--END:domains--></title>
+<meta name="description" content="<!--IF:onemap-->A semiconductor supply chain map of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:onemap--><!--IF:domains-->{{n_maps}} maps of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:domains--><!--IF:prereg--> Each question's scoring rules are published as a dated SHA-256 commitment.<!--END:prereg--> No backtests.">
 <link rel="canonical" href="{{site_url}}">
 {{analytics}}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
@@ -38,6 +38,15 @@ main section.steps{padding:28px 0 28px}
 .steps .n{display:block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.14em;color:var(--amber);margin-bottom:6px}
 .steps h3{margin:0 0 6px;font-family:"Source Serif 4",serif;font-size:1.3rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
 .steps p{margin:0;color:var(--ink2);font-size:.98rem;line-height:1.5}
+.mapcards{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}
+.mapcard{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:18px 20px}
+.mapcard h3{margin:0 0 8px;font-family:"Source Serif 4",serif;font-size:1.35rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
+.mapcard h3 a{text-decoration:none}
+.mapcard h3 a:hover{text-decoration:underline}
+.mapcard .blurb{margin:0 0 12px;font-size:.97rem;line-height:1.5}
+.mapstat{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:6px 14px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.mapstat b{font-size:1rem;font-weight:500;color:var(--ink2);margin-inline-end:4px;letter-spacing:0}
+.mapcard .maplinks{margin:0;font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase}
 main h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:1.8rem;line-height:1.2;margin:0 0 18px}
 main h3{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:26px 0 8px}
 main p{color:var(--ink2);max-width:74ch;margin:0 0 14px}
@@ -63,19 +72,26 @@ footer a{color:var(--ink2)}
     <li><b>{{companies}}</b> companies</li>
     <li><b>{{chokepoints}}</b> chokepoints</li>
     <li><b>{{questions}}</b> dated questions</li>
+<!--IF:domains-->
+    <li><b>{{n_maps}}</b> maps</li>
+<!--END:domains-->
     <li><b>No backtests</b></li>
   </ul>
   <div class="cta">
     <a class="primary" href="{{map_href}}">Explore the map</a>
     <a class="secondary" href="{{track_href}}">See the track record</a>
   </div>
-<!--IF:domains-->
-  <nav class="maps" aria-label="Maps"><span>Maps</span>{{domains}}</nav>
-<!--END:domains-->
 {{subscribe}}
 </header>
 
 <main>
+<!--IF:domains-->
+<section id="maps" aria-label="The maps">
+  <h2>{{n_maps}} maps, one method</h2>
+  <p>Each map is a chain in its own right, with its own companies, chokepoints and dated questions — and its own second benchmark. The method below is the same for all of them.</p>
+  <ul class="mapcards">{{map_cards}}</ul>
+</section>
+<!--END:domains-->
 <section id="steps" class="steps" aria-label="How it works in three steps">
   <ol>
     <li><span class="n">01</span><h3>Map</h3><p>Who supplies whom across the AI supply chain, and where the chokepoints are.</p></li>
@@ -85,6 +101,7 @@ footer a{color:var(--ink2)}
 </section>
 
 <section id="how">
+<!--IF:onemap-->
   <h2>How it works: a semiconductor supply chain map with dated questions</h2>
 
   <h3>The chain, in layers</h3>
@@ -92,12 +109,22 @@ footer a{color:var(--ink2)}
 
   <h3>Semiconductor chokepoints</h3>
   <p>{{chokepoints}} chokepoints are marked on the map: highly concentrated dependencies with few viable alternatives, such as {{chokepoint_examples}}. Where a listed challenger exists, a pulse compares the holder's 13-week return with the challengers'.</p>
+<!--END:onemap-->
+<!--IF:domains-->
+  <h2>How it works: supply chain maps with dated questions</h2>
+
+  <h3>The chain, in layers</h3>
+  <p>Each map is drawn in layers — the {{cur_title}} in {{n_layers}}: {{layers}}. Across {{n_maps}} maps the site covers {{companies}} listed companies and who supplies whom among them — the AI infrastructure behind the models, from raw materials to data centers and the power that runs them.</p>
+
+  <h3>Chokepoints</h3>
+  <p>{{chokepoints}} chokepoints are marked across the maps: highly concentrated dependencies with few viable alternatives, such as {{chokepoint_examples}} on the {{cur_title}}. Where a listed challenger exists, a pulse compares the holder's 13-week return with the challengers'.</p>
+<!--END:domains-->
 
   <h3>Dated questions</h3>
-  <p>The map is paired with {{questions}} dated questions across the chain — questions tied to upcoming reports, policy decisions and industry events. Each comes with pre-written yes/no criteria, and each scored question names an impact basket: the companies its answer bears on.<!--IF:observe--> Observation-only questions ({{observe_only}} today) carry no basket and are not scored.<!--END:observe--></p>
+  <p><!--IF:onemap-->The map is<!--END:onemap--><!--IF:domains-->The maps are<!--END:domains--> paired with {{questions}} dated questions across the chain — questions tied to upcoming reports, policy decisions and industry events. Each comes with pre-written yes/no criteria, and each scored question names an impact basket: the companies its answer bears on.<!--IF:observe--> Observation-only questions ({{observe_only}} today) carry no basket and are not scored.<!--END:observe--></p>
 
   <h3>Scored forward against the market</h3>
-  <p>When a yes or no answer lands, the basket is measured from the close of the next trading session against an equal-weight benchmark of every priced company on the map (EW_MAP), with the PHLX Semiconductor Sector Index (SOX), tracked through {{sox}}, shown alongside it. The official score is the basket's excess over EW_MAP at a primary horizon of {{primary_horizon}} trading sessions; {{diagnostic_horizons}} sessions are kept as diagnostics. Mixed or unclear answers are recorded as observations and are not scored.</p>
+  <p>When a yes or no answer lands, the basket is measured from the close of the next trading session against an equal-weight benchmark of every priced company on the map (EW_MAP), with<!--IF:onemap--> the PHLX Semiconductor Sector Index (SOX), tracked through {{sox}},<!--END:onemap--><!--IF:domains--> that map's own second benchmark — named on its card above —<!--END:domains--> shown alongside it. The official score is the basket's excess over EW_MAP at a primary horizon of {{primary_horizon}} trading sessions; {{diagnostic_horizons}} sessions are kept as diagnostics. Mixed or unclear answers are recorded as observations and are not scored.</p>
 <!--IF:prereg-->
   <h3>Pre-registered and verifiable</h3>
   <p>Each question's scoring contract — its baskets, yes/no criteria, horizons and benchmarks — is hashed with SHA-256 and published, with the date it was committed, in <a href="{{commitments_href}}">commitments.json</a>. {{n_valid}} of the {{n_committed}} questions committed so far were committed before their answer date, and commitments.json marks any that were not. Once a question resolves, its full card is published free in <a href="{{track_public_href}}">track_public.json</a> with the exact contract text, and a Verify button on the Track Record recomputes the hash in your browser and compares it with the published commitment.</p>
@@ -110,7 +137,12 @@ footer a{color:var(--ink2)}
   <h2>Questions</h2>
 
   <h3>What is Linchpin Signal?</h3>
+<!--IF:onemap-->
   <p>{{brand}} is a map of the physical supply chain behind AI — {{companies}} companies in {{n_layers}} layers, with {{chokepoints}} {{chokepoint_kind}} chokepoints marked — paired with {{questions}} dated questions whose answers are measured forward against the market and published once they resolve.</p>
+<!--END:onemap-->
+<!--IF:domains-->
+  <p>{{brand}} maps the physical supply chain behind AI — {{n_maps}} maps covering {{companies}} companies, with {{chokepoints}} chokepoints marked — paired with {{questions}} dated questions whose answers are measured forward against the market and published once they resolve.</p>
+<!--END:domains-->
 <!--IF:prereg-->
   <h3>How are forecasts registered?</h3>
   <p>Each question's scoring contract is serialised canonically and hashed with SHA-256, and the hash is published with its commit date in <a href="{{commitments_href}}">commitments.json</a>. The build stops if a committed contract no longer matches its hash. When a question resolves, the exact contract text is published with its card, and the Verify button recomputes the SHA-256 in your browser with the Web Crypto API and compares it with the published hash. A commitment made on or after the answer date is marked as not a valid preregistration.</p>

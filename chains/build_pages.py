@@ -307,6 +307,24 @@ def translate(he_html: str) -> tuple[str, list[str]]:
     return out, missing
 
 
+def _bench_js(dom: str | None = None) -> str:
+    """The second benchmark's label, declared for the cards inlined after it.
+
+    The card renderer prints ``window.BENCH_LABEL||'SOX'`` in half a dozen
+    places. The track page sets that variable from its own template; the map
+    inlines the same renderer and never did, so every card on it fell through
+    to the literal -- and a power map that labels its benchmark with the
+    semiconductor index is not a styling slip, it is the wrong fact. The
+    first domain's label IS 'SOX', which is why nothing looked wrong until
+    there was a second map.
+    """
+    import json as _json
+
+    from chains import forecast
+    label = forecast.benchmark_for(dom)["label"]
+    return f"window.BENCH_LABEL={_json.dumps(label)};\n"
+
+
 def _inline_cards(text: str) -> str:
     """Fill the shared card renderer into a page that asks for it.
 
@@ -316,10 +334,10 @@ def _inline_cards(text: str) -> str:
     """
     from chains.track import (CARDS_PLACEHOLDER, GLOSSARY_PLACEHOLDER,
                               cards_js, glossary_js)
-    for token, fill in ((CARDS_PLACEHOLDER, cards_js),
-                        (GLOSSARY_PLACEHOLDER, glossary_js)):
-        if token in text:
-            text = text.replace(token, fill())
+    if CARDS_PLACEHOLDER in text:
+        text = text.replace(CARDS_PLACEHOLDER, _bench_js() + cards_js())
+    if GLOSSARY_PLACEHOLDER in text:
+        text = text.replace(GLOSSARY_PLACEHOLDER, glossary_js())
     return text
 
 
@@ -380,6 +398,28 @@ EN_VALUE = ("The physical supply chain behind AI — who supplies whom, where th
             "chokepoints are, and which dated questions come next.")
 
 
+def desc_line(lang: str, dom: str | None = None) -> str:
+    """The ``<meta name="description">`` sentence, from the domain's own map.
+
+    The wording in PUB above is the first domain's and stays its exact
+    wording, so a map that declares nothing reads today as it read yesterday.
+    A second industry has to say what IT is: "the AI chip supply chain" on a
+    power map is the single sentence search engines and link previews quote,
+    and it described the wrong industry entirely. ``{nodes}`` and ``{cps}``
+    are filled from the snapshot either way -- a count typed into a map would
+    be true only on the day somebody typed it.
+    """
+    from chains import mapfile
+    try:
+        brand = ((mapfile.load(dom=dom).get("labels") or {}).get("brand") or {})
+    except (FileNotFoundError, ValueError):
+        return PUB[lang]["desc"]
+    d = brand.get("desc")
+    if isinstance(d, dict):
+        d = d.get(lang)
+    return (str(d).strip() if d else "") or PUB[lang]["desc"]
+
+
 def value_line(dom: str | None = None) -> str:
     """The sentence under the brand, from the domain's own map when it names
     one. The line above is the first domain's and stays its exact wording, so
@@ -438,8 +478,9 @@ def public_page(template: str, live: str, cfg: dict,
         snap = _json.loads(live)
     except ValueError:
         snap = {}
-    desc = cfg["desc"].format(nodes=len(snap.get("nodes") or []),
-                              cps=len(snap.get("cps") or []))
+    desc = desc_line(cfg["lang"]).format(
+        nodes=len(snap.get("nodes") or []),
+        cps=len(snap.get("cps") or []))
     h = template
 
     # 1. the artifact database is not reachable from a public page

@@ -497,3 +497,104 @@ def test_the_map_description_counts_come_from_the_snapshot():
     live = json.dumps({"nodes": [{}] * 3, "cps": [{}] * 2})
     assert "3 stations, 2 chokepoints" in _map_page(live)
     assert "49 stations" not in _map_page(live)
+
+
+# -- more than one map ---------------------------------------------------------
+# The front door leads to every map the site serves. Its headline numbers are
+# the site's, not the first map's: when the second industry arrived, the page
+# went on quoting one map's question count while linking to both, which
+# undercounts the thing the link points at.
+#
+# publish_site writes this page from the root domain's publish only, so the
+# numbers come from whichever map happens to be root. That is one map's
+# accident of sort order deciding what the site says about itself, and the
+# test below pins the page against it: rendered from either map, the proof
+# strip has to read the same.
+ENERGY = "energy"
+
+
+def _two_sites(tmp_path):
+    """Two published directories, as --all-domains leaves them."""
+    semi = _site(tmp_path)
+    other = tmp_path / ENERGY
+    other.mkdir(parents=True, exist_ok=True)
+    emap = load_map(dom=ENERGY)
+    ewatch = json.loads(
+        (watch_path(ENERGY)).read_text(encoding="utf-8"))
+    (other / "live_en.json").write_text(json.dumps(
+        {"nodes": emap["nodes"], "cps": emap["chokepoints"], "watch": ewatch,
+         "labels": live_snapshot.labels_for(emap, "en")}), encoding="utf-8")
+    return semi, other, len(ewatch)
+
+
+def _both(tmp_path, dom="semi"):
+    semi, _other, n = _two_sites(tmp_path)
+    src = semi if dom == "semi" else tmp_path / dom
+    return landing.render(src, dom, URL, live=["semi", ENERGY]), n
+
+
+def test_every_published_map_gets_a_card(tmp_path):
+    html_, _n = _both(tmp_path)
+    for dom in ("semi", ENERGY):
+        title = ((load_map(dom=dom)["labels"]["brand"].get("title") or {})
+                 .get("en"))
+        assert f'<a href="/{dom}/"' in html_, dom
+        assert f'<a href="/{dom}/track/">Track Record</a>' in html_, dom
+        assert title and title in html_, dom
+
+
+def test_each_card_carries_that_maps_own_description(tmp_path):
+    """The blurb is the map's sentence about itself, not the engine's."""
+    html_, _n = _both(tmp_path)
+    for dom in ("semi", ENERGY):
+        value = ((load_map(dom=dom)["labels"]["brand"].get("value") or {})
+                 .get("en"))
+        assert value, f"{dom} declares no value line to show"
+        assert value in _text(html_), dom
+
+
+def test_each_card_counts_that_maps_own_questions(tmp_path):
+    html_, n_energy = _both(tmp_path)
+    text = _text(html_)
+    assert f"{len(WATCH)} dated questions" in text
+    assert f"{n_energy} dated questions" in text
+
+
+def test_the_headline_counts_every_map(tmp_path):
+    """39 + 14, added up here rather than typed into the template."""
+    html_, n_energy = _both(tmp_path)
+    text = _text(html_)
+    total = len(WATCH) + n_energy
+    assert f"{total} dated questions" in text
+    emap = load_map(dom=ENERGY)
+    assert (f"{len(MAP['nodes']) + len(emap['nodes'])} companies") in text
+    assert (f"{len(MAP['chokepoints']) + len(emap['chokepoints'])} "
+            f"chokepoints") in text
+    assert "2 maps" in text
+
+
+def test_the_headline_does_not_depend_on_which_map_rendered_it(tmp_path):
+    """The root domain renders it, and which map that is, is sort
+    order. The page must read the same either way."""
+    from_semi, _n = _both(tmp_path, "semi")
+    from_energy, _n = _both(tmp_path, ENERGY)
+    strip = lambda h: re.search(r'class="proof".*?</ul>', h, re.S).group(0)
+    assert strip(from_semi) == strip(from_energy)
+
+
+def test_a_second_maps_benchmark_is_named_as_its_own(tmp_path):
+    """The scoring sentence stops naming one index for every map, and each
+    card carries the benchmark that map is actually scored against."""
+    html_, _n = _both(tmp_path)
+    text = _text(html_)
+    assert landing.forecast_benchmark_label(ENERGY) in text
+    assert "PHLX Semiconductor Sector Index" not in text, \
+        "one industry's index must not be stated as fact for every map"
+
+
+def test_one_map_still_reads_exactly_as_it_did(tmp_path):
+    """The whole multi-map apparatus is conditional: a site serving a single
+    map must be byte-for-byte the page it was."""
+    one = landing.render(_site(tmp_path), "semi", URL)
+    assert one == landing.render(_site(tmp_path), "semi", URL, live=["semi"])
+    assert '<li class="mapcard">' not in one and "2 maps" not in one

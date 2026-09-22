@@ -43,32 +43,32 @@
         "en": "fuel"
       },
       "E2": {
-        "he": "טורבינות",
-        "en": "turbines"
-      },
-      "E3": {
-        "he": "ציוד רשת",
-        "en": "grid equipment"
-      },
-      "E4": {
-        "he": "הולכה ו-HVDC",
-        "en": "transmission & HVDC"
-      },
-      "E5": {
-        "he": "הספק ומרכזי נתונים",
-        "en": "power & data center"
-      },
-      "E6": {
-        "he": "ייצור חשמל",
-        "en": "generation / IPP"
-      },
-      "E7": {
         "he": "דלק גרעיני",
         "en": "nuclear fuel"
       },
-      "E8": {
+      "E3": {
         "he": "כורים ו-SMR",
         "en": "reactors & SMR"
+      },
+      "E4": {
+        "he": "טורבינות",
+        "en": "turbines"
+      },
+      "E5": {
+        "he": "ציוד רשת",
+        "en": "grid equipment"
+      },
+      "E6": {
+        "he": "הולכה ו-HVDC",
+        "en": "transmission & HVDC"
+      },
+      "E7": {
+        "he": "ייצור חשמל",
+        "en": "generation / IPP"
+      },
+      "E8": {
+        "he": "הספק ומרכזי נתונים",
+        "en": "power & data center"
       }
     },
     "lines": {
@@ -178,45 +178,45 @@
     },
     {
       "id": "E2",
-      "name": "Turbines",
-      "order": 2,
-      "description": "Gas turbines: the hardest bottleneck for new firm capacity."
-    },
-    {
-      "id": "E3",
-      "name": "Grid equipment",
-      "order": 3,
-      "description": "Transformers, switchgear and the steel inside them."
-    },
-    {
-      "id": "E4",
-      "name": "Transmission & HVDC",
-      "order": 4,
-      "description": "Cable, HVDC links and the contractors that build the grid."
-    },
-    {
-      "id": "E5",
-      "name": "Power & data center",
-      "order": 5,
-      "description": "Power management and cooling inside the data hall."
-    },
-    {
-      "id": "E6",
-      "name": "Generation / IPP",
-      "order": 6,
-      "description": "The producers selling firm power to hyperscalers."
-    },
-    {
-      "id": "E7",
       "name": "Nuclear fuel",
-      "order": 7,
+      "order": 2,
       "description": "Enrichment, fuel and small modular reactors."
     },
     {
-      "id": "E8",
+      "id": "E3",
       "name": "Reactors & SMR",
-      "order": 8,
+      "order": 3,
       "description": "Pressure vessels, forgings and the reactor builders themselves."
+    },
+    {
+      "id": "E4",
+      "name": "Turbines",
+      "order": 4,
+      "description": "Gas turbines: the hardest bottleneck for new firm capacity."
+    },
+    {
+      "id": "E5",
+      "name": "Grid equipment",
+      "order": 5,
+      "description": "Transformers, switchgear and the steel inside them."
+    },
+    {
+      "id": "E6",
+      "name": "Transmission & HVDC",
+      "order": 6,
+      "description": "Cable, HVDC links and the contractors that build the grid."
+    },
+    {
+      "id": "E7",
+      "name": "Generation / IPP",
+      "order": 7,
+      "description": "The producers selling firm power to hyperscalers."
+    },
+    {
+      "id": "E8",
+      "name": "Power & data center",
+      "order": 8,
+      "description": "Power management and cooling inside the data hall."
     }
   ],
   "nodes": [
@@ -228,7 +228,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E2",
+      "layer": "E4",
       "line": "turbine",
       "role": "Gas turbine maker; backlog booked years out",
       "price_symbol": "GEV.US",
@@ -237,7 +237,9 @@
         "siemens_energy",
         "baker_hughes"
       ],
-      "key_suppliers": [],
+      "key_suppliers": [
+        "bwxt"
+      ],
       "customer_concentration": "",
       "notes": "",
       "segment_share": ""
@@ -250,7 +252,7 @@
       "exchange": "XETRA",
       "us_listed": false,
       "adr": false,
-      "layer": "E2",
+      "layer": "E4",
       "line": "turbine",
       "role": "Turbines and grid technologies",
       "price_symbol": "ENR.XETRA",
@@ -272,7 +274,7 @@
       "exchange": "NASDAQ",
       "us_listed": true,
       "adr": false,
-      "layer": "E2",
+      "layer": "E4",
       "line": "turbine",
       "role": "Industrial gas turbines",
       "price_symbol": "BKR.US",
@@ -294,7 +296,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E3",
+      "layer": "E5",
       "line": "gridgear",
       "role": "Power management for the data hall and the grid",
       "price_symbol": "ETN.US",
@@ -319,7 +321,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": true,
-      "layer": "E3",
+      "layer": "E5",
       "line": "gridgear",
       "role": "Electrification and switchgear",
       "price_symbol": "ABBNY.US",
@@ -345,7 +347,7 @@
       "exchange": "PARIS",
       "us_listed": false,
       "adr": false,
-      "layer": "E3",
+      "layer": "E5",
       "line": "gridgear",
       "role": "Electrification and data-center power",
       "price_symbol": "SU.PA",
@@ -367,7 +369,7 @@
       "exchange": "NASDAQ",
       "us_listed": true,
       "adr": false,
-      "layer": "E3",
+      "layer": "E5",
       "line": "gridgear",
       "role": "Switchgear and electrical houses",
       "price_symbol": "POWL.US",
@@ -389,7 +391,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E3",
+      "layer": "E5",
       "line": "gridgear",
       "role": "Grid components and utility hardware",
       "price_symbol": "HUBB.US",
@@ -411,7 +413,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E3",
+      "layer": "E5",
       "line": "gridgear",
       "role": "Grain-oriented electrical steel for transformer cores",
       "price_symbol": "CLF.US",
@@ -432,7 +434,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": true,
-      "layer": "E3",
+      "layer": "E5",
       "line": "gridgear",
       "role": "Grain-oriented electrical steel",
       "price_symbol": "PKX.US",
@@ -453,7 +455,7 @@
       "exchange": "MILAN",
       "us_listed": false,
       "adr": true,
-      "layer": "E4",
+      "layer": "E6",
       "line": "conductor",
       "role": "Subsea and HVDC cable",
       "price_symbol": "PRYMY.US",
@@ -476,7 +478,7 @@
       "exchange": "PARIS",
       "us_listed": false,
       "adr": false,
-      "layer": "E4",
+      "layer": "E6",
       "line": "conductor",
       "role": "Subsea and HVDC cable",
       "price_symbol": "NEX.PA",
@@ -498,7 +500,7 @@
       "exchange": "COPENHAGEN",
       "us_listed": false,
       "adr": false,
-      "layer": "E4",
+      "layer": "E6",
       "line": "conductor",
       "role": "HVDC cable systems",
       "price_symbol": "NKT.CO",
@@ -520,7 +522,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E4",
+      "layer": "E6",
       "line": "conductor",
       "role": "Builds and upgrades transmission",
       "price_symbol": "PWR.US",
@@ -543,7 +545,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E5",
+      "layer": "E8",
       "line": "datacenter",
       "role": "Data-center power and cooling",
       "price_symbol": "VRT.US",
@@ -566,7 +568,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E5",
+      "layer": "E8",
       "line": "datacenter",
       "role": "Electrical protection and liquid cooling",
       "price_symbol": "NVT.US",
@@ -587,7 +589,7 @@
       "exchange": "NASDAQ",
       "us_listed": true,
       "adr": false,
-      "layer": "E6",
+      "layer": "E7",
       "line": "generator",
       "role": "Nuclear fleet selling firm power to hyperscalers",
       "price_symbol": "CEG.US",
@@ -611,7 +613,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E6",
+      "layer": "E7",
       "line": "generator",
       "role": "Independent power producer with nuclear",
       "price_symbol": "VST.US",
@@ -635,7 +637,7 @@
       "exchange": "NASDAQ",
       "us_listed": true,
       "adr": false,
-      "layer": "E6",
+      "layer": "E7",
       "line": "generator",
       "role": "Nuclear IPP contracted to a hyperscaler",
       "price_symbol": "TLN.US",
@@ -659,7 +661,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E6",
+      "layer": "E7",
       "line": "generator",
       "role": "Utility and renewable generation at scale",
       "price_symbol": "NEE.US",
@@ -668,7 +670,9 @@
         "constellation",
         "vistra"
       ],
-      "key_suppliers": [],
+      "key_suppliers": [
+        "gev"
+      ],
       "customer_concentration": "",
       "notes": "",
       "segment_share": ""
@@ -681,7 +685,7 @@
       "exchange": "NYSE-A",
       "us_listed": true,
       "adr": false,
-      "layer": "E7",
+      "layer": "E2",
       "line": "atom",
       "role": "Uranium enrichment, including HALEU",
       "price_symbol": "LEU.US",
@@ -721,7 +725,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E8",
+      "layer": "E3",
       "line": "reactor",
       "role": "Nuclear components and fuel",
       "price_symbol": "BWXT.US",
@@ -740,7 +744,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E8",
+      "layer": "E3",
       "line": "reactor",
       "role": "Small modular reactor developer",
       "price_symbol": "OKLO.US",
@@ -749,11 +753,10 @@
         "nuscale"
       ],
       "key_suppliers": [
-        "bwxt",
         "centrus"
       ],
       "customer_concentration": "",
-      "notes": "",
+      "notes": "Meta agreement, 1.2 GW Ohio (Jan 2026). Source: https://oklo.com/newsroom/news-details/2026/Oklo-Meta-Announce-Agreement-in-Support-of-1-2-GW-Nuclear-Energy-Development-in-Southern-Ohio/default.aspx",
       "segment_share": ""
     },
     {
@@ -764,7 +767,7 @@
       "exchange": "NYSE",
       "us_listed": true,
       "adr": false,
-      "layer": "E8",
+      "layer": "E3",
       "line": "reactor",
       "role": "Small modular reactor developer",
       "price_symbol": "SMR.US",
@@ -773,7 +776,8 @@
         "oklo"
       ],
       "key_suppliers": [
-        "bwxt"
+        "doosan",
+        "fluor"
       ],
       "customer_concentration": "",
       "notes": "",
@@ -793,7 +797,7 @@
       "name": "Doosan Enerbility",
       "short": "DOOSAN",
       "ticker": "034020.KS",
-      "layer": "E8",
+      "layer": "E3",
       "line": "reactor",
       "role": "Ultra-large reactor pressure-vessel forgings",
       "price_symbol": null,
@@ -807,7 +811,9 @@
         "nuscale",
         "oklo"
       ],
-      "key_suppliers": [],
+      "key_suppliers": [
+        "doosan"
+      ],
       "customer_concentration": "",
       "notes": "",
       "segment_share": "",
@@ -816,7 +822,7 @@
       "name": "Rolls-Royce Holdings",
       "short": "RR",
       "ticker": "RR",
-      "layer": "E8",
+      "layer": "E3",
       "line": "reactor",
       "role": "Small modular reactor programme",
       "price_symbol": "RYCEY.US",
@@ -838,7 +844,7 @@
       "name": "Fluor",
       "short": "FLR",
       "ticker": "FLR",
-      "layer": "E8",
+      "layer": "E3",
       "line": "reactor",
       "role": "Engineering and construction for reactor projects",
       "price_symbol": "FLR.US"
@@ -860,7 +866,7 @@
       "name": "Nano Nuclear Energy",
       "short": "NNE",
       "ticker": "NNE",
-      "layer": "E8",
+      "layer": "E3",
       "line": "reactor",
       "role": "Microreactor developer",
       "price_symbol": "NNE.US"
@@ -1021,24 +1027,6 @@
       "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
     },
     {
-      "from": "bwxt",
-      "to": "nuscale",
-      "type": "supplies",
-      "what": "Nuclear components",
-      "group": "fuel",
-      "criticality": "medium",
-      "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
-    },
-    {
-      "from": "bwxt",
-      "to": "oklo",
-      "type": "supplies",
-      "what": "Nuclear components",
-      "group": "fuel",
-      "criticality": "medium",
-      "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
-    },
-    {
       "from": "eaton",
       "to": "vertiv",
       "type": "supplies",
@@ -1111,22 +1099,58 @@
       "source": "https://techjacksolutions.com/ai-brief/vertiv-raises-2026-guidance-to-14b-as-ai-data-center-backlog/"
     },
     {
-      "from": "oklo",
-      "to": "nuscale",
-      "type": "competes",
-      "what": "Small modular reactor designs",
-      "group": "fuel",
-      "criticality": "low",
-      "source": "https://www.etftrends.com/nuclear-energy-content-hub/bottlenecks-nuclear-fuel-supply-chain/"
-    },
-    {
       "from": "doosan",
       "to": "nuscale",
       "type": "supplies",
-      "what": "Reactor forgings and modules",
+      "what": "reactor module forgings and components",
       "group": "reactor",
       "criticality": "high",
-      "source": "https://www.world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/heavy-manufacturing-of-power-plants"
+      "source": "https://www.world-nuclear-news.org/Articles/Doosan-starts-forging-components-for-NuScale-SMR"
+    },
+    {
+      "from": "centrus",
+      "to": "oklo",
+      "type": "supplies",
+      "what": "HALEU fuel (2026 LOI, 1.2 GW Ohio)",
+      "group": "fuel",
+      "criticality": "high",
+      "source": "https://www.centrusenergy.com/news/oklo-centrus-sign-letter-of-intent-to-purchase-nuclear-fuel-for-aurora-powerhouse-deployment-in-southern-ohio/"
+    },
+    {
+      "from": "bwxt",
+      "to": "gev",
+      "type": "supplies",
+      "what": "BWRX-300 reactor pressure vessel (Darlington)",
+      "group": "reactor",
+      "criticality": "high",
+      "source": "https://www.gevernova.com/news/press-releases/ge-hitachi-awards-contract-bwrx-300-reactor-pressure-vessel-bwxt"
+    },
+    {
+      "from": "gev",
+      "to": "nextera",
+      "type": "supplies",
+      "what": "gas turbines — NextEra/GE Vernova gas-generation partnership",
+      "group": "turbines",
+      "criticality": "medium",
+      "source": "https://www.utilitydive.com/news/nextera-ge-vernova-gas-earnings/738316/"
+    },
+    {
+      "from": "doosan",
+      "to": "rolls_royce",
+      "type": "supplies",
+      "what": "key nuclear-island components for Rolls-Royce SMR",
+      "group": "reactor",
+      "criticality": "high",
+      "source": "https://www.world-nuclear-news.org/articles/skoda-js-doosan-enerbility-get-key-rolls-royce-smr-work"
+    },
+    {
+      "from": "fluor",
+      "to": "nuscale",
+      "type": "supplies",
+      "what": "FEED 2 engineering for RoPower NuScale plant, Romania",
+      "group": "reactor",
+      "criticality": "medium",
+      "source": "https://www.world-nuclear-news.org/articles/ropower-and-fluor-corporation-sign-feed-2-contract"
     }
   ],
   "chokepoints": [

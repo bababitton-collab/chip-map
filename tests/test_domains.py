@@ -307,3 +307,112 @@ def test_the_price_store_stays_shared_however_many_domains_there_are(
     first = paths.prices_dir()
     monkeypatch.setenv("CHIP_MAP_DOMAIN", "zulu")
     assert paths.prices_dir() == first
+
+
+# -- the leak gate reads each domain's own question text ---------------------
+# Build #74 on main died here. `publish_site --all-domains` walks every map
+# from ONE process and sets nothing in the environment, so the gate's fetch --
+# which took no domain -- fell back to the first map's section of the corpus.
+# Handed the second map's locked ids, it did not scan the wrong text and pass;
+# it raised KeyError and took the deploy with it. The quieter half is worse:
+# for as long as it lived, the second industry's sentences were never the ones
+# being looked for, so its paywall was gated against a corpus that could not
+# contain them.
+#
+# The two maps below both own a question called gev_q3 -- that collision is
+# the whole reason the corpus is keyed by domain -- and each writes a
+# different sentence under it. Scanning either site against the other's text
+# is therefore not a near miss but a wrong answer, in both directions.
+LEAK_CORPUS = {
+    "alpha": {
+        "gev_q3": {"q_en": "Does Alpha name a delivery date for the turbine?",
+                   "yes_en": "A date inside the quarter is named on the call.",
+                   "no_en": "", "why_en": ""},
+        "alpha_only": {"q_en": "Does Alpha raise its capex line again?",
+                       "yes_en": "", "no_en": "", "why_en": ""},
+    },
+    "beta": {
+        "gev_q3": {"q_en": "Does Beta hold the reactor schedule for 2027?",
+                   "yes_en": "The schedule is reaffirmed without a slip.",
+                   "no_en": "", "why_en": ""},
+        "beta_only": {"q_en": "Does Beta sign a second offtake agreement?",
+                      "yes_en": "", "no_en": "", "why_en": ""},
+    },
+}
+
+
+def _leak_site(root, dom, locked, published):
+    """A published directory: a snapshot naming its locked rows, and whatever
+    bytes we want the scanner to find (index.html is in PAYWALLED)."""
+    site = root / dom
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "live_en.json").write_text(
+        json.dumps({"watch": [{"id": i, "locked": True} for i in locked]}),
+        encoding="utf-8")
+    (site / "index.html").write_text(published, encoding="utf-8")
+    return site
+
+
+@pytest.fixture
+def leak_gate(monkeypatch):
+    """The gate with its corpus stubbed, and the domain deliberately absent
+    from the environment -- the condition CI publishes under."""
+    from chains import questions
+    monkeypatch.delenv("CHIP_MAP_DOMAIN", raising=False)
+    asked = []
+
+    def fetch(url=None, dom=None):
+        asked.append(dom)
+        # Mirrors the real fallback: no domain means the first map. That is
+        # what made this a crash rather than a silent pass.
+        got = LEAK_CORPUS[dom or paths.DEFAULT_DOMAIN]
+        # And mirrors validate(), which hands back every field a record can
+        # carry -- the scan reads all of them, in both languages.
+        return {qid: {f: rec.get(f, "") for f in publish_site.FIELDS_CHECKED}
+                for qid, rec in got.items()}
+
+    monkeypatch.setattr(questions, "fetch", fetch)
+    monkeypatch.setitem(LEAK_CORPUS, paths.DEFAULT_DOMAIN,
+                        LEAK_CORPUS["alpha"])
+    return asked
+
+
+def test_two_domains_publish_from_one_process_each_against_its_own_text(
+        tmp_path, leak_gate):
+    """Both maps are scanned in a single process with nothing in the
+    environment to say which is which, and each one's leak is found."""
+    a = _leak_site(tmp_path, "alpha", ["gev_q3"],
+                   "<p>Does Alpha name a delivery date for the turbine?</p>")
+    b = _leak_site(tmp_path, "beta", ["gev_q3"],
+                   "<p>Does Beta hold the reactor schedule for 2027?</p>")
+
+    hits_a = publish_site.locked_text_in_site(a, "alpha")
+    hits_b = publish_site.locked_text_in_site(b, "beta")
+
+    assert leak_gate == ["alpha", "beta"], \
+        "each domain must fetch its own text, not inherit the first map's"
+    assert [h.split(" ")[0] for h in hits_a] == ["gev_q3"]
+    assert [h.split(" ")[0] for h in hits_b] == ["gev_q3"]
+
+
+def test_the_second_domain_is_not_judged_by_the_first_domains_sentences(
+        tmp_path, leak_gate):
+    """The same id, the other map's wording. Beta's site carrying ALPHA's
+    gev_q3 sentence is not a leak of beta's paywall, and the scan must say so
+    rather than raise -- and must still catch beta's own."""
+    site = _leak_site(
+        tmp_path, "beta", ["gev_q3", "beta_only"],
+        "<p>Does Alpha name a delivery date for the turbine?</p>")
+    assert publish_site.locked_text_in_site(site, "beta") == []
+
+    leaked = _leak_site(
+        tmp_path / "second", "beta", ["gev_q3", "beta_only"],
+        "<p>Does Beta sign a second offtake agreement?</p>")
+    assert [h.split(" ")[0] for h in
+            publish_site.locked_text_in_site(leaked, "beta")] == ["beta_only"]
+
+
+def test_a_clean_second_domain_passes_the_gate(tmp_path, leak_gate):
+    site = _leak_site(tmp_path, "beta", ["gev_q3", "beta_only"],
+                      "<p>Nothing anybody paid for.</p>")
+    assert publish_site.locked_text_in_site(site, "beta") == []

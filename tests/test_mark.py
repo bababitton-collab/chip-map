@@ -221,7 +221,7 @@ def wired(tmp_path, monkeypatch):
                                   encoding="utf-8")
     monkeypatch.setattr(mark, "headlines", lambda *a, **k: [])
     monkeypatch.setattr(mark, "pick_model", lambda key: "claude-test")
-    monkeypatch.setattr("chains.questions.fetch", lambda url=None: {
+    monkeypatch.setattr("chains.questions.fetch", lambda url=None, dom=None: {
         "a": {"q_en": "Did the company raise its guidance for the year?",
               "yes_en": "Guidance for the full year is raised outright.",
               "no_en": "Guidance for the full year is held or cut.",
@@ -318,7 +318,7 @@ def test_an_expired_row_is_closed_as_none_without_asking(wired, monkeypatch):
     fake = Fake(GOOD)
     monkeypatch.setattr(mark, "ask", fake)
     monkeypatch.setattr("chains.questions.fetch",
-                        lambda url=None: pytest.fail("fetched"))
+                        lambda url=None, dom=None: pytest.fail("fetched"))
     monkeypatch.delenv(mark.KEY_ENV, raising=False)   # closing needs no key
     mon = dt.date(2026, 9, 21)                         # sixth session after
     assert mark.run(None, mon, False, None, say=lambda *_: None) == 0
@@ -390,7 +390,7 @@ def test_force_without_dry_run_is_refused_before_anything_runs(
     fake = Fake(GOOD)
     monkeypatch.setattr(mark, "ask", fake)
     monkeypatch.setattr("chains.questions.fetch",
-                        lambda url=None: pytest.fail("fetched"))
+                        lambda url=None, dom=None: pytest.fail("fetched"))
     with pytest.raises(mark.MarkError) as e:
         mark.run(None, TODAY, False, None, say=lambda *_: None, force="a")
     assert "dry run" in str(e.value)
@@ -489,7 +489,7 @@ def test_the_locked_text_gate_reads_marks_json(tmp_path, monkeypatch):
         {"watch": [{"id": "locked1", "locked": True},
                    {"id": "open1"}]}), encoding="utf-8")
     secret = "Does the company raise its full-year guidance on this call?"
-    monkeypatch.setattr("chains.questions.fetch", lambda url=None: {
+    monkeypatch.setattr("chains.questions.fetch", lambda url=None, dom=None: {
         "locked1": {"q_en": secret, "yes_en": "", "no_en": "", "why_en": "",
                     "q_he": "", "yes_he": "", "no_he": "", "why_he": ""},
         "open1": {"q_en": "An open question nobody pays for.", "yes_en": "",

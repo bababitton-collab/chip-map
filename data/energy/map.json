@@ -25,6 +25,9 @@
       "value": {
         "en": "The physical power behind AI compute — who supplies the electricity, where the bottlenecks are, and which dated questions come next."
       },
+      "desc": {
+        "en": "A living map of the power behind AI compute: {nodes} stations, {cps} chokepoints pulsing with the market, a forecast board and questions with a date."
+      },
       "story": {
         "he": "לינצ'פין הוא הפין הקטן שמחזיק את הגלגל על הציר. מוציאים אותו — והכל נעצר. אנחנו מוצאים את הפינים האלה בשרשרת האספקה, ומודדים מה קורה להם, כל יום.",
         "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."

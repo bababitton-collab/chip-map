@@ -40,7 +40,8 @@ from chains.answers import PRIMARY_HORIZON
 TEMPLATE = "landing.html"
 
 # Filled without escaping: markup and JSON this module builds itself.
-RAW = frozenset({"domains", "site_nav", "site_nav_css", "jsonld", "subscribe",
+RAW = frozenset({"map_cards",
+                 "site_nav", "site_nav_css", "jsonld", "subscribe",
                  "analytics"})
 
 
@@ -170,6 +171,13 @@ def _copy(dom: str | None, key: str) -> str:
     return str(block.get(key) or "").strip()
 
 
+def forecast_benchmark_label(dom: str | None = None) -> str:
+    """What a page prints for this domain's second benchmark. The symbol is
+    what is priced; the label is what a reader is shown."""
+    from chains import forecast
+    return forecast.benchmark_for(dom)["label"]
+
+
 def forecast_benchmark_symbol(dom: str | None = None) -> str:
     """The symbol of this domain's second benchmark.
 
@@ -181,13 +189,85 @@ def forecast_benchmark_symbol(dom: str | None = None) -> str:
     return forecast.benchmark_for(dom)["symbol"]
 
 
-def _domain_links(live: list[str], dom: str) -> str:
-    """One link per map the site actually serves, the current one marked."""
+def _brand(dom: str, key: str) -> str:
+    """One sentence a map keeps about itself, in English."""
+    from chains import mapfile
+    try:
+        block = ((mapfile.load(dom=dom).get("labels") or {})
+                 .get("brand") or {}).get(key)
+    except (FileNotFoundError, ValueError):
+        return ""
+    if isinstance(block, dict):
+        block = block.get("en")
+    return str(block or "").strip()
+
+
+def map_cards(root: Path, names: list[str], dom: str,
+              dom_dir: Path) -> list[dict]:
+    """One entry per map the site actually serves, read from what is served.
+
+    A name discovered under data/ but not yet published is left out rather
+    than described from the repository. Every number on this page is read
+    from the files sitting beside it -- see the module docstring -- and a
+    card counting questions out of data/ would be the one claim here with
+    nothing published behind it. On an --all-domains run the first map's
+    publish therefore writes a page naming one map and the last one's
+    rewrites it naming all of them, which is the same order the numbers
+    themselves settle in.
+
+    The name, the blurb and the benchmark come from each map's own file: a
+    second industry describes itself, or the engine describes it in the
+    first industry's words.
+    """
+    found = []
+    for name in names or []:
+        d = root / name
+        live = _read(d / "live_en.json")
+        if not isinstance(live, dict):
+            continue
+        found.append((name, d, live))
+    if not found:
+        # Rendered against a single published directory -- every test, and
+        # any site serving one map. The page then says exactly what it said
+        # before there was a second one.
+        live = _read(dom_dir / "live_en.json")
+        found = [(dom, dom_dir, live if isinstance(live, dict) else {})]
+    cards = []
+    for name, _d, live in found:
+        cards.append({
+            "name": name,
+            "title": _brand(name, "title") or name,
+            "blurb": _brand(name, "value"),
+            "bench": forecast_benchmark_label(name),
+            "companies": len(live.get("nodes") or []),
+            "chokepoints": len(live.get("cps") or []),
+            "questions": len(live.get("watch") or []),
+        })
+    return cards
+
+
+def _map_cards_html(cards: list[dict], dom: str) -> str:
+    """The cards, one per map, the current one marked."""
+    def esc(s):
+        return html.escape(str(s), quote=True)
+
     out = []
-    for name in live:
-        cur = ' aria-current="page"' if name == dom else ""
-        out.append(f'<a href="/{html.escape(name, quote=True)}/"{cur}>'
-                   f'{html.escape(name)}</a>')
+    for c in cards:
+        cur = ' aria-current="page"' if c["name"] == dom else ""
+        blurb = f'<p class="blurb">{esc(c["blurb"])}</p>' if c["blurb"] else ""
+        out.append(
+            f'<li class="mapcard">'
+            f'<h3><a href="/{esc(c["name"])}/"{cur}>{esc(c["title"])}</a></h3>'
+            f'{blurb}'
+            f'<ul class="mapstat">'
+            f'<li><b>{c["questions"]}</b> dated questions</li>'
+            f'<li><b>{c["companies"]}</b> companies</li>'
+            f'<li><b>{c["chokepoints"]}</b> chokepoints</li>'
+            f'<li>scored against <b>{esc(c["bench"])}</b></li>'
+            f'</ul>'
+            f'<p class="maplinks"><a href="/{esc(c["name"])}/">Map</a> · '
+            f'<a href="/{esc(c["name"])}/track/">Track Record</a></p>'
+            f'</li>')
     return "".join(out)
 
 
@@ -212,13 +292,25 @@ def render(dom_dir: Path, dom: str, site_url: str,
     subscribe = subscribe_embed_url()
     t = _blocks(t, "subscribe", bool(subscribe))
     names = list(live or [])
-    t = _blocks(t, "domains", len(names) > 1)
+    # Every map the site actually serves, and the totals across them. The
+    # counts in the hero and the prose describe the SITE, so on a two-map
+    # site they are the sum -- a headline that quoted one map's question
+    # count while linking to both would undercount the thing it points at,
+    # and a number typed in would go stale the first time either map grew.
+    cards = map_cards(dom_dir.parent, names, dom, dom_dir)
+    many = len(cards) > 1
+    t = _blocks(t, "domains", many)
+    t = _blocks(t, "onemap", not many)
+    totals = {k: sum(c[k] for c in cards)
+              for k in ("companies", "chokepoints", "questions")}
     values = {
-        "domains": _domain_links(names, dom),
+        "map_cards": _map_cards_html(cards, dom),
+        "n_maps": str(len(cards)),
+        "cur_title": _brand(dom, "title") or dom,
         "brand": f["brand"],
-        "companies": str(f["companies"]),
-        "chokepoints": str(f["chokepoints"]),
-        "questions": str(f["questions"]),
+        "companies": str(totals["companies"]),
+        "chokepoints": str(totals["chokepoints"]),
+        "questions": str(totals["questions"]),
         "observe_only": str(f["observe_only"]),
         "n_layers": str(len(f["layers"])),
         "layers": _series(f["layers"]),

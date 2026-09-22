@@ -130,9 +130,13 @@ TRACK_PLAINTEXT = "track.json"
 TRACK_ASSETS = ["lightweight-charts.standalone.production.js",
                 "lightweight-charts.LICENSE.txt"]
 
+# The landing page, named from inside a domain's directory: it sits at the
+# site root, one level up from every map.
+FRONT_DOOR = "../index.html"
+
 GATED = ("index.html", "live_en.json", "focus_en.json", "track_public.json",
          # the landing page, at the site root
-         "../index.html")
+         FRONT_DOOR)
 
 # Checked for locked question text rather than for Hebrew: these are the files
 # that could carry a sentence somebody is meant to pay for.
@@ -205,6 +209,50 @@ def write_landing(src: Path, dom: str, live: list[str] | None = None) -> Path:
     return p
 
 
+def write_landing_now() -> Path:
+    """The front door, from whatever is published under site/ right now.
+
+    WRITTEN LAST, NEVER MID-WALK
+    ----------------------------
+    The page names every map the site serves and counts questions across all
+    of them, and it reads those numbers from the published directories beside
+    it. So the moment it is written decides what it can see. Written during
+    the root domain's publish -- which is what happened -- it is written
+    first, when a fresh site/ holds nothing but the map just copied: the
+    second industry's directory does not exist yet, its card cannot be drawn,
+    and no later publish comes back to fix it because only the root domain
+    ever wrote this file. The page then advertised one map and one map's
+    question count on a site serving two, and it did so while the second
+    map's own pages sat published and reachable one directory away.
+
+    Nothing was stale and nothing was cached: the file was correct for the
+    instant it was written and never written again.
+    """
+    from chains import domains as registry
+    found = registry.discover()
+    root = root_domain()
+    p = write_landing(site_dir(root), root, found)
+    # The same two gates every other published file goes through. Written
+    # after the walk, it would otherwise be the one file that skips them --
+    # and a file that escapes a gate because of WHEN it is written is exactly
+    # the class of hole this page fell through once already. Checked against
+    # EVERY map's locked text, not just the root map's, which is more than
+    # it got when it was written mid-walk.
+    runs = hebrew_runs(p.read_text(encoding="utf-8"))
+    if runs:
+        raise SystemExit(
+            f"site/index.html: {len(runs)} Hebrew string(s) in a file served "
+            f"to English readers. Not published.\n  "
+            + "\n  ".join(runs[:10]))
+    for dom in found:
+        leaked = locked_text_in_site(site_dir(dom), dom, only=(FRONT_DOOR,))
+        if leaked:
+            raise SystemExit(
+                f"a locked question's text reached the front door: "
+                f"{leaked[:3]}. Not published.")
+    return p
+
+
 def copy_detail_pages(built: Path, track: Path) -> list[str]:
     """The per-question pages, at /<domain>/track/<qid>/.
 
@@ -225,12 +273,17 @@ def copy_detail_pages(built: Path, track: Path) -> list[str]:
 
 
 def publish(dst: Path | None = None,
-            dom: str | None = None) -> tuple[Path, list[str]]:
+            dom: str | None = None,
+            landing: bool = True) -> tuple[Path, list[str]]:
     """Copy one domain in, then gate it. Returns (site dir, what was written).
 
     ``dom`` is threaded rather than read from the environment inside each
     helper, so one process can publish several maps in turn without editing
     the environment underneath itself between them.
+
+    ``landing`` is False when a caller is publishing every domain and will
+    write the front door itself once they are all in place. A page that
+    counts across maps cannot be written halfway through putting them there.
     """
     dom = dom or domain()
     site = dst or site_dir(dom)
@@ -301,10 +354,10 @@ def publish(dst: Path | None = None,
                                        encoding="utf-8",
                                        newline="\n")
     written.append("../CNAME")
-    # The front door, read from the files just copied beside it.
-    if site.name == root_domain():
-        from chains import domains as registry
-        write_landing(site, site.name, registry.discover())
+    # The front door, read from the files just copied beside it. Skipped when
+    # the caller is walking every domain: see write_front_door below.
+    if landing and site.name == root_domain():
+        write_landing_now()
         written.append("../index.html  (landing page)")
 
     # Nothing unsealed, ever. Checked on the directory about to be served
@@ -325,7 +378,11 @@ def publish(dst: Path | None = None,
                 f"to English readers. Not published.\n  "
                 + "\n  ".join(runs[:10]))
 
-    for name in GATED:
+    # The front door is gated here only when it was written here. On an
+    # --all-domains walk it does not exist yet, and it is written and gated
+    # together at the end -- see write_landing_now.
+    gated = GATED if landing else tuple(n for n in GATED if n != FRONT_DOOR)
+    for name in gated:
         text = (site / name).read_text(encoding="utf-8")
         runs = hebrew_runs(text)
         if runs:
@@ -341,7 +398,8 @@ def publish(dst: Path | None = None,
     return site, written
 
 
-def locked_text_in_site(site: Path, dom: str | None = None) -> list[str]:
+def locked_text_in_site(site: Path, dom: str | None = None,
+                        only: tuple[str, ...] | None = None) -> list[str]:
     """Any locked question whose sentence appears in a published file.
 
     ``dom`` names the map being gated. It matters twice over: the question
@@ -381,8 +439,9 @@ def locked_text_in_site(site: Path, dom: str | None = None) -> list[str]:
         text[r["id"]][f]
         for r in snap.get("watch", []) if not r.get("locked")
         for f in FIELDS_CHECKED if r["id"] in text)
+    names = PAYWALLED if only is None else only
     blobs = {n: (site / n).read_text(encoding="utf-8")
-             for n in PAYWALLED if (site / n).exists()}
+             for n in names if (site / n).exists()}
     # The per-question pages carry a resolved question's whole text, and they
     # are named after the question -- so they cannot be listed in PAYWALLED
     # ahead of time. They are found here instead: belonging to a resolved
@@ -433,13 +492,20 @@ def main(argv: list[str] | None = None) -> int:
         rc = 0
         for dom in found:
             print(f"\n=== {dom} " + "=" * (60 - len(dom)))
-            rc = _one(dom) or rc
+            # Not during the walk: the front door counts across every map and
+            # is written below, once they are all published.
+            rc = _one(dom, landing=False) or rc
+        p = write_landing_now()
+        print(f"\n=== front door " + "=" * 49)
+        print(f"  {'../index.html  (landing page)':<34} "
+              f"{p.stat().st_size:>9,} bytes")
+        print(f"  names every map published above: {', '.join(found)}")
         return rc
     return _one(args.domain)
 
 
-def _one(dom: str | None = None) -> int:
-    site, written = publish(dom=dom)
+def _one(dom: str | None = None, landing: bool = True) -> int:
+    site, written = publish(dom=dom, landing=landing)
     print(f"site: {site}")
     for name in written:
         p = site / name.split("  ")[0]

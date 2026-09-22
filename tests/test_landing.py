@@ -598,3 +598,80 @@ def test_one_map_still_reads_exactly_as_it_did(tmp_path):
     one = landing.render(_site(tmp_path), "semi", URL)
     assert one == landing.render(_site(tmp_path), "semi", URL, live=["semi"])
     assert '<li class="mapcard">' not in one and "2 maps" not in one
+
+
+# -- the front door is written after every map, not during the first ----------
+# Shipped wrong once, in build #76. The page counts across every map and reads
+# those numbers from the published directories beside it, so WHEN it is
+# written decides what it can see. It was written inside the root domain's
+# publish -- first, into a site/ that a fresh checkout leaves empty -- so the
+# second map's directory did not exist yet, its card could not be drawn, and
+# no later publish came back: only the root domain ever wrote this file. The
+# live site advertised one map and 39 questions while serving two maps and 53,
+# with the second map's own pages published and reachable one directory away.
+#
+# Nothing was stale and nothing was cached. The file was correct for the
+# instant it was written and never written again. This test starts from an
+# empty directory, which is the only condition that shows it.
+
+def _published(root, dom, nodes, cps, watch):
+    d = root / dom
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "live_en.json").write_text(json.dumps(
+        {"nodes": nodes, "cps": cps, "watch": watch,
+         "labels": live_snapshot.labels_for(load_map(dom=dom), "en")}),
+        encoding="utf-8")
+    return d
+
+
+@pytest.fixture
+def walked(tmp_path, monkeypatch):
+    """--all-domains against an empty site/, with publish reduced to what it
+    leaves behind: the snapshot the front door reads."""
+    from chains import domains as registry
+    root = tmp_path / "site"
+    names = ["semi", ENERGY]
+    order = []
+    emap = load_map(dom=ENERGY)
+    ewatch = json.loads(watch_path(ENERGY).read_text(encoding="utf-8"))
+    rows = {"semi": (MAP["nodes"], MAP["chokepoints"], WATCH),
+            ENERGY: (emap["nodes"], emap["chokepoints"], ewatch)}
+
+    def fake_publish(dst=None, dom=None, landing=True):
+        order.append(("publish", dom))
+        assert not landing, \
+            "a walk must not write the front door inside a domain's publish"
+        return _published(root, dom, *rows[dom]), []
+
+    monkeypatch.setattr(registry, "discover", lambda *a, **k: list(names))
+    monkeypatch.setattr(publish_site, "site_root", lambda: root)
+    monkeypatch.setattr(publish_site, "site_dir", lambda d=None: root / d)
+    monkeypatch.setattr(publish_site, "publish", fake_publish)
+    monkeypatch.setattr(publish_site, "locked_text_in_site",
+                        lambda *a, **k: [])
+    real_write = publish_site.write_landing
+
+    def watched(src, dom, live=None):
+        order.append(("front door", dom))
+        return real_write(src, dom, live)
+
+    monkeypatch.setattr(publish_site, "write_landing", watched)
+    assert publish_site.main(["--all-domains"]) == 0
+    return root, order, len(ewatch)
+
+
+def test_the_front_door_is_written_once_and_last(walked):
+    _root, order, _n = walked
+    assert order == [("publish", "semi"), ("publish", ENERGY),
+                     ("front door", "semi")]
+
+
+def test_the_front_door_names_every_map_from_an_empty_site(walked):
+    root, _order, n_energy = walked
+    html_ = (root / "index.html").read_text(encoding="utf-8")
+    for dom in ("semi", ENERGY):
+        assert f'<a href="/{dom}/"' in html_, dom
+    assert html_.count('<li class="mapcard">') == 2
+    text = _text(html_)
+    assert f"{len(WATCH) + n_energy} dated questions" in text
+    assert "2 maps" in text

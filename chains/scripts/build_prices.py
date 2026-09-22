@@ -45,9 +45,13 @@ def main() -> int:
     node_syms = prices.symbols_in_map(doc)
     chal_syms = prices.challenger_symbols(doc, resolve_challenger)
     symbols = node_syms + [s for s in chal_syms if s not in node_syms]
-    # The second benchmark is not a station on the map, so it is named here.
-    if forecast.SOX_SYMBOL not in symbols:
-        symbols.append(forecast.SOX_SYMBOL)
+    # The second benchmark is not a station on the map, so it is named here --
+    # and it is this domain's benchmark, not the first domain's. Appending the
+    # wrong one downloads a line nothing reads and leaves the line every page
+    # prints with no prices at all.
+    bench = forecast.benchmark_for()["symbol"]
+    if bench not in symbols:
+        symbols.append(bench)
     print(f"map v{doc.get('version')}: {len(node_syms)} node/subnode symbols, "
           f"{len(chal_syms)} challenger symbols, {len(symbols)} distinct\n")
 

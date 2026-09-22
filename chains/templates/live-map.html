@@ -993,8 +993,14 @@ function layout(){
 // the power row last of all. Every station keeps its layer, its colour, its
 // ring and its size -- only the axis changes.
 function layoutPortrait(){
-  const rows=['L1','L2','L3','L4','L5','L6','L7','L9'];
-  const order=['logic','memory','packaging','network','cloud','power'];
+  // The rows are the layers the map declares, in key order. Read from the
+  // data so a map with different layers draws its own rows instead of this
+  // one's; for the first domain the two are the same list, station for station.
+  const rows=Object.keys((D.labels||{}).layers||{}).sort();
+  // Declared by the map, or this list. NOT derived from the label keys: they
+  // are in a different order, and deriving it would reseat two of the first
+  // domain's rows for no reason anybody asked for.
+  const order=((D.labels||{}).line_order)||['logic','memory','packaging','network','cloud','power'];
   const groups={};
   nodes.forEach(n=>{ const L=n.layer==='L9'?'L9':n.layer; (groups[L]=groups[L]||[]).push(n); });
   // Nothing above the first row; the last row needs room under it for a label.
@@ -1088,10 +1094,16 @@ function layoutLandscape(){
   // Portrait writes per-node label metrics; landscape computes its own, so
   // they are cleared rather than left to leak across an orientation change.
   nodes.forEach(n=>{ n.lfs=null; n.lbl=null; n.ldy=0; n.slot=null; n.stagger=false; });
-  const cols=['L1','L2','L3','L4','L5','L6','L7'];
+  // Every declared layer except the one drawn in its own band underneath.
+  // A map that bands nothing filters nothing.
+  const cols=Object.keys((D.labels||{}).layers||{}).sort()
+    .filter(l=>!(((D.labels||{}).band)||['L9']).includes(l));
   const padR=70, padL=110, colW=(W-padR-padL)/(cols.length-1);
   const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);
-  const order=['logic','memory','packaging','network','cloud','power'];
+  // Declared by the map, or this list. NOT derived from the label keys: they
+  // are in a different order, and deriving it would reseat two of the first
+  // domain's rows for no reason anybody asked for.
+  const order=((D.labels||{}).line_order)||['logic','memory','packaging','network','cloud','power'];
   const groups={};
   nodes.forEach(n=>{ const L=n.layer==='L9'?'L9':n.layer; (groups[L]=groups[L]||[]).push(n); });
   const top=70, bottom=H-80;
@@ -1108,7 +1120,11 @@ function layoutLandscape(){
   // label on the row beside either neighbour.
   const g9=(groups['L9']||[]); const x7=xOf['L7'], x4=xOf['L4'];
   g9.forEach((nd,i)=>{ nd.x=x7+(i/(g9.length-1||1))*(x4-x7); nd.y=H-34; });
-  nodes.forEach(n=>{ n.r = n.cap? Math.max(7, Math.min(24, 6+18*Math.sqrt(n.cap/5516))) : 7; });
+  // A station with no size known is drawn at the map's declared neutral
+  // radius, not at the smallest one: the smallest reads as "tiny company",
+  // which is a claim the data does not make. A map that declares none keeps
+  // the old floor, so nothing already published moves.
+  nodes.forEach(n=>{ n.r = n.cap? Math.max(7, Math.min(24, 6+18*Math.sqrt(n.cap/5516))) : (((D.labels||{}).size_unknown_r)||7); });
   // No two rings in a column come within 6px of each other. The column may use
   // the whole canvas height for it, and is lifted back only if it ran past the
   // bottom -- a row of stations pushed off the canvas would be worse than the
@@ -1260,9 +1276,15 @@ function layerBar(){
   // (see layoutLandscape). If a station, its ring or its label would touch it
   // there, it goes straight up until none does -- never sideways. Link lines
   // may run behind it; the chip is opaque, as the header chips are.
-  l9.innerHTML = `<span class="lchip" data-l="L9" style="left:${l9x.toFixed(1)}px;`
+  // The bottom row is a layer like any other, and only a map that declares it
+  // gets a chip for it. Without this a map with no such layer had an empty tag
+  // drawn across its stage, naming a row that does not exist. The early return
+  // matters: everything below measures the chip that would not be there.
+  const BAND = ((((D.labels||{}).band)||['L9'])[0]);
+  if(!(((D.labels||{}).layers)||{})[BAND]){ l9.innerHTML=''; return; }
+  l9.innerHTML = `<span class="lchip" data-l="${BAND}" style="left:${l9x.toFixed(1)}px;`
     + `top:${l9y.toFixed(1)}px;transform:translate(-50%,-100%)">`
-    + `${chip('L9', LAYER_HE.L9||'')}</span>`;
+    + `${chip(BAND, LAYER_HE[BAND]||'')}</span>`;
   const tag=l9.firstElementChild, tr=tag.getBoundingClientRect();
   const tw=Math.ceil(tr.width), th=Math.ceil(tr.height);
   const x0=l9x-tw/2-1, x1=l9x+tw/2+1;

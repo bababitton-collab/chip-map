@@ -1301,8 +1301,12 @@ def test_the_three_line_styles_cannot_be_confused():
     assert "sox: {c:SOX, w:1.4, d:SOX_DASH" in body
     assert ("SOX_DASH=' stroke-dasharray=\"1 3\" stroke-linecap=\"round\"'"
             in body)
-    assert "<span>vs SOX</span>" in body
-    assert "<span>up − SOX since the report</span>" in body
+    # The three styles are what this test pins, and they do not move. The
+    # LABEL beside the amber line is the domain's own, with the first
+    # domain's as the fallback, so the assertion follows the expression.
+    assert "<span>vs ${(window.BENCH_LABEL||'SOX')}</span>" in body
+    assert ("<span>up − ${(window.BENCH_LABEL||'SOX')} since the report</span>"
+            in body)
 
 
 # -- the charts as a browser would draw them ---------------------------------

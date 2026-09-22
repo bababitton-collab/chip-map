@@ -29,7 +29,7 @@ def main() -> int:
     syms = sorted({s for s in
                    prices.symbols_in_map(doc)
                    + prices.challenger_symbols(doc, resolve_challenger)
-                   + [forecast.SOX_SYMBOL]
+                   + [forecast.benchmark_for()["symbol"]]
                    if prices.path_for(s).exists()})
     found = repair.scan_all(syms)
     print(f"scanned {len(syms)} series, found {found.height} impossible prints")

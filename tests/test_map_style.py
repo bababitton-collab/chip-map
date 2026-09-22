@@ -135,7 +135,15 @@ def test_l9_has_its_own_layer_outside_the_sticky_header():
     i = TPL.index("bar.innerHTML = bands.map(")
     j = TPL.index("l9.innerHTML =", i)
     assert 'data-l="L9"' not in TPL[i:j], "no L9 chip among the column chips"
-    assert 'data-l="L9"' in TPL[j:j + 300]
+    # The band is named by the map, with this map's layer as the default, so
+    # the attribute is the expression rather than the word. And it is drawn
+    # only where that layer is declared: a map without one had an empty chip
+    # laid across its stage, naming a row that does not exist.
+    band = TPL[j:j + 300]
+    assert 'data-l="${BAND}"' in band
+    assert "((((D.labels||{}).band)||['L9'])[0])" in TPL[i:j]
+    assert "if(!(((D.labels||{}).layers)||{})[BAND]){ l9.innerHTML=''; return; }" \
+        in TPL[i:j]
 
 
 def test_the_l9_chip_sits_above_the_row_centred_on_etn():

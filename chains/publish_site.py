@@ -71,7 +71,7 @@ from pathlib import Path
 
 from chains.build_pages import hebrew_runs
 from chains.paths import domain, out_dir, site_dir, site_root
-from chains.questions import FIELDS as QUESTION_FIELDS
+from chains.questions import FIELDS as QUESTION_FIELDS, languages_for
 
 # (source in out/, name in site/). The briefs are resolved by glob because
 # their filename carries the build date.
@@ -95,6 +95,18 @@ COPIES = [
 
 BRIEFS = [("brief-free-*.md", "brief.md"),
           ("brief-he-free-*.md", "brief-he.md")]
+
+# The Hebrew half of a published map, by its name in site/. A domain whose map
+# declares languages: ["en"] never writes these: chains/build_pages.py builds
+# no Hebrew page for it, so he.html has no source, and the Hebrew snapshot and
+# letter would be served beside a site that has no page to read them. Skipped
+# by destination name rather than by removing them from the lists above,
+# because a bilingual map still publishes every one of them.
+HE_ONLY = ("he.html", "live.json", "focus.json", "brief-he.md")
+
+
+def publishes_hebrew(dom: str | None = None) -> bool:
+    return "he" in languages_for(dom)
 
 # Only these. he.html, live.json and brief-he.md are Hebrew on purpose.
 # The forward test, at /<domain>/track/. The page is English-only and its data
@@ -225,7 +237,14 @@ def publish(dst: Path | None = None,
     site.mkdir(parents=True, exist_ok=True)
     written: list[str] = []
 
+    hebrew = publishes_hebrew(dom)
+    # An English-only map leaves its Hebrew half behind, and says so rather
+    # than skipping in silence: a file that stops being published is exactly
+    # the sort of change that should be visible in the run's output.
+    stale = [n for n in HE_ONLY if not hebrew and (site / n).exists()]
     for src_name, dst_name in COPIES:
+        if dst_name in HE_ONLY and not hebrew:
+            continue
         src = out_dir(dom) / src_name
         if not src.exists():
             raise SystemExit(
@@ -236,11 +255,20 @@ def publish(dst: Path | None = None,
         written.append(dst_name)
 
     for pattern, dst_name in BRIEFS:
+        if dst_name in HE_ONLY and not hebrew:
+            continue
         src = latest(pattern, dom)
         if src is None:
             raise SystemExit(f"no {pattern} in {out_dir()}")
         shutil.copyfile(src, site / dst_name)
         written.append(f"{dst_name}  (from {src.name})")
+
+    # A map that used to publish Hebrew and no longer declares it would
+    # otherwise keep serving the last Hebrew page it ever built, from a
+    # directory nothing rewrites.
+    for name in stale:
+        (site / name).unlink()
+        written.append(f"{name}  (REMOVED -- this map declares English only)")
 
     # The forward test lives at /<domain>/track/, so a reader can be sent to
     # the evidence without being sent to the whole map.
@@ -384,8 +412,30 @@ def locked_text_in_site(site: Path, dom: str | None = None) -> list[str]:
     return hits
 
 
-def main() -> int:
-    site, written = publish()
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--domain", default=None,
+                    help="which map under data/ to publish")
+    ap.add_argument("--all-domains", action="store_true",
+                    help="publish every domain found under data/, in order")
+    args = ap.parse_args(argv)
+    if args.all_domains:
+        from chains import domains as registry
+        found = registry.discover()
+        if not found:
+            print(f"no buildable domain under {registry.root()}")
+            return 1
+        rc = 0
+        for dom in found:
+            print(f"\n=== {dom} " + "=" * (60 - len(dom)))
+            rc = _one(dom) or rc
+        return rc
+    return _one(args.domain)
+
+
+def _one(dom: str | None = None) -> int:
+    site, written = publish(dom=dom)
     print(f"site: {site}")
     for name in written:
         p = site / name.split("  ")[0]

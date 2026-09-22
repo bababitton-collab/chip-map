@@ -1,0 +1,333 @@
+[
+ {
+  "qid": "gev_q3",
+  "answer_date": "2026-10-22",
+  "committed_at": "2026-09-17",
+  "sha256": "c1271d8b45a10c4b9e7a1ccc88e2b2734db23fda6e2b1851b92a495e46b55aca",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "gev": {
+     "symbol": "GEV.US",
+     "adv_usd": 2594261841,
+     "last_close": "2026-09-16"
+    },
+    "siemens_energy": {
+     "symbol": "ENR.XETRA",
+     "adv_usd": 371014186,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "vrt_q3",
+  "answer_date": "2026-10-22",
+  "committed_at": "2026-09-17",
+  "sha256": "f2455248e9c5c3be375172d32a7b352e98219b49c3b1ea01f07b10daba0ce068",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "vertiv": {
+     "symbol": "VRT.US",
+     "adv_usd": 1667191018,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "abb_q3",
+  "answer_date": "2026-10-15",
+  "committed_at": "2026-09-17",
+  "sha256": "ade2383db3a4aabc717984f81adbe1ac3685d9f3a36164799cb1a828a7be9ce5",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "abb": {
+     "symbol": "ABBNY.US",
+     "adv_usd": 35194795,
+     "last_close": "2026-09-16"
+    },
+    "eaton": {
+     "symbol": "ETN.US",
+     "adv_usd": 907590037,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "pwr_q3",
+  "answer_date": "2026-10-30",
+  "committed_at": "2026-09-17",
+  "sha256": "0e744670af8a77f9ea4d0201dcfbcb4c5f4318d8230d1e6b9849cfaa6445cede",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "quanta": {
+     "symbol": "PWR.US",
+     "adv_usd": 787957301,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "etn_q3",
+  "answer_date": "2026-11-04",
+  "committed_at": "2026-09-17",
+  "sha256": "eb3435ba8bbdeb514ffc74312d720d3c2cce43d2488a15f7ee23eee8440aee4f",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "eaton": {
+     "symbol": "ETN.US",
+     "adv_usd": 907590037,
+     "last_close": "2026-09-16"
+    },
+    "vertiv": {
+     "symbol": "VRT.US",
+     "adv_usd": 1667191018,
+     "last_close": "2026-09-16"
+    },
+    "quanta": {
+     "symbol": "PWR.US",
+     "adv_usd": 787957301,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "ccj_q3",
+  "answer_date": "2026-11-05",
+  "committed_at": "2026-09-17",
+  "sha256": "61c314911c94c1de43b218b21b6450726547c86c5c4f1c0f9ec40f60c7380647",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "cameco": {
+     "symbol": "CCJ.US",
+     "adv_usd": 300135453,
+     "last_close": "2026-09-16"
+    },
+    "centrus": {
+     "symbol": "LEU.US",
+     "adv_usd": 130389557,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "ceg_q3",
+  "answer_date": "2026-11-06",
+  "committed_at": "2026-09-17",
+  "sha256": "cf1afab5df4b8577b0f595b951fe8bc5a48c59ba6dd4ba1d3b7c39169e352ab2",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "constellation": {
+     "symbol": "CEG.US",
+     "adv_usd": 793651368,
+     "last_close": "2026-09-16"
+    },
+    "vistra": {
+     "symbol": "VST.US",
+     "adv_usd": 662622768,
+     "last_close": "2026-09-16"
+    },
+    "talen": {
+     "symbol": "TLN.US",
+     "adv_usd": 294183872,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "vst_q3",
+  "answer_date": "2026-11-06",
+  "committed_at": "2026-09-17",
+  "sha256": "a2b600e4dc968b035b98c6522b1fbb909d7e2785700d12f9f79a6518039f138f",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "vistra": {
+     "symbol": "VST.US",
+     "adv_usd": 662622768,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "siemens_grid",
+  "answer_date": "2026-11-30",
+  "committed_at": "2026-09-17",
+  "sha256": "8dd2074fd230ca77ef00af586b0cd355ccd7b9d601d02ca5f09cea73c7e86ddd",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "siemens_energy": {
+     "symbol": "ENR.XETRA",
+     "adv_usd": 371014186,
+     "last_close": "2026-09-16"
+    },
+    "gev": {
+     "symbol": "GEV.US",
+     "adv_usd": 2594261841,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "leu_haleu",
+  "answer_date": "2026-11-30",
+  "committed_at": "2026-09-17",
+  "sha256": "a6539b3d7c2fcd597242fe1fdfbb276427cf272cc4a78751daa8a051ffc3feeb",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "centrus": {
+     "symbol": "LEU.US",
+     "adv_usd": 130389557,
+     "last_close": "2026-09-16"
+    },
+    "cameco": {
+     "symbol": "CCJ.US",
+     "adv_usd": 300135453,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "hvdc_cable",
+  "answer_date": "2026-11-30",
+  "committed_at": "2026-09-17",
+  "sha256": "39e10b4fa81dbf33809d15ba7366a9e57fc4a5d3b1a10be7f020fc0459e79b58",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "prysmian": {
+     "symbol": "PRYMY.US",
+     "adv_usd": 6883739,
+     "last_close": "2026-09-16"
+    },
+    "nexans": {
+     "symbol": "NEX.PA",
+     "adv_usd": 26071677,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "goes_share",
+  "answer_date": "2026-11-30",
+  "committed_at": "2026-09-17",
+  "sha256": "e283c6910f96b42c4aba0be883643420a752c9d5ec82630f6bad5e5fcacd96a1",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "clf": {
+     "symbol": "CLF.US",
+     "adv_usd": 214840099,
+     "last_close": "2026-09-16"
+    },
+    "posco": {
+     "symbol": "PKX.US",
+     "adv_usd": 18400697,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ },
+ {
+  "qid": "reactor_smr",
+  "answer_date": "2026-11-30",
+  "committed_at": "2026-09-20",
+  "sha256": "b2ca15bab25133aa5e4f8974ac3204d87e2aea92c8cd7cb37497660ba0e327b9",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-20",
+   "min_adv_usd": 250000,
+   "legs": {
+    "oklo": {
+     "symbol": "OKLO.US",
+     "adv_usd": 433529300,
+     "last_close": "2026-09-18"
+    },
+    "nuscale": {
+     "symbol": "SMR.US",
+     "adv_usd": 303033681,
+     "last_close": "2026-09-18"
+    },
+    "nano_nuclear": {
+     "symbol": "NNE.US",
+     "adv_usd": 38940517,
+     "last_close": "2026-09-18"
+    }
+   }
+  }
+ },
+ {
+  "qid": "powl_q4",
+  "answer_date": "2026-12-15",
+  "committed_at": "2026-09-17",
+  "sha256": "a078956be66deb2985e420411e5caf10ef9698b9e9afd985947f8ecf8fcf601a",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-17",
+   "min_adv_usd": 250000,
+   "legs": {
+    "powell": {
+     "symbol": "POWL.US",
+     "adv_usd": 167676230,
+     "last_close": "2026-09-16"
+    }
+   }
+  }
+ }
+]

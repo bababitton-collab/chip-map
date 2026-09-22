@@ -210,7 +210,7 @@
           swatch:`border-color:${DN}`},
     ew:  {c:EW,  w:1.4, d:' stroke-dasharray="4 3"', label:()=>'equal-weight map',
           swatch:`border-color:${EW};border-top-style:dashed`},
-    sox: {c:SOX, w:1.4, d:SOX_DASH, label:()=>'SOX',
+    sox: {c:SOX, w:1.4, d:SOX_DASH, label:()=>(window.BENCH_LABEL||'SOX'),
           swatch:`border-color:${SOX};border-top-style:dotted`},
   };
   const R2_NOTE = 'second ring · shown as a number';
@@ -399,7 +399,7 @@
     const nums = withNums === false ? '' : `<div class="obsnums">
         <div><b class="${sgn(o.up)}">${p2(o.up)}</b><span>up basket since the report</span></div>
         <div><b class="${sgn(o.up_ew)}">${p2(o.up_ew)}</b><span>up − map since the report</span></div>
-        <div><b class="${sgn(o.up_sox)}">${p2(o.up_sox)}</b><span>up − SOX since the report</span></div>
+        <div><b class="${sgn(o.up_sox)}">${p2(o.up_sox)}</b><span>up − ${(window.BENCH_LABEL||'SOX')} since the report</span></div>
         ${up2!=null?`<div><b class="${sgn(up2)}">${p2(up2)}</b><span>up · second ring since the report</span></div>`:''}
       </div>`;
     return `<div class="chart obschart">
@@ -507,7 +507,7 @@
     const hz = r.horizons||{}, h = hz[PH];
     const diag = Object.keys(hz).filter(k=>k!==PH && hz[k])
       .sort((a,b)=>Number(a)-Number(b)).map(k=>`${k}d ${p2(hz[k].spread)}`);
-    if(h && h.spread_sox!=null) diag.push(`vs SOX at ${PH}d ${p2(h.spread_sox)}`);
+    if(h && h.spread_sox!=null) diag.push(`vs ${(window.BENCH_LABEL||'SOX')} at ${PH}d ${p2(h.spread_sox)}`);
     const big = 'display:block;font-family:IBM Plex Mono,monospace;font-weight:500;line-height:1.1';
     const val = h
       ? `<b data-official-value class="${h.hit?'pos':'neg'}" style="${big};font-size:1.6rem">${p2(h.spread)}</b><span>${h.hit?'hit':'miss'} · locked ${esc(h.date)}</span>`
@@ -539,7 +539,10 @@
           ? `marked ${String(r.marked_at||'').slice(0,10)} · entry at next close`
           : (r.state==='reported'
               ? `Reported ${esc(r.report_date||r.d)}`
-              : `${esc(r.d)} · ${r.confirmed?'confirmed':'expected'}`));
+              // An unconfirmed date is the company's expected reporting day,
+              // not a date anybody has published. It says so on the card
+              // until the official one is in and the question is recommitted.
+              : `${esc(r.d)} · ${r.confirmed?'confirmed':'expected — to be confirmed'}`));
     let badge='', line='';
     if(r.state==='upcoming'){
       badge = ringSVG(daysTo(r.d));
@@ -569,7 +572,7 @@
     const nums = r.entry_date ? `<div class="big">
         <div><b class="${sgn(t.win_lose)}">${p2(t.win_lose)}</b><span>up − down today</span></div>
         <div><b class="${sgn(t.win_ew)}">${p2(t.win_ew)}</b><span>up − map today</span></div>
-        <div><b class="${sgn(t.win_sox)}">${p2(t.win_sox)}</b><span>vs SOX</span></div>
+        <div><b class="${sgn(t.win_sox)}">${p2(t.win_sox)}</b><span>vs ${(window.BENCH_LABEL||'SOX')}</span></div>
       </div>` + (r.has_r2?`<div class="small">
         <div><b class="${sgn(t.win2_lose2)}">${p2(t.win2_lose2)}</b><span>ring 2 up − down</span></div>
         <div><b class="${sgn(t.win2_ew)}">${p2(t.win2_ew)}</b><span>ring 2 up − map</span></div>
@@ -650,7 +653,8 @@
   // browser only -- the numbers are the build's.
   const RT_COLS = [['qid','Question',0], ['who','Company',0],
                    ['answer_date','Answered',0], ['verdict','Verdict',0],
-                   ['basket','Basket',1], ['ew','EW_MAP',1], ['sox','SOX',1],
+                   ['basket','Basket',1], ['ew','EW_MAP',1],
+                   ['sox',(window.BENCH_LABEL||'SOX'),1],
                    ['excess_ew','vs EW_MAP',1], ['sessions','Sessions',2],
                    ['committed_at','Signed',0], ['sha','Hash',0]];
   function recordTable(rows){
@@ -782,7 +786,7 @@
       ${lbl('Diagnostic, not the score')}
       <div class="tiles">
         ${dtiles}
-        ${tile(X.n ? p2(X.mean_excess) : '0 / 0', X.n ? `excess vs SOX at ${PH}d (n=${X.n})` : 'no scored forecasts yet', '', ' data-stat="sox"')}
+        ${tile(X.n ? p2(X.mean_excess) : '0 / 0', X.n ? `excess vs ${(window.BENCH_LABEL||'SOX')} at ${PH}d (n=${X.n})` : 'no scored forecasts yet', '', ' data-stat="sox"')}
         ${tile(rate(S.ring2_hit_5), cap(S.ring2_hit_5,'second ring hit 5d'))}
         ${tile(S.n_upcoming||0, nu ? 'pre-registered · next '+nu.d+' '+nu.who
                                    : 'pre-registered')}

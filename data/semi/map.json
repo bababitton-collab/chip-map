@@ -1,5 +1,6 @@
 {
  "chain": "semiconductors-ai-compute",
+ "note_on_copy": "labels.copy holds the words this industry uses for itself on the landing page. They were literals in chains/templates/landing.html until the engine became multi-domain; the wording here is that wording, unchanged, so the published page did not move.",
  "as_of": "2026-09-08",
  "note_on_method": "Market caps are from companiesmarketcap.com and stockanalysis.com snapshots dated 2026-09-02/03 unless noted. Figures marked 'estimate' in notes are analyst/third-party; figures citing a 10-K/20-F/6-K or company press release are disclosed. null means not verifiable from a source I could reach.",
  "layers": [
@@ -10300,6 +10301,10 @@
  },
  "edge_note": "v2.2: 45 supplier-customer edges added from customer-concentration disclosures (10-K/20-F), supplier awards and trade reports; each carries source and as_of. Weakest: ter->nvda, mpwr->nvda, etn->nvda (see what field).",
  "labels": {
+  "copy": {
+   "chokepoint_kind": "semiconductor",
+   "chokepoint_examples": "EUV lithography, HBM memory and advanced packaging"
+  },
   "layers": {
    "L1": {
     "he": "חומרי גלם",

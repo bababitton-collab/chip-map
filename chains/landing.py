@@ -83,8 +83,13 @@ def check_access() -> None:
             "chains/access.py: " + "; ".join(wrong))
 
 
-def facts(dom_dir: Path) -> dict:
-    """Everything the page states, read from the files in ``dom_dir``."""
+def facts(dom_dir: Path, dom: str | None = None) -> dict:
+    """Everything the page states, read from the files in ``dom_dir``.
+
+    ``dom`` names the map those files came from. It is needed for the phrases
+    the map holds for itself -- the benchmark and the words this industry uses
+    -- which are read from the map rather than from the published directory.
+    """
     live = _read(dom_dir / "live_en.json")
     if not isinstance(live, dict):
         raise LandingError(f"{dom_dir / 'live_en.json'} is missing: the "
@@ -110,7 +115,17 @@ def facts(dom_dir: Path) -> dict:
         "primary_horizon": PRIMARY_HORIZON,
         "diagnostic_horizons": [h for h in preregister.CONTRACT_HORIZONS
                                 if h != PRIMARY_HORIZON],
-        "sox": preregister.BENCHMARKS["sox"],
+        # This domain's second benchmark, not the first domain's. The landing
+        # page states it as fact beside the scoring rule, so a stale name here
+        # would be a false statement about how the record is measured.
+        "sox": forecast_benchmark_symbol(dom),
+        # The words that name THIS industry, from its own map. They are not
+        # defaulted in Python on purpose: a default here would be one domain's
+        # vocabulary living in the engine, which is the thing the map exists
+        # to hold. A map that declares none gets an empty phrase rather than
+        # another industry's.
+        "chokepoint_kind": _copy(dom, "chokepoint_kind"),
+        "chokepoint_examples": _copy(dom, "chokepoint_examples"),
         "prereg": (isinstance(commits, list) and bool(commits)
                    and isinstance(public, dict)
                    and isinstance(public.get("forecasts"), list)),
@@ -139,6 +154,33 @@ def _jsonld(brand: str, url: str) -> str:
     return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
 
+def _copy(dom: str | None, key: str) -> str:
+    """One phrase this industry uses for itself, from its own map.
+
+    Read from the map rather than defaulted here: a default would be one
+    industry's vocabulary living in the engine, which is exactly what the
+    labels block exists to hold. A map that declares nothing gets an empty
+    phrase -- never another industry's words.
+    """
+    from chains import mapfile
+    try:
+        block = (mapfile.load(dom=dom).get("labels") or {}).get("copy") or {}
+    except (FileNotFoundError, ValueError):
+        return ""
+    return str(block.get(key) or "").strip()
+
+
+def forecast_benchmark_symbol(dom: str | None = None) -> str:
+    """The symbol of this domain's second benchmark.
+
+    Imported late and read per build: the landing page states it as a fact
+    about how the record is measured, so naming another domain's index here
+    would be a false statement rather than a stale label.
+    """
+    from chains import forecast
+    return forecast.benchmark_for(dom)["symbol"]
+
+
 def _domain_links(live: list[str], dom: str) -> str:
     """One link per map the site actually serves, the current one marked."""
     out = []
@@ -161,7 +203,7 @@ def render(dom_dir: Path, dom: str, site_url: str,
     """
     from chains.paths import subscribe_embed_url, templates_dir
     check_access()
-    f = facts(dom_dir)
+    f = facts(dom_dir, dom)
     t = template if template is not None else (
         (templates_dir() / TEMPLATE).read_text(encoding="utf-8"))
     t = _blocks(t, "prereg", f["prereg"])
@@ -183,6 +225,11 @@ def render(dom_dir: Path, dom: str, site_url: str,
         "primary_horizon": str(f["primary_horizon"]),
         "diagnostic_horizons": _series(f["diagnostic_horizons"]),
         "sox": f["sox"],
+        # Derived in facts() with the rest, and handed to the template here:
+        # fill() raises on a key it cannot find, so a phrase that stops at
+        # facts() stops the build rather than rendering an empty gap.
+        "chokepoint_kind": f["chokepoint_kind"],
+        "chokepoint_examples": f["chokepoint_examples"],
         "n_committed": str(f.get("n_committed", "")),
         "n_valid": str(f.get("n_valid", "")),
         "map_href": f"/{dom}/",

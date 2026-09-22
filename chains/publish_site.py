@@ -229,6 +229,15 @@ def write_site_record() -> Path:
     from chains import track, track_site
     from chains import domains as registry
     found = registry.discover()
+    # A map called "track" would be published to site/track/ and this page
+    # would overwrite its front page -- or it would overwrite this one,
+    # depending which ran last. Neither is a thing to discover in production,
+    # and the name is the only one this page reserves.
+    if track_site.DIRNAME in found:
+        raise SystemExit(
+            f"a map named {track_site.DIRNAME!r} collides with the site-wide "
+            f"record published at /{track_site.DIRNAME}/. Rename the "
+            f"directory under data/.")
     published = [d for d in found if (site_dir(d) / "track_public.json").exists()]
     if not published:
         raise SystemExit(

@@ -140,3 +140,26 @@ def test_the_page_carries_no_hebrew(tmp_path):
     from chains.build_pages import hebrew_runs
     root = _site(tmp_path, {"semi": [_card("a", 0.01, True)]})
     assert hebrew_runs(track_site.render(root, ["semi"], "https://x/")) == []
+
+
+# -- the site root is not a map -----------------------------------------------
+# Build #78 died here. The CI guard that proves every published map ships a
+# SEALED tracking payload globbed site/*/ and treated each directory as a map.
+# Adding a page that belongs to no map put a directory at the site root that
+# has no sealed payload and never will, so a correct publish was read as a map
+# missing its encrypted half and the deploy was stopped. The guard now asks
+# the engine which directories are maps. The reserved name is checked here,
+# from the other side: nothing may claim it.
+
+def test_no_map_may_be_named_after_the_site_wide_record(monkeypatch):
+    from chains import domains as registry
+    from chains import publish_site
+    monkeypatch.setattr(registry, "discover",
+                        lambda *a, **k: ["semi", track_site.DIRNAME])
+    with pytest.raises(SystemExit) as e:
+        publish_site.write_site_record()
+    assert track_site.DIRNAME in str(e.value)
+
+
+def test_the_reserved_name_is_the_one_the_page_is_published_under():
+    assert track_site.DIRNAME == "track"

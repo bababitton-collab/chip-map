@@ -1524,6 +1524,75 @@
   "flows": [],
   "etfs": [],
   "vulnerable": [],
-  "challengers": {},
+  "challengers": {
+    "CPE1": [
+      {
+        "name": "Doosan Enerbility",
+        "ticker_or_private": "034020 (KRX)",
+        "country": "KR",
+        "approach": "Heavy gas turbine frames built in Changwon, sold against the three incumbents rather than through them",
+        "stage": "volume",
+        "signal": "Record gas turbine order from a US buyer",
+        "signal_source": "https://en.sedaily.com/finance/2026/03/07/doosan-enerbility-wins-record-gas-turbine-order-from-us-big-20260307",
+        "as_of": "2026-03-07"
+      },
+      {
+        "name": "Bloom Energy",
+        "ticker_or_private": "BE",
+        "country": "US",
+        "approach": "Solid-oxide fuel cells sited at the data center, bypassing the turbine and the interconnect queue behind it",
+        "stage": "volume",
+        "signal": "Shipping into data-center demand rather than piloting it",
+        "signal_source": "https://www.fool.com/investing/2026/09/19/bloom-energy-is-riding-the-data-center-boom-to-a-2/",
+        "as_of": "2026-09-19"
+      }
+    ],
+    "CPE2": [
+      {
+        "name": "HD Hyundai Electric",
+        "ticker_or_private": "267260 (KRX)",
+        "country": "KR",
+        "approach": "Extra-high-voltage transformer capacity built inside the US, against a four-year lead time at the incumbents",
+        "stage": "volume",
+        "signal": "Expanding its US production subsidiary for EHV power transformers",
+        "signal_source": "https://www.prnewswire.com/news-releases/hd-hyundai-electric-expands-us-production-subsidiary-solidifies-leadership-in-north-american-extra-high-voltage-power-transformer-market-302707507.html",
+        "as_of": "2026-01-01"
+      },
+      {
+        "name": "Hyosung Heavy Industries",
+        "ticker_or_private": "298040 (KRX)",
+        "country": "KR",
+        "approach": "Korean transformer capacity aimed at the same North American shortage",
+        "stage": "volume",
+        "signal": "Scaling transformer output for the US market",
+        "signal_source": "http://www.kedglobal.com/energy/newsView/ked202503030002",
+        "as_of": "2025-03-03"
+      }
+    ],
+    "CPE3": [
+      {
+        "name": "LS Cable & System (LS Corp)",
+        "ticker_or_private": "006260 (KRX)",
+        "country": "KR",
+        "approach": "A US subsea cable plant, against three European makers who hold the book",
+        "stage": "pilot",
+        "signal": "Seoul backing a US subsea cable plant with $218 million",
+        "signal_source": "https://www.upi.com/Top_News/World-News/2026/08/24/South-Korea-backs-LS-Cables-US-subsea-cable-plant-with-218-million/6601787614428/",
+        "as_of": "2026-08-24"
+      }
+    ],
+    "CPE4": [
+      {
+        "name": "Silex Systems / Global Laser Enrichment",
+        "ticker_or_private": "SILXY",
+        "country": "AU/US",
+        "approach": "Laser (SILEX) enrichment, a different physics from the centrifuge cascades the incumbents run",
+        "stage": "pilot",
+        "signal": "NRC received GLE's licence application for the Paducah laser enrichment facility",
+        "signal_source": "https://www.federalregister.gov/documents/2026/03/06/2026-04474/global-laser-enrichment-llc-paducah-laser-enrichment-facility-notice-of-receipt-of-application-for",
+        "as_of": "2026-03-06"
+      }
+    ]
+  },
   "display_rules": {}
 }

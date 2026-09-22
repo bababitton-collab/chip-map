@@ -133,6 +133,13 @@ TRACK_ASSETS = ["lightweight-charts.standalone.production.js",
 # The landing page, named from inside a domain's directory: it sits at the
 # site root, one level up from every map.
 FRONT_DOOR = "../index.html"
+# The site-wide record, named the same way: one level up, then into track/.
+SITE_RECORD = "../track/index.html"
+# The pooled record as data, at the site root. Numbers only -- N, hits, the
+# rate and its interval, per map and across them -- and no question text of
+# any kind. The map pages fetch it for their capital-gate meter, which
+# cannot otherwise know what another map published.
+SITE_RECORD_JSON = "../record.json"
 
 GATED = ("index.html", "live_en.json", "focus_en.json", "track_public.json",
          # the landing page, at the site root
@@ -206,6 +213,93 @@ def write_landing(src: Path, dom: str, live: list[str] | None = None) -> Path:
     p.write_text(landing.render(src, dom, f"https://{CUSTOM_DOMAIN}/",
                                 live=live),
                  encoding="utf-8", newline="\n")
+    return p
+
+
+def write_site_record() -> Path:
+    """site/track/index.html: the record across every map, written once.
+
+    Written after the walk for the same reason the front door is: it counts
+    across maps, so it cannot be written halfway through putting them there.
+    Gated in the same breath, and on more than the page itself --
+    public_leaks() is re-run on every map's published record, because this
+    page is derived from those files and a leak in one of them would be a
+    leak that arrived here through the back door.
+    """
+    from chains import track, track_site
+    from chains import domains as registry
+    found = registry.discover()
+    published = [d for d in found if (site_dir(d) / "track_public.json").exists()]
+    if not published:
+        raise SystemExit(
+            "no map has published a record, so site/track/ would state a "
+            "number about nothing. Run the build first.")
+
+    # Gate 1: each map's free record, checked again against its own full
+    # payload. The per-domain page already passed this when it was written;
+    # it is asked again here because THIS page is built out of those files.
+    for dom in published:
+        full = out_dir(dom) / "track.json"
+        if not full.exists():
+            raise SystemExit(f"{full} is missing: the site-wide record "
+                             f"cannot be gated without the payload it came "
+                             f"from.")
+        pub = json.loads((site_dir(dom) / "track_public.json")
+                         .read_text(encoding="utf-8"))
+        leaks = track.public_leaks(pub, json.loads(
+            full.read_text(encoding="utf-8")))
+        if leaks:
+            raise SystemExit(
+                f"{dom}: a question still ahead reached the published "
+                f"record: {leaks[:3]}. Not published.")
+
+    out = site_root() / track_site.DIRNAME
+    out.mkdir(parents=True, exist_ok=True)
+    doc = track_site.render(site_root(), published, f"https://{CUSTOM_DOMAIN}/")
+
+    # Gate 2: no Hebrew, on the bytes about to be served.
+    runs = hebrew_runs(doc)
+    if runs:
+        raise SystemExit(
+            f"site/track/index.html: {len(runs)} Hebrew string(s) in a file "
+            f"served to English readers. Not published.\n  "
+            + "\n  ".join(runs[:10]))
+
+    p = out / "index.html"
+    p.write_text(doc, encoding="utf-8", newline="\n")
+
+    data = track.pooled(
+        {d: json.loads((site_dir(d) / "track_public.json")
+                       .read_text(encoding="utf-8")) for d in published})
+    # Cards are what carry a question's words; the meter needs none of them.
+    # Written without them rather than filtered afterwards: this file is
+    # fetched by every map page, and "we removed the text" is a weaker
+    # promise than "the text was never put in".
+    slim = {"primary_horizon": data["primary_horizon"],
+            "domains": data["domains"],
+            "record": data["record"],
+            "by_domain": {d: {"domain": d,
+                              "record": b["record"],
+                              "benchmark": b["benchmark"]}
+                          for d, b in data["by_domain"].items()}}
+    rj = site_root() / "record.json"
+    rj.write_text(json.dumps(slim, ensure_ascii=False, indent=1) + "\n",
+                  encoding="utf-8", newline="\n")
+    runs = hebrew_runs(rj.read_text(encoding="utf-8"))
+    if runs:
+        raise SystemExit(
+            f"site/record.json: {len(runs)} Hebrew string(s). Not published.")
+
+    # Gate 3: no locked question's sentence, against EVERY map's text -- not
+    # only the first one's. The page names questions from all of them.
+    for dom in published:
+        leaked = locked_text_in_site(site_dir(dom), dom,
+                                     only=(SITE_RECORD, SITE_RECORD_JSON))
+        if leaked:
+            p.unlink(missing_ok=True)
+            raise SystemExit(
+                f"a locked question's text reached the site-wide record: "
+                f"{leaked[:3]}. Not published.")
     return p
 
 
@@ -495,10 +589,13 @@ def main(argv: list[str] | None = None) -> int:
             # Not during the walk: the front door counts across every map and
             # is written below, once they are all published.
             rc = _one(dom, landing=False) or rc
+        rec = write_site_record()
         p = write_landing_now()
         print(f"\n=== front door " + "=" * 49)
         print(f"  {'../index.html  (landing page)':<34} "
               f"{p.stat().st_size:>9,} bytes")
+        print(f"  {'../track/index.html  (site record)':<34} "
+              f"{rec.stat().st_size:>9,} bytes")
         print(f"  names every map published above: {', '.join(found)}")
         return rc
     return _one(args.domain)

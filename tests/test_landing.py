@@ -649,6 +649,17 @@ def walked(tmp_path, monkeypatch):
     monkeypatch.setattr(publish_site, "publish", fake_publish)
     monkeypatch.setattr(publish_site, "locked_text_in_site",
                         lambda *a, **k: [])
+    # The site-wide record is written in the same place and has its own
+    # tests; this fixture is about WHEN the front door is written.
+    def stub_record():
+        d = root / "track"
+        d.mkdir(parents=True, exist_ok=True)
+        p = d / "index.html"
+        p.write_text("", encoding="utf-8")
+        order.append(("site record", None))
+        return p
+
+    monkeypatch.setattr(publish_site, "write_site_record", stub_record)
     real_write = publish_site.write_landing
 
     def watched(src, dom, live=None):
@@ -663,7 +674,7 @@ def walked(tmp_path, monkeypatch):
 def test_the_front_door_is_written_once_and_last(walked):
     _root, order, _n = walked
     assert order == [("publish", "semi"), ("publish", ENERGY),
-                     ("front door", "semi")]
+                     ("site record", None), ("front door", "semi")]
 
 
 def test_the_front_door_names_every_map_from_an_empty_site(walked):

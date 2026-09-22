@@ -197,8 +197,8 @@ TRANSLATIONS = [
   '<h2>The Forecast Ledger</h2>'),
  ('<p class="lede">כל תשובה שסומנה הופכת לרישום: הסלים נקבעו מראש בקובץ שבגיט, לפני האירוע, והציון נמדד מהסגירה הראשונה שאחרי הסימון מול שאר המפה. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>',
   '<p class="lede">Every marked answer becomes a record: the baskets were fixed in advance, in a file in git, before the event, and the score is measured from the first close after the mark against the rest of the map. There is no backtest here and there cannot be one — the forecast was written before the price moved. The sample is small, and every number here is shown with its N.</p>'),
- ("  const LT = {h2:'יומן התחזיות', none:'עוד לא סומנה אף תשובה. הרישום הראשון ייפתח כאן ברגע שתסומן.',\n    scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'N=30 לפני כל החלטת הון', of:'מתוך',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',\n    direct:'ישיר — הסל הרשום', indirect:'עקיף — טבעת שנייה לפי המפה',\n    noind:'אין עדיין תחזית עקיפה'};",
-  "  const LT = {h2:'The Forecast Ledger', none:'No answer has been marked yet. The first entry opens here the moment one is.',\n    scored:'recorded', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'N=30 before any capital decision', of:'of',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark',\n    direct:'direct \\u2014 the registered basket', indirect:'indirect \\u2014 second ring, via the map',\n    noind:'no indirect forecast yet'};"),
+ ("  const LT = {h2:'יומן התחזיות', none:'עוד לא סומנה אף תשובה. הרישום הראשון ייפתח כאן ברגע שתסומן.',\n    scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'N=__MIN_N__ לפני כל החלטת הון', of:'מתוך',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',\n    direct:'ישיר — הסל הרשום', indirect:'עקיף — טבעת שנייה לפי המפה',\n    noind:'אין עדיין תחזית עקיפה'};",
+  "  const LT = {h2:'The Forecast Ledger', none:'No answer has been marked yet. The first entry opens here the moment one is.',\n    scored:'recorded', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'N=__MIN_N__ before any capital decision', of:'of',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark',\n    direct:'direct \\u2014 the registered basket', indirect:'indirect \\u2014 second ring, via the map',\n    noind:'no indirect forecast yet'};"),
  # The teaser layer. A locked row is fully visible and simply has no
  # sentence; the dummy below is fixed and is never the real text.
  ("const LOCK = {\n  dummy: 'שאלה נעולה — הטקסט המלא מגיע במייל השבועי יחד עם מה שצריך להקשיב לו בשיחת התוצאות',\n  line: 'הטקסט המלא', mail: 'במייל השבועי',\n  badge: 'השאלה הפתוחה השבוע',\n  marked: 'סומן', };",
@@ -323,6 +323,24 @@ def _bench_js(dom: str | None = None) -> str:
     from chains import forecast
     label = forecast.benchmark_for(dom)["label"]
     return f"window.BENCH_LABEL={_json.dumps(label)};\n"
+
+
+MIN_N_PLACEHOLDER = "__MIN_N__"
+
+
+def _fill_min_n(text: str) -> str:
+    """The capital gate's N, from the one place it is defined.
+
+    The templates carry the sentence -- in each language, where copy
+    belongs -- and a placeholder where the number goes. The number itself is
+    forecast.MIN_N_FOR_CAPITAL, which is also what record_stats publishes
+    beside every record it computes. Typed into the templates it was the
+    same figure written in three files and provable in none of them: a
+    threshold raised in the scoring code would have left two pages promising
+    the old one, and the page is where a reader is told the rule.
+    """
+    from chains.forecast import MIN_N_FOR_CAPITAL
+    return text.replace(MIN_N_PLACEHOLDER, str(MIN_N_FOR_CAPITAL))
 
 
 def _inline_cards(text: str) -> str:
@@ -519,7 +537,8 @@ def public_page(template: str, live: str, cfg: dict,
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n" + extra_head + "</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return doc.replace("__FOCUS__", focus).replace("__LIVE__", live)
+    return _fill_min_n(
+        doc.replace("__FOCUS__", focus).replace("__LIVE__", live))
 
 
 def private_page(template: str, live: str, focus: str = "null") -> str:
@@ -544,7 +563,8 @@ def private_page(template: str, live: str, focus: str = "null") -> str:
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return doc.replace("__FOCUS__", focus).replace("__LIVE__", live)
+    return _fill_min_n(
+        doc.replace("__FOCUS__", focus).replace("__LIVE__", live))
 
 
 def build_private(template=None, live=None, out=None):

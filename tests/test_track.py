@@ -2059,3 +2059,65 @@ def test_at_eight_the_page_prints_the_ranges_with_n(tmp_path):
     assert "SOX" not in head, "SOX is never in the official block"
     assert "Diagnostic, not the score" in diag
     assert 'data-stat="sox"><b>+0.10%</b><span>excess vs SOX at 20d (n=8)' in diag
+
+
+# -- each map is priced against its own second benchmark ----------------------
+# EW_MAP is what every hit is scored on and it is built from the map's own
+# nodes, so it was always per-domain. The SECOND benchmark was not: its symbol
+# was a module constant, so a power map's excess-vs-benchmark column was
+# computed against the semiconductor ETF. The contract already named each
+# map's own line -- preregister.benchmarks_for has been per-domain since the
+# second map arrived -- so the published hash promised GRID.US while the
+# number beside it was priced from SOXQ.US.
+#
+# Read from the map in hand, never from the environment: these functions are
+# handed the document they are pricing, and publish walks every map in one
+# process without setting CHIP_MAP_DOMAIN between them.
+
+def _symbols_asked_for(doc, monkeypatch):
+    """Every symbol the price book is opened with for this map."""
+    asked = set()
+    real = forecast.Book
+
+    class Spy(real):
+        def __init__(self, syms):
+            asked.update(syms)
+            super().__init__(syms)
+
+    monkeypatch.setattr(forecast, "Book", Spy)
+    track.build(forecasts=[], ledger={"rows": []}, watch=[], doc=doc,
+                marks={})
+    return asked
+
+
+@pytest.mark.parametrize("declared,expected", [
+    (None, forecast.SOX_SYMBOL),
+    ({"key": "grid", "symbol": "GRID.US", "label": "GRID"}, "GRID.US"),
+])
+def test_the_second_benchmark_priced_is_the_one_the_map_names(
+        declared, expected, monkeypatch):
+    doc = {"nodes": [], "benchmark": declared} if declared else {"nodes": []}
+    asked = _symbols_asked_for(doc, monkeypatch)
+    assert expected in asked
+    other = "GRID.US" if expected == forecast.SOX_SYMBOL else forecast.SOX_SYMBOL
+    assert other not in asked, "one map priced against another map's index"
+
+
+def test_a_map_naming_no_benchmark_keeps_the_first_domains_line():
+    """The default is a default, not a rule -- and it must stay byte for byte
+    what the committed contracts hashed."""
+    assert forecast.benchmark_in({}) == forecast.DEFAULT_BENCHMARK
+    assert forecast.benchmark_in(None) == forecast.DEFAULT_BENCHMARK
+    assert forecast.DEFAULT_BENCHMARK == {
+        "key": "sox", "symbol": "SOXQ.US", "label": "SOX"}
+
+
+def test_the_symbol_comes_from_the_document_not_the_environment(monkeypatch):
+    """The failure this prevents: scoring one map while the environment names
+    another. benchmark_in must not consult CHIP_MAP_DOMAIN at all."""
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "semi")
+    doc = {"nodes": [], "benchmark": {"key": "grid", "symbol": "GRID.US",
+                                      "label": "GRID"}}
+    assert forecast.benchmark_in(doc)["symbol"] == "GRID.US"
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "energy")
+    assert forecast.benchmark_in({"nodes": []})["symbol"] == forecast.SOX_SYMBOL

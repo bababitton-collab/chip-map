@@ -344,10 +344,14 @@ def publish(dst: Path | None = None,
 def locked_text_in_site(site: Path, dom: str | None = None) -> list[str]:
     """Any locked question whose sentence appears in a published file.
 
-    ``dom`` names the map being gated. It matters: the marks file scanned
-    below is that domain's, and reading the default domain's instead would
-    clear a second industry's site against the wrong file -- a gate that
-    passes by looking somewhere else is worse than no gate.
+    ``dom`` names the map being gated. It matters twice over: the question
+    text fetched below is that domain's section of the corpus, and so is the
+    marks file scanned at the end. Reading the first domain's instead would
+    clear a second industry's site against the wrong sentences -- a gate that
+    passes by looking somewhere else is worse than no gate. This is not
+    hypothetical: ``--all-domains`` publishes every map from one process and
+    sets nothing in the environment, so a fetch with no domain to go on falls
+    back to the first map and is handed ids the second one never heard of.
 
     The paywall is a negative property, and negative properties rot quietly.
     So it is checked on the bytes about to be served rather than inferred from
@@ -361,7 +365,7 @@ def locked_text_in_site(site: Path, dom: str | None = None) -> list[str]:
     """
     from chains import questions
     try:
-        text = questions.fetch()
+        text = questions.fetch(dom=dom)
     except questions.QuestionsError:
         return []          # no text was fetched, so none can have been written
     snap = json.loads((site / "live_en.json").read_text(encoding="utf-8"))

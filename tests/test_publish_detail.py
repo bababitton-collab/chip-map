@@ -70,7 +70,7 @@ def site(tmp_path, monkeypatch):
     text = {"locked1": {**blank, publish_site.FIELDS_CHECKED[0]: LOCKED_SENTENCE},
             "open1": {**blank, publish_site.FIELDS_CHECKED[0]:
                       "An open question anybody may read in full today."}}
-    monkeypatch.setattr("chains.questions.fetch", lambda url=None: text)
+    monkeypatch.setattr("chains.questions.fetch", lambda url=None, dom=None: text)
     return s
 
 

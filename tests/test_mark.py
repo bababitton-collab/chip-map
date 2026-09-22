@@ -12,7 +12,10 @@ import json
 
 import pytest
 
+from pathlib import Path
+
 from chains import mark
+from chains.paths import watch_path
 
 
 TODAY = dt.date(2026, 9, 11)
@@ -507,3 +510,187 @@ def test_the_locked_text_gate_reads_marks_json(tmp_path, monkeypatch):
     hits = publish_site.locked_text_in_site(site)
     assert hits, "a locked sentence in marks.json was not caught"
     assert "marks.json" in hits[0] and "locked1" in hits[0]
+
+
+# -- every map gets marked, each in its own process ---------------------------
+# The job ran `python -m chains.mark` once, with no domain and nothing in the
+# environment, so every path helper fell back to the default map. Only the
+# first industry was ever marked; a second map's answered question would pass
+# its date and nothing would record it -- silently, because the job reported
+# success after marking the first one. The workflow now walks
+# domains.discover() with a subprocess per map. These tests hold the two
+# properties that walk depends on.
+
+TWO = {
+    "alpha": [row("shared", "2026-10-15", win=["x"], lose=[]),
+              row("alpha_only", "2026-10-15", win=["x"], lose=[])],
+    "beta": [row("shared", "2026-10-15", win=["y"], lose=[])],
+}
+
+# The same id in two maps, with different text. This is real: semi and energy
+# both own gev_q3 today.
+CORPUS = {
+    "alpha": {"shared": {"q_en": "Did ALPHA raise its full-year guidance?",
+                         "yes_en": "y", "no_en": "n", "why_en": "w"},
+              "alpha_only": {"q_en": "Did ALPHA sign the contract?",
+                             "yes_en": "y", "no_en": "n", "why_en": "w"}},
+    "beta": {"shared": {"q_en": "Did BETA hold its reactor schedule?",
+                        "yes_en": "y", "no_en": "n", "why_en": "w"}},
+}
+
+
+@pytest.fixture
+def two_maps(tmp_path, monkeypatch):
+    monkeypatch.setenv("CHIP_MAP_DATA", str(tmp_path))
+    monkeypatch.setenv(mark.KEY_ENV, "not-a-real-key")
+    monkeypatch.setenv(mark.MODEL_ENV, "claude-test")
+    # Set, not deleted. mark.main() assigns CHIP_MAP_DOMAIN itself, and a
+    # delenv of a variable that was already absent records nothing to undo
+    # -- so the value the code sets outlives the test, and every later test
+    # in the process reads a map that does not exist. Handing monkeypatch a
+    # value first makes it own the variable and restore it whatever the code
+    # does. A deliberately wrong one, so --domain is proved to win.
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "not-a-real-map")
+    for dom, rows in TWO.items():
+        d = tmp_path / dom
+        d.mkdir(parents=True)
+        (d / "watch.json").write_text(json.dumps(rows), encoding="utf-8")
+        (d / "watch_en.json").write_text(json.dumps(rows), encoding="utf-8")
+        (d / "map.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(mark, "headlines", lambda *a, **k: [])
+    monkeypatch.setattr(mark, "pick_model", lambda key: "claude-test")
+    asked = []
+
+    def fetch(url=None, dom=None):
+        asked.append(dom)
+        if dom not in CORPUS:
+            raise AssertionError(
+                f"the fetch was handed {dom!r}: a map must ask for its own "
+                f"section of the corpus, never the default one's")
+        return CORPUS[dom]
+
+    monkeypatch.setattr("chains.questions.fetch", fetch)
+    return tmp_path, asked
+
+
+def test_the_walk_writes_one_marks_file_per_map(two_maps, monkeypatch):
+    """What the workflow loop does, in process: one call per domain, each
+    with its own --domain. Each map must land in its own file."""
+    root, _asked = two_maps
+    monkeypatch.setattr(mark, "ask", Fake(GOOD))
+    for dom in ("alpha", "beta"):
+        assert mark.main(["--domain", dom, "--today", "2026-10-15"]) == 0
+    for dom in ("alpha", "beta"):
+        got = json.loads((root / dom / "marks.json").read_text(
+            encoding="utf-8"))
+        assert got["answers"], f"{dom} wrote no answer"
+        assert "shared" in got["answers"], dom
+    # and neither wrote into the other's file
+    a = json.loads((root / "alpha" / "marks.json").read_text(encoding="utf-8"))
+    b = json.loads((root / "beta" / "marks.json").read_text(encoding="utf-8"))
+    assert "alpha_only" in a["answers"]
+    assert "alpha_only" not in b["answers"], \
+        "one map's question reached another map's marks file"
+
+
+def test_each_map_is_handed_its_own_question_text(two_maps, monkeypatch):
+    """The fetch must be asked for THIS map's section. Keyed on the id alone
+    the two maps' `shared` question is one question with two meanings, and
+    the wrong section does not fail loudly -- it answers with the other
+    industry's sentence for the same id."""
+    root, asked = two_maps
+    monkeypatch.setattr(mark, "ask", Fake(GOOD))
+    for dom in ("alpha", "beta"):
+        mark.main(["--domain", dom, "--today", "2026-10-15"])
+    assert asked == ["alpha", "beta"], \
+        f"the fetch was handed {asked}, not each map's own name"
+
+
+def test_the_second_map_never_sees_the_first_maps_corpus(two_maps,
+                                                         monkeypatch):
+    """Asked for beta, the corpus handed over must be beta's -- the fixture
+    raises if the fetch is called with anything else, including None."""
+    root, asked = two_maps
+    seen = {}
+
+    def spy(rw, q, news, key, model):
+        seen[rw["id"]] = q
+        return GOOD
+
+    monkeypatch.setattr(mark, "ask", spy)
+    mark.main(["--domain", "beta", "--today", "2026-10-15"])
+    assert asked == ["beta"]
+    text = json.dumps(seen, ensure_ascii=False)
+    assert "BETA" in text
+    assert "ALPHA" not in text, "the first map's sentence reached the second"
+
+
+def test_a_dry_run_on_the_second_map_finds_its_own_due_question(
+        tmp_path, monkeypatch):
+    """The real case, with no API call: energy's first question is abb_q3 on
+    2026-10-15, and nothing but energy has it."""
+    monkeypatch.setenv(mark.KEY_ENV, "not-a-real-key")
+    monkeypatch.setenv(mark.MODEL_ENV, "claude-test")
+    monkeypatch.setenv("CHIP_MAP_DOMAIN", "not-a-real-map")
+    monkeypatch.setattr(mark, "headlines", lambda *a, **k: [])
+    monkeypatch.setattr(mark, "pick_model", lambda key: "claude-test")
+    asked = {}
+
+    def fetch(url=None, dom=None):
+        asked["dom"] = dom
+        rows = json.loads(
+            (watch_path(dom)).read_text(encoding="utf-8"))
+        return {r["id"]: {"q_en": "q", "yes_en": "y", "no_en": "n",
+                          "why_en": "w"} for r in rows}
+
+    monkeypatch.setattr("chains.questions.fetch", fetch)
+    said = []
+    rc = mark.run("energy", dt.date(2026, 10, 15), True, None, say=said.append)
+    assert rc == 0
+    assert asked["dom"] == "energy"
+    blob = "\n".join(said)
+    assert "abb_q3" in blob, blob
+    assert "1/1 due" in blob or "questions:" in blob
+
+
+def test_the_forced_id_narrows_the_walk_to_the_maps_that_own_it():
+    """--force names one question, and mark.py raises on a map that does not
+    have it. Walking every map would turn a forced dry run red on all but
+    one, so the list is narrowed first."""
+    from chains import mark_domains
+    assert mark_domains.owners("abb_q3") == ["energy"]
+    assert mark_domains.owners("no_such_question_anywhere") == []
+    # a question two maps both name belongs to both walks
+    assert set(mark_domains.owners("gev_q3")) == {"semi", "energy"}
+
+
+def test_an_id_no_map_owns_is_an_error_not_an_empty_walk():
+    """A walk that visited nothing and reported success would be the quietest
+    possible way to lose a typo."""
+    from chains import mark_domains
+    assert mark_domains.main(["no_such_question_anywhere"]) == 1
+    assert mark_domains.main([]) == 0
+
+
+def test_the_forced_id_is_an_argument_not_an_environment_variable():
+    """chains/paths.py's docstring is the one place a reader should have to
+    look to learn what this build reads from the environment, and a one-shot
+    debugging input does not belong on that list."""
+    import ast
+    from pathlib import Path as _P
+    tree = ast.parse((_P(__file__).resolve().parents[1] / "chains"
+                      / "mark_domains.py").read_text(encoding="utf-8"))
+    reads = [n for n in ast.walk(tree)
+             if isinstance(n, ast.Attribute) and n.attr in ("environ",
+                                                            "getenv")]
+    assert reads == [], "the forced id must not become an environment knob"
+
+
+def test_the_workflow_walks_every_domain_in_its_own_process():
+    """Pinned on the workflow: the single bare call must not come back."""
+    yml = (Path(__file__).resolve().parents[1] / ".github" / "workflows"
+           / "mark.yml").read_text(encoding="utf-8")
+    assert 'python -m chains.mark_domains' in yml
+    assert 'CHIP_MAP_DOMAIN="$dom" python -m chains.mark --domain "$dom"' in yml
+    assert "exit $rc" in yml, "a failed map must make the run red"
+    assert "\n          python -m chains.mark $args" not in yml

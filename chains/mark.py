@@ -406,7 +406,14 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
     key = model = ""
     if todo:
         from chains import questions as Q
-        text = Q.fetch()
+        # The corpus is keyed by domain, and this one's section is the only
+        # one that can answer for its rows. Left to default, the fetch falls
+        # back to CHIP_MAP_DOMAIN and then to the first map -- which is right
+        # only for as long as nothing else is ever marked. Two maps may name
+        # a question alike (semi and energy both own gev_q3), so the wrong
+        # section does not fail loudly, it answers with another industry's
+        # sentence for the same id.
+        text = Q.fetch(dom=domain)
         say(f"questions: {len(text)} fetched; text for "
             f"{sum(1 for r in todo if text.get(r['id']))}/{len(todo)} due")
 

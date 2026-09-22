@@ -169,7 +169,7 @@ def leg_rows(legs: dict, doc: dict, book, kinds: dict,
 
 
 def benchmarks(legs: dict, book, node_symbols: list[str], kinds: dict,
-               window: list[dt.date]) -> dict:
+               window: list[dt.date], doc: dict | None = None) -> dict:
     """The basket, the equal-weight map and SOX over the same window.
 
     forecast.basket_returns and forecast.ew_map are the functions the ledger
@@ -194,7 +194,8 @@ def benchmarks(legs: dict, book, node_symbols: list[str], kinds: dict,
         if series:
             lines[group] = [_pct(v) for v in series]
     ew = forecast.ew_map(book, node_symbols, base, window)
-    sox = forecast.basket_returns(book, [forecast.SOX_SYMBOL], base, window)
+    sox = forecast.basket_returns(
+        book, [forecast.benchmark_in(doc)["symbol"]], base, window)
     out["ew"] = _pct(ew[-1]) if ew else None
     out["sox"] = _pct(sox[-1]) if sox else None
     if ew:
@@ -271,7 +272,8 @@ def for_card(rec: dict, doc: dict, book, node_symbols: list[str],
         "last_session": window[-1].isoformat(),
         "legs": rows,
         "no_series": missing,
-        "benchmarks": benchmarks(legs, book, node_symbols, kinds, window),
+        "benchmarks": benchmarks(legs, book, node_symbols, kinds, window,
+                                 doc),
         # One line per basket company, rebased to a common first session.
         # Empty is a fact about the data and says so rather than drawing an
         # empty frame.

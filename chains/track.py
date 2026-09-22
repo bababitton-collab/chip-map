@@ -246,7 +246,8 @@ def _observed(legs: dict, doc: dict, book, symbol_of: dict,
     ser = {g: (forecast.basket_returns(book, syms(legs[g]), base, window)
                if legs[g] else None) for g in GROUPS}
     ew = forecast.ew_map(book, node_symbols, base, window)
-    sox = forecast.basket_returns(book, [forecast.SOX_SYMBOL], base, window)
+    sox = forecast.basket_returns(
+        book, [forecast.benchmark_in(doc)["symbol"]], base, window)
     out = {
         "from": base.isoformat(),
         "sessions": len(window) - 1,
@@ -441,7 +442,8 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
     ser = {g: (forecast.basket_returns(book, syms(legs[g]), entry, window)
                if legs[g] else None) for g in GROUPS}
     ew = forecast.ew_map(book, node_symbols, entry, window)
-    sox = forecast.basket_returns(book, [forecast.SOX_SYMBOL], entry, window)
+    sox = forecast.basket_returns(
+        book, [forecast.benchmark_in(doc)["symbol"]], entry, window)
     out["series"] = {
         "dates": [x.isoformat() for x in window],
         "ew": [_pct(v) for v in ew],
@@ -690,7 +692,7 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
                  for n in doc.get("nodes", []) if n.get("ticker")}
 
     if book is None or cal is None:
-        wanted = set(node_symbols) | {forecast.SOX_SYMBOL}
+        wanted = set(node_symbols) | {forecast.benchmark_in(doc)["symbol"]}
         for w in watch:
             for i in list(w.get("win") or []) + list(w.get("lose") or []):
                 if i in symbol_of:

@@ -100,19 +100,34 @@ SOX_AS_OF = "2026-09-13"
 DEFAULT_BENCHMARK = {"key": "sox", "symbol": SOX_SYMBOL, "label": "SOX"}
 
 
-def benchmark_for(dom: str | None = None) -> dict:
-    """One domain's second benchmark: the key it is filed under, the symbol
-    that is priced, and the label a page prints beside the numbers."""
-    from chains import mapfile
-    try:
-        declared = (mapfile.load(dom=dom).get("benchmark") or {})
-    except (FileNotFoundError, ValueError):
-        declared = {}
+def benchmark_in(doc: dict | None = None) -> dict:
+    """The second benchmark of the map already in hand.
+
+    Read from the document rather than from the environment. Every function
+    that prices this line is handed the map it is pricing, and a helper that
+    went back to CHIP_MAP_DOMAIN for the answer could disagree with its own
+    argument -- scoring one industry's questions against another industry's
+    index whenever the two were not set in step. That is not hypothetical
+    here: publish walks every map in a single process without touching the
+    environment between them.
+    """
+    declared = (doc or {}).get("benchmark") or {}
     sym = declared.get("symbol")
     if not sym:
         return dict(DEFAULT_BENCHMARK)
     return {"key": declared.get("key") or "bench", "symbol": sym,
             "label": declared.get("label") or sym}
+
+
+def benchmark_for(dom: str | None = None) -> dict:
+    """One domain's second benchmark: the key it is filed under, the symbol
+    that is priced, and the label a page prints beside the numbers."""
+    from chains import mapfile
+    try:
+        doc = mapfile.load(dom=dom)
+    except (FileNotFoundError, ValueError):
+        doc = {}
+    return benchmark_in(doc)
 
 
 # ----------------------------------------------------------------- calendar
@@ -266,7 +281,7 @@ def excess(win: list[float | None], lose: list[float | None],
 # -------------------------------------------------------------- the ledger
 def score_one(f: dict, book: Book, cal: list[dt.date],
               node_symbols: list[str], symbol_of: dict[str, str],
-              log: list[str]) -> dict | None:
+              log: list[str], bench: str = SOX_SYMBOL) -> dict | None:
     entry = entry_session(f["marked_at"], cal)
     order = f.get("order", DEFAULT_ORDER)
     if entry is None:
@@ -304,7 +319,7 @@ def score_one(f: dict, book: Book, cal: list[dt.date],
     # The same claim against SOX. Reported, never scored: the hit stays on
     # EW_MAP. With both sides present the benchmark cancels, so this equals
     # the EW_MAP excess; it differs only for a basket with no lose side.
-    sx = basket_returns(book, [SOX_SYMBOL], entry, window)
+    sx = basket_returns(book, [bench], entry, window)
     exc_sox = excess(w, l, sx)
 
     rows = []
@@ -410,7 +425,8 @@ def build(forecasts: list[dict], doc: dict | None = None,
     if not forecasts:
         return {"summary": _summaries([]), "rows": []}
 
-    wanted = set(node_symbols) | {SOX_SYMBOL}
+    bench = benchmark_in(doc)["symbol"]
+    wanted = set(node_symbols) | {bench}
     for f in forecasts:
         for i in list(f["win"]) + list(f["lose"]):
             if i in symbol_of:
@@ -420,7 +436,7 @@ def build(forecasts: list[dict], doc: dict | None = None,
 
     rows = []
     for f in forecasts:
-        r = score_one(f, book, cal, node_symbols, symbol_of, log)
+        r = score_one(f, book, cal, node_symbols, symbol_of, log, bench)
         if r:
             rows.append(r)
     rows.sort(key=lambda r: (r["marked_at"], r["id"]), reverse=True)

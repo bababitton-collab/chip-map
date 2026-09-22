@@ -100,7 +100,34 @@ jobs:
             fi
             args="$args --force ${FORCE_QID}"
           fi
-          python -m chains.mark $args
+          # Every map, one process each. A subprocess per domain rather
+          # than a loop inside mark.py: each one gets CHIP_MAP_DOMAIN set for
+          # its whole life, so every path helper and the question fetch
+          # answer for the same map and cannot be left pointing at the
+          # previous one. That is the failure publish_site shipped twice.
+          #
+          # One map failing does not stop the others -- a bad news source for
+          # one industry must not leave another industry's answered question
+          # unmarked -- but any failure makes the run red, because a green
+          # tick on a job that half ran is the report nobody reads twice.
+          # --force names ONE question, and a question belongs to one map.
+          # Asked of a map that does not have it, mark.py raises -- so a
+          # forced dry run would turn red on every other map. The list is
+          # narrowed to the map that owns the id, and an id no map owns is
+          # an error here rather than a run that quietly does nothing.
+          doms="$(python -m chains.mark_domains "${FORCE_QID}")"
+          rc=0
+          for dom in $doms; do
+            echo "::group::mark $dom"
+            if CHIP_MAP_DOMAIN="$dom" python -m chains.mark --domain "$dom" $args; then
+              echo "$dom: ok"
+            else
+              rc=1
+              echo "::error::mark failed for $dom"
+            fi
+            echo "::endgroup::"
+          done
+          exit $rc
 
       # Only when the file actually moved, and never on a dry run. Rebase then
       # push, up to three times: the build may have pushed to main in between,

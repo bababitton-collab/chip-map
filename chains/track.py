@@ -1117,7 +1117,9 @@ def render(data: dict, template: str | None = None) -> str:
         from chains import sitenav
         from chains.paths import domain
         t = t.replace(NAV_CSS_PLACEHOLDER, sitenav.CSS)
-        t = t.replace(NAV_PLACEHOLDER, sitenav.html(domain(), "track"))
+        t = t.replace(NAV_PLACEHOLDER,
+                      sitenav.html(domain(), "track",
+                                   several=sitenav.several_maps()))
     if SUBSCRIBE_PLACEHOLDER in t:
         from chains import sitenav
         from chains.paths import subscribe_embed_url

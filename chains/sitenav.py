@@ -11,6 +11,12 @@ import html as _html
 
 BRAND = "Linchpin Signal"
 MAP_LABEL = "Map"
+# What the same item is called, and where it goes, once there is more than one
+# map: the choice between them rather than one of them.
+MAPS_LABEL = "Maps"
+MAPS_ANCHOR = "#maps"
+# The way back out of a map, to the site that holds them all.
+ALL_MAPS = "All maps"
 TRACK_RECORD = "Track Record"
 TRACK_RECORD_DESCRIPTOR = "Every forecast recorded before the answer."
 SUBSCRIBE_LABEL = "Get the key — subscribe to the weekly mail (free)"
@@ -50,18 +56,55 @@ def event_js(name: str) -> str:
     return f"window.plausible&&plausible('{name}')"
 
 
-def links(dom: str) -> list[tuple[str, str, str]]:
-    """``(key, label, href)`` for each item, in the order they are drawn."""
-    return [("map", MAP_LABEL, f"/{dom}/"),
+def links(dom: str, *, several: bool = False,
+          site_wide: bool = False) -> list[tuple[str, str, str]]:
+    """``(key, label, href)`` for each item, in the order they are drawn.
+
+    ``several`` says the site serves more than one map; ``site_wide`` says
+    this page belongs to the site rather than to one of them -- the front
+    door and the pooled record.
+
+    The two together are what stop the bar pointing at the first map as if it
+    were the only one. On a site-wide page with several maps, "Map" leads to
+    the choice between them and "Track Record" to the record across them;
+    pointing either at /<first>/ would send a reader who arrived at the site
+    into one industry without ever showing them there was another. On a map's
+    own page the two stay that map's -- a reader inside a chain wants that
+    chain's record -- and "All maps" is added as the way back out.
+
+    With a single map every branch below collapses to the pair it always
+    returned, so a one-map site is byte-for-byte the site it was.
+    """
+    if not several:
+        return [("map", MAP_LABEL, f"/{dom}/"),
+                ("track", TRACK_RECORD, f"/{dom}/track/")]
+    if site_wide:
+        return [("map", MAPS_LABEL, MAPS_ANCHOR),
+                ("track", TRACK_RECORD, "/track/")]
+    return [("all", ALL_MAPS, "/"),
+            ("map", MAP_LABEL, f"/{dom}/"),
             ("track", TRACK_RECORD, f"/{dom}/track/")]
 
 
-def html(dom: str, current: str | None = None) -> str:
+def several_maps() -> bool:
+    """Does this site serve more than one map?
+
+    Read from data/, which is the definition of a domain -- so a page built
+    before anything is published still knows, and the answer cannot disagree
+    with what the publish walk is about to do.
+    """
+    from chains import domains
+    return len(domains.discover()) > 1
+
+
+def html(dom: str, current: str | None = None, *,
+         several: bool = False, site_wide: bool = False) -> str:
     """The bar. ``current`` is "home", "map" or "track"."""
     home = ' aria-current="page"' if current == "home" else ""
     parts = [f'<nav class="sitenav" aria-label="Site">'
              f'<a class="home" href="/"{home}>{_html.escape(BRAND)}</a>']
-    for key, label, href in links(dom):
+    for key, label, href in links(dom, several=several,
+                                  site_wide=site_wide):
         cur = ' aria-current="page"' if key == current else ""
         cls = ' class="rec"' if key == "track" else ""
         parts.append(f'<a{cls} href="{href}"{cur}>{_html.escape(label)}</a>')

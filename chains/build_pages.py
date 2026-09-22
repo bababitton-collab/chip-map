@@ -466,7 +466,7 @@ EN_TOP_CSS = (
 
 def en_top(dom: str) -> str:
     from chains import sitenav
-    return (sitenav.html(dom, "map") + "\n"
+    return (sitenav.html(dom, "map", several=sitenav.several_maps()) + "\n"
             '<div class="top">\n'
             '  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div>\n'
             f'  <p class="value">{value_line(dom)}</p>\n'

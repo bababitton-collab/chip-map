@@ -531,7 +531,8 @@ def render(card: dict, dom: str, template: str | None = None) -> str:
                 bench_label=hero_lines(dom)[2][1]))),
             ("__ANALYTICS__", sitenav.ANALYTICS),
             ("__SITE_NAV_CSS__", sitenav.CSS),
-            ("__SITE_NAV__", sitenav.html(dom, "track")),
+            ("__SITE_NAV__", sitenav.html(dom, "track",
+                                          several=sitenav.several_maps())),
             ("__MAIN__", main_html(card, dom))):
         t = t.replace(token, fill)
     return t

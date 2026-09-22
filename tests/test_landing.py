@@ -686,3 +686,75 @@ def test_the_front_door_names_every_map_from_an_empty_site(walked):
     text = _text(html_)
     assert f"{len(WATCH) + n_energy} dated questions" in text
     assert "2 maps" in text
+
+
+# -- with several maps, the front door points at the choice --------------------
+# While there was one map, every link on the front door could lead to it and
+# nothing was lost. With two, a bar that leads to /semi/ sends a reader who
+# arrived at the SITE into one industry without ever showing them there was
+# another -- and the hero's "the physical supply chain", singular, describes
+# one of the maps rather than the site above them.
+
+def _hero_and_nav(html_):
+    hero = html_[html_.index('<header class="hero">'):html_.index("</header>")]
+    nav = html_[html_.index('<nav class="sitenav"'):]
+    nav = nav[:nav.index("</nav>")]
+    return hero, nav
+
+
+def test_with_several_maps_nothing_in_the_hero_or_the_bar_points_at_one(
+        tmp_path):
+    html_, _n = _both(tmp_path)
+    hero, nav = _hero_and_nav(html_)
+    for part, name in ((hero, "hero"), (nav, "site nav")):
+        assert 'href="/semi/"' not in part, name
+        assert 'href="/semi/track/"' not in part, name
+
+
+def test_the_bar_leads_to_the_choice_and_to_the_pooled_record(tmp_path):
+    html_, _n = _both(tmp_path)
+    _hero, nav = _hero_and_nav(html_)
+    assert 'href="#maps"' in nav
+    assert 'href="/track/"' in nav
+
+
+def test_the_hero_call_to_action_is_the_cards_section(tmp_path):
+    html_, _n = _both(tmp_path)
+    hero, _nav = _hero_and_nav(html_)
+    assert '<a class="primary" href="#maps">' in hero
+    # and the section it names is really there, with that id
+    assert 'id="maps"' in html_
+
+
+def test_the_headline_is_the_sites_own_words_not_a_maps(tmp_path):
+    from chains import sitefile
+    html_, _n = _both(tmp_path)
+    hero, _nav = _hero_and_nav(html_)
+    title = sitefile.copy("hero", "title")
+    lead = sitefile.copy("hero", "lead")
+    assert title and lead, "data/site.json declares no hero copy"
+    assert title in _text(hero) and lead in _text(hero)
+    assert landing.ONE_MAP_TITLE not in _text(hero)
+
+
+def test_the_site_copy_is_read_from_the_file_not_the_engine(monkeypatch,
+                                                            tmp_path):
+    """A site that declares nothing keeps the wording it had: adding the file
+    is what changes the page, never its absence."""
+    from chains import sitefile
+    monkeypatch.setattr(sitefile, "path", lambda: tmp_path / "absent.json")
+    assert landing.hero(True) == (landing.ONE_MAP_TITLE, landing.ONE_MAP_LEAD)
+    (tmp_path / "s.json").write_text(
+        '{"hero": {"title": "T", "lead": "L"}}', encoding="utf-8")
+    monkeypatch.setattr(sitefile, "path", lambda: tmp_path / "s.json")
+    assert landing.hero(True) == ("T", "L")
+    assert landing.hero(False) == (landing.ONE_MAP_TITLE, landing.ONE_MAP_LEAD)
+
+
+def test_one_map_keeps_the_bar_and_the_hero_it_always_had(tmp_path):
+    one = landing.render(_site(tmp_path), "semi", URL)
+    hero, nav = _hero_and_nav(one)
+    assert 'href="/semi/"' in nav and 'href="/semi/track/"' in nav
+    assert 'href="#maps"' not in one and 'href="/track/"' not in one
+    assert f"<h1>{landing.ONE_MAP_TITLE}</h1>" in hero
+    assert '<a class="primary" href="/semi/">Explore the map</a>' in hero

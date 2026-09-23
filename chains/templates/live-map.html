@@ -973,6 +973,15 @@ function build(){
 // seven columns would leave nothing but initials.
 const PORTRAIT_AT = 1.15;
 let MODE='landscape', pitch=0, rowY={};
+// The band layer: the one drawn in its own strip along the bottom rather
+// than as a column. WHICH layer that is belongs to the map -- semi puts its
+// end-market row there, energy declares none -- so it is read from
+// labels.band, with the first domain's L9 as the fallback its own file has
+// always relied on. Read through this rather than written as the literal
+// in five places: a second map that named its band anything else had
+// four of those five ignore it. A function, not a const, because D is
+// replaced wholesale when a fresher snapshot lands.
+const bandId = () => ((((D.labels||{}).band)||['L9'])[0]);
 
 function layout(){
   MODE = (W / Math.max(H,1)) < PORTRAIT_AT ? 'portrait' : 'landscape';
@@ -1002,7 +1011,7 @@ function layoutPortrait(){
   // domain's rows for no reason anybody asked for.
   const order=((D.labels||{}).line_order)||['logic','memory','packaging','network','cloud','power'];
   const groups={};
-  nodes.forEach(n=>{ const L=n.layer==='L9'?'L9':n.layer; (groups[L]=groups[L]||[]).push(n); });
+  nodes.forEach(n=>{ const L=n.layer; (groups[L]=groups[L]||[]).push(n); });
   // Nothing above the first row; the last row needs room under it for a label.
   const top=34, bottom=46, padX=22;
   pitch=(H-top-bottom)/rows.length;
@@ -1087,7 +1096,7 @@ function layoutPortrait(){
     n.lfs=fs; n.lbl=lbl; n.lw=ctx.measureText(lbl).width;
     n.ldy=n.stagger?Math.round(base*1.15):0;
   });
-  bands=[]; l9y=rowY['L9']||(H-34); l9x=8; l9anchor='left';
+  bands=[]; l9y=rowY[bandId()]||(H-34); l9x=8; l9anchor='left';
 }
 
 function layoutLandscape(){
@@ -1097,7 +1106,7 @@ function layoutLandscape(){
   // Every declared layer except the one drawn in its own band underneath.
   // A map that bands nothing filters nothing.
   const cols=Object.keys((D.labels||{}).layers||{}).sort()
-    .filter(l=>!(((D.labels||{}).band)||['L9']).includes(l));
+    .filter(l=>!((D.labels||{}).band||[bandId()]).includes(l));
   const padR=70, padL=110, colW=(W-padR-padL)/(cols.length-1);
   const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);
   // Declared by the map, or this list. NOT derived from the label keys: they
@@ -1105,7 +1114,7 @@ function layoutLandscape(){
   // domain's rows for no reason anybody asked for.
   const order=((D.labels||{}).line_order)||['logic','memory','packaging','network','cloud','power'];
   const groups={};
-  nodes.forEach(n=>{ const L=n.layer==='L9'?'L9':n.layer; (groups[L]=groups[L]||[]).push(n); });
+  nodes.forEach(n=>{ const L=n.layer; (groups[L]=groups[L]||[]).push(n); });
   const top=70, bottom=H-80;
   cols.forEach(L=>{
     const g=(groups[L]||[]).sort((a,b)=>order.indexOf(a.line)-order.indexOf(b.line)||(b.cap||0)-(a.cap||0));
@@ -1118,7 +1127,7 @@ function layoutLandscape(){
   // labels ran into each other and into the L9 chip. Three columns' width
   // leaves 72px between centres at the 900px minimum, room for the widest
   // label on the row beside either neighbour.
-  const g9=(groups['L9']||[]); const x7=xOf['L7'], x4=xOf['L4'];
+  const g9=(groups[bandId()]||[]); const x7=xOf['L7'], x4=xOf['L4'];
   g9.forEach((nd,i)=>{ nd.x=x7+(i/(g9.length-1||1))*(x4-x7); nd.y=H-34; });
   // A station with no size known is drawn at the map's declared neutral
   // radius, not at the smallest one: the smallest reads as "tiny company",
@@ -1280,7 +1289,7 @@ function layerBar(){
   // gets a chip for it. Without this a map with no such layer had an empty tag
   // drawn across its stage, naming a row that does not exist. The early return
   // matters: everything below measures the chip that would not be there.
-  const BAND = ((((D.labels||{}).band)||['L9'])[0]);
+  const BAND = bandId();
   if(!(((D.labels||{}).layers)||{})[BAND]){ l9.innerHTML=''; return; }
   l9.innerHTML = `<span class="lchip" data-l="${BAND}" style="left:${l9x.toFixed(1)}px;`
     + `top:${l9y.toFixed(1)}px;transform:translate(-50%,-100%)">`

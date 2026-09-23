@@ -141,7 +141,14 @@ def test_l9_has_its_own_layer_outside_the_sticky_header():
     # laid across its stage, naming a row that does not exist.
     band = TPL[j:j + 300]
     assert 'data-l="${BAND}"' in band
-    assert "((((D.labels||{}).band)||['L9'])[0])" in TPL[i:j]
+    # Derived, not spelled out. The expression used to be written inline here
+    # and as the literal 'L9' in four other places, so a map that named its
+    # band anything else would have had four of the five ignore it. There is
+    # one definition now and every reader calls it.
+    assert "const BAND = bandId();" in TPL[i:j]
+    assert "const bandId = () => ((((D.labels||{}).band)||['L9'])[0]);" in TPL
+    assert TPL.count("'L9'") == 1, \
+        "the band id belongs in bandId() and nowhere else"
     assert "if(!(((D.labels||{}).layers)||{})[BAND]){ l9.innerHTML=''; return; }" \
         in TPL[i:j]
 

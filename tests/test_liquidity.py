@@ -182,3 +182,90 @@ def test_the_snapshot_marks_only_the_thin_stations():
     nodes = json.loads(p.read_text(encoding="utf-8"))["nodes"]
     assert sorted(n["id"] for n in nodes if "thin" in n) == ["agc", "tok"]
     assert all(n["thin"] is True for n in nodes if "thin" in n)
+
+
+# -- a venue's own currency ----------------------------------------------------
+# currency_of falls back to "USD" for a suffix it does not know, and the
+# fallback is silent: the closes convert at 1.0 and the leg's traded value
+# comes out in the exchange's own money wearing a dollar sign. That is not a
+# gap, it is a wrong number large enough to carry a leg through the gate. HK
+# was missing and 2269.HK read about 7.8x its true dollar value.
+
+HKD_PER_USD = 7.8433            # USDHKD.FOREX, 2026-09-22
+
+
+class _HKClient:
+    """2269.HK as the vendor actually serves it: closes in Hong Kong dollars,
+    and the peg on USDHKD.FOREX."""
+
+    def eod(self, symbol, from_=None, to=None):
+        if symbol == "USDHKD.FOREX":
+            return [{"date": "2026-09-15", "close": HKD_PER_USD}]
+        if symbol == "HKDUSD.FOREX":
+            return [{"date": "2026-09-15", "close": 0.1275}]   # rounded; unused
+        return [{"date": "2026-09-14", "close": 52.65, "volume": 18_626_715},
+                {"date": "2026-09-15", "close": 52.80, "volume": 17_569_235}]
+
+
+def test_a_hong_kong_line_is_measured_in_dollars_not_in_hong_kong_dollars():
+    m = L.Measure(TODAY, client=_HKClient())("2269.HK")
+    assert m["currency"] == "HKD", "the suffix has to resolve to the venue's money"
+
+    hkd = (52.65 * 18_626_715 + 52.80 * 17_569_235) / 2
+    assert m["adv_usd"] == pytest.approx(hkd / HKD_PER_USD, rel=1e-9)
+
+    # The number this pins is the one the bug produced: unconverted, the same
+    # bars read as about 7.8x more traded value than the line really has, and
+    # the gate would have been cleared on money that was never dollars.
+    assert m["adv_usd"] < hkd / 7, "still reading Hong Kong dollars as dollars"
+    assert 1e8 < m["adv_usd"] < 3e8, "about US$200m, not about US$1.6bn"
+
+
+def test_every_exchange_the_map_can_name_has_a_currency():
+    """The two tables are added to together or not at all.
+
+    A code in exchanges.py with no entry in CURRENCY_BY_EXCHANGE is the exact
+    shape of the HK bug: the symbol resolves, the bars arrive, and the dollars
+    are wrong with nothing raised.
+    """
+    from chains import exchanges as X
+
+    known = set(X.BY_EXCHANGE.values()) | set(X.BY_SUFFIX.values())
+    missing = sorted(code for code in known
+                     if code not in L.CURRENCY_BY_EXCHANGE)
+    assert not missing, (
+        f"exchanges.py can produce {missing}, and liquidity.CURRENCY_BY_EXCHANGE "
+        f"has no currency for it, so its closes would be read as US dollars")
+
+
+def test_every_price_line_on_every_map_has_a_currency():
+    """The maps are the other source of a suffix, and the one that bites.
+
+    exchanges.py's tables are not where CO came from -- the energy map simply
+    names NKT.CO -- so a test that reads only those tables would have passed
+    over a live price line being measured in kroner and called dollars. This
+    one walks what the maps actually say.
+    """
+    from chains import domains
+
+    strays = []
+    for dom in domains.discover():
+        doc = json.loads((map_path(dom=dom)).read_text(encoding="utf-8"))
+        for n in doc.get("nodes", []):
+            sym = n.get("price_symbol")
+            if not sym or n.get("price_symbol_kind") == "none":
+                continue
+            suffix = sym.rsplit(".", 1)[-1].upper()
+            if suffix not in L.CURRENCY_BY_EXCHANGE:
+                strays.append(f"{dom}:{n['id']}={sym}")
+    assert not strays, (
+        f"these price lines have no currency in CURRENCY_BY_EXCHANGE, so their "
+        f"traded value would be measured in the venue's own money and reported "
+        f"as US dollars: {strays}")
+
+
+def test_hong_kong_is_no_longer_listed_as_unavailable():
+    from chains import exchanges as X
+
+    assert "HK" not in X.UNAVAILABLE and "HKEX" not in X.UNAVAILABLE
+    assert X.BY_SUFFIX["HK"] == "HK" and X.BY_EXCHANGE["HKEX"] == "HK"

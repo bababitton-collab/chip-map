@@ -1,0 +1,56 @@
+name: pr
+
+# The tests, on every pull request.
+#
+# build.yml runs them too, but only after a merge has already landed on main:
+# its triggers are the schedule, a manual dispatch and a push to main. So the
+# first time a change met the suite was after it was irreversible, and the
+# repair was a second commit on main rather than a red tick on the branch.
+#
+# READ-ONLY, DELIBERATELY
+# -----------------------
+# This job checks out, installs and runs the tests. Nothing else. It holds no
+# secret, writes nothing to the repository, publishes nothing and deploys
+# nothing -- a pull request can come from anywhere, and a workflow that could
+# commit, push or deploy on one is a write handed to whoever opened it.
+# `permissions: contents: read` says so at the top rather than leaving it to
+# the repository default.
+#
+# WHAT IT DOES NOT RUN
+# --------------------
+# Not `preregister --check`, and not the build or the publish. That gate
+# belongs to the build, where it stops a deployment; running it here as well
+# would move a decision about what is publishable onto a branch, and it needs
+# QUESTIONS_URL -- a secret this job is better off not holding.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+# A second push to the same branch makes the first run's answer stale, so it
+# is cancelled rather than raced.
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      # The same interpreter and cache the build uses, so a pass here means
+      # the same thing a pass there does.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Exactly the command build.yml runs, character for character. Two
+      # spellings of "the tests" would eventually disagree about which ones.
+      - name: tests
+        run: python -m pytest tests/ tools/probes/test_adr.py -q

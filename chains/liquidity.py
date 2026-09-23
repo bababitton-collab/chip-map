@@ -39,9 +39,20 @@ STALE_SESSIONS = 3          # the nightly line: more than this without a close
 
 # EODHD's exchange code -> the currency its closes are quoted in. LSE closes
 # are in pence.
+#
+# A SUFFIX MISSING FROM THIS TABLE IS NOT A MISSING FEATURE, IT IS A WRONG
+# NUMBER. currency_of() falls back to "USD", and the fallback is silent: the
+# closes are converted at 1.0 and the leg's traded value comes out in whatever
+# the exchange actually quotes, wearing a dollar sign. HK was missing here and
+# 2269.HK read US$1.59bn a day against a true US$203m -- 7.8x, the HKD peg --
+# which is comfortably enough to carry a leg through a gate it should have
+# failed. Looking for others found CO: NKT.CO is a priced node on the energy
+# map and its traded value read 6.6x high, harmless only because nothing has
+# put it in a basket yet. Add the currency at the same time as the exchange,
+# never after -- and see the test that walks every map's price lines.
 CURRENCY_BY_EXCHANGE = {"US": "USD", "XETRA": "EUR", "PA": "EUR", "AS": "EUR", "BR": "EUR", "VI": "EUR",
                         "SW": "CHF", "TO": "CAD", "LSE": "GBX", "KO": "KRW", "KQ": "KRW", "TW": "TWD",
-                        "TWO": "TWD", "SHG": "CNY", "SHE": "CNY"}
+                        "TWO": "TWD", "SHG": "CNY", "SHE": "CNY", "HK": "HKD", "CO": "DKK"}
 
 
 class LiquidityError(RuntimeError):

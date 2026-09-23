@@ -9,7 +9,7 @@ returned 70 exchanges.
 
 The important part of that list is what is NOT in it:
 
-    no Japan (Tokyo)      no Hong Kong      no Singapore
+    no Japan (Tokyo)      no Singapore
     no Italy (Milan)      no India
 
 Those are not typos to be worked around with a different suffix. The
@@ -19,6 +19,20 @@ report can say *why* a ticker failed rather than only that it did.
 
 Korea is the one where the Yahoo habit actively misleads: KRX is ``KO`` here,
 not ``KS``.
+
+HONG KONG, ADDED 2026-09-23
+---------------------------
+Hong Kong was on the list above until it was probed directly and found to
+serve: ``2269.HK``, ``0700.HK`` and ``9988.HK`` all return daily bars, and
+``USDHKD.FOREX`` returns the peg. The plan changed under the list rather than
+the list being wrong when it was written -- ``/api/exchanges-list/`` now
+answers 404 on this subscription, so the 2026-09-08 enumeration above can no
+longer be re-run and only what has been probed by hand is changed here.
+
+Listing the exchange is half the fix. A venue quotes in its own currency, and
+:data:`chains.liquidity.CURRENCY_BY_EXCHANGE` is what converts it; while HK
+was absent there, its closes were silently read as dollars and 2269.HK's
+traded value came out 7.8x too high. The two tables are added to together.
 """
 from __future__ import annotations
 
@@ -43,6 +57,9 @@ BY_EXCHANGE: dict[str, str] = {
     "Euronext Brussels": "BR",
     "Vienna Stock Exchange": "VI",
     "SIX": "SW",
+    "HKEX": "HK",
+    "SEHK": "HK",
+    "Hong Kong Exchange": "HK",
     "TSX": "TO",
     "LSE": "LSE",
 }
@@ -61,6 +78,7 @@ BY_SUFFIX: dict[str, str] = {
     "BR": "BR",
     "VI": "VI",
     "SW": "SW",
+    "HK": "HK",
     "TO": "TO",
     "L": "LSE",
 }
@@ -69,8 +87,6 @@ BY_SUFFIX: dict[str, str] = {
 UNAVAILABLE: dict[str, str] = {
     "T": "Tokyo Stock Exchange -- not in the EODHD exchange list on this plan",
     "TSE": "Tokyo Stock Exchange -- not in the EODHD exchange list on this plan",
-    "HK": "Hong Kong Exchange -- not in the EODHD exchange list on this plan",
-    "HKEX": "Hong Kong Exchange -- not in the EODHD exchange list on this plan",
     "SI": "Singapore Exchange -- not in the EODHD exchange list on this plan",
     "SGX": "Singapore Exchange -- not in the EODHD exchange list on this plan",
     "MI": "Borsa Italiana (Milan) -- not in the EODHD exchange list on this plan",

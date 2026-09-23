@@ -1,0 +1,1129 @@
+{
+  "chain": "pharma-glp1-supply",
+  "as_of": "2026-09-23",
+  "version": "1.0",
+  "note_on_method": "Nodes are companies with a listed price line unless they are marked otherwise; a node whose price_symbol_kind is \"none\" is drawn and described but never scored, because a basket leg that cannot be priced would be a claim the ledger quietly drops. Edges are supplies or competes only, and each carries the source it was read from. Every price line here was checked against the price vendor on 2026-09-23.",
+  "benchmark": {
+    "key": "pharma",
+    "symbol": "PPH.US",
+    "label": "PHARMA"
+  },
+  "labels": {
+    "languages": [
+      "en"
+    ],
+    "copy": {
+      "chokepoint_kind": "pharmaceutical supply",
+      "chokepoint_examples": "sterile fill-finish, injection contact components, peptide synthesis and Chinese CDMO exposure"
+    },
+    "brand": {
+      "name": "Linchpin Signal",
+      "title": {
+        "en": "The Living GLP-1 Map"
+      },
+      "value": {
+        "en": "The physical supply chain behind the obesity drugs — who fills the syringe, who makes the peptide, and where it breaks."
+      },
+      "desc": {
+        "en": "A living map of the GLP-1 supply chain: {nodes} companies, {cps} chokepoints pulsing with the market, a forecast board and questions with a date."
+      },
+      "story": {
+        "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."
+      },
+      "footer": {
+        "en": "Linchpin Signal · not investment advice · every number carries a source"
+      }
+    },
+    "layers": {
+      "P1": {
+        "en": "peptide api"
+      },
+      "P2": {
+        "en": "biologics cdmo"
+      },
+      "P3": {
+        "en": "sterile fill-finish"
+      },
+      "P4": {
+        "en": "injection components"
+      },
+      "P5": {
+        "en": "bioprocess tools"
+      },
+      "P6": {
+        "en": "brands and demand"
+      }
+    },
+    "lines": {
+      "peptide": {
+        "en": "peptide API",
+        "color": "#8fae87"
+      },
+      "cdmo": {
+        "en": "biologics CDMO",
+        "color": "#9b90bd"
+      },
+      "fillfinish": {
+        "en": "fill-finish",
+        "color": "#c9a227"
+      },
+      "contact": {
+        "en": "contact components",
+        "color": "#c08878"
+      },
+      "device": {
+        "en": "devices",
+        "color": "#b39a6a"
+      },
+      "glass": {
+        "en": "glass",
+        "color": "#7d93b8"
+      },
+      "tools": {
+        "en": "bioprocess tools",
+        "color": "#7aa894"
+      },
+      "brand": {
+        "en": "brands",
+        "color": "#a9a396"
+      }
+    },
+    "line_order": [
+      "peptide",
+      "cdmo",
+      "fillfinish",
+      "contact",
+      "device",
+      "glass",
+      "tools",
+      "brand"
+    ],
+    "lanes": {
+      "peptide": {
+        "en": "peptide"
+      },
+      "cdmo": {
+        "en": "CDMO"
+      },
+      "fillfinish": {
+        "en": "fill-finish"
+      },
+      "components": {
+        "en": "components"
+      },
+      "tools": {
+        "en": "bioprocess tools"
+      },
+      "brands": {
+        "en": "brands"
+      },
+      "policy": {
+        "en": "policy"
+      }
+    },
+    "stages": {
+      "research": {
+        "en": "research"
+      },
+      "pilot": {
+        "en": "pilot"
+      },
+      "qualified": {
+        "en": "qualified"
+      },
+      "volume": {
+        "en": "volume"
+      }
+    },
+    "size_unknown_r": 13
+  },
+  "layers": [
+    {
+      "id": "P1",
+      "name": "Peptide API",
+      "order": 1,
+      "description": "Solid- and liquid-phase peptide synthesis: the molecule itself, and the one part of the chain the incumbents do not all make in-house."
+    },
+    {
+      "id": "P2",
+      "name": "Biologics CDMO",
+      "order": 2,
+      "description": "Contract development and manufacturing for biologics, and the layer where policy rather than physics decides who may supply whom."
+    },
+    {
+      "id": "P3",
+      "name": "Sterile fill-finish",
+      "order": 3,
+      "description": "Filling a sterile vial, syringe or pen. Mostly private, hardest to add, and the binding constraint on GLP-1 volume."
+    },
+    {
+      "id": "P4",
+      "name": "Injection components",
+      "order": 4,
+      "description": "Everything the drug touches: elastomer stoppers, plungers, cartridges, syringes, vials and pen injectors."
+    },
+    {
+      "id": "P5",
+      "name": "Bioprocess tools",
+      "order": 5,
+      "description": "Single-use bags, filtration, chromatography and the instruments that qualify a line before it can fill anything."
+    },
+    {
+      "id": "P6",
+      "name": "Brands and demand",
+      "order": 6,
+      "description": "The incretin franchises whose volume the whole chain is sized against."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "bachem",
+      "name": "Bachem",
+      "short": "BANB",
+      "ticker": "BANB",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P1",
+      "line": "peptide",
+      "role": "Largest independent peptide CDMO; building GLP-1 capacity at Bubendorf and Sisslerfeld",
+      "price_symbol": "BANB.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "polypeptide",
+        "lonza"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "Capital Markets Day 26 November 2026 is the next disclosed event; the 2026 half-year report was published 30 July 2026.",
+      "segment_share": ""
+    },
+    {
+      "id": "polypeptide",
+      "name": "PolyPeptide Group",
+      "short": "PPGN",
+      "ticker": "PPGN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P1",
+      "line": "peptide",
+      "role": "Peptide CDMO across six sites; GLP-1 is the swing volume",
+      "price_symbol": "PPGN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "bachem",
+        "lonza"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "Next scheduled disclosure is full-year 2026 results on 9 March 2027.",
+      "segment_share": ""
+    },
+    {
+      "id": "lonza",
+      "name": "Lonza",
+      "short": "LONN",
+      "ticker": "LONN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P2",
+      "line": "cdmo",
+      "role": "Largest Western CDMO; peptides, biologics and the Vacaville capacity bought from Roche",
+      "price_symbol": "LONN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "samsung_bio",
+        "wuxi_bio",
+        "fujifilm"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "samsung_bio",
+      "name": "Samsung Biologics",
+      "short": "207940",
+      "ticker": "207940.KS",
+      "exchange": "KRX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P2",
+      "line": "cdmo",
+      "role": "Largest single-site biologics capacity in the world; the default non-China answer to a reshoring mandate",
+      "price_symbol": "207940.KO",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lonza",
+        "wuxi_bio",
+        "fujifilm"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Seoul listing under the vendor's own code: KRX is .KO here, not .KS."
+    },
+    {
+      "id": "wuxi_bio",
+      "name": "WuXi Biologics",
+      "short": "2269",
+      "ticker": "2269.HK",
+      "exchange": "HKEX",
+      "us_listed": false,
+      "adr": true,
+      "layer": "P2",
+      "line": "cdmo",
+      "role": "China-based biologics CDMO; the exposure the BIOSECURE Act is written about",
+      "price_symbol": "WXXWY.US",
+      "price_symbol_kind": "adr",
+      "competitors": [
+        "lonza",
+        "samsung_bio",
+        "fujifilm"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "Second ring: priced for the map, deliberately absent from every basket. The ADR turns over about US$0.7m a day, which clears the gate but is thin enough that a leg built on it would measure the ADR rather than the company.",
+      "segment_share": "",
+      "price_note": "Priced through the US ADR: Hong Kong is not in the vendor's exchange list on this plan, and the vendor has no HKD rate, so the Hong Kong line would be measured in the wrong currency."
+    },
+    {
+      "id": "fujifilm",
+      "name": "Fujifilm Diosynth",
+      "short": "FUJIY",
+      "ticker": "4901",
+      "exchange": "TSE",
+      "us_listed": false,
+      "adr": true,
+      "layer": "P2",
+      "line": "cdmo",
+      "role": "Biologics CDMO arm of Fujifilm; large US and UK capacity additions",
+      "price_symbol": "FUJIY.US",
+      "price_symbol_kind": "adr",
+      "competitors": [
+        "lonza",
+        "samsung_bio",
+        "wuxi_bio"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "The listed parent is a conglomerate; the CDMO is one segment inside it, so the price line is a weak read on this layer.",
+      "segment_share": "",
+      "price_note": "Priced through the US ADR: Tokyo is not in the vendor's exchange list on this plan."
+    },
+    {
+      "id": "siegfried",
+      "name": "Siegfried Holding",
+      "short": "SFZN",
+      "ticker": "SFZN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P3",
+      "line": "fillfinish",
+      "role": "Sterile fill-finish and drug product CDMO; one of the few listed pure plays in the layer",
+      "price_symbol": "SFZN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lonza"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "catalent",
+      "name": "Catalent",
+      "short": "-",
+      "ticker": null,
+      "exchange": null,
+      "us_listed": false,
+      "adr": false,
+      "layer": "P3",
+      "line": "fillfinish",
+      "role": "The largest independent fill-finish network; taken private by Novo Holdings and its GLP-1 sites assigned to Novo Nordisk",
+      "price_symbol": null,
+      "price_symbol_kind": "none",
+      "competitors": [
+        "siegfried"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "Mentioned, never in a basket. It is the single clearest reason this layer is a chokepoint and it cannot be bought.",
+      "segment_share": "",
+      "price_note": "Not listed: acquired by Novo Holdings in December 2024, so there is no price line to score."
+    },
+    {
+      "id": "west",
+      "name": "West Pharmaceutical Services",
+      "short": "WST",
+      "ticker": "WST",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P4",
+      "line": "contact",
+      "role": "Elastomer stoppers, plungers and seals; the contact surface on most injectables",
+      "price_symbol": "WST.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "stevanato",
+        "gerresheimer"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "stevanato",
+      "name": "Stevanato Group",
+      "short": "STVN",
+      "ticker": "STVN",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P4",
+      "line": "contact",
+      "role": "Glass syringes and cartridges plus the filling machines that run them",
+      "price_symbol": "STVN.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "west",
+        "gerresheimer"
+      ],
+      "key_suppliers": [
+        "corning"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "gerresheimer",
+      "name": "Gerresheimer",
+      "short": "GXI",
+      "ticker": "GXI",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P4",
+      "line": "contact",
+      "role": "Vials, syringes and pen systems; high-value solutions is the GLP-1 exposure",
+      "price_symbol": "GXI.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "west",
+        "stevanato"
+      ],
+      "key_suppliers": [
+        "corning"
+      ],
+      "customer_concentration": "",
+      "notes": "The 2025 annual financial statements were delayed to 29 June 2026 and 2026 guidance was cut at the same time.",
+      "segment_share": ""
+    },
+    {
+      "id": "ypsomed",
+      "name": "Ypsomed",
+      "short": "YPSN",
+      "ticker": "YPSN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P4",
+      "line": "device",
+      "role": "Pen injectors and autoinjectors built for other companies' molecules",
+      "price_symbol": "YPSN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "west",
+        "stevanato"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "corning",
+      "name": "Corning",
+      "short": "GLW",
+      "ticker": "GLW",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P4",
+      "line": "glass",
+      "role": "Valor pharmaceutical glass; the tubing upstream of vials and syringes",
+      "price_symbol": "GLW.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "Life Sciences is a small segment of a company whose price is set by optical and display.",
+      "segment_share": ""
+    },
+    {
+      "id": "sartorius",
+      "name": "Sartorius AG",
+      "short": "SRT3",
+      "ticker": "SRT3",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "P5",
+      "line": "tools",
+      "role": "Single-use bioprocess equipment and consumables",
+      "price_symbol": "SRT3.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "danaher",
+        "thermo",
+        "repligen"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "The preference share is the traded line: the ordinary share turns over about a fortieth as much."
+    },
+    {
+      "id": "danaher",
+      "name": "Danaher",
+      "short": "DHR",
+      "ticker": "DHR",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P5",
+      "line": "tools",
+      "role": "Cytiva and Pall: filtration, chromatography and single-use flow paths",
+      "price_symbol": "DHR.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "sartorius",
+        "thermo",
+        "repligen"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "thermo",
+      "name": "Thermo Fisher Scientific",
+      "short": "TMO",
+      "ticker": "TMO",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P5",
+      "line": "tools",
+      "role": "Bioprocess consumables, and Patheon drug product services alongside them",
+      "price_symbol": "TMO.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "danaher",
+        "sartorius",
+        "repligen"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "repligen",
+      "name": "Repligen",
+      "short": "RGEN",
+      "ticker": "RGEN",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P5",
+      "line": "tools",
+      "role": "Filtration and chromatography hardware sold into bioprocess lines",
+      "price_symbol": "RGEN.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "danaher",
+        "sartorius",
+        "thermo"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "lly",
+      "name": "Eli Lilly",
+      "short": "LLY",
+      "ticker": "LLY",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P6",
+      "line": "brand",
+      "role": "Mounjaro, Zepbound and Foundayo; the volume the chain is sized against",
+      "price_symbol": "LLY.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "novo",
+        "amgen",
+        "pfizer"
+      ],
+      "key_suppliers": [
+        "west",
+        "stevanato",
+        "catalent",
+        "bachem"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "novo",
+      "name": "Novo Nordisk",
+      "short": "NVO",
+      "ticker": "NVO",
+      "exchange": "NYSE",
+      "us_listed": false,
+      "adr": true,
+      "layer": "P6",
+      "line": "brand",
+      "role": "Ozempic, Wegovy and the Wegovy pill; owns Catalent's GLP-1 fill-finish sites through Novo Holdings",
+      "price_symbol": "NVO.US",
+      "price_symbol_kind": "adr",
+      "competitors": [
+        "lly",
+        "amgen",
+        "pfizer"
+      ],
+      "key_suppliers": [
+        "west",
+        "gerresheimer",
+        "catalent",
+        "polypeptide"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced through the US ADR, which is where the liquidity is."
+    },
+    {
+      "id": "amgen",
+      "name": "Amgen",
+      "short": "AMGN",
+      "ticker": "AMGN",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P6",
+      "line": "brand",
+      "role": "MariTide, a monthly injectable in phase 3",
+      "price_symbol": "AMGN.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lly",
+        "novo",
+        "pfizer"
+      ],
+      "key_suppliers": [
+        "west"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "pfizer",
+      "name": "Pfizer",
+      "short": "PFE",
+      "ticker": "PFE",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P6",
+      "line": "brand",
+      "role": "Entered obesity by buying Metsera; phase 3 programme starting",
+      "price_symbol": "PFE.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lly",
+        "novo",
+        "amgen"
+      ],
+      "key_suppliers": [
+        "west"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "viking",
+      "name": "Viking Therapeutics",
+      "short": "VKTX",
+      "ticker": "VKTX",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "P6",
+      "line": "brand",
+      "role": "VK2735, injectable and oral, in and entering phase 3",
+      "price_symbol": "VKTX.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lly",
+        "novo"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    }
+  ],
+  "edges": [
+    {
+      "from": "bachem",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Peptide API under contract",
+      "group": "peptide",
+      "criticality": "high",
+      "source": "https://www.bachem.com/knowledge-center/glp-1-demand-for-peptide-manufacturers/"
+    },
+    {
+      "from": "bachem",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Peptide API under contract",
+      "group": "peptide",
+      "criticality": "high",
+      "source": "https://www.bachem.com/knowledge-center/glp-1-demand-for-peptide-manufacturers/"
+    },
+    {
+      "from": "polypeptide",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Peptide API under contract",
+      "group": "peptide",
+      "criticality": "medium",
+      "source": "https://www.bachem.com/knowledge-center/glp-1-demand-for-peptide-manufacturers/"
+    },
+    {
+      "from": "lonza",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Peptide and biologics capacity",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://www.bachem.com/knowledge-center/glp-1-demand-for-peptide-manufacturers/"
+    },
+    {
+      "from": "siegfried",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Sterile fill-finish capacity",
+      "group": "fillfinish",
+      "criticality": "high",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "catalent",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Sterile fill-finish; the GLP-1 sites now sit inside Novo",
+      "group": "fillfinish",
+      "criticality": "high",
+      "source": "https://www.daily-remedy.com/the-bottleneck-is-the-needle/"
+    },
+    {
+      "from": "west",
+      "to": "lly",
+      "type": "supplies",
+      "what": "High-value elastomer stoppers and plungers",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "west",
+      "to": "novo",
+      "type": "supplies",
+      "what": "High-value elastomer stoppers and plungers",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "west",
+      "to": "amgen",
+      "type": "supplies",
+      "what": "Elastomer components",
+      "group": "contact",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "west",
+      "to": "pfizer",
+      "type": "supplies",
+      "what": "Elastomer components",
+      "group": "contact",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "stevanato",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Glass cartridges, syringes and filling equipment",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "stevanato",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Glass cartridges, syringes and filling equipment",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "gerresheimer",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Vials, syringes and pen systems",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "ypsomed",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Pen injectors and autoinjectors",
+      "group": "device",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "corning",
+      "to": "stevanato",
+      "type": "supplies",
+      "what": "Pharmaceutical glass tubing",
+      "group": "glass",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "corning",
+      "to": "gerresheimer",
+      "type": "supplies",
+      "what": "Pharmaceutical glass tubing",
+      "group": "glass",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "sartorius",
+      "to": "lonza",
+      "type": "supplies",
+      "what": "Single-use bioprocess consumables and filtration",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "sartorius",
+      "to": "samsung_bio",
+      "type": "supplies",
+      "what": "Single-use bioprocess consumables and filtration",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "danaher",
+      "to": "lonza",
+      "type": "supplies",
+      "what": "Cytiva and Pall filtration and chromatography",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "danaher",
+      "to": "samsung_bio",
+      "type": "supplies",
+      "what": "Cytiva and Pall filtration and chromatography",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "thermo",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Patheon drug product services and bioprocess consumables",
+      "group": "tools",
+      "criticality": "medium",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "repligen",
+      "to": "lonza",
+      "type": "supplies",
+      "what": "Filtration and chromatography hardware",
+      "group": "tools",
+      "criticality": "medium",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "wuxi_bio",
+      "to": "pfizer",
+      "type": "supplies",
+      "what": "Biologics CDMO capacity, and the exposure the Act is written about",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://www.thefdalawblog.com/2026/06/wuxi-apptecs-1260h-listing-brings-the-biosecure-act-back-to-center-stage/"
+    },
+    {
+      "from": "fujifilm",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Biologics CDMO capacity",
+      "group": "cdmo",
+      "criticality": "medium",
+      "source": "https://www.klgates.com/BIOSECURE-Act-What-You-Need-to-Know-1-20-2026"
+    },
+    {
+      "from": "lly",
+      "to": "novo",
+      "type": "competes",
+      "what": "Incretin share in obesity and diabetes",
+      "group": "brand",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "amgen",
+      "to": "lly",
+      "type": "competes",
+      "what": "Obesity pipeline",
+      "group": "brand",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "pfizer",
+      "to": "lly",
+      "type": "competes",
+      "what": "Obesity pipeline",
+      "group": "brand",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "viking",
+      "to": "lly",
+      "type": "competes",
+      "what": "Obesity pipeline",
+      "group": "brand",
+      "criticality": "low",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "bachem",
+      "to": "polypeptide",
+      "type": "competes",
+      "what": "Peptide CDMO capacity",
+      "group": "peptide",
+      "criticality": "medium",
+      "source": "https://www.bachem.com/knowledge-center/glp-1-demand-for-peptide-manufacturers/"
+    },
+    {
+      "from": "samsung_bio",
+      "to": "wuxi_bio",
+      "type": "competes",
+      "what": "Biologics CDMO capacity, with policy as the tiebreak",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://www.thefdalawblog.com/2026/06/wuxi-apptecs-1260h-listing-brings-the-biosecure-act-back-to-center-stage/"
+    },
+    {
+      "from": "lonza",
+      "to": "wuxi_bio",
+      "type": "competes",
+      "what": "Biologics CDMO capacity, with policy as the tiebreak",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://www.thefdalawblog.com/2026/06/wuxi-apptecs-1260h-listing-brings-the-biosecure-act-back-to-center-stage/"
+    },
+    {
+      "from": "west",
+      "to": "stevanato",
+      "type": "competes",
+      "what": "Injection contact components",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "gerresheimer",
+      "to": "stevanato",
+      "type": "competes",
+      "what": "Vials and syringes",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "sartorius",
+      "to": "danaher",
+      "type": "competes",
+      "what": "Bioprocess consumables",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    },
+    {
+      "from": "thermo",
+      "to": "danaher",
+      "type": "competes",
+      "what": "Bioprocess consumables",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/"
+    }
+  ],
+  "chokepoints": [
+    {
+      "id": "CPP1",
+      "name": "Sterile fill-finish",
+      "label": {
+        "en": "sterile fill-finish"
+      },
+      "blurb": {
+        "en": "The bottleneck is the needle, not the molecule: a sterile line takes years to build and qualify, and most of the capacity that exists is private or already spoken for."
+      },
+      "node_ids": [
+        "siegfried",
+        "catalent",
+        "lly",
+        "novo"
+      ],
+      "concentration": "Largely private; the biggest independent network, Catalent, was bought by Novo Holdings and its GLP-1 sites assigned to Novo Nordisk",
+      "geography": "United States, Switzerland, Italy, Denmark",
+      "dependents": [
+        "lly",
+        "novo",
+        "amgen",
+        "pfizer",
+        "viking"
+      ],
+      "substitute": "None at scale inside the window; a new sterile line is built, validated and inspected before it fills anything",
+      "substitution_time": "3-4 years",
+      "source": "https://www.daily-remedy.com/the-bottleneck-is-the-needle/"
+    },
+    {
+      "id": "CPP2",
+      "name": "Injection contact components",
+      "label": {
+        "en": "injection contact components"
+      },
+      "blurb": {
+        "en": "Stoppers, plungers, cartridges and syringes are the surface the drug touches, so each one is qualified to its molecule. The constraint is qualified capacity, not rubber."
+      },
+      "node_ids": [
+        "west",
+        "stevanato",
+        "gerresheimer",
+        "ypsomed",
+        "corning"
+      ],
+      "concentration": "West's high-value components were 49% of its sales in Q2 2026 and GLP-1 elastomer alone about a tenth of company revenue",
+      "geography": "United States, Germany, Italy, Switzerland",
+      "dependents": [
+        "lly",
+        "novo",
+        "amgen",
+        "pfizer"
+      ],
+      "substitute": "A second supplier exists on paper, but requalifying a contact component is a regulatory change, not a purchase",
+      "substitution_time": "18-36 months",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "id": "CPP3",
+      "name": "Peptide synthesis",
+      "label": {
+        "en": "peptide synthesis"
+      },
+      "blurb": {
+        "en": "Semaglutide and its peers are peptides, and the independent capacity to make them at tonne scale sits with a very small number of Swiss houses."
+      },
+      "node_ids": [
+        "bachem",
+        "polypeptide",
+        "lonza"
+      ],
+      "concentration": "Two listed independents of scale, both Swiss, plus the incretin makers' own in-house lines",
+      "geography": "Switzerland, United States, Belgium",
+      "dependents": [
+        "lly",
+        "novo",
+        "viking"
+      ],
+      "substitute": "In-house synthesis, which the incumbents are building and which takes as long as any other plant",
+      "substitution_time": "2-3 years",
+      "source": "https://www.bachem.com/knowledge-center/glp-1-demand-for-peptide-manufacturers/"
+    },
+    {
+      "id": "CPP4",
+      "name": "Chinese CDMO exposure",
+      "label": {
+        "en": "Chinese CDMO exposure"
+      },
+      "blurb": {
+        "en": "The BIOSECURE Act is law, so the constraint is no longer whether it passes but who ends up named and how fast work has to move. Reshoring is a queue for the same Western capacity everything else is queueing for."
+      },
+      "node_ids": [
+        "wuxi_bio",
+        "samsung_bio",
+        "lonza",
+        "fujifilm"
+      ],
+      "concentration": "A small number of non-China CDMOs able to absorb work at scale, against an incumbent that has been named on the Section 1260H list",
+      "geography": "China, South Korea, Switzerland, Japan, United States",
+      "dependents": [
+        "lly",
+        "novo",
+        "amgen",
+        "pfizer"
+      ],
+      "substitute": "Samsung Biologics, Lonza and Fujifilm, all of whom are adding capacity into the same demand",
+      "substitution_time": "2-4 years",
+      "source": "https://www.klgates.com/BIOSECURE-Act-What-You-Need-to-Know-1-20-2026"
+    }
+  ],
+  "subnodes": [],
+  "sub_edges": [],
+  "flows": [],
+  "etfs": [],
+  "vulnerable": [],
+  "challengers": {},
+  "display_rules": {}
+}

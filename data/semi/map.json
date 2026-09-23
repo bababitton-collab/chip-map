@@ -10301,6 +10301,9 @@
  },
  "edge_note": "v2.2: 45 supplier-customer edges added from customer-concentration disclosures (10-K/20-F), supplier awards and trade reports; each carries source and as_of. Weakest: ter->nvda, mpwr->nvda, etn->nvda (see what field).",
  "labels": {
+  "languages": [
+   "en"
+  ],
   "copy": {
    "chokepoint_kind": "semiconductor",
    "chokepoint_examples": "EUV lithography, HBM memory and advanced packaging"

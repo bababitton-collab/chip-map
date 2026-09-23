@@ -109,6 +109,39 @@ def _headline(rec: dict) -> str:
     return "".join(bits)
 
 
+def record_json(data: dict) -> dict:
+    """The document published at /record.json, from a pooled record.
+
+    Here rather than inline in publish_site so that the shape has ONE
+    definition. A test that checked the published artifact instead would
+    be comparing against whatever the last build happened to leave on
+    disk, and would pass or fail on how recently somebody ran it.
+
+    Cards are left out rather than filtered afterwards: this file is
+    fetched by every map page, and "we removed the text" is a weaker
+    promise than "the text was never put in".
+    """
+    return {"primary_horizon": data["primary_horizon"],
+            "domains": data["domains"],
+            "record": data["record"],
+            "by_domain": {d: {"domain": d,
+                              "record": b["record"],
+                              "benchmark": b["benchmark"]}
+                          for d, b in data["by_domain"].items()}}
+
+
+def _gate(rec: dict) -> str:
+    """The capital caveat, while the pooled sample is still short.
+
+    Read from the record rather than decided here: track.record_stats has
+    already compared this record's own N with the threshold, and a page
+    that repeated the comparison would be a second copy of the rule.
+    """
+    if not rec.get("capital_gated"):
+        return ""
+    return f'<p class="gate">{html.escape(str(rec.get("capital_rule") or ""))}</p>'
+
+
 def _blocks(per: dict, order: list[str], titles: dict) -> str:
     """One block per map: its own excess, against its own benchmarks."""
     esc = html.escape
@@ -167,10 +200,14 @@ def render(root: Path, names: list[str], site_url: str,
         "headline": _headline(rec),
         "blocks": _blocks(data["by_domain"], data["domains"], titles),
         "n_maps": str(len(data["domains"])),
-        "capital_rule": rec.get("capital_rule") or "",
+        # The whole element, or nothing at all. An empty <p class="gate">
+        # would still take its margin and leave a gap where a caveat used
+        # to be, which reads as something failing to load.
+        "capital_gate": _gate(rec),
         "excess_note": rec.get("excess") or "",
     }
-    raw = {"site_nav", "site_nav_css", "analytics", "headline", "blocks"}
+    raw = {"site_nav", "site_nav_css", "analytics", "headline", "blocks",
+           "capital_gate"}
 
     import re
 
@@ -185,4 +222,5 @@ def render(root: Path, names: list[str], site_url: str,
     return re.sub(r"\{\{(\w+)\}\}", fill, t)
 
 
-__all__ = ["render", "payloads", "TrackSiteError", "TEMPLATE", "DIRNAME"]
+__all__ = ["render", "payloads", "record_json", "TrackSiteError",
+           "TEMPLATE", "DIRNAME"]

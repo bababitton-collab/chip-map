@@ -21,8 +21,13 @@ different object, and the only thing that makes it one is that the claim was
 written down first and cannot be edited.
 
 The consequence is that the sample grows one question at a time and is small
-for a long while. ``capital_rule`` says so in the output, on every horizon, at
-every N. See the note on N below.
+for a long while. ``capital_rule`` says so in the output for as long as it is
+true -- while N is under MIN_N_FOR_CAPITAL -- and goes quiet once the sample
+clears it. It used to be emitted at every N, which meant a reader could not
+tell from the sentence whether it still applied; a caveat that never leaves
+is furniture, not a warning. ``capital_gated`` is the one place that decides,
+and every page reads it rather than comparing the two numbers itself.
+See the note on N below.
 
 THE CALENDAR COMES FROM THE PRICES
 ----------------------------------
@@ -75,6 +80,23 @@ MAX_SERIES = 60
 # summary at every N so the number is never read without it.
 MIN_N_FOR_CAPITAL = 30
 CAPITAL_RULE = f"no capital decision below N={MIN_N_FOR_CAPITAL}"
+
+
+def capital_gated(n: int | None) -> bool:
+    """Is the sample still too small to carry a capital decision?
+
+    The ONE comparison. Every summary, every record and every page asks this
+    rather than putting ``n < 30`` of its own somewhere: three copies of a
+    threshold is three chances for one of them to be raised and the others
+    forgotten, and the one that is forgotten is the one still telling a
+    reader the sample is fine.
+    """
+    return (n or 0) < MIN_N_FOR_CAPITAL
+
+
+def capital_note(n: int | None) -> str | None:
+    """The sentence while it applies, and nothing once it does not."""
+    return CAPITAL_RULE if capital_gated(n) else None
 
 # The second benchmark. EW_MAP stays the one every hit and every summary
 # is scored against; this is a separate market line reported beside it and
@@ -405,7 +427,10 @@ def summarise(rows: list[dict], horizons: tuple[int, ...] = HORIZONS) -> dict:
         "n_scored": len(scored),
         "n_pending": len(rows) - len(scored),
         "min_n": MIN_N_FOR_CAPITAL,
-        "capital_rule": CAPITAL_RULE,
+        # Scored forecasts are the denominator this caveat is about, so they
+        # are what it is measured against.
+        "capital_gated": capital_gated(len(scored)),
+        "capital_rule": capital_note(len(scored)),
         "benchmark": BENCHMARK,
     }
 
@@ -485,7 +510,8 @@ def main() -> int:
         print(f"  {line}")
     s = led["summary"]
     print(f"\nforecasts scored {len(led['rows'])}  pending {s['n_pending']}")
-    print(f"{s['capital_rule']}\n")
+    if s.get("capital_rule"):
+        print(f"{s['capital_rule']}\n")
     print("   h    N  hits   rate   mean excess  median excess  pending")
     for h in HORIZONS:
         d = s["horizons"][str(h)]

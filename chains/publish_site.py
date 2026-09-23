@@ -280,17 +280,7 @@ def write_site_record() -> Path:
     data = track.pooled(
         {d: json.loads((site_dir(d) / "track_public.json")
                        .read_text(encoding="utf-8")) for d in published})
-    # Cards are what carry a question's words; the meter needs none of them.
-    # Written without them rather than filtered afterwards: this file is
-    # fetched by every map page, and "we removed the text" is a weaker
-    # promise than "the text was never put in".
-    slim = {"primary_horizon": data["primary_horizon"],
-            "domains": data["domains"],
-            "record": data["record"],
-            "by_domain": {d: {"domain": d,
-                              "record": b["record"],
-                              "benchmark": b["benchmark"]}
-                          for d, b in data["by_domain"].items()}}
+    slim = track_site.record_json(data)
     rj = site_root() / "record.json"
     rj.write_text(json.dumps(slim, ensure_ascii=False, indent=1) + "\n",
                   encoding="utf-8", newline="\n")

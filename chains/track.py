@@ -641,9 +641,14 @@ def record_stats(records: list[dict]) -> dict:
            "min_n_for_interval": MIN_N_FOR_INTERVAL,
            # The capital gate travels WITH the record, from the one
            # place it is defined, so no page has to know the number to
-           # print the rule beside the figure it qualifies.
+           # print the rule beside the figure it qualifies -- and no page
+           # decides for itself whether it still applies. capital_gated is
+           # that decision, made once here against this record's own N, so
+           # the pooled headline and each map's block can disagree about it
+           # honestly: 17 questions is still short when 34 is not.
            "min_n_for_capital": forecast.MIN_N_FOR_CAPITAL,
-           "capital_rule": forecast.CAPITAL_RULE}
+           "capital_gated": forecast.capital_gated(n),
+           "capital_rule": forecast.capital_note(n)}
     if n == 0:
         out.update({"hits": 0, "hit_rate": None, "hit_rate_interval": None,
                     "mean_excess": None, "median_excess": None,

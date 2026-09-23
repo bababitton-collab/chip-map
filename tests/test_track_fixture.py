@@ -298,14 +298,17 @@ def test_at_and_above_the_threshold_the_sample_clears_it(pooled):
     assert rec["n"] >= rec["min_n_for_capital"]
 
 
-def test_the_rule_is_stated_at_every_n_by_design(fixture_cards, pooled):
-    """forecast.py: "capital_rule says so in the output, on every horizon, at
-    every N". The sentence is NOT withheld once the sample is large -- the
-    number is never meant to be read without it. Pinned here because it is a
-    decision, not an oversight, and a future reader may assume otherwise."""
+def test_the_rule_goes_quiet_once_the_sample_clears_the_threshold(
+        fixture_cards, pooled):
+    """It used to be stated at every N. A caveat that never leaves is
+    furniture — a reader could not tell from the sentence whether it still
+    applied. It is now present exactly while it is true."""
     short = track.pooled({"semi": {"forecasts": fixture_cards["semi"]}})
-    assert short["record"]["capital_rule"] == pooled["record"]["capital_rule"]
     assert short["record"]["n"] < 30 <= pooled["record"]["n"]
+    assert short["record"]["capital_gated"] is True
+    assert short["record"]["capital_rule"] == forecast.CAPITAL_RULE
+    assert pooled["record"]["capital_gated"] is False
+    assert pooled["record"]["capital_rule"] is None
 
 
 # -- each map keeps its own benchmark and its own sample --------------------
@@ -360,21 +363,32 @@ def test_record_json_has_the_same_shape_when_it_has_numbers_in_it(pooled):
     assert json.dumps(doc)          # serialisable, as the file must be
 
 
-def test_the_fixture_shape_matches_what_the_live_file_publishes(pooled):
-    """Against the real published document when there is one, so a key added
-    on one path and not the other is caught."""
-    from pathlib import Path
-    live = Path("site/record.json")
-    if not live.exists():
-        pytest.skip("no published record.json in this working tree")
-    real = json.loads(live.read_text(encoding="utf-8"))
-    mine = _slim(pooled)
-    assert set(real) == set(mine)
-    assert set(real["record"]) == set(mine["record"]), \
-        "the pooled record's keys drifted between empty and populated"
-    for dom in real["by_domain"]:
-        assert set(real["by_domain"][dom]) == set(
-            mine["by_domain"].get(dom, {})), dom
+def test_the_fixture_goes_through_the_real_record_json_builder(pooled):
+    """The shape is whatever chains/track_site.record_json says it is — the
+    same function publish_site writes the file with. The first version of
+    this test compared against site/record.json on disk, which meant it
+    passed or failed on how recently somebody had run a build."""
+    from chains import track_site
+    doc = track_site.record_json(pooled)
+    assert doc == _slim(pooled)
+    assert set(doc) == {"primary_horizon", "domains", "record", "by_domain"}
+
+
+def test_an_empty_record_and_a_populated_one_have_the_same_keys(pooled):
+    """The live record is all zeros today and will not always be. A key that
+    appears only once there are numbers is a schema that changes under a
+    reader the first time the site has something to say."""
+    from chains import track_site
+    empty = track_site.record_json(
+        track.pooled({d: {"forecasts": []} for d in ("semi", "energy")}))
+    full = track_site.record_json(pooled)
+    assert set(empty) == set(full)
+    assert set(empty["record"]) == set(full["record"])
+    for dom in full["by_domain"]:
+        assert set(empty["by_domain"][dom]) == set(full["by_domain"][dom])
+    # and the gate is the one value that legitimately differs
+    assert empty["record"]["capital_gated"] is True
+    assert full["record"]["capital_gated"] is False
 
 
 def test_the_fixture_never_writes_anything(tmp_path, pooled):
@@ -405,3 +419,95 @@ def test_the_same_qid_in_both_maps_is_two_events_not_one(fixture_cards):
         "a question two maps name alike was counted once"
     assert both["by_domain"]["semi"]["record"]["n"] == 17
     assert both["by_domain"]["energy"]["record"]["n"] == 17
+
+
+# -- either side of the threshold, to the question ---------------------------
+# 29 / 30 / 31, built from the fixture cards rather than from new ones, so the
+# boundary is tested against the same scoring that produced every other number
+# in this file. The gate is a `<` comparison: 30 is NOT short.
+
+def _n_cards(fixture_cards, n: int) -> list[dict]:
+    """Exactly n cleared cards, drawn from both maps' fixture sample."""
+    cleared = [c for dom in ("semi", "energy")
+               for c in fixture_cards[dom] if (c["horizons"] or {}).get(PH)]
+    assert len(cleared) >= n, "the fixture is too small for this boundary"
+    # unique qids, so record_stats counts every one of them
+    return [dict(c, qid=f"{PREFIX}bound_{i:02d}") for i, c in
+            enumerate(cleared[:n])]
+
+
+@pytest.mark.parametrize("n,gated", [(29, True), (30, False), (31, False)])
+def test_the_pooled_gate_turns_off_at_the_threshold(fixture_cards, n, gated):
+    rec = track.pooled(
+        {"semi": {"forecasts": _n_cards(fixture_cards, n)}})["record"]
+    assert rec["n"] == n
+    assert rec["capital_gated"] is gated
+    assert (rec["capital_rule"] is None) is not gated
+    if gated:
+        assert rec["capital_rule"] == forecast.CAPITAL_RULE
+
+
+@pytest.mark.parametrize("n,gated", [(29, True), (30, False), (31, False)])
+def test_a_single_map_block_gates_on_its_own_n(fixture_cards, n, gated):
+    """Each block carries its own caveat, because each has its own sample.
+    A map with 12 scored questions is still short on a site whose pooled
+    record has cleared 30, and it has to say so."""
+    block = track.pooled(
+        {"energy": {"forecasts": _n_cards(fixture_cards, n)}}
+    )["by_domain"]["energy"]["record"]
+    assert block["n"] == n
+    assert block["capital_gated"] is gated
+
+
+def test_the_two_can_disagree(fixture_cards):
+    """The real shape of it: pooled has cleared, one map has not."""
+    data = track.pooled({"semi": {"forecasts": _n_cards(fixture_cards, 20)},
+                         "energy": {"forecasts": _n_cards(fixture_cards, 12)}})
+    assert data["record"]["n"] == 32
+    assert data["record"]["capital_gated"] is False
+    assert data["by_domain"]["energy"]["record"]["n"] == 12
+    assert data["by_domain"]["energy"]["record"]["capital_gated"] is True
+
+
+def test_the_threshold_is_read_from_the_scoring_code_not_retyped():
+    """One comparison, one constant. Three copies of `n < 30` is three
+    chances for one of them to be raised and the others forgotten."""
+    assert forecast.capital_gated(forecast.MIN_N_FOR_CAPITAL - 1) is True
+    assert forecast.capital_gated(forecast.MIN_N_FOR_CAPITAL) is False
+    assert forecast.capital_note(forecast.MIN_N_FOR_CAPITAL) is None
+    assert forecast.capital_note(0) == forecast.CAPITAL_RULE
+
+
+# -- what the page actually renders -----------------------------------------
+
+def test_the_page_prints_the_caveat_while_the_sample_is_short(tmp_path,
+                                                              fixture_cards):
+    from chains import track_site
+    root = tmp_path / "short"
+    for dom in ("semi", "energy"):
+        d = root / dom
+        d.mkdir(parents=True)
+        (d / "track_public.json").write_text(
+            json.dumps({"forecasts": _n_cards(fixture_cards, 10)}),
+            encoding="utf-8")
+    html = track_site.render(root, ["semi", "energy"], "https://x/")
+    assert forecast.CAPITAL_RULE in html
+    assert 'class="gate"' in html
+
+
+def test_the_page_drops_the_element_entirely_once_it_clears(tmp_path,
+                                                            fixture_cards):
+    """Not an empty <p>: that would keep its margin and leave a gap where a
+    caveat used to be, which reads as something failing to load."""
+    from chains import track_site
+    root = tmp_path / "long"
+    for dom in ("semi", "energy"):
+        d = root / dom
+        d.mkdir(parents=True)
+        (d / "track_public.json").write_text(
+            json.dumps({"forecasts": _n_cards(fixture_cards, 17)}),
+            encoding="utf-8")
+    html = track_site.render(root, ["semi", "energy"], "https://x/")
+    assert "no capital decision" not in html
+    assert 'class="gate"' not in html
+    assert "<p></p>" not in html

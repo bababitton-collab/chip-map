@@ -1,0 +1,275 @@
+[
+ {
+  "qid": "bioprocess_q3",
+  "answer_date": "2026-10-21",
+  "committed_at": "2026-09-23",
+  "sha256": "329160e8ed0a232b8c584609a013f418f396bc82cff6ea31afff06c2bda6e558",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "danaher": {
+     "symbol": "DHR.US",
+     "adv_usd": 939670545,
+     "last_close": "2026-09-22"
+    },
+    "sartorius": {
+     "symbol": "SRT3.XETRA",
+     "adv_usd": 24939980,
+     "last_close": "2026-09-22"
+    },
+    "thermo": {
+     "symbol": "TMO.US",
+     "adv_usd": 1221632290,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "wst_q3",
+  "answer_date": "2026-10-22",
+  "committed_at": "2026-09-23",
+  "sha256": "2f094d31d63eec786e514ecd376975ccb022b442ce6a86061227daa47057ed3d",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "west": {
+     "symbol": "WST.US",
+     "adv_usd": 239215924,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "corning_q3",
+  "answer_date": "2026-10-27",
+  "committed_at": "2026-09-23",
+  "sha256": "472ac0bf18cbafacc5c8e83d7b197e12a4740419d2c98f5abdeeecc699b00d42",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "corning": {
+     "symbol": "GLW.US",
+     "adv_usd": 2162442483,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "samsung_bio_q3",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-23",
+  "sha256": "1015b03099d69594c6db5a954ce99a04920f1a9f624d908bc65cda4c8cb6a045",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "samsung_bio": {
+     "symbol": "207940.KO",
+     "adv_usd": 58078469,
+     "last_close": "2026-09-23"
+    },
+    "lonza": {
+     "symbol": "LONN.SW",
+     "adv_usd": 95637183,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "lly_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-23",
+  "sha256": "bba5c3b9f4455941016116d6d0973b73cc0381b41ae56ecf772f305ea67a296f",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "lly": {
+     "symbol": "LLY.US",
+     "adv_usd": 3166940154,
+     "last_close": "2026-09-22"
+    },
+    "novo": {
+     "symbol": "NVO.US",
+     "adv_usd": 561750411,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "novo_q3",
+  "answer_date": "2026-11-04",
+  "committed_at": "2026-09-23",
+  "sha256": "48106f326d4e216a78e94f82476f40fdc7e0a8860291a84c65b96257ec052ccc",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "lly": {
+     "symbol": "LLY.US",
+     "adv_usd": 3166940154,
+     "last_close": "2026-09-22"
+    },
+    "novo": {
+     "symbol": "NVO.US",
+     "adv_usd": 561750411,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "stvn_q3",
+  "answer_date": "2026-11-04",
+  "committed_at": "2026-09-23",
+  "sha256": "1e43818762a195d79d70b4a6ddccc65436b41b0d97f43f726b4f09e12e11a3a9",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "stevanato": {
+     "symbol": "STVN.US",
+     "adv_usd": 7820620,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "bachem_cmd",
+  "answer_date": "2026-11-26",
+  "committed_at": "2026-09-23",
+  "sha256": "cfb42e06ae90e5e38120d52200a0bcb36948b6be504e7e065a43ad9be390ad31",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "bachem": {
+     "symbol": "BANB.SW",
+     "adv_usd": 10302960,
+     "last_close": "2026-09-22"
+    },
+    "polypeptide": {
+     "symbol": "PPGN.SW",
+     "adv_usd": 7496288,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "gerresheimer_q4",
+  "answer_date": "2026-11-30",
+  "committed_at": "2026-09-23",
+  "sha256": "aa1dd3a6fe69aa4b039f49d6467aad7edaa6da7df3a3b2b09bb7d9c9a5803f67",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "gerresheimer": {
+     "symbol": "GXI.XETRA",
+     "adv_usd": 6118897,
+     "last_close": "2026-09-22"
+    },
+    "stevanato": {
+     "symbol": "STVN.US",
+     "adv_usd": 7820620,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "biosecure_list",
+  "answer_date": "2026-12-18",
+  "committed_at": "2026-09-23",
+  "sha256": "469b55140e24f8e863d21df6bad0d85f8c47607e23c0030abff243e65f2d156d",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "samsung_bio": {
+     "symbol": "207940.KO",
+     "adv_usd": 58078469,
+     "last_close": "2026-09-23"
+    },
+    "lonza": {
+     "symbol": "LONN.SW",
+     "adv_usd": 95637183,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "cagrisema_fda",
+  "answer_date": "2026-12-31",
+  "committed_at": "2026-09-23",
+  "sha256": "d096db4a1245f5b68c616dfc3e530159bdea94af91fbc6fb4d08f3fb66cd7751",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "novo": {
+     "symbol": "NVO.US",
+     "adv_usd": 561750411,
+     "last_close": "2026-09-22"
+    },
+    "lly": {
+     "symbol": "LLY.US",
+     "adv_usd": 3166940154,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ },
+ {
+  "qid": "viking_oral_p3",
+  "answer_date": "2026-12-31",
+  "committed_at": "2026-09-23",
+  "sha256": "3024ed58c4ca270d953803a937396f8c89a7735c8c35e2f71d775e1103e37f4d",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-23",
+   "min_adv_usd": 250000,
+   "legs": {
+    "viking": {
+     "symbol": "VKTX.US",
+     "adv_usd": 103284071,
+     "last_close": "2026-09-22"
+    }
+   }
+  }
+ }
+]

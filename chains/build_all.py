@@ -3,7 +3,7 @@
     python -m chains.build_all [--domain semi] [--skip-prices]
 
     prices -> repair -> legs -> page -> fundamentals -> preregister -> live
-          -> pages -> brief, brief_free -> brief_he, brief_he_free
+          -> pages -> brief, brief_free
 
 ``legs`` is the one step that never stops the run: it prints the basket legs
 that have gone more than a few sessions without a close (chains/liquidity.py)
@@ -50,7 +50,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
-from chains.paths import marks_path, out_dir, watch_en_path, watch_path  # noqa: E402
+from chains.paths import marks_path, out_dir, watch_en_path  # noqa: E402
 
 PY = sys.executable
 
@@ -84,26 +84,23 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
                         str(watch_en_path()), ans,
                         str(o / f"brief-free-{today.isoformat()}.md"),
                         "--free"]),
-        ("brief_he", ["-m", "chains.brief_he", str(o / "live.json"),
-                      str(watch_path()), ans,
-                      str(o / f"brief-he-{today.isoformat()}.md")]),
-        ("brief_he_free", ["-m", "chains.brief_he", str(o / "live.json"),
-                           str(watch_path()), ans,
-                           str(o / f"brief-he-free-{today.isoformat()}.md"),
-                           "--free"]),
+        # No Hebrew letter. Every map now declares languages: ["en"], so
+        # publish_site drops brief-he.md with the rest of the Hebrew half
+        # and nothing downstream reads one. Building it was work whose only
+        # consumer had already been switched off -- and a file in out/ that
+        # nothing publishes is a file somebody eventually wires back up by
+        # mistake. chains/brief_he.py stays: it still writes a letter on
+        # demand, it is simply not part of the build.
     ]
     return [s for s in out if not (skip_prices and s[0] == "prices")]
 
 
 def outputs(today: date) -> list[str]:
     return ["commitments.json", "live.json", "live_en.json",
-            "public-map.html",
             "public-map-en.html", "track.json", "track_public.json",
             "track.html",
             f"brief-{today.isoformat()}.md",
-            f"brief-free-{today.isoformat()}.md",
-            f"brief-he-{today.isoformat()}.md",
-            f"brief-he-free-{today.isoformat()}.md"]
+            f"brief-free-{today.isoformat()}.md"]
 
 
 def main() -> int:

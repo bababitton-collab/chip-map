@@ -192,7 +192,11 @@ def test_a_missing_question_fails_rather_than_rendering_an_empty_headline():
     assert "no text for" in str(e.value)
 
 
-@pytest.mark.parametrize("field", questions.REQUIRED)
+# The fields validate() actually enforces, which is per DOMAIN -- REQUIRED is
+# the module's "one per language" list, and no map declares Hebrew any more,
+# so q_he is no longer required of anybody. Parametrising over the constant
+# asked for a refusal the validator had stopped owing.
+@pytest.mark.parametrize("field", questions.required_for())
 def test_an_empty_question_is_refused(field):
     bad = dict(TEXT["next"]); bad[field] = "  "
     with pytest.raises(questions.QuestionsError) as e:

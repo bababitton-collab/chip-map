@@ -84,7 +84,10 @@ jobs:
       # nobody committed.
       - name: build
         env:
-          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+          # No price-vendor key: the price source needs none. Removed with the
+          # EODHD subscription -- a secret reference that resolves to an empty
+          # string is worse than none, because the step runs and the data is
+          # missing rather than the run failing.
           QUESTIONS_URL: ${{ secrets.QUESTIONS_URL }}
           SIGNUP_URL: ${{ vars.SIGNUP_URL }}
           # SUBSCRIBE_EMBED_URL is deliberately not passed: its value is in

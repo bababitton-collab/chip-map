@@ -35,9 +35,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from chains import mapfile
 from tools.probes import adr                                # noqa: E402
 from chains.paths import map_path, out_dir                     # noqa: E402
-from chains.paths import api_token                             # noqa: E402
 from tools.probes.probe_coverage import probe_one             # noqa: E402
-from chains.providers.eodhd import EODHDClient                   # noqa: E402
+# RETIRED WITH THE EODHD SUBSCRIPTION
+# ----------------------------------
+# This probe walked the vendor's whole US symbol list -- 51,111 names --
+# to find depositary receipts by name. The price source that replaced it
+# serves one symbol per request and publishes no symbol list at all, so
+# there is no way to run this against it.
+#
+# It is kept because its OUTPUT is still load-bearing: the ADR choices it
+# made on 2026-09-08 are in the maps, and tools/probes/adr.py still holds
+# the matcher with the cases that broke it, which is what tests/test_adr.py
+# covers. Only the fetch is dead.
 
 # Decided by Michael, 2026-09-08, on the four fields the parser could not read.
 PROSE_DECISIONS: dict[str, dict] = {
@@ -94,7 +103,7 @@ PROSE_DECISIONS: dict[str, dict] = {
 }
 
 
-def us_symbol_index(client: EODHDClient) -> list[tuple[str, str]]:
+def us_symbol_index(client) -> list[tuple[str, str]]:
     rows = client.symbols("US")
     return [(str(r.get("Code", "")).strip().upper(), str(r.get("Name", "")))
             for r in rows if r.get("Code")]
@@ -115,7 +124,11 @@ def main() -> int:
     mismatches: list[dict] = []
     renamed: list[dict] = []
 
-    with EODHDClient(api_token(), rate_per_min=900) as client:
+    raise SystemExit(
+        "probe_adr cannot run: it needs a full US symbol list, and the price "
+        "source has no such endpoint. The matcher it fed lives on in "
+        "tools/probes/adr.py and is still tested.")
+    with None as client:  # unreachable; kept so the shape below still reads
         print("fetching the US symbol list (one call)...")
         index = us_symbol_index(client)
         by_code = dict(index)

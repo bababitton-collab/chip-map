@@ -12,12 +12,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from chains import exchanges, forecast, mapfile, prices       # noqa: E402
-from chains.paths import api_token                            # noqa: E402
-from chains.providers.eodhd import EODHDClient                  # noqa: E402
+from chains.providers.yahoo import YahooClient                   # noqa: E402
 
 
 def resolve_challenger(c: dict) -> str | None:
-    """A challenger's ticker, in EODHD form, or None if it has no listing.
+    """A challenger's ticker, in the map's spelling, or None.
 
     A challenger record has no ``exchange`` field; the venue, when it is known
     at all, sits in a parenthetical: "WAF (Xetra)". The ticker parser strips
@@ -55,7 +54,7 @@ def main() -> int:
     print(f"map v{doc.get('version')}: {len(node_syms)} node/subnode symbols, "
           f"{len(chal_syms)} challenger symbols, {len(symbols)} distinct\n")
 
-    with EODHDClient(api_token(), rate_per_min=900) as client:
+    with YahooClient(rate_per_min=300) as client:
         done = prices.fetch_all(client, symbols, start=prices.START)
 
     got = {k: v for k, v in done.items() if v}

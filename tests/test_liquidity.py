@@ -76,10 +76,15 @@ def test_the_measure_converts_to_dollars_and_reads_the_last_close():
     assert m["adv_usd"] == pytest.approx(1.25 * (10_000 + 60_000) / 2), "1 / USDEUR"
 
 
-def test_no_token_is_a_refusal_not_a_pass(monkeypatch):
-    monkeypatch.delenv("EODHD_API_TOKEN", raising=False)
-    with pytest.raises(L.LiquidityError, match="not committed"):
-        L.Measure(TODAY)
+def test_a_leg_whose_value_cannot_be_read_is_a_refusal_not_a_pass():
+    """The rule outlived the token that used to be its reason.
+
+    There is no key to be missing any more, so the gate can no longer fail
+    for that. What must not change is the other half: a leg the vendor could
+    not answer for is NOT a leg that passed.
+    """
+    got = L.check_leg("x", "X.US", fake(error="vendor exploded"), TODAY)
+    assert got["ok"] is False and "exploded" in got["why"]
 
 
 def test_the_stored_record_is_what_the_gate_passed_on():

@@ -31,7 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from chains import mapfile, paths                             # noqa: E402
 from chains.paths import out_dir                              # noqa: E402
-from chains.providers.eodhd import EODHDClient, EODHDError      # noqa: E402
+from chains.providers.yahoo import YahooClient, YahooError       # noqa: E402
 
 # The five names asked for, in the EODHD form rather than the Yahoo form, plus
 # controls. Without the controls a 403 is unreadable: it could mean "non-US
@@ -53,20 +53,12 @@ FUNDAMENTALS_PROBE = [
 ALTERNATE_SUFFIX = {"TW": ["TWO"], "TWO": ["TW"], "KO": ["KQ"], "KQ": ["KO"]}
 
 
-def api_key() -> str:
-    """Kept as a name other modules import; the token now comes from one place.
-
-    It used to fall back to reading a value out of a sibling project's .env.
-    That fallback is exactly the laptop dependency this repository removes, so
-    it is gone: the environment, or nothing.
-    """
-    return paths.api_token()
 
 
 PROBE_WINDOW_DAYS = 365      # not 14: a thin OTC line can go a month unprinted
 
 
-def probe_one(client: EODHDClient, ticker: str) -> tuple[bool, str | None, dict | None]:
+def probe_one(client: YahooClient, ticker: str) -> tuple[bool, str | None, dict | None]:
     """One recent bar, over a window wide enough for a thinly traded line.
 
     The window was 14 days and that silently deleted real lines: TOKCF is Tokyo
@@ -77,7 +69,7 @@ def probe_one(client: EODHDClient, ticker: str) -> tuple[bool, str | None, dict 
     frm = (date.today() - timedelta(days=PROBE_WINDOW_DAYS)).isoformat()
     try:
         rows = client.eod(ticker, from_=frm)
-    except EODHDError as exc:
+    except YahooError as exc:
         return False, str(exc)[:120], None
     except Exception as exc:                              # noqa: BLE001
         return False, f"{type(exc).__name__}: {exc}"[:120], None
@@ -107,7 +99,7 @@ def main() -> int:
     print(f"\nprobing {len(todo)} resolvable tickers, one request each\n")
 
     results: dict[str, dict] = {}
-    with EODHDClient(api_key(), rate_per_min=900) as client:
+    with YahooClient(rate_per_min=300) as client:
         for i, e in enumerate(todo, 1):
             ok, err, bar = probe_one(client, e.ticker)
             used = e.ticker

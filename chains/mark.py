@@ -218,43 +218,23 @@ def expired(rows: list[dict], marks: dict, today: dt.date,
 LAST_NEWS: dict = {"status": None, "error": None, "n": 0}
 
 
-def headlines(ticker: str, day: dt.date, token: str | None) -> list[str]:
-    """A few EODHD headlines around the date, if the plan serves them.
+def headlines(ticker: str, day: dt.date, token: str | None = None) -> list[str]:
+    """No headline source. Returns nothing, and says so.
 
-    Optional on purpose. The news endpoint is not on every plan, and a mark
-    that depends on it would fail for a reason that has nothing to do with
-    what the company said.
+    This used to call EODHD's news endpoint. That subscription is gone, and
+    the endpoint was already answering with nothing useful before it went --
+    "0 headlines" for a week, which is what sent somebody looking.
+
+    The function stays rather than its callers losing a parameter, because
+    headlines were always optional here: a mark that depended on them would
+    fail for a reason that has nothing to do with what the company said. The
+    marking job reads the filing and the release; the headlines were colour.
+
+    ``token`` is accepted and ignored so no caller has to change on the way
+    past. A replacement source, if one is ever wanted, plugs in here.
     """
-    LAST_NEWS.update(status=None, error=None, n=0)
-    if not token or not ticker:
-        LAST_NEWS["error"] = "no token" if not token else "no ticker"
-        return []
-    try:
-        import httpx
-        frm = (day - dt.timedelta(days=1)).isoformat()
-        to = (day + dt.timedelta(days=NEWS_DAYS)).isoformat()
-        r = httpx.get(f"https://eodhd.com/api/news",
-                      params={"s": ticker, "from": frm, "to": to,
-                              "limit": 10, "api_token": token, "fmt": "json"},
-                      timeout=20)
-        if r.status_code != 200:
-            # The status, never the request: the token is a query parameter
-            # on this endpoint, so the URL itself is a secret and must not be
-            # logged. "0 headlines" told us nothing for a week.
-            LAST_NEWS.update(status=r.status_code,
-                             error=f"HTTP {r.status_code}")
-            return []
-        out = []
-        for item in r.json()[:10]:
-            t = str(item.get("title") or "").strip()
-            d = str(item.get("date") or "")[:10]
-            if t:
-                out.append(f"{d} {t}"[:180])
-        LAST_NEWS.update(status=200, error=None, n=len(out))
-        return out
-    except Exception as e:
-        LAST_NEWS.update(status=None, error=type(e).__name__)
-        return []                          # optional, but no longer silent
+    LAST_NEWS.update(status=None, error="no headline source configured", n=0)
+    return []
 
 
 # ------------------------------------------------------------------- model
@@ -513,7 +493,6 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
         model = pick_model(key)
         say(f"model: {model}")
 
-    eod = os.environ.get("EODHD_API_TOKEN", "").strip() or None
     when = dt.datetime.now(dt.timezone.utc).replace(
         microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -522,9 +501,9 @@ def run(domain: str | None, today: dt.date, dry: bool, only: str | None,
     for row in todo:
         q = text.get(row["id"]) or {}
         news = headlines(str(row.get("tk") or ""),
-                         dt.date.fromisoformat(row["d"]), eod)
+                         dt.date.fromisoformat(row["d"]))
         why_news = LAST_NEWS.get("error")
-        trail.append(f"  {row['id']}: {len(news)} EODHD headline(s)"
+        trail.append(f"  {row['id']}: {len(news)} headline(s)"
                      + (f" ({why_news})" if why_news else ""))
         rec = None
         failed: AskFailed | None = None

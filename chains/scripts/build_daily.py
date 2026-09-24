@@ -37,9 +37,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from chains import mapfile, prices                            # noqa: E402
-from chains.paths import (api_token, commitments_path,        # noqa: E402
+from chains.paths import (commitments_path,                   # noqa: E402
                           watch_path)
-from chains.providers.eodhd import EODHDClient                # noqa: E402
+from chains.providers.yahoo import YahooClient                 # noqa: E402
 
 # Re-asked before the newest stored candle, for the same reason the close layer
 # does it: a late vendor correction lands on a day already stored.
@@ -130,9 +130,8 @@ def main() -> int:
             print("nothing to fetch")
         return 0
 
-    token = api_token()
     got = {}
-    with EODHDClient(token, rate_per_min=900) as client:
+    with YahooClient(rate_per_min=300) as client:
         for r in need:
             sym = r["symbol"]
             try:

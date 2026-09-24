@@ -246,14 +246,21 @@ def test_the_map_override_is_available_but_not_the_default(monkeypatch,
 
 # -- the token ---------------------------------------------------------------
 
-def test_only_the_price_step_needs_the_token(monkeypatch):
-    """Everything else builds without it, so a contributor with no vendor
-    account can still run the tests and rebuild the pages from a cache."""
+def test_no_step_needs_a_price_vendor_key():
+    """There is no price-vendor key left to need.
+
+    The build used to stop at the prices step without EODHD_API_TOKEN. The
+    price source that replaced it needs no account, so the knob is gone
+    rather than merely unused -- an env var nothing reads is a thing somebody
+    eventually sets and waits for.
+    """
     from chains import paths
-    monkeypatch.delenv(paths.TOKEN_ENV, raising=False)
-    with pytest.raises(SystemExit) as e:
-        paths.api_token()
-    assert paths.TOKEN_ENV in str(e.value)
+    assert not hasattr(paths, "api_token")
+    assert not hasattr(paths, "TOKEN_ENV")
+    for path in modules():
+        text = path.read_text(encoding="utf-8")
+        assert "EODHD_API_TOKEN" not in text, (
+            f"{path.name} still names the retired price-vendor secret")
 
 
 def test_the_token_is_never_written_into_a_module():
@@ -298,7 +305,7 @@ def test_no_module_reads_an_environment_variable_that_is_not_documented():
     need" is answerable by reading one file."""
     documented = {"CHIP_MAP_DATA", "CHIP_MAP_OUT", "CHIP_MAP_SITE",
                   "CHIP_MAP_PRICES", "CHIP_MAP_PATH", "CHIP_MAP_DOMAIN",
-                  "EODHD_API_TOKEN", "ANSWERS_URL", "QUESTIONS_URL",
+                  "ANSWERS_URL", "QUESTIONS_URL",
                   "SIGNUP_URL", "SUBSCRIBE_EMBED_URL",
                   # chains/mark.py: the key it reads sources with, the model
                   # to use, and the file Actions wants its run summary in.

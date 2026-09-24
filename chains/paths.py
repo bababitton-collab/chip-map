@@ -5,7 +5,6 @@
     CHIP_MAP_OUT     derived output  default ./out
     CHIP_MAP_SITE    what is served  default ./site
     CHIP_MAP_PRICES  price parquets  default ./out/prices
-    EODHD_API_TOKEN  required by the prices step only
     QUESTIONS_URL    required; the question text, see chains/questions.py
     ANSWERS_URL      optional; see chains/answers.py
     SIGNUP_URL       optional; where the page's CTA points
@@ -72,7 +71,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # is, read by chains/build_pages.py and never written by a scheduled run.
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
-TOKEN_ENV = "EODHD_API_TOKEN"
 ANSWERS_URL_ENV = "ANSWERS_URL"
 SIGNUP_URL_ENV = "SIGNUP_URL"
 SUBSCRIBE_EMBED_URL_ENV = "SUBSCRIBE_EMBED_URL"
@@ -193,21 +191,6 @@ def answers_path(dom: str | None = None) -> Path:
 def templates_dir() -> Path:
     """Where the page templates live. Read-only for every scheduled run."""
     return TEMPLATES_DIR
-
-
-def api_token() -> str:
-    """The EODHD token. Only the prices step needs it.
-
-    Read here rather than inside the client so the failure is one clear line at
-    the top of the step that needs it, instead of a stack trace out of an HTTP
-    library. Every other step runs without it.
-    """
-    token = os.environ.get(TOKEN_ENV, "").strip()
-    if not token:
-        raise SystemExit(
-            f"{TOKEN_ENV} is not set. The prices step needs it; every other "
-            f"step does not. In CI it comes from the repository secret.")
-    return token
 
 
 def answers_url() -> str | None:

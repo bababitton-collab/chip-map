@@ -153,7 +153,14 @@ def frame(symbol: str, rows: list[dict]) -> pl.DataFrame:
         pl.col("date").cast(pl.Utf8).str.to_date(),
         pl.col("adj_close").cast(pl.Float64),
         *[pl.col(k).cast(pl.Float64) for k in (*OHLC, "volume")],
-    ).drop_nulls("adj_close").unique(subset=["date"], keep="last").sort("date")
+    ).drop_nulls("adj_close").filter(
+        # A non-positive adjusted close is not a price, and dropping only
+        # nulls let one through: Yahoo serves -5756.58 for SLAHF.US on
+        # 2024-02-08. It survived the null filter, would have been stored as
+        # a number, and every return computed across it would have been
+        # nonsense with nothing raised.
+        pl.col("adj_close") > 0
+    ).unique(subset=["date"], keep="last").sort("date")
     return df.select(list(SCHEMA))
 
 

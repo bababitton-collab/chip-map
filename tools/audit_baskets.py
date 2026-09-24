@@ -5,7 +5,7 @@
     python tools/audit_baskets.py --show-text  # also prints each trigger sentence
 
 It reads and it reports. It changes no data file and runs no preregistration.
-EODHD_API_TOKEN, when set, adds each leg's traded volume and the search for a
+Traded volume and the search for a
 better listing; without it those columns say so.
 
 WHAT IT CHECKS
@@ -386,13 +386,12 @@ class Liquidity:
     def __init__(self, token: str | None, as_of: dt.date):
         self.as_of = as_of
         self.client = None
-        self.note = "EODHD_API_TOKEN not set: volume and alternative listings not checked"
+        self.note = "volume and alternative listings not checked"
         self._adv: dict[str, dict | None] = {}
         self._fx: dict[str, float | None] = {"USD": 1.0}
         if token:
-            from chains.providers.eodhd import EODHDClient, silence_http_logging
-            silence_http_logging()
-            self.client = EODHDClient(token, rate_per_min=600)
+            from chains.providers.yahoo import YahooClient
+            self.client = YahooClient(rate_per_min=300)
             self.note = ""
 
     def close(self) -> None:
@@ -927,7 +926,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"question text unavailable, kind and reporter checks skipped: {e}")
         texts = {}
     open_ids = questions.open_ids(rows, today)
-    liq = Liquidity(os.environ.get("EODHD_API_TOKEN", "").strip() or None, dt.date.fromisoformat(live["as_of"]))
+    liq = Liquidity("yahoo", dt.date.fromisoformat(live["as_of"]))
     try:
         legs = Legs(mp, live, liq)
         audits = [audit_question(mp, legs, r, committed, today, texts.get(r["id"]), open_ids) for r in rows]

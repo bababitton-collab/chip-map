@@ -753,10 +753,12 @@ def test_the_failure_detail_never_carries_the_key(wired, monkeypatch):
 def test_the_news_lookup_says_why_it_found_nothing(monkeypatch):
     """"0 headlines" was true and useless for a week."""
     monkeypatch.setattr(mark, "LAST_NEWS", dict(mark.LAST_NEWS))
-    assert mark.headlines("MU", dt.date(2026, 9, 30), None) == []
-    assert mark.LAST_NEWS["error"] == "no token"
+    assert mark.headlines("MU", dt.date(2026, 9, 30)) == []
+    assert mark.LAST_NEWS["error"] == "no headline source configured"
+    # And it still says so when a caller passes the old token argument, which
+    # is accepted and ignored so nothing upstream had to change.
     assert mark.headlines("", dt.date(2026, 9, 30), "tok") == []
-    assert mark.LAST_NEWS["error"] == "no ticker"
+    assert mark.LAST_NEWS["error"] == "no headline source configured"
 
 
 # -- rule 2: a call that never returned is not invalid model output ----------

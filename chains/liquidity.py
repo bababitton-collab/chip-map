@@ -1,10 +1,10 @@
 """Whether a basket leg's price line can carry a forecast: traded, and recently.
 
     python -m chains.liquidity --stale    # the nightly line: legs gone quiet (never fails)
-    python -m chains.liquidity --report   # every leg's traded value from EODHD, thinnest first
+    python -m chains.liquidity --report   # every leg's traded value, thinnest first
 
 A leg is scored by its price, so the question is about the LINE, not the
-company. TOK is a real supplier to TSMC; its only line EODHD carries, TOKCF,
+company. TOK is a real supplier to TSMC; its only US line, TOKCF,
 traded about US$8,500 a day and went three weeks without a close. A basket
 leg priced on a line like that measures nothing.
 
@@ -37,7 +37,8 @@ ADV_DAYS = 91               # "three months" of daily bars
 GATE_SESSIONS = 3           # a close within the last three completed sessions
 STALE_SESSIONS = 3          # the nightly line: more than this without a close
 
-# EODHD's exchange code -> the currency its closes are quoted in. LSE closes
+# The exchange code in a symbol's suffix -> the currency its closes are
+# quoted in. LSE closes
 # are in pence.
 #
 # A SUFFIX MISSING FROM THIS TABLE IS NOT A MISSING FEATURE, IT IS A WRONG
@@ -56,7 +57,13 @@ CURRENCY_BY_EXCHANGE = {"US": "USD", "XETRA": "EUR", "PA": "EUR", "AS": "EUR", "
 
 
 class LiquidityError(RuntimeError):
-    """The check could not be run at all -- which is not the same as passing."""
+    """The check could not be run at all -- which is not the same as passing.
+
+    Kept, and still raised by the provider underneath: a leg whose traded
+    value could not be read is not a leg that passed. What changed is that the
+    reason is no longer ever "the token is missing" -- the price source needs
+    no key.
+    """
 
 
 def currency_of(symbol: str) -> str:
@@ -75,7 +82,8 @@ def sessions_since(last: dt.date, today: dt.date) -> int:
 
 # ----------------------------------------------------------------- measuring
 class Measure:
-    """Three months of daily bars per symbol from EODHD, with FX to dollars.
+    """Three months of daily bars per symbol from the price vendor, with FX to
+    dollars.
 
     ``measure(symbol)`` -> {symbol, adv_usd, adv_shares, sessions, last_close,
     currency} or {symbol, error}. One instance per run: symbols and rates are
@@ -85,13 +93,8 @@ class Measure:
     def __init__(self, today: dt.date, client=None):
         self.today = today
         if client is None:
-            token = os.environ.get("EODHD_API_TOKEN", "").strip()
-            if not token:
-                raise LiquidityError("EODHD_API_TOKEN is not set, so no leg's traded value can be "
-                                     "checked -- and an unchecked leg is not committed")
-            from chains.providers.eodhd import EODHDClient, silence_http_logging
-            silence_http_logging()
-            client = EODHDClient(token, rate_per_min=600)
+            from chains.providers.yahoo import YahooClient
+            client = YahooClient(rate_per_min=300)
         self.client = client
         self._got: dict[str, dict] = {}
         self._fx: dict[str, float | None] = {"USD": 1.0}
@@ -129,14 +132,14 @@ class Measure:
         try:
             rows = [r for r in self._bars(symbol, ADV_DAYS) if r.get("volume") is not None and r.get("close")]
         except Exception as e:                                  # noqa: BLE001 -- reported per leg
-            got = {"symbol": symbol, "error": f"EODHD: {type(e).__name__}"}
+            got = {"symbol": symbol, "error": f"price vendor: {type(e).__name__}"}
         else:
             cur = currency_of(symbol)
             rate = self.fx(cur) if rows else None
             if not rows:
-                got = {"symbol": symbol, "error": "EODHD has no daily bars with volume in three months"}
+                got = {"symbol": symbol, "error": "no daily bars with volume in three months"}
             elif rate is None:
-                got = {"symbol": symbol, "error": f"no {cur}->USD rate on EODHD"}
+                got = {"symbol": symbol, "error": f"no {cur}->USD rate from the price vendor"}
             else:
                 got = {"symbol": symbol, "currency": cur, "sessions": len(rows), "last_close": rows[-1]["date"],
                        "adv_shares": sum(float(r["volume"]) for r in rows) / len(rows),
@@ -278,7 +281,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m chains.liquidity")
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--stale", action="store_true", help="the nightly line, from the price store; exits 0")
-    mode.add_argument("--report", action="store_true", help="every leg's traded value from EODHD")
+    mode.add_argument("--report", action="store_true", help="every leg's traded value")
     a = ap.parse_args(argv)
     rows = json.loads(watch_path().read_text(encoding="utf-8"))
     doc = mapfile.load()

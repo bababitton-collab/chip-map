@@ -1,0 +1,294 @@
+[
+ {
+  "qid": "ge_aero_q3",
+  "answer_date": "2026-10-20",
+  "committed_at": "2026-09-24",
+  "sha256": "77cf6b667579ec5f1a67f5b0b7aee0562e1c27b0fc684f6211e9840ca74641cf",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "ge_aero": {
+     "symbol": "GE.US",
+     "adv_usd": 1438288188,
+     "last_close": "2026-09-23"
+    },
+    "howmet": {
+     "symbol": "HWM.US",
+     "adv_usd": 807505481,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "noc_q3",
+  "answer_date": "2026-10-20",
+  "committed_at": "2026-09-24",
+  "sha256": "7b9d778e8558ef43c496ff5ac9100f249f351170c2eac386e5f9f58675e18632",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "noc": {
+     "symbol": "NOC.US",
+     "adv_usd": 455821533,
+     "last_close": "2026-09-23"
+    },
+    "l3harris": {
+     "symbol": "LHX.US",
+     "adv_usd": 431490193,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "srm_bottleneck",
+  "answer_date": "2026-10-22",
+  "committed_at": "2026-09-24",
+  "sha256": "d26655755fe5132bf882cddb923cf3f5284a8d7a868dda9842b39c4cb9b9f4ee",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "l3harris": {
+     "symbol": "LHX.US",
+     "adv_usd": 431490193,
+     "last_close": "2026-09-23"
+    },
+    "noc": {
+     "symbol": "NOC.US",
+     "adv_usd": 455821533,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "safran_q3",
+  "answer_date": "2026-10-23",
+  "committed_at": "2026-09-24",
+  "sha256": "34b1d5b9ffe45c9709b4301548aad933e7fae5923643fe05264e077d597fc8c2",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "safran": {
+     "symbol": "SAF.PA",
+     "adv_usd": 196680737,
+     "last_close": "2026-09-24"
+    },
+    "ge_aero": {
+     "symbol": "GE.US",
+     "adv_usd": 1438288188,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "lmt_q3",
+  "answer_date": "2026-10-27",
+  "committed_at": "2026-09-24",
+  "sha256": "035740339ad32f09751d4ba2c1e4022115929183d72c158debdeb686f4827e47",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "lmt": {
+     "symbol": "LMT.US",
+     "adv_usd": 647791685,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "rtx_q3",
+  "answer_date": "2026-10-27",
+  "committed_at": "2026-09-24",
+  "sha256": "0275a881f812f2b18b28b15a0d30e0dd8a2a5a63c299ac8c961e7cd958b347ee",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "rtx": {
+     "symbol": "RTX.US",
+     "adv_usd": 939468440,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "ati_q3",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-24",
+  "sha256": "7f28c37f317f515611f054e05e58a0b0fad9043af9aeab4eeccbdf881661b41a",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "ati": {
+     "symbol": "ATI.US",
+     "adv_usd": 348040699,
+     "last_close": "2026-09-23"
+    },
+    "carpenter": {
+     "symbol": "CRS.US",
+     "adv_usd": 400602394,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "gd_q3",
+  "answer_date": "2026-10-28",
+  "committed_at": "2026-09-24",
+  "sha256": "47d3b7a63d4c91881fb779e6e3bf5b4510c5314a471974e15c35a3a80c91ae9b",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "gd": {
+     "symbol": "GD.US",
+     "adv_usd": 404929643,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "hwm_q3",
+  "answer_date": "2026-10-29",
+  "committed_at": "2026-09-24",
+  "sha256": "573ffee6bada84a11387c3f24d3eb74bcc10219fe36cecaee16f648a229c8218",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "howmet": {
+     "symbol": "HWM.US",
+     "adv_usd": 807505481,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "hii_q3",
+  "answer_date": "2026-11-03",
+  "committed_at": "2026-09-24",
+  "sha256": "adba58d8a804f2ca6b0daecea49f5fbf9222c4edc60156a13cfa318778bb226a",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "hii": {
+     "symbol": "HII.US",
+     "adv_usd": 141789934,
+     "last_close": "2026-09-23"
+    },
+    "gd": {
+     "symbol": "GD.US",
+     "adv_usd": 404929643,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "mp_ndpr_q3",
+  "answer_date": "2026-11-05",
+  "committed_at": "2026-09-24",
+  "sha256": "a3076b2acb15fd98330a4bcca682c813b0cb7ce262b950bb3d191e868343bb57",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "mp": {
+     "symbol": "MP.US",
+     "adv_usd": 293291797,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ },
+ {
+  "qid": "rheinmetall_q3",
+  "answer_date": "2026-11-05",
+  "committed_at": "2026-09-24",
+  "sha256": "37fc4dc73a4ac69a7a0de1e46f328c04b81169c8cc806ca8287794287a32529b",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "rheinmetall": {
+     "symbol": "RHM.XETRA",
+     "adv_usd": 243551295,
+     "last_close": "2026-09-24"
+    },
+    "bae": {
+     "symbol": "BA.LSE",
+     "adv_usd": 163731944,
+     "last_close": "2026-09-24"
+    },
+    "thales": {
+     "symbol": "HO.PA",
+     "adv_usd": 65814379,
+     "last_close": "2026-09-24"
+    }
+   }
+  }
+ },
+ {
+  "qid": "artillery_155",
+  "answer_date": "2026-12-31",
+  "committed_at": "2026-09-24",
+  "sha256": "2afee8e6c740ae495a06983e980b1ba2aaf507d83732ec02bfe9fd3efd3f849e",
+  "primary_horizon": 20,
+  "valid_preregistration": true,
+  "liquidity": {
+   "checked_at": "2026-09-24",
+   "min_adv_usd": 250000,
+   "legs": {
+    "gd": {
+     "symbol": "GD.US",
+     "adv_usd": 404929643,
+     "last_close": "2026-09-23"
+    },
+    "noc": {
+     "symbol": "NOC.US",
+     "adv_usd": 455821533,
+     "last_close": "2026-09-23"
+    }
+   }
+  }
+ }
+]

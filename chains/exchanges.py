@@ -1,9 +1,17 @@
-"""Map the chain map's exchange labels and ticker suffixes onto EODHD codes.
+"""Map the chain map's exchange labels and ticker suffixes onto the codes
+this repository stores symbols under.
+
+Those codes are EODHD's, inherited: they are what every map, every parquet
+filename and every committed liquidity record already spells symbols with, so
+they stayed when the vendor went. chains/providers/yahoo.py translates them on
+the way out to whatever the current price source calls the same venue. The
+table below is therefore the repository's own spelling, not a vendor's.
 
 EVERY CODE HERE WAS READ OFF THE SUBSCRIPTION, NOT REMEMBERED
 -------------------------------------------------------------
 The obvious suffixes -- ``.T`` for Tokyo, ``.KS`` for Korea, ``.HK`` for Hong
-Kong -- are Yahoo Finance's, not EODHD's, and several do not exist here at all.
+Kong -- are Yahoo Finance's, not these, and several did not exist on the plan
+that set them.
 The codes below come from ``GET /api/exchanges-list/`` on 2026-09-08, which
 returned 70 exchanges.
 

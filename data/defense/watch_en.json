@@ -1,0 +1,243 @@
+[
+ {
+  "id": "ge_aero_q3",
+  "d": "2026-10-20",
+  "confirmed": true,
+  "who": "GE Aerospace Q3",
+  "tk": "GE",
+  "cps": [
+   "CPD2"
+  ],
+  "win": [
+   "ge_aero",
+   "howmet"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "engines",
+  "lbl": "GE Aerospace",
+  "kind": "tide"
+ },
+ {
+  "id": "noc_q3",
+  "d": "2026-10-20",
+  "confirmed": true,
+  "who": "Northrop Grumman Q3",
+  "tk": "NOC",
+  "cps": [
+   "CPD1"
+  ],
+  "win": [
+   "noc",
+   "l3harris"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "motors",
+  "lbl": "Northrop",
+  "kind": "tide"
+ },
+ {
+  "id": "srm_bottleneck",
+  "d": "2026-10-22",
+  "confirmed": false,
+  "who": "L3Harris Q3",
+  "tk": "LHX",
+  "cps": [
+   "CPD1"
+  ],
+  "win": [
+   "l3harris",
+   "noc"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "motors",
+  "lbl": "L3Harris",
+  "kind": "tide"
+ },
+ {
+  "id": "safran_q3",
+  "d": "2026-10-23",
+  "confirmed": true,
+  "who": "Safran Q3 revenue",
+  "tk": "SAF",
+  "cps": [
+   "CPD2"
+  ],
+  "win": [
+   "safran",
+   "ge_aero"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "engines",
+  "lbl": "Safran",
+  "kind": "tide"
+ },
+ {
+  "id": "lmt_q3",
+  "d": "2026-10-27",
+  "confirmed": false,
+  "who": "Lockheed Martin Q3",
+  "tk": "LMT",
+  "cps": [
+   "CPD3"
+  ],
+  "win": [
+   "lmt"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "munitions",
+  "lbl": "Lockheed",
+  "kind": "tide"
+ },
+ {
+  "id": "rtx_q3",
+  "d": "2026-10-27",
+  "confirmed": false,
+  "who": "RTX Q3",
+  "tk": "RTX",
+  "cps": [
+   "CPD3"
+  ],
+  "win": [
+   "rtx"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "munitions",
+  "lbl": "RTX",
+  "kind": "tide"
+ },
+ {
+  "id": "ati_q3",
+  "d": "2026-10-28",
+  "confirmed": false,
+  "who": "ATI Q3",
+  "tk": "ATI",
+  "cps": [
+   "CPD2"
+  ],
+  "win": [
+   "ati",
+   "carpenter"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "materials",
+  "lbl": "ATI",
+  "kind": "tide"
+ },
+ {
+  "id": "gd_q3",
+  "d": "2026-10-28",
+  "confirmed": false,
+  "who": "General Dynamics Q3",
+  "tk": "GD",
+  "cps": [
+   "CPD3"
+  ],
+  "win": [
+   "gd"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "munitions",
+  "lbl": "General Dynamics",
+  "kind": "tide"
+ },
+ {
+  "id": "hwm_q3",
+  "d": "2026-10-29",
+  "confirmed": false,
+  "who": "Howmet Aerospace Q3",
+  "tk": "HWM",
+  "cps": [
+   "CPD2"
+  ],
+  "win": [
+   "howmet"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "castings",
+  "lbl": "Howmet",
+  "kind": "tide"
+ },
+ {
+  "id": "hii_q3",
+  "d": "2026-11-03",
+  "confirmed": false,
+  "who": "Huntington Ingalls Q3",
+  "tk": "HII",
+  "cps": [
+   "CPD5"
+  ],
+  "win": [
+   "hii",
+   "gd"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "naval",
+  "lbl": "Huntington Ingalls",
+  "kind": "tide"
+ },
+ {
+  "id": "mp_ndpr_q3",
+  "d": "2026-11-05",
+  "confirmed": false,
+  "who": "MP Materials Q3",
+  "tk": "MP",
+  "cps": [],
+  "win": [
+   "mp"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "materials",
+  "lbl": "MP Materials",
+  "kind": "tide"
+ },
+ {
+  "id": "rheinmetall_q3",
+  "d": "2026-11-05",
+  "confirmed": false,
+  "who": "Rheinmetall nine-month report",
+  "tk": "RHM",
+  "cps": [
+   "CPD4"
+  ],
+  "win": [
+   "rheinmetall",
+   "bae",
+   "thales"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "europe",
+  "lbl": "Rheinmetall",
+  "kind": "tide"
+ },
+ {
+  "id": "artillery_155",
+  "d": "2026-12-31",
+  "confirmed": false,
+  "who": "155mm monthly rate",
+  "tk": "-",
+  "cps": [
+   "CPD3"
+  ],
+  "win": [
+   "gd",
+   "noc"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "munitions",
+  "lbl": "155mm",
+  "kind": "tide"
+ }
+]

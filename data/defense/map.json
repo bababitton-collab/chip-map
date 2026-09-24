@@ -1,0 +1,1024 @@
+{
+  "chain": "defense-aerospace-rearmament",
+  "as_of": "2026-09-24",
+  "version": "1.0",
+  "note_on_method": "Nodes are companies with a listed price line unless they are marked otherwise; a node whose price_symbol_kind is \"none\" is drawn and described but never scored. Each company appears exactly once, in the layer where its constraint sits -- a prime that also makes motors or engines carries that through its edges and its chokepoint membership rather than through a second node. Every price line here was re-measured against the price vendor on 2026-09-24.",
+  "benchmark": {
+    "key": "defense",
+    "symbol": "ITA.US",
+    "label": "DEFENSE"
+  },
+  "labels": {
+    "languages": [
+      "en"
+    ],
+    "copy": {
+      "chokepoint_kind": "defence industrial",
+      "chokepoint_examples": "solid rocket motors, jet-engine castings, 155mm munitions, European rearmament capacity and the submarine industrial base"
+    },
+    "brand": {
+      "name": "Linchpin Signal",
+      "title": {
+        "en": "The Living Defence Map"
+      },
+      "value": {
+        "en": "The physical supply chain behind rearmament — who pours the motor, who casts the turbine blade, and where it breaks."
+      },
+      "desc": {
+        "en": "A living map of the defence industrial base: {nodes} companies, {cps} chokepoints pulsing with the market, a forecast board and questions with a date."
+      },
+      "story": {
+        "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."
+      },
+      "footer": {
+        "en": "Linchpin Signal · not investment advice · every number carries a source"
+      }
+    },
+    "layers": {
+      "D1": {
+        "en": "materials"
+      },
+      "D2": {
+        "en": "components"
+      },
+      "D3": {
+        "en": "propulsion"
+      },
+      "D4": {
+        "en": "primes and missiles"
+      },
+      "D5": {
+        "en": "naval"
+      }
+    },
+    "lines": {
+      "alloy": {
+        "en": "alloy",
+        "color": "#8fae87"
+      },
+      "magnet": {
+        "en": "magnets",
+        "color": "#9b90bd"
+      },
+      "energetic": {
+        "en": "energetics",
+        "color": "#c9a227"
+      },
+      "motor": {
+        "en": "rocket motors",
+        "color": "#ff5a3c"
+      },
+      "casting": {
+        "en": "castings",
+        "color": "#c08878"
+      },
+      "engine": {
+        "en": "engines",
+        "color": "#7aa894"
+      },
+      "prime": {
+        "en": "primes",
+        "color": "#7d93b8"
+      },
+      "naval": {
+        "en": "naval",
+        "color": "#b39a6a"
+      }
+    },
+    "line_order": [
+      "alloy",
+      "magnet",
+      "energetic",
+      "motor",
+      "casting",
+      "engine",
+      "prime",
+      "naval"
+    ],
+    "lanes": {
+      "materials": {
+        "en": "materials"
+      },
+      "motors": {
+        "en": "rocket motors"
+      },
+      "castings": {
+        "en": "castings"
+      },
+      "engines": {
+        "en": "engines"
+      },
+      "munitions": {
+        "en": "munitions"
+      },
+      "naval": {
+        "en": "naval"
+      },
+      "europe": {
+        "en": "Europe"
+      }
+    },
+    "stages": {
+      "research": {
+        "en": "research"
+      },
+      "pilot": {
+        "en": "pilot"
+      },
+      "qualified": {
+        "en": "qualified"
+      },
+      "volume": {
+        "en": "volume"
+      }
+    },
+    "size_unknown_r": 13
+  },
+  "layers": [
+    {
+      "id": "D1",
+      "name": "Materials",
+      "order": 1,
+      "description": "Titanium, nickel superalloy, rare-earth magnets and the energetic chemicals every solid motor is poured from."
+    },
+    {
+      "id": "D2",
+      "name": "Components",
+      "order": 2,
+      "description": "Solid rocket motors and the castings and forgings a jet engine is assembled around: the two places this chain actually binds."
+    },
+    {
+      "id": "D3",
+      "name": "Propulsion",
+      "order": 3,
+      "description": "Engine makers, military and commercial, sharing one hot-section supply base."
+    },
+    {
+      "id": "D4",
+      "name": "Primes and missiles",
+      "order": 4,
+      "description": "The integrators, American and European, who hold the programme contracts and the munitions lines."
+    },
+    {
+      "id": "D5",
+      "name": "Naval",
+      "order": 5,
+      "description": "Nuclear shipbuilding, where the constraint is two yards and the people in them."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ati",
+      "name": "ATI Inc",
+      "short": "ATI",
+      "ticker": "ATI",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D1",
+      "line": "alloy",
+      "role": "Titanium and nickel superalloy for engine hot sections and airframes",
+      "price_symbol": "ATI.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "carpenter"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "carpenter",
+      "name": "Carpenter Technology",
+      "short": "CRS",
+      "ticker": "CRS",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D1",
+      "line": "alloy",
+      "role": "Specialty alloy and powder for engines and fasteners",
+      "price_symbol": "CRS.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "ati"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "mp",
+      "name": "MP Materials",
+      "short": "MP",
+      "ticker": "MP",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D1",
+      "line": "magnet",
+      "role": "The only integrated US rare-earth magnet chain; Independence is running and 10X does not commission until 2028",
+      "price_symbol": "MP.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "The Department of Defense partnership was announced in July 2025 and the 10X site was chosen in February 2026. Both are settled; what is still ahead is the ramp.",
+      "segment_share": ""
+    },
+    {
+      "id": "energetics",
+      "name": "Energetic chemicals",
+      "short": "-",
+      "ticker": null,
+      "exchange": null,
+      "us_listed": false,
+      "adr": false,
+      "layer": "D1",
+      "line": "energetic",
+      "role": "Ammonium perchlorate and the propellant precursors every solid motor is poured from",
+      "price_symbol": null,
+      "price_symbol_kind": "none",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "Mentioned, never in a basket. New motor factories have opened without relieving this, which is why the choke moved here from assembly.",
+      "segment_share": "",
+      "price_note": "No listed pure play: the US oxidiser supply sits with a single private producer and inside the motor houses themselves."
+    },
+    {
+      "id": "l3harris",
+      "name": "L3Harris Technologies",
+      "short": "LHX",
+      "ticker": "LHX",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D2",
+      "line": "motor",
+      "role": "Aerojet Rocketdyne: one of the two incumbent solid rocket motor houses",
+      "price_symbol": "LHX.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "noc"
+      ],
+      "key_suppliers": [
+        "energetics"
+      ],
+      "customer_concentration": "",
+      "notes": "Aerojet Rocketdyne was bought by L3Harris in July 2023, so the motor business and the prime are one listed company here rather than two.",
+      "segment_share": ""
+    },
+    {
+      "id": "howmet",
+      "name": "Howmet Aerospace",
+      "short": "HWM",
+      "ticker": "HWM",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D2",
+      "line": "casting",
+      "role": "Investment castings, forgings and fasteners for engines and airframes",
+      "price_symbol": "HWM.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [
+        "ati",
+        "carpenter"
+      ],
+      "customer_concentration": "",
+      "notes": "Also a node on the chip map, where it sits in the power layer. The maps carry their own copies; ids are unique within a map, not across.",
+      "segment_share": ""
+    },
+    {
+      "id": "ge_aero",
+      "name": "GE Aerospace",
+      "short": "GE",
+      "ticker": "GE",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D3",
+      "line": "engine",
+      "role": "The largest engine maker, buying its castings supplier",
+      "price_symbol": "GE.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "safran",
+        "rolls",
+        "rtx"
+      ],
+      "key_suppliers": [
+        "howmet",
+        "ati"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "safran",
+      "name": "Safran",
+      "short": "SAF",
+      "ticker": "SAF",
+      "exchange": "Euronext Paris",
+      "us_listed": false,
+      "adr": false,
+      "layer": "D3",
+      "line": "engine",
+      "role": "CFM with GE, plus landing gear and nacelles",
+      "price_symbol": "SAF.PA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "ge_aero",
+        "rolls",
+        "rtx"
+      ],
+      "key_suppliers": [
+        "howmet"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "rolls",
+      "name": "Rolls-Royce Holdings",
+      "short": "RR",
+      "ticker": "RR",
+      "exchange": "LSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "D3",
+      "line": "engine",
+      "role": "Wide-body engines, and the reactors in the British submarine fleet",
+      "price_symbol": "RR.LSE",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "ge_aero",
+        "safran",
+        "rtx"
+      ],
+      "key_suppliers": [
+        "howmet"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced on the London line. The power map prices the same company through its US ADR, chosen when the vendor then in use returned no London series; both are correct and each map's benchmark is its own."
+    },
+    {
+      "id": "lmt",
+      "name": "Lockheed Martin",
+      "short": "LMT",
+      "ticker": "LMT",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "The largest defence prime; missiles, F-35, hypersonics",
+      "price_symbol": "LMT.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "noc",
+        "rtx",
+        "boeing"
+      ],
+      "key_suppliers": [
+        "l3harris",
+        "noc",
+        "mp"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "noc",
+      "name": "Northrop Grumman",
+      "short": "NOC",
+      "ticker": "NOC",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "Prime and, through Orbital ATK, the other incumbent motor house",
+      "price_symbol": "NOC.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lmt",
+        "rtx",
+        "boeing"
+      ],
+      "key_suppliers": [
+        "energetics"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "gd",
+      "name": "General Dynamics",
+      "short": "GD",
+      "ticker": "GD",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "Ordnance and tactical systems, and Electric Boat on the submarine side",
+      "price_symbol": "GD.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lmt",
+        "noc",
+        "rtx"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "boeing",
+      "name": "Boeing",
+      "short": "BA",
+      "ticker": "BA",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "Defence, space and security alongside the commercial airframe line",
+      "price_symbol": "BA.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lmt",
+        "noc",
+        "rtx"
+      ],
+      "key_suppliers": [
+        "ge_aero",
+        "safran",
+        "rolls",
+        "howmet"
+      ],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "BA in New York is Boeing. BA in London is BAE Systems, a different company on this same map; the two are kept apart by exchange here and by node id everywhere else."
+    },
+    {
+      "id": "rtx",
+      "name": "RTX",
+      "short": "RTX",
+      "ticker": "RTX",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "Raytheon missiles and Pratt & Whitney engines in one company",
+      "price_symbol": "RTX.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "lmt",
+        "noc",
+        "boeing"
+      ],
+      "key_suppliers": [
+        "l3harris",
+        "howmet",
+        "mp"
+      ],
+      "customer_concentration": "",
+      "notes": "Sits in the prime layer because that is where its programme risk is, and competes with the engine layer through Pratt.",
+      "segment_share": ""
+    },
+    {
+      "id": "rheinmetall",
+      "name": "Rheinmetall",
+      "short": "RHM",
+      "ticker": "RHM",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "The European rearmament cycle in one order book: ammunition, vehicles and air defence",
+      "price_symbol": "RHM.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "bae",
+        "thales"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "bae",
+      "name": "BAE Systems",
+      "short": "BA",
+      "ticker": "BA",
+      "exchange": "LSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "The largest European prime; submarines, combat air and munitions",
+      "price_symbol": "BA.LSE",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "rheinmetall",
+        "thales"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "BA in London is BAE Systems. Boeing, on this same map, is BA in New York; the symbols differ only by exchange, which is why both carry the venue explicitly."
+    },
+    {
+      "id": "thales",
+      "name": "Thales",
+      "short": "HO",
+      "ticker": "HO",
+      "exchange": "Euronext Paris",
+      "us_listed": false,
+      "adr": false,
+      "layer": "D4",
+      "line": "prime",
+      "role": "Radar, air defence electronics and secure communications",
+      "price_symbol": "HO.PA",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "rheinmetall",
+        "bae"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "hii",
+      "name": "Huntington Ingalls Industries",
+      "short": "HII",
+      "ticker": "HII",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "D5",
+      "line": "naval",
+      "role": "Newport News: one of the two yards that can build a nuclear submarine",
+      "price_symbol": "HII.US",
+      "price_symbol_kind": "primary",
+      "competitors": [
+        "gd"
+      ],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    }
+  ],
+  "edges": [
+    {
+      "from": "ati",
+      "to": "ge_aero",
+      "type": "supplies",
+      "what": "Titanium and nickel for hot sections",
+      "group": "alloy",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "ati",
+      "to": "howmet",
+      "type": "supplies",
+      "what": "Titanium and nickel feedstock",
+      "group": "alloy",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "carpenter",
+      "to": "ge_aero",
+      "type": "supplies",
+      "what": "Specialty alloy and powder",
+      "group": "alloy",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "carpenter",
+      "to": "howmet",
+      "type": "supplies",
+      "what": "Specialty alloy and powder",
+      "group": "alloy",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "howmet",
+      "to": "ge_aero",
+      "type": "supplies",
+      "what": "Investment castings and forgings",
+      "group": "casting",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "howmet",
+      "to": "rtx",
+      "type": "supplies",
+      "what": "Investment castings for Pratt",
+      "group": "casting",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "howmet",
+      "to": "safran",
+      "type": "supplies",
+      "what": "Castings and fasteners",
+      "group": "casting",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "howmet",
+      "to": "boeing",
+      "type": "supplies",
+      "what": "Fasteners and structural castings",
+      "group": "casting",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "energetics",
+      "to": "l3harris",
+      "type": "supplies",
+      "what": "Ammonium perchlorate and propellant precursors",
+      "group": "energetic",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "energetics",
+      "to": "noc",
+      "type": "supplies",
+      "what": "Ammonium perchlorate and propellant precursors",
+      "group": "energetic",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "l3harris",
+      "to": "lmt",
+      "type": "supplies",
+      "what": "Solid rocket motors for missiles",
+      "group": "motor",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "l3harris",
+      "to": "rtx",
+      "type": "supplies",
+      "what": "Solid rocket motors for missiles",
+      "group": "motor",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "noc",
+      "to": "lmt",
+      "type": "supplies",
+      "what": "Solid rocket motors for missiles",
+      "group": "motor",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "noc",
+      "to": "rtx",
+      "type": "supplies",
+      "what": "Solid rocket motors for missiles",
+      "group": "motor",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "mp",
+      "to": "lmt",
+      "type": "supplies",
+      "what": "Rare-earth magnets for actuators and seekers",
+      "group": "magnet",
+      "criticality": "medium",
+      "source": "https://investors.mpmaterials.com/investor-news/news-details/2026/MP-Materials-Reports-Second-Quarter-2026-Results/default.aspx"
+    },
+    {
+      "from": "mp",
+      "to": "rtx",
+      "type": "supplies",
+      "what": "Rare-earth magnets for actuators and seekers",
+      "group": "magnet",
+      "criticality": "medium",
+      "source": "https://investors.mpmaterials.com/investor-news/news-details/2026/MP-Materials-Reports-Second-Quarter-2026-Results/default.aspx"
+    },
+    {
+      "from": "ge_aero",
+      "to": "boeing",
+      "type": "supplies",
+      "what": "Engines",
+      "group": "engine",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "safran",
+      "to": "boeing",
+      "type": "supplies",
+      "what": "CFM engines and nacelles",
+      "group": "engine",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "rolls",
+      "to": "boeing",
+      "type": "supplies",
+      "what": "Wide-body engines",
+      "group": "engine",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "rtx",
+      "to": "boeing",
+      "type": "supplies",
+      "what": "Pratt & Whitney engines",
+      "group": "engine",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "gd",
+      "to": "lmt",
+      "type": "supplies",
+      "what": "Ordnance and munitions components",
+      "group": "munition",
+      "criticality": "medium",
+      "source": "https://breakingdefense.com/2026/02/army-official-not-happy-with-gds-handling-of-155mm-contract-as-production-lags/"
+    },
+    {
+      "from": "lmt",
+      "to": "noc",
+      "type": "competes",
+      "what": "Missile and hypersonics programmes",
+      "group": "prime",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "lmt",
+      "to": "rtx",
+      "type": "competes",
+      "what": "Missile programmes",
+      "group": "prime",
+      "criticality": "high",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "from": "boeing",
+      "to": "lmt",
+      "type": "competes",
+      "what": "Combat air and space programmes",
+      "group": "prime",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "l3harris",
+      "to": "noc",
+      "type": "competes",
+      "what": "Solid rocket motors, now against qualified newcomers as well",
+      "group": "motor",
+      "criticality": "high",
+      "source": "https://insidedefense.com/daily-news/dod-qualifies-new-solid-rocket-motor-supplier-breaks-northrop-aerojet-domestic-duopoly"
+    },
+    {
+      "from": "ge_aero",
+      "to": "safran",
+      "type": "competes",
+      "what": "Engines",
+      "group": "engine",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "rolls",
+      "to": "ge_aero",
+      "type": "competes",
+      "what": "Wide-body engines",
+      "group": "engine",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "rtx",
+      "to": "ge_aero",
+      "type": "competes",
+      "what": "Narrow-body engines through Pratt",
+      "group": "engine",
+      "criticality": "high",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "ati",
+      "to": "carpenter",
+      "type": "competes",
+      "what": "Specialty alloy",
+      "group": "alloy",
+      "criticality": "medium",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "from": "rheinmetall",
+      "to": "bae",
+      "type": "competes",
+      "what": "European land systems and munitions",
+      "group": "prime",
+      "criticality": "high",
+      "source": "https://www.rheinmetall.com/en/media/news-watch/news/2026/08/2026-08-06-rheinmetall-news-half-yearly-financial-report-h1"
+    },
+    {
+      "from": "rheinmetall",
+      "to": "thales",
+      "type": "competes",
+      "what": "European air defence",
+      "group": "prime",
+      "criticality": "medium",
+      "source": "https://www.rheinmetall.com/en/media/news-watch/news/2026/08/2026-08-06-rheinmetall-news-half-yearly-financial-report-h1"
+    },
+    {
+      "from": "bae",
+      "to": "thales",
+      "type": "competes",
+      "what": "European defence electronics",
+      "group": "prime",
+      "criticality": "medium",
+      "source": "https://www.rheinmetall.com/en/media/news-watch/news/2026/08/2026-08-06-rheinmetall-news-half-yearly-financial-report-h1"
+    },
+    {
+      "from": "hii",
+      "to": "gd",
+      "type": "competes",
+      "what": "The two nuclear yards, for the same welders and the same schedule",
+      "group": "naval",
+      "criticality": "high",
+      "source": "https://news.usni.org/2026/05/12/virginia-subs-will-hit-2-a-year-build-rate-in-2030s-cno-caudle-says"
+    }
+  ],
+  "chokepoints": [
+    {
+      "id": "CPD1",
+      "name": "Solid rocket motors and energetics",
+      "label": {
+        "en": "solid rocket motors"
+      },
+      "blurb": {
+        "en": "Two incumbent motor houses, and newcomers now qualified beside them -- but the constraint has moved upstream to the propellant chemistry, which no new factory has yet relieved."
+      },
+      "node_ids": [
+        "l3harris",
+        "noc",
+        "energetics"
+      ],
+      "concentration": "Northrop and L3Harris remain the volume incumbents; Anduril was qualified as a third domestic supplier in August 2025 and X-Bow and Ursa Major are behind it, so this is a duopoly loosening at the assembly step and not at the oxidiser",
+      "geography": "United States",
+      "dependents": [
+        "lmt",
+        "rtx",
+        "noc"
+      ],
+      "substitute": "The new entrants, for tactical motors, once each design is qualified to its own missile",
+      "substitution_time": "2-4 years per programme",
+      "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/"
+    },
+    {
+      "id": "CPD2",
+      "name": "Jet-engine castings and titanium",
+      "label": {
+        "en": "castings and titanium"
+      },
+      "blurb": {
+        "en": "Single-crystal castings and the titanium behind them set the pace of every engine line. GE agreed to pay US$11.75bn to take its own supplier in-house rather than keep queueing."
+      },
+      "node_ids": [
+        "howmet",
+        "ati",
+        "carpenter",
+        "ge_aero"
+      ],
+      "concentration": "GE Aerospace agreed on 8 September 2026 to acquire Consolidated Precision Products for US$11.75bn, about 18x 2027 EBITDA, closing in the second half of 2027",
+      "geography": "United States, United Kingdom, France",
+      "dependents": [
+        "boeing",
+        "rtx",
+        "safran",
+        "lmt"
+      ],
+      "substitute": "None inside the window: a casting is qualified to its engine, and requalification is a certification exercise",
+      "substitution_time": "3+ years",
+      "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical"
+    },
+    {
+      "id": "CPD3",
+      "name": "155mm artillery and munitions",
+      "label": {
+        "en": "155mm and munitions"
+      },
+      "blurb": {
+        "en": "The ramp has missed its own target for a year. The Army wanted 100,000 rounds a month by October 2025 and is not there, with a half-billion-dollar plant that made none of the parts it was built for."
+      },
+      "node_ids": [
+        "gd",
+        "noc",
+        "lmt"
+      ],
+      "concentration": "A Department of Defense Inspector General report in July 2026 found the Army far behind the 100,000 rounds per month it set for October 2025; General Dynamics' Mesquite plant delivered none of the 30,000 projectile metal parts expected of it",
+      "geography": "United States, Europe",
+      "dependents": [
+        "lmt",
+        "rtx"
+      ],
+      "substitute": "European lines, which are being built into the same demand rather than spare capacity",
+      "substitution_time": "2-3 years",
+      "source": "https://breakingdefense.com/2026/02/army-official-not-happy-with-gds-handling-of-155mm-contract-as-production-lags/"
+    },
+    {
+      "id": "CPD4",
+      "name": "European rearmament capacity",
+      "label": {
+        "en": "European rearmament"
+      },
+      "blurb": {
+        "en": "The order book is real and the question is whether it can be built. Rheinmetall carried a EUR 80.5bn backlog at 30 June 2026 against EUR 56.0bn a year before."
+      },
+      "node_ids": [
+        "rheinmetall",
+        "bae",
+        "thales"
+      ],
+      "concentration": "Rheinmetall Backlog of EUR 80.5bn as at 30 June 2026, from EUR 56.0bn a year earlier, on nomination of EUR 16.2bn in the half; the company guides to above EUR 100bn by the end of 2026",
+      "geography": "Germany, United Kingdom, France",
+      "dependents": [
+        "lmt",
+        "noc"
+      ],
+      "substitute": "American lines, already committed to American demand",
+      "substitution_time": "2-4 years",
+      "source": "https://www.rheinmetall.com/en/media/news-watch/news/2026/08/2026-08-06-rheinmetall-news-half-yearly-financial-report-h1"
+    },
+    {
+      "id": "CPD5",
+      "name": "Submarine industrial base",
+      "label": {
+        "en": "submarine industrial base"
+      },
+      "blurb": {
+        "en": "Two yards in the country can build a nuclear submarine, both are full, and the date the Navy gets two boats a year keeps moving away from it."
+      },
+      "node_ids": [
+        "hii",
+        "gd"
+      ],
+      "concentration": "General Dynamics Electric Boat and HII's Newport News are the only two yards able to build nuclear submarines, and delivery is running near 1.2 to 1.3 Virginia-class boats a year against a requirement of two; the Chief of Naval Operations said in May 2026 that two a year arrives around 2032, from a target that had been 2028",
+      "geography": "United States",
+      "dependents": [
+        "lmt",
+        "noc"
+      ],
+      "substitute": "None. The constraint is qualified welders and dry dock, not a contract",
+      "substitution_time": "6+ years",
+      "source": "https://news.usni.org/2026/05/12/virginia-subs-will-hit-2-a-year-build-rate-in-2030s-cno-caudle-says"
+    }
+  ],
+  "subnodes": [],
+  "sub_edges": [],
+  "flows": [],
+  "etfs": [],
+  "vulnerable": [],
+  "challengers": {},
+  "display_rules": {}
+}

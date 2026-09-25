@@ -56,9 +56,21 @@ def test_korea_is_KO_not_the_yahoo_KS():
     assert exchanges.resolve("005930.KS", "KRX") == ("005930.KO", None)
 
 
-def test_tokyo_is_reported_as_a_subscription_gap_not_a_bad_ticker():
-    tick, why = exchanges.resolve("4063.T", "TSE")
-    assert tick is None and "not in the EODHD exchange list" in why
+def test_tokyo_resolves_now_that_the_price_source_carries_it():
+    """It did not, and this test used to assert that it did not.
+
+    Tokyo, Hong Kong and India were all absent from the plan the original
+    exchange list was read off. The price source that replaced it serves all
+    three, each confirmed by a direct probe, so the map may name a Tokyo line
+    instead of reaching the same company through a depositary receipt.
+    """
+    assert exchanges.resolve("4063.T", "TSE") == ("4063.T", None)
+
+
+def test_a_venue_the_source_still_does_not_carry_is_a_gap_not_a_bad_ticker():
+    """The distinction this test was really protecting. Milan is still out."""
+    tick, why = exchanges.resolve("LDO.MI", "Euronext Milan")
+    assert tick is None and "Milan" in why
 
 
 @pytest.mark.parametrize("sym,exch,want", [

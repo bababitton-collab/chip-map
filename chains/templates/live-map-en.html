@@ -89,6 +89,7 @@ html.rec .focusui{display:none!important}
 .legend .pl{width:10px;height:10px;border-radius:50%;border:2px solid var(--tight)}
 .legend .pe{width:10px;height:10px;border-radius:50%;border:2px solid var(--erode)}
 .legend .pa{width:10px;height:10px;border-radius:50%;border:2px solid var(--amber)}
+.legend .zn{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink3);background:transparent}
 .tip{position:absolute;pointer-events:none;background:#000d;color:var(--ink);font-size:.95rem;padding:6px 9px;border:1px solid var(--rule);display:none;max-width:280px;line-height:1.35;z-index:4}
 
 /* RECORDING MODE. ?rec=1 adds .rec to <html>, and everything below hangs off
@@ -462,8 +463,14 @@ const FOCUS = __FOCUS__;
 let D = LIVE;
 const C = getComputedStyle(document.documentElement); const tok=n=>C.getPropertyValue(n).trim();
 let LCOL = {}, LHE = {}, LAYER_HE = {};
+// Zones: the map's horizontal division, if it declares one. A map with
+// no zones leaves these empty and nothing below draws.
+let ZCOL = {}, ZNAME = {}, ZORDER = [];
 function readLabels(){ const LB = D.labels||{};
   LCOL = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.color]));
+  ZCOL = Object.fromEntries(Object.entries(LB.zones||{}).map(([k,v])=>[k, v.color]));
+  ZNAME = Object.fromEntries(Object.entries(LB.zones||{}).map(([k,v])=>[k, v.name]));
+  ZORDER = LB.zone_order || Object.keys(LB.zones||{});
   LHE = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.name]));
   LAYER_HE = LB.layers||{}; }
 readLabels();
@@ -474,7 +481,8 @@ const FWD = {tracked:'questions tracked', through:'prices through'};
 const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',
   buys:'Buys from', sells:'Sells to', peers:'Others in this layer',
   via:'Challenges through', against:'against', sells1:'sells', to:'to ',
-  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?'};
+  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?',
+  legendZone:'Which zone?'};
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Recording hook. The whole script is a closure, so a recorder driving the
@@ -1457,6 +1465,21 @@ function draw(now){
     } }); }
   // nodes
   nodes.forEach(n=>{
+    // ZONES, drawn as a tint and not as geometry. The layout is unchanged --
+    // a station sits where its layer and its size put it -- and the zone is
+    // said with a soft ring under the circle plus a faint fill behind it.
+    // Geometry was the other option and it was worse here: seven zones
+    // across seven layers is forty-nine cells for forty-seven companies, so
+    // partitioning the rows would have bought separation with whitespace,
+    // which is the one thing a density map cannot spend.
+    if(n.zone && ZCOL[n.zone]){
+      const zc=ZCOL[n.zone];
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*1.9,0,7);
+      ctx.fillStyle=zc; ctx.globalAlpha=0.10; ctx.fill(); ctx.globalAlpha=1;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*1.9,0,7);
+      ctx.strokeStyle=zc; ctx.globalAlpha=0.55; ctx.lineWidth=1.5;
+      ctx.stroke(); ctx.globalAlpha=1;
+    }
     // The finale's emphasis: an amber halo that breathes, and a ring that
     // leaves every three seconds. Drawn under the station so the station
     // stays the thing in focus, and only for the one id the flag names -- no
@@ -1717,6 +1740,14 @@ function header(){
     + `</div><div class="row"><b>${WORDS.legendRing}</b>`
     + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`
     + `<span><i class="pa"></i>cannot be measured</span></div>`;
+  // The zone row is appended separately and deliberately: it holds no Hebrew
+  // of its own -- the label comes from WORDS and the names come from the map
+  // -- so the English template needs no translation pair for it, and adding
+  // a zone cannot break the one that covers the rows above.
+  if(ZORDER.length) document.getElementById('legend').innerHTML +=
+    `<div class="row"><b>${WORDS.legendZone}</b>`
+    + ZORDER.map(k=>`<span><i class="zn" style="border-color:${ZCOL[k]}"></i>${ZNAME[k]}</span>`).join('')
+    + `</div>`;
   const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
   const BR = (D.labels||{}).brand||{};
   document.getElementById('foot').innerHTML=`<b>The pulse</b> is the market's vote over the last 13 weeks: the holder's return minus its listed challengers' return. Positive — the lock is tightening, red and fast. Negative — eroding, green and slow. Right now: ${nt} tightening, ${ne} eroding, ${na} with no listed challenger. Station size is market cap. Each company in its own currency; Japanese names via US depositary receipts. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone. Every number carries a source; "estimate" means none was found. Prices lag by up to a week.`+`<span class="brandline">${BR.footer||''}</span>`;

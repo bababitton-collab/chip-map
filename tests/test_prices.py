@@ -71,7 +71,11 @@ def test_every_row_carries_a_currency():
 @pytest.mark.parametrize("symbol, want", [
     ("AMAT.US", "USD"), ("2330.TW", "TWD"), ("005930.KO", "KRW"),
     ("300316.SHE", "CNY"), ("TPE.XETRA", "EUR"), ("ASML.AS", "EUR"),
-    ("MTLN.LSE", "GBP"),
+    # London quotes in pence, and this case said GBP until two London nodes
+    # reached the defence map and the site printed "GBP 1485.20" for a share
+    # worth about fourteen pounds eighty. See tests/test_currencies.py.
+    ("MTLN.LSE", "GBX"),
+    ("2269.HK", "HKD"),
 ])
 def test_the_currency_comes_from_the_exchange(symbol, want):
     assert prices.currency_for(symbol) == want

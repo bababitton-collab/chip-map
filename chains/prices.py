@@ -59,6 +59,7 @@ from pathlib import Path
 
 import polars as pl
 
+from chains import currencies
 from chains.paths import prices_dir
 
 START = "2019-01-01"
@@ -90,15 +91,11 @@ SCHEMA = {
 }
 OHLC = ("open", "high", "low", "close")
 
-# EODHD exchange code -> trading currency. Deterministic: the exchange decides
-# it, so it is a lookup and not a per-symbol field to fetch.
-CURRENCY: dict[str, str] = {
-    "US": "USD", "TW": "TWD", "TWO": "TWD", "KO": "KRW", "KQ": "KRW",
-    "SHE": "CNY", "SHG": "CNY", "XETRA": "EUR", "F": "EUR", "AS": "EUR",
-    "PA": "EUR", "BR": "EUR", "VI": "EUR", "MC": "EUR", "LS": "EUR",
-    "SW": "CHF", "LSE": "GBP", "TO": "CAD", "AU": "AUD", "ST": "SEK",
-    "CO": "DKK", "OL": "NOK", "HE": "EUR", "IR": "EUR",
-}
+# The table moved to chains/currencies.py. It used to live here AND in
+# chains/liquidity.py, and the two drifted: this one said London was GBP while
+# that one said GBX, and London quotes in pence. Re-exported under the old
+# name so nothing that imported it has to care.
+CURRENCY = currencies.BY_SUFFIX
 
 
 def _f(v) -> float | None:
@@ -114,8 +111,7 @@ def currency_for(symbol: str) -> str:
     Unknown suffixes return "UNKNOWN" rather than defaulting to USD. A wrong
     currency label on a chart is a quiet error and a missing one is a loud one.
     """
-    _, _, suffix = symbol.rpartition(".")
-    return CURRENCY.get(suffix.upper(), "UNKNOWN")
+    return currencies.of(symbol)
 
 
 def path_for(symbol: str) -> Path:
@@ -235,11 +231,29 @@ def _conform(df: pl.DataFrame) -> pl.DataFrame:
     return df.select(list(SCHEMA))
 
 
+def _relabel(symbol: str, df: pl.DataFrame) -> pl.DataFrame:
+    """The currency column, re-derived from the symbol on every read.
+
+    It is a pure function of the venue, so storing it was denormalising a
+    fact -- and a denormalised fact goes stale. It did: London was written
+    into two parquets as GBP, the table was corrected to GBX, and the files
+    kept saying GBP because nothing rewrites a column that is only ever
+    appended to. Worse, a tail append would have left one series holding both
+    labels, and the page reads the first row.
+
+    Deriving it here costs nothing and makes that impossible.
+    """
+    if df.is_empty():
+        return df
+    return df.with_columns(pl.lit(currency_for(symbol),
+                                  dtype=pl.Utf8).alias("currency"))
+
+
 def load(symbol: str) -> pl.DataFrame:
     p = path_for(symbol)
     if not p.exists():
         return pl.DataFrame(schema=SCHEMA)
-    return _conform(pl.read_parquet(p))
+    return _relabel(symbol, _conform(pl.read_parquet(p)))
 
 
 def bars(symbol: str, start: date | None = None,

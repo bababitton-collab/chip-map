@@ -32,28 +32,17 @@ import os
 import sys
 from typing import Callable
 
+from chains import currencies
+
 MIN_ADV_USD = 250_000
 ADV_DAYS = 91               # "three months" of daily bars
 GATE_SESSIONS = 3           # a close within the last three completed sessions
 STALE_SESSIONS = 3          # the nightly line: more than this without a close
 
-# The exchange code in a symbol's suffix -> the currency its closes are
-# quoted in. LSE closes
-# are in pence.
-#
-# A SUFFIX MISSING FROM THIS TABLE IS NOT A MISSING FEATURE, IT IS A WRONG
-# NUMBER. currency_of() falls back to "USD", and the fallback is silent: the
-# closes are converted at 1.0 and the leg's traded value comes out in whatever
-# the exchange actually quotes, wearing a dollar sign. HK was missing here and
-# 2269.HK read US$1.59bn a day against a true US$203m -- 7.8x, the HKD peg --
-# which is comfortably enough to carry a leg through a gate it should have
-# failed. Looking for others found CO: NKT.CO is a priced node on the energy
-# map and its traded value read 6.6x high, harmless only because nothing has
-# put it in a basket yet. Add the currency at the same time as the exchange,
-# never after -- and see the test that walks every map's price lines.
-CURRENCY_BY_EXCHANGE = {"US": "USD", "XETRA": "EUR", "PA": "EUR", "AS": "EUR", "BR": "EUR", "VI": "EUR",
-                        "SW": "CHF", "TO": "CAD", "LSE": "GBX", "KO": "KRW", "KQ": "KRW", "TW": "TWD",
-                        "TWO": "TWD", "SHG": "CNY", "SHE": "CNY", "HK": "HKD", "CO": "DKK"}
+# The table lives in chains/currencies.py. It used to live here too, and
+# the two copies drifted -- see that module. Re-exported under the old
+# name because the report and the tests read it.
+CURRENCY_BY_EXCHANGE = currencies.BY_SUFFIX
 
 
 class LiquidityError(RuntimeError):
@@ -67,7 +56,15 @@ class LiquidityError(RuntimeError):
 
 
 def currency_of(symbol: str) -> str:
-    return CURRENCY_BY_EXCHANGE.get(symbol.rsplit(".", 1)[-1].upper(), "USD")
+    """The venue's currency, or UNKNOWN.
+
+    It used to answer "USD" for a suffix it did not know. That is how 2269.HK
+    came to read 7.8x its real traded value: the closes were Hong Kong
+    dollars, nothing converted them, and nothing raised. UNKNOWN reaches fx()
+    below, finds no rate, and the leg is refused -- which is what an
+    unmeasurable leg deserves.
+    """
+    return currencies.of(symbol)
 
 
 def sessions_since(last: dt.date, today: dt.date) -> int:

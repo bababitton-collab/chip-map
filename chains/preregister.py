@@ -105,9 +105,15 @@ REVISION_FIELDS = ("revised_at", "revision_note", "history")
 HISTORY_FIELDS = ("sha256", "committed_at")
 # Only on an entry committed since the liquidity gate, after everything else.
 LIQUIDITY_FIELDS = ("liquidity",)
-ENTRY_SHAPES = (ENTRY_FIELDS, ENTRY_FIELDS + REVISION_FIELDS,
-                ENTRY_FIELDS + LIQUIDITY_FIELDS,
-                ENTRY_FIELDS + REVISION_FIELDS + LIQUIDITY_FIELDS)
+# Only on an entry committed since the EW_MAP guard, after everything else.
+EW_MAP_FIELDS = ("ew_map",)
+# Every shape an entry may legally have. The optional groups are appended in a
+# fixed order, so a file written before either of them still matches.
+ENTRY_SHAPES = tuple(
+    ENTRY_FIELDS + rev + liq + ew
+    for rev in ((), REVISION_FIELDS)
+    for liq in ((), LIQUIDITY_FIELDS)
+    for ew in ((), EW_MAP_FIELDS))
 
 
 class PreregisterError(ValueError):
@@ -176,7 +182,8 @@ def commitment(row: dict, text: dict | None = None) -> dict:
 
 # ------------------------------------------------------------- the entries
 def _entry(qid: str, answer_date: str, committed_at: str, sha: str,
-           revision: dict | None = None, liq: dict | None = None) -> dict:
+           revision: dict | None = None, liq: dict | None = None,
+           ew: dict | None = None) -> dict:
     e = {"qid": qid, "answer_date": answer_date,
          "committed_at": committed_at, "sha256": sha,
          "primary_horizon": PRIMARY_HORIZON,
@@ -187,7 +194,94 @@ def _entry(qid: str, answer_date: str, committed_at: str, sha: str,
         e.update({k: revision[k] for k in REVISION_FIELDS})
     if liq:
         e["liquidity"] = liq
+    if ew:
+        e["ew_map"] = ew
     return e
+
+
+def priced_symbols(doc: dict) -> list[str]:
+    """The map's priced nodes, exactly as the ledger reads them.
+
+    Deliberately the same test as chains.forecast: ``price_symbol`` present
+    and ``price_symbol_kind`` not "none". If these two ever disagree the
+    fingerprint stops describing the thing it is guarding.
+    """
+    return sorted({n["price_symbol"] for n in doc.get("nodes", [])
+                   if n.get("price_symbol")
+                   and n.get("price_symbol_kind") != "none"})
+
+
+def ew_map_fingerprint(doc: dict) -> dict:
+    """What the map's benchmark was made of when a question was committed.
+
+    WHY THIS IS ON THE ENTRY AND NOT IN THE CONTRACT
+    ------------------------------------------------
+    It belongs in the contract by rights -- it is part of what the claim is
+    scored against. It cannot go there. contract() is recomputed on every
+    --check and compared to the published hash, so adding a field to it would
+    break every hash already published. The entry envelope already carries
+    optional groups that are checked but not hashed (the revision trail, the
+    liquidity record), and this is another.
+
+    WHAT IT IS GUARDING
+    -------------------
+    EW_MAP is the equal-weight of the map's priced nodes, and the contract
+    names it as a string -- "equal-weight of the map's priced nodes" -- which
+    stays true whatever the map contains. So adding or removing a node moves
+    the benchmark under questions already committed, silently, and the record
+    still verifies. For a question with both baskets the benchmark cancels
+    algebraically and none of this matters. For a question with a win side
+    only, excess IS win minus EW_MAP, and it moves by the whole difference.
+
+    The same set also fixes the session calendar: chains.forecast builds the
+    trading calendar from the map's US symbols, so a node added there shifts
+    the grid the horizons are counted on.
+
+    The member list is stored beside the hash, not just the hash, because a
+    build log that says "the map changed" is not actionable. It is repeated
+    on each entry committed together, which is redundant and cheap; naming
+    what moved is worth more than the bytes.
+    """
+    syms = priced_symbols(doc)
+    blob = json.dumps(syms, separators=(",", ":")).encode("utf-8")
+    return {"sha256": hashlib.sha256(blob).hexdigest(),
+            "n": len(syms), "symbols": syms}
+
+
+def ew_map_problems(qid: str, entry: dict, contract_: dict,
+                    doc: dict, today: str) -> list[str]:
+    """Whether the benchmark has moved under a question still waiting.
+
+    Only for a question with no lose basket, and only while its answer date
+    is still ahead. A resolved question has already been scored on whatever
+    the map was; reopening that is not this gate's job.
+    """
+    rec = entry.get("ew_map")
+    if not rec:
+        return []                       # committed before the guard existed
+    if contract_.get("lose"):
+        return []                       # both sides: the benchmark cancels
+    if entry["answer_date"] < today:
+        return []                       # already past its date
+    now = ew_map_fingerprint(doc)
+    if now["sha256"] == rec.get("sha256"):
+        return []
+    was, has = set(rec.get("symbols") or []), set(now["symbols"])
+    added, gone = sorted(has - was), sorted(was - has)
+    parts = []
+    if added:
+        parts.append(f"added {', '.join(added)}")
+    if gone:
+        parts.append(f"removed {', '.join(gone)}")
+    detail = "; ".join(parts) or (f"the same {now['n']} symbols in a "
+                                  f"different form")
+    return [f"the map's priced nodes have changed since this was committed "
+            f"on {entry['committed_at']} ({detail}). EW_MAP is the "
+            f"equal-weight of those nodes and this question has no lose "
+            f"basket, so its excess is measured against a benchmark that "
+            f"moved after the claim was fixed. Either restore the map before "
+            f"{entry['answer_date']}, or re-commit the question with "
+            f"--recommit and say why."]
 
 
 def _liquidity_for(qid: str, results: dict, day: str) -> dict:
@@ -222,7 +316,8 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
             today: dt.date | None = None,
             recommit: frozenset | set = frozenset(),
             note: str = "", notes: dict | None = None,
-            liquidity: dict | None = None) -> list[dict]:
+            liquidity: dict | None = None,
+            doc: dict | None = None) -> list[dict]:
     """The commitments file as it should now read. Sticky on (qid, sha256).
 
     ``note`` is the one line published beside every contract re-committed in
@@ -239,7 +334,7 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
         seen.add(qid)
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         old = by.get(qid)
-        revision, liq, fresh = None, None, False
+        revision, liq, ew, fresh = None, None, None, False
         if old is None:
             committed, fresh = day, True
         elif old["sha256"] == sha:
@@ -247,6 +342,7 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
             if "revised_at" in old:
                 revision = old
             liq = old.get("liquidity")
+            ew = old.get("ew_map")
         elif qid not in recommit:
             raise PreregisterError(
                 f"{qid}: its contract no longer hashes to the value committed "
@@ -272,7 +368,12 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
                              "committed_at": old["committed_at"]}]}
         if fresh and liquidity is not None:
             liq = _liquidity_for(qid, liquidity, day)
-        out.append(_entry(qid, r["d"], committed, sha, revision, liq))
+        if fresh and doc is not None:
+            # Recorded on the way in, so a question carries the benchmark it
+            # was actually committed against. An entry written before the
+            # guard existed simply has none, and is skipped by the check.
+            ew = ew_map_fingerprint(doc)
+        out.append(_entry(qid, r["d"], committed, sha, revision, liq, ew))
     for e in prior or []:
         if e["qid"] not in seen:
             out.append(dict(e))
@@ -303,8 +404,18 @@ def _revision_problems(e: dict) -> list[str]:
 
 
 def check(rows: list[dict], texts: dict | None,
-          committed: list[dict]) -> list[str]:
-    """Why the committed file does not match the questions, or [] if it does."""
+          committed: list[dict], doc: dict | None = None,
+          today: str | None = None) -> list[str]:
+    """Why the committed file does not match the questions, or [] if it does.
+
+    ``doc`` is the map, for the EW_MAP guard. It defaults to the domain's own
+    map rather than being required, so every existing caller keeps working;
+    an entry with no ew_map record is skipped either way.
+    """
+    if doc is None:
+        from chains import mapfile
+        doc = mapfile.load()
+    today = today or dt.date.today().isoformat()
     by = {e["qid"]: e for e in committed}
     problems = []
     for r in rows:
@@ -321,6 +432,9 @@ def check(rows: list[dict], texts: dict | None,
             if "liquidity" in e:
                 problems += [f"{qid}: {p}" for p in liquidity.record_problems(
                     e["liquidity"], e["committed_at"])]
+        contract_ = contract(r, (texts or {}).get(qid))
+        problems += [f"{qid}: {p}" for p in
+                     ew_map_problems(qid, e, contract_, doc, today)]
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         if e["sha256"] != sha:
             problems.append(f"{qid}: contract changed since it was committed "
@@ -416,7 +530,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             got = entries(rows, texts, prior, recommit=recommit, note=a.note,
                           notes={q: t for q, t in a.note_for},
-                          liquidity=gate)
+                          liquidity=gate, doc=mapfile.load())
         except PreregisterError as e:
             print(f"preregister: {e}")
             return 1
@@ -433,7 +547,8 @@ def main(argv: list[str] | None = None) -> int:
         print("  commit this file: the commit is the timestamp")
         return 0
 
-    problems = check(rows, texts, prior)
+    from chains import mapfile as _mf
+    problems = check(rows, texts, prior, doc=_mf.load())
     if problems:
         print(f"preregister: {len(problems)} problem(s) in {path}")
         for p in problems:

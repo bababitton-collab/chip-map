@@ -207,8 +207,8 @@ TRANSLATIONS = [
   "  const T = {head:'Every question, before it is answered',\n    promise:'Every dated question, what to listen for, who leaks first, and the answer with its source — before and after each event.',\n    btn:'Get the weekly mail', soon:'coming soon',\n    disc:'Free, no recommendations. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone.',\n    q:'questions', open:'open', next:'next answer', days:'days', today:'today', tomorrow:'tomorrow'};"),
  # One visual language: plain words for holder/challenger, a two-row
  # legend, and the peer panel's section titles.
- ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',\n  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?'};",
-  "const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',\n  buys:'Buys from', sells:'Sells to', peers:'Others in this layer',\n  via:'Challenges through', against:'against', sells1:'sells', to:'to ',\n  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?'};"),
+ ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',\n  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?',\n  legendZone:'איזה אזור?'};",
+  "const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',\n  buys:'Buys from', sells:'Sells to', peers:'Others in this layer',\n  via:'Challenges through', against:'against', sells1:'sells', to:'to ',\n  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?',\n  legendZone:'Which zone?'};"),
  ('    h+=`<h3>מי מספק למי ש${WORDS.holder} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;',
   '    h+=`<h3>Who supplies the company that ${WORDS.holder} · ${t1.length} direct, ${t2.length} beneath them</h3>`;'),
  ('    h+=`<h3>מי ${WORDS.challenger} · ${c.sigs.length}</h3>`;',

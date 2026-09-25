@@ -99,6 +99,8 @@ SUFFIX = {
     "MI": "MI",        # Milan -- absent from the EODHD plan entirely
     "T": "T",          # Tokyo -- absent from the EODHD plan entirely
     "TSE": "T",
+    "NS": "NS",        # India, NSE
+    "AU": "AX",        # Australia. This repository writes AU; Yahoo writes AX
 }
 
 

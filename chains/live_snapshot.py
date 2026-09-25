@@ -133,6 +133,13 @@ def labels_for(m: dict, lang: str) -> dict:
         "lines": {k: {"name": v.get(lang, k), "color": v.get("color")}
                   for k, v in (lb.get("lines") or {}).items()},
         "lanes": {k: v.get(lang, k) for k, v in (lb.get("lanes") or {}).items()},
+        # Zones: the horizontal division, beside the vertical one the layers
+        # already give. Same shape as lines -- a name and a colour -- because
+        # the page draws them the same way.
+        **({"zones": {k: {"name": v.get(lang, k), "color": v.get("color")}
+                      for k, v in lb["zones"].items()}}
+           if lb.get("zones") else {}),
+        **({"zone_order": list(lb["zone_order"])} if lb.get("zone_order") else {}),
         "stages": {k: v.get(lang, k) for k, v in (lb.get("stages") or {}).items()},
         # Drawing instructions the map may declare for itself: the order its
         # lines are seated in, and the radius for a station whose size is not
@@ -287,6 +294,10 @@ def build(today: dt.date | None = None, lang: str = "he",
             "short": n.get("short")
                      or (n.get("ticker") or n["name"]).split(".")[0][:8],
             "layer": n["layer"], "line": n.get("line"),
+            # A map may divide itself sideways as well as by layer. Emitted
+            # only when the node declares one, so a map with no zones ships
+            # no key and its snapshot does not grow a field.
+            **({"zone": n["zone"]} if n.get("zone") else {}),
             "cap": n.get("market_cap_usd_b"), "role": n.get("role", ""),
             "country": n.get("exchange", ""),
             "sym": n.get("price_symbol"), "kind": n.get("price_symbol_kind"),

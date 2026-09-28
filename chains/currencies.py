@@ -64,6 +64,8 @@ BY_SUFFIX: dict[str, str] = {
     "KO": "KRW", "KQ": "KRW",
     "SHG": "CNY", "SHE": "CNY",
     "HK": "HKD",
+    "T": "JPY",            # Tokyo
+    "NS": "INR",           # India, NSE
     # Americas and Pacific
     "TO": "CAD", "AU": "AUD",
 }

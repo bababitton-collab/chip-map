@@ -1,0 +1,259 @@
+[
+ {
+  "id": "avtr_q3",
+  "d": "2026-10-23",
+  "confirmed": false,
+  "who": "Avantor Q3",
+  "tk": "AVTR",
+  "cps": [
+   "CPR5"
+  ],
+  "win": [
+   "avantor"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "tools",
+  "lbl": "Avantor",
+  "kind": "tide"
+ },
+ {
+  "id": "novartis_q3",
+  "d": "2026-10-28",
+  "confirmed": false,
+  "who": "Novartis Q3",
+  "tk": "NVS",
+  "cps": [
+   "CPR3"
+  ],
+  "win": [
+   "novartis"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "radio",
+  "lbl": "Novartis",
+  "kind": "tide"
+ },
+ {
+  "id": "baxter_q3",
+  "d": "2026-10-29",
+  "confirmed": false,
+  "who": "Baxter Q3",
+  "tk": "BAX",
+  "cps": [
+   "CPR2"
+  ],
+  "win": [
+   "baxter",
+   "fresenius"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "sterile",
+  "lbl": "Baxter",
+  "kind": "tide"
+ },
+ {
+  "id": "cardinal_q1",
+  "d": "2026-10-30",
+  "confirmed": false,
+  "who": "Cardinal Health FQ1",
+  "tk": "CAH",
+  "cps": [
+   "CPR3"
+  ],
+  "win": [
+   "cardinal"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "distribution",
+  "lbl": "Cardinal",
+  "kind": "tide"
+ },
+ {
+  "id": "bwxt_q3",
+  "d": "2026-11-03",
+  "confirmed": false,
+  "who": "BWX Technologies Q3",
+  "tk": "BWXT",
+  "cps": [
+   "CPR3"
+  ],
+  "win": [
+   "bwxt"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "radio",
+  "lbl": "BWXT",
+  "kind": "tide"
+ },
+ {
+  "id": "teva_q3",
+  "d": "2026-11-03",
+  "confirmed": true,
+  "who": "Teva Q3",
+  "tk": "TEVA",
+  "cps": [
+   "CPR1"
+  ],
+  "win": [
+   "teva",
+   "viatris"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "generics",
+  "lbl": "Teva",
+  "kind": "tide"
+ },
+ {
+  "id": "cencora_q4",
+  "d": "2026-11-04",
+  "confirmed": false,
+  "who": "Cencora FQ4",
+  "tk": "COR",
+  "cps": [],
+  "win": [
+   "cencora",
+   "mckesson"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "distribution",
+  "lbl": "Cencora",
+  "kind": "tide"
+ },
+ {
+  "id": "crl_q3",
+  "d": "2026-11-04",
+  "confirmed": false,
+  "who": "Charles River Q3",
+  "tk": "CRL",
+  "cps": [
+   "CPR4"
+  ],
+  "win": [
+   "charles_river"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "cdmo",
+  "lbl": "Charles River",
+  "kind": "tide"
+ },
+ {
+  "id": "fresenius_q3",
+  "d": "2026-11-04",
+  "confirmed": false,
+  "who": "Fresenius Q3",
+  "tk": "FRE",
+  "cps": [
+   "CPR2"
+  ],
+  "win": [
+   "fresenius",
+   "hikma"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "sterile",
+  "lbl": "Fresenius",
+  "kind": "tide"
+ },
+ {
+  "id": "bd_q4",
+  "d": "2026-11-05",
+  "confirmed": false,
+  "who": "Becton Dickinson FQ4",
+  "tk": "BDX",
+  "cps": [
+   "CPR5"
+  ],
+  "win": [
+   "bd",
+   "west"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "packaging",
+  "lbl": "BD",
+  "kind": "tide"
+ },
+ {
+  "id": "mckesson_q2",
+  "d": "2026-11-05",
+  "confirmed": false,
+  "who": "McKesson FQ2",
+  "tk": "MCK",
+  "cps": [],
+  "win": [
+   "mckesson"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "distribution",
+  "lbl": "McKesson",
+  "kind": "tide"
+ },
+ {
+  "id": "divis_q2",
+  "d": "2026-11-06",
+  "confirmed": false,
+  "who": "Divi's Laboratories FQ2",
+  "tk": "DIVI",
+  "cps": [
+   "CPR1"
+  ],
+  "win": [
+   "divis",
+   "sun_pharma",
+   "aurobindo"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "api",
+  "lbl": "Divi's",
+  "kind": "tide"
+ },
+ {
+  "id": "fujifilm_h1",
+  "d": "2026-11-06",
+  "confirmed": false,
+  "who": "Fujifilm H1",
+  "tk": "4901",
+  "cps": [
+   "CPR4"
+  ],
+  "win": [
+   "fujifilm",
+   "agc"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "cdmo",
+  "lbl": "Fujifilm",
+  "kind": "tide"
+ },
+ {
+  "id": "merck_kgaa_q3",
+  "d": "2026-11-12",
+  "confirmed": false,
+  "who": "Merck KGaA Q3",
+  "tk": "MRK",
+  "cps": [
+   "CPR4"
+  ],
+  "win": [
+   "merck_kgaa",
+   "sartorius"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "tools",
+  "lbl": "Merck KGaA",
+  "kind": "tide"
+ }
+]

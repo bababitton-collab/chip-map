@@ -89,6 +89,7 @@ html.rec .focusui{display:none!important}
 .legend .pl{width:10px;height:10px;border-radius:50%;border:2px solid var(--tight)}
 .legend .pe{width:10px;height:10px;border-radius:50%;border:2px solid var(--erode)}
 .legend .pa{width:10px;height:10px;border-radius:50%;border:2px solid var(--amber)}
+.legend .zn{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink3);background:transparent}
 .tip{position:absolute;pointer-events:none;background:#000d;color:var(--ink);font-size:.95rem;padding:6px 9px;border:1px solid var(--rule);display:none;max-width:280px;line-height:1.35;z-index:4}
 
 /* RECORDING MODE. ?rec=1 adds .rec to <html>, and everything below hangs off
@@ -462,8 +463,14 @@ const FOCUS = __FOCUS__;
 let D = LIVE;
 const C = getComputedStyle(document.documentElement); const tok=n=>C.getPropertyValue(n).trim();
 let LCOL = {}, LHE = {}, LAYER_HE = {};
+// Zones: the map's horizontal division, if it declares one. A map with
+// no zones leaves these empty and nothing below draws.
+let ZCOL = {}, ZNAME = {}, ZORDER = [];
 function readLabels(){ const LB = D.labels||{};
   LCOL = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.color]));
+  ZCOL = Object.fromEntries(Object.entries(LB.zones||{}).map(([k,v])=>[k, v.color]));
+  ZNAME = Object.fromEntries(Object.entries(LB.zones||{}).map(([k,v])=>[k, v.name]));
+  ZORDER = LB.zone_order || Object.keys(LB.zones||{});
   LHE = Object.fromEntries(Object.entries(LB.lines||{}).map(([k,v])=>[k, v.name]));
   LAYER_HE = LB.layers||{}; }
 readLabels();
@@ -474,7 +481,8 @@ const FWD = {tracked:'שאלות במעקב', through:'מחירים עד'};
 const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',
   buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',
   via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',
-  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?'};
+  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?',
+  legendZone:'איזה אזור?'};
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Recording hook. The whole script is a closure, so a recorder driving the
@@ -1457,6 +1465,21 @@ function draw(now){
     } }); }
   // nodes
   nodes.forEach(n=>{
+    // ZONES, drawn as a tint and not as geometry. The layout is unchanged --
+    // a station sits where its layer and its size put it -- and the zone is
+    // said with a soft ring under the circle plus a faint fill behind it.
+    // Geometry was the other option and it was worse here: seven zones
+    // across seven layers is forty-nine cells for forty-seven companies, so
+    // partitioning the rows would have bought separation with whitespace,
+    // which is the one thing a density map cannot spend.
+    if(n.zone && ZCOL[n.zone]){
+      const zc=ZCOL[n.zone];
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*1.9,0,7);
+      ctx.fillStyle=zc; ctx.globalAlpha=0.10; ctx.fill(); ctx.globalAlpha=1;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*1.9,0,7);
+      ctx.strokeStyle=zc; ctx.globalAlpha=0.55; ctx.lineWidth=1.5;
+      ctx.stroke(); ctx.globalAlpha=1;
+    }
     // The finale's emphasis: an amber halo that breathes, and a ring that
     // leaves every three seconds. Drawn under the station so the station
     // stays the thing in focus, and only for the one id the flag names -- no
@@ -1717,6 +1740,14 @@ function header(){
     + `</div><div class="row"><b>${WORDS.legendRing}</b>`
     + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`
     + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;
+  // The zone row is appended separately and deliberately: it holds no Hebrew
+  // of its own -- the label comes from WORDS and the names come from the map
+  // -- so the English template needs no translation pair for it, and adding
+  // a zone cannot break the one that covers the rows above.
+  if(ZORDER.length) document.getElementById('legend').innerHTML +=
+    `<div class="row"><b>${WORDS.legendZone}</b>`
+    + ZORDER.map(k=>`<span><i class="zn" style="border-color:${ZCOL[k]}"></i>${ZNAME[k]}</span>`).join('')
+    + `</div>`;
   const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
   const BR = (D.labels||{}).brand||{};
   document.getElementById('foot').innerHTML=`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`+`<span class="brandline">${BR.footer||''}</span>`;

@@ -1,0 +1,1931 @@
+{
+  "chain": "pharma-supply-zones",
+  "as_of": "2026-09-25",
+  "version": "1.0",
+  "note_on_method": "Layers run vertically, raw material to patient. ZONES run horizontally: each is a chain of its own through those layers, and a node carries the zone it belongs to in its \"zone\" field. Two layers are bridges -- primary packaging and bioprocess tools -- shared by every zone, and their nodes carry the zone \"BR\". Each company appears exactly once. A node whose price_symbol_kind is \"none\" is drawn and never scored; three nodes are priced but deliberately kept out of every basket, and say so in their notes. Every price line was measured against the price vendor on 2026-09-25.",
+  "benchmark": {
+    "key": "pharma_broad",
+    "symbol": "XPH.US",
+    "label": "PHARMA"
+  },
+  "benchmark_note": "XPH is the equal-weight US pharmaceutical line. Equal weight because EW_MAP, the benchmark that actually scores a question here, is equal-weight too, so the second line is built the same way; and pharmaceutical rather than healthcare because this map is not about insurers or hospitals. The gap, stated rather than hidden: XPH is US-only and holds no CDMO, no bioprocess tools and no distribution, so it does not span roughly forty percent of this map. The same kind of gap GRID has for the power map and ITA for the defence one.",
+  "labels": {
+    "languages": [
+      "en"
+    ],
+    "copy": {
+      "chokepoint_kind": "pharmaceutical supply",
+      "chokepoint_examples": "China-only key starting materials, sterile injectable capacity, medical isotopes, biologics CDMO capacity and primary packaging"
+    },
+    "brand": {
+      "name": "Linchpin Signal",
+      "title": {
+        "en": "The Living Pharma Map"
+      },
+      "value": {
+        "en": "The physical supply chain behind medicine — seven chains, from Chinese key starting materials to the pharmacy shelf, and where each one breaks."
+      },
+      "desc": {
+        "en": "A living map of the medicine supply chain in seven zones — generics and Chinese API, sterile injectables, biologics, radiopharma, cell and gene, incretins and distribution — with {nodes} companies, {cps} chokepoints pulsing with the market, a forecast board and questions with a date."
+      },
+      "story": {
+        "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."
+      },
+      "footer": {
+        "en": "Linchpin Signal · not investment advice · every number carries a source"
+      }
+    },
+    "layers": {
+      "M1": {
+        "en": "raw materials and ksm"
+      },
+      "M2": {
+        "en": "api and peptides"
+      },
+      "M3": {
+        "en": "manufacturing and cdmo"
+      },
+      "M4": {
+        "en": "primary packaging"
+      },
+      "M5": {
+        "en": "bioprocess tools"
+      },
+      "M6": {
+        "en": "brands"
+      },
+      "M7": {
+        "en": "distribution"
+      }
+    },
+    "zones": {
+      "Z1": {
+        "en": "GLP-1 and incretins",
+        "color": "#c9a227"
+      },
+      "Z2": {
+        "en": "Generics and China-India API",
+        "color": "#ff5a3c"
+      },
+      "Z3": {
+        "en": "Sterile injectables",
+        "color": "#7aa894"
+      },
+      "Z4": {
+        "en": "Biologics and CDMO",
+        "color": "#9b90bd"
+      },
+      "Z5": {
+        "en": "Radiopharma and isotopes",
+        "color": "#7d93b8"
+      },
+      "Z6": {
+        "en": "Cell and gene therapy",
+        "color": "#8fae87"
+      },
+      "Z7": {
+        "en": "Distribution",
+        "color": "#b39a6a"
+      },
+      "BR": {
+        "en": "Bridges",
+        "color": "#a9a396"
+      }
+    },
+    "zone_order": [
+      "Z1",
+      "Z2",
+      "Z3",
+      "Z4",
+      "Z5",
+      "Z6",
+      "Z7",
+      "BR"
+    ],
+    "lines": {
+      "ksm": {
+        "en": "key starting materials",
+        "color": "#ff5a3c"
+      },
+      "api": {
+        "en": "API",
+        "color": "#c08878"
+      },
+      "cdmo": {
+        "en": "CDMO",
+        "color": "#9b90bd"
+      },
+      "contact": {
+        "en": "contact components",
+        "color": "#c9a227"
+      },
+      "glass": {
+        "en": "glass",
+        "color": "#7d93b8"
+      },
+      "device": {
+        "en": "devices",
+        "color": "#b39a6a"
+      },
+      "tools": {
+        "en": "bioprocess tools",
+        "color": "#7aa894"
+      },
+      "iso": {
+        "en": "isotopes",
+        "color": "#8fae87"
+      },
+      "brand": {
+        "en": "brands",
+        "color": "#a9a396"
+      },
+      "dist": {
+        "en": "distribution",
+        "color": "#6f7a8b"
+      }
+    },
+    "line_order": [
+      "ksm",
+      "api",
+      "cdmo",
+      "contact",
+      "glass",
+      "device",
+      "tools",
+      "iso",
+      "brand",
+      "dist"
+    ],
+    "lanes": {
+      "api": {
+        "en": "API"
+      },
+      "generics": {
+        "en": "generics"
+      },
+      "sterile": {
+        "en": "sterile injectables"
+      },
+      "cdmo": {
+        "en": "CDMO"
+      },
+      "radio": {
+        "en": "radiopharma"
+      },
+      "tools": {
+        "en": "tools"
+      },
+      "packaging": {
+        "en": "packaging"
+      },
+      "distribution": {
+        "en": "distribution"
+      }
+    },
+    "stages": {
+      "research": {
+        "en": "research"
+      },
+      "pilot": {
+        "en": "pilot"
+      },
+      "qualified": {
+        "en": "qualified"
+      },
+      "volume": {
+        "en": "volume"
+      }
+    },
+    "size_unknown_r": 13
+  },
+  "layers": [
+    {
+      "id": "M1",
+      "name": "Raw materials and KSM",
+      "order": 1,
+      "description": "Key starting materials and the basic chemistry every downstream step assumes it can buy."
+    },
+    {
+      "id": "M2",
+      "name": "API and peptides",
+      "order": 2,
+      "description": "Active ingredient, made to order or to stock. The layer the tariff schedule names alongside the finished drug."
+    },
+    {
+      "id": "M3",
+      "name": "Manufacturing and CDMO",
+      "order": 3,
+      "description": "Contract development and manufacturing: biologics, sterile drug product, and the capacity nobody owns enough of."
+    },
+    {
+      "id": "M4",
+      "name": "Primary packaging",
+      "order": 4,
+      "description": "Everything the drug touches. Shared by every zone on this map, which is why it is drawn as a bridge."
+    },
+    {
+      "id": "M5",
+      "name": "Bioprocess tools",
+      "order": 5,
+      "description": "Consumables, filtration and instruments. The other bridge: a line has to be equipped before it can fill anything."
+    },
+    {
+      "id": "M6",
+      "name": "Brands",
+      "order": 6,
+      "description": "The companies whose names are on the box, across all seven chains."
+    },
+    {
+      "id": "M7",
+      "name": "Distribution",
+      "order": 7,
+      "description": "Three wholesalers move most of the medicine in the United States."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "north_china_pharma",
+      "name": "North China Pharmaceutical",
+      "short": "600812",
+      "ticker": "600812",
+      "exchange": "SSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M1",
+      "zone": "Z2",
+      "line": "ksm",
+      "role": "Penicillin intermediates; 6-APA at a scale nothing outside China matches",
+      "price_symbol": "600812.SHG",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "hepalink",
+      "name": "Shenzhen Hepalink",
+      "short": "002399",
+      "ticker": "002399",
+      "exchange": "SZSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M1",
+      "zone": "Z2",
+      "line": "ksm",
+      "role": "Crude heparin, from a supply base concentrated in one country",
+      "price_symbol": "002399.SHE",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "zhejiang_huahai",
+      "name": "Zhejiang Huahai",
+      "short": "600521",
+      "ticker": "600521",
+      "exchange": "SSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M1",
+      "zone": "Z2",
+      "line": "ksm",
+      "role": "API and key starting materials across the generic book",
+      "price_symbol": "600521.SHG",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "divis",
+      "name": "Divi's Laboratories",
+      "short": "DIVI",
+      "ticker": "DIVISLAB",
+      "exchange": "NSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M2",
+      "zone": "Z2",
+      "line": "api",
+      "role": "Custom synthesis and generic API at scale",
+      "price_symbol": "DIVISLAB.NS",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "aurobindo",
+      "name": "Aurobindo Pharma",
+      "short": "AURO",
+      "ticker": "AUROPHARMA",
+      "exchange": "NSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M2",
+      "zone": "Z2",
+      "line": "api",
+      "role": "Vertically integrated generics and API",
+      "price_symbol": "AUROPHARMA.NS",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "sun_pharma",
+      "name": "Sun Pharmaceutical",
+      "short": "SUNP",
+      "ticker": "SUNPHARMA",
+      "exchange": "NSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M2",
+      "zone": "Z2",
+      "line": "api",
+      "role": "India's largest drugmaker; specialty and generics",
+      "price_symbol": "SUNPHARMA.NS",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "dr_reddy",
+      "name": "Dr Reddy's Laboratories",
+      "short": "RDY",
+      "ticker": "RDY",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M2",
+      "zone": "Z2",
+      "line": "api",
+      "role": "Generics and API, with a liquid US listing",
+      "price_symbol": "RDY.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced on the New York line, which turns over more than the Mumbai one. Both exist; this map uses the deeper."
+    },
+    {
+      "id": "bachem",
+      "name": "Bachem",
+      "short": "BANB",
+      "ticker": "BANB",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M2",
+      "zone": "Z1",
+      "line": "api",
+      "role": "The largest independent peptide CDMO",
+      "price_symbol": "BANB.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "polypeptide",
+      "name": "PolyPeptide Group",
+      "short": "PPGN",
+      "ticker": "PPGN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M2",
+      "zone": "Z1",
+      "line": "api",
+      "role": "Peptide CDMO across six sites",
+      "price_symbol": "PPGN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "lonza",
+      "name": "Lonza",
+      "short": "LONN",
+      "ticker": "LONN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M3",
+      "zone": "Z4",
+      "line": "cdmo",
+      "role": "The largest Western CDMO",
+      "price_symbol": "LONN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "samsung_bio",
+      "name": "Samsung Biologics",
+      "short": "207940",
+      "ticker": "207940.KS",
+      "exchange": "KRX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M3",
+      "zone": "Z4",
+      "line": "cdmo",
+      "role": "The largest single-site biologics capacity in the world",
+      "price_symbol": "207940.KO",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Seoul listing under the vendor's own code: KRX is .KO here, not .KS."
+    },
+    {
+      "id": "wuxi_bio",
+      "name": "WuXi Biologics",
+      "short": "2269",
+      "ticker": "2269",
+      "exchange": "HKEX",
+      "us_listed": false,
+      "adr": true,
+      "layer": "M3",
+      "zone": "Z4",
+      "line": "cdmo",
+      "role": "China-based biologics CDMO; the exposure policy is written about",
+      "price_symbol": "WXXWY.US",
+      "price_symbol_kind": "adr",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced through the US ADR. Kept out of every basket: the ADR turns over about US$0.7m a day, thin enough that a leg built on it would measure the ADR rather than the company."
+    },
+    {
+      "id": "fujifilm",
+      "name": "Fujifilm",
+      "short": "4901",
+      "ticker": "4901",
+      "exchange": "TSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M3",
+      "zone": "Z4",
+      "line": "cdmo",
+      "role": "Diosynth biologics, with large US and UK capacity additions",
+      "price_symbol": "4901.T",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "The listed parent is a conglomerate and the CDMO is one segment, so the price line is a weak read on this layer.",
+      "segment_share": "",
+      "price_note": "Priced on the Tokyo line. The vendor carries Tokyo now; the chip map reaches the same company through an ADR, chosen when it did not."
+    },
+    {
+      "id": "agc",
+      "name": "AGC Inc",
+      "short": "5201",
+      "ticker": "5201",
+      "exchange": "TSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M3",
+      "zone": "Z4",
+      "line": "cdmo",
+      "role": "Biologics CDMO alongside the glass business",
+      "price_symbol": "5201.T",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "siegfried",
+      "name": "Siegfried Holding",
+      "short": "SFZN",
+      "ticker": "SFZN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M3",
+      "zone": "Z1",
+      "line": "cdmo",
+      "role": "Sterile fill-finish and drug product",
+      "price_symbol": "SFZN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "charles_river",
+      "name": "Charles River Laboratories",
+      "short": "CRL",
+      "ticker": "CRL",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M3",
+      "zone": "Z6",
+      "line": "cdmo",
+      "role": "Preclinical services and cell and gene manufacturing",
+      "price_symbol": "CRL.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "west",
+      "name": "West Pharmaceutical Services",
+      "short": "WST",
+      "ticker": "WST",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M4",
+      "zone": "BR",
+      "line": "contact",
+      "role": "Elastomer stoppers, plungers and seals",
+      "price_symbol": "WST.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "stevanato",
+      "name": "Stevanato Group",
+      "short": "STVN",
+      "ticker": "STVN",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M4",
+      "zone": "BR",
+      "line": "contact",
+      "role": "Glass syringes and cartridges, and the filling machines",
+      "price_symbol": "STVN.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "gerresheimer",
+      "name": "Gerresheimer",
+      "short": "GXI",
+      "ticker": "GXI",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M4",
+      "zone": "BR",
+      "line": "contact",
+      "role": "Vials, syringes and pen systems",
+      "price_symbol": "GXI.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "schott_pharma",
+      "name": "Schott Pharma",
+      "short": "1SXP",
+      "ticker": "1SXP",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M4",
+      "zone": "BR",
+      "line": "contact",
+      "role": "Pharmaceutical glass and polymer containment",
+      "price_symbol": "1SXP.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Kept out of every basket: about US$1.7m a day is the thinnest line on this map, and a leg on it would move with the listing rather than the business."
+    },
+    {
+      "id": "corning",
+      "name": "Corning",
+      "short": "GLW",
+      "ticker": "GLW",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M4",
+      "zone": "BR",
+      "line": "glass",
+      "role": "Valor pharmaceutical glass, upstream of the vial",
+      "price_symbol": "GLW.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "bd",
+      "name": "Becton Dickinson",
+      "short": "BDX",
+      "ticker": "BDX",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M4",
+      "zone": "BR",
+      "line": "device",
+      "role": "Prefilled syringes, needles and the injection device base",
+      "price_symbol": "BDX.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "ypsomed",
+      "name": "Ypsomed",
+      "short": "YPSN",
+      "ticker": "YPSN",
+      "exchange": "SIX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M4",
+      "zone": "BR",
+      "line": "device",
+      "role": "Pen injectors and autoinjectors built for other people's molecules",
+      "price_symbol": "YPSN.SW",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "danaher",
+      "name": "Danaher",
+      "short": "DHR",
+      "ticker": "DHR",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M5",
+      "zone": "BR",
+      "line": "tools",
+      "role": "Cytiva and Pall: filtration, chromatography, single-use flow paths",
+      "price_symbol": "DHR.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "thermo",
+      "name": "Thermo Fisher Scientific",
+      "short": "TMO",
+      "ticker": "TMO",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M5",
+      "zone": "BR",
+      "line": "tools",
+      "role": "Bioprocess consumables and Patheon drug product services",
+      "price_symbol": "TMO.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "sartorius",
+      "name": "Sartorius AG",
+      "short": "SRT3",
+      "ticker": "SRT3",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M5",
+      "zone": "BR",
+      "line": "tools",
+      "role": "Single-use bioprocess equipment and consumables",
+      "price_symbol": "SRT3.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "The preference share is the traded line; the ordinary share turns over about a fortieth as much."
+    },
+    {
+      "id": "repligen",
+      "name": "Repligen",
+      "short": "RGEN",
+      "ticker": "RGEN",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M5",
+      "zone": "BR",
+      "line": "tools",
+      "role": "Filtration and chromatography hardware",
+      "price_symbol": "RGEN.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "merck_kgaa",
+      "name": "Merck KGaA",
+      "short": "MRK",
+      "ticker": "MRK",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M5",
+      "zone": "BR",
+      "line": "tools",
+      "role": "Life science tools and process solutions",
+      "price_symbol": "MRK.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Merck KGaA of Darmstadt, not Merck & Co of New Jersey. Different companies, and only one of them is on this map."
+    },
+    {
+      "id": "avantor",
+      "name": "Avantor",
+      "short": "AVTR",
+      "ticker": "AVTR",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M5",
+      "zone": "BR",
+      "line": "tools",
+      "role": "Materials and consumables into biopharma production",
+      "price_symbol": "AVTR.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "lly",
+      "name": "Eli Lilly",
+      "short": "LLY",
+      "ticker": "LLY",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z1",
+      "line": "brand",
+      "role": "Mounjaro, Zepbound and Foundayo",
+      "price_symbol": "LLY.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "novo",
+      "name": "Novo Nordisk",
+      "short": "NVO",
+      "ticker": "NVO",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": true,
+      "layer": "M6",
+      "zone": "Z1",
+      "line": "brand",
+      "role": "Ozempic, Wegovy and the Wegovy pill",
+      "price_symbol": "NVO.US",
+      "price_symbol_kind": "adr",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced through the US ADR, which is where the liquidity is."
+    },
+    {
+      "id": "pfizer",
+      "name": "Pfizer",
+      "short": "PFE",
+      "ticker": "PFE",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z3",
+      "line": "brand",
+      "role": "Sterile injectables alongside the branded book",
+      "price_symbol": "PFE.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "novartis",
+      "name": "Novartis",
+      "short": "NVS",
+      "ticker": "NVS",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": true,
+      "layer": "M6",
+      "zone": "Z5",
+      "line": "brand",
+      "role": "Pluvicto and Lutathera: the largest radioligand franchise",
+      "price_symbol": "NVS.US",
+      "price_symbol_kind": "adr",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced through the US ADR."
+    },
+    {
+      "id": "bayer",
+      "name": "Bayer",
+      "short": "BAYN",
+      "ticker": "BAYN",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z5",
+      "line": "brand",
+      "role": "Xofigo, and a pharma book beside the crop business",
+      "price_symbol": "BAYN.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "bms",
+      "name": "Bristol Myers Squibb",
+      "short": "BMY",
+      "ticker": "BMY",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z5",
+      "line": "brand",
+      "role": "RayzeBio: alpha-emitter radiopharmaceuticals",
+      "price_symbol": "BMY.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "teva",
+      "name": "Teva Pharmaceutical Industries",
+      "short": "TEVA",
+      "ticker": "TEVA",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": true,
+      "layer": "M6",
+      "zone": "Z2",
+      "line": "brand",
+      "role": "The largest generics maker",
+      "price_symbol": "TEVA.US",
+      "price_symbol_kind": "adr",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced through the US ADR, which is the deeper line."
+    },
+    {
+      "id": "viatris",
+      "name": "Viatris",
+      "short": "VTRS",
+      "ticker": "VTRS",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z2",
+      "line": "brand",
+      "role": "Generics and established brands at scale",
+      "price_symbol": "VTRS.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "hikma",
+      "name": "Hikma Pharmaceuticals",
+      "short": "HIK",
+      "ticker": "HIK",
+      "exchange": "LSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z3",
+      "line": "brand",
+      "role": "US sterile injectables and generics",
+      "price_symbol": "HIK.LSE",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "London quotes in pence; the label is GBX."
+    },
+    {
+      "id": "amneal",
+      "name": "Amneal Pharmaceuticals",
+      "short": "AMRX",
+      "ticker": "AMRX",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z3",
+      "line": "brand",
+      "role": "Generic injectables and specialty",
+      "price_symbol": "AMRX.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "baxter",
+      "name": "Baxter International",
+      "short": "BAX",
+      "ticker": "BAX",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z3",
+      "line": "brand",
+      "role": "IV fluids and sterile solutions; a shortage bellwether",
+      "price_symbol": "BAX.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "fresenius",
+      "name": "Fresenius SE",
+      "short": "FRE",
+      "ticker": "FRE",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z3",
+      "line": "brand",
+      "role": "Kabi: generic injectables and clinical nutrition",
+      "price_symbol": "FRE.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "lantheus",
+      "name": "Lantheus Holdings",
+      "short": "LNTH",
+      "ticker": "LNTH",
+      "exchange": "NASDAQ",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z5",
+      "line": "brand",
+      "role": "Pylarify and the diagnostic isotope book",
+      "price_symbol": "LNTH.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Kept out of every basket. A definitive merger agreement with Curium was signed on 3 August 2026 at US$102.50 in cash plus a contingent value right, so the share is pinned near the deal price and no longer responds to what happens in radiopharma."
+    },
+    {
+      "id": "telix",
+      "name": "Telix Pharmaceuticals",
+      "short": "TLX",
+      "ticker": "TLX",
+      "exchange": "ASX",
+      "us_listed": false,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z5",
+      "line": "brand",
+      "role": "Illuccix and a therapeutic isotope pipeline",
+      "price_symbol": "TLX.AU",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "price_note": "Priced on the Australian line, which turns over about eight times the US depositary receipt."
+    },
+    {
+      "id": "bwxt",
+      "name": "BWX Technologies",
+      "short": "BWXT",
+      "ticker": "BWXT",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M6",
+      "zone": "Z5",
+      "line": "brand",
+      "role": "Medical isotopes alongside the naval reactor business",
+      "price_symbol": "BWXT.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "mckesson",
+      "name": "McKesson",
+      "short": "MCK",
+      "ticker": "MCK",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M7",
+      "zone": "Z7",
+      "line": "dist",
+      "role": "The largest US drug wholesaler",
+      "price_symbol": "MCK.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "cencora",
+      "name": "Cencora",
+      "short": "COR",
+      "ticker": "COR",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M7",
+      "zone": "Z7",
+      "line": "dist",
+      "role": "Wholesale distribution and specialty logistics",
+      "price_symbol": "COR.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    },
+    {
+      "id": "cardinal",
+      "name": "Cardinal Health",
+      "short": "CAH",
+      "ticker": "CAH",
+      "exchange": "NYSE",
+      "us_listed": true,
+      "adr": false,
+      "layer": "M7",
+      "zone": "Z7",
+      "line": "dist",
+      "role": "Wholesale distribution, and the nuclear pharmacy network that makes it a bridge into radiopharma",
+      "price_symbol": "CAH.US",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": ""
+    }
+  ],
+  "edges": [
+    {
+      "from": "north_china_pharma",
+      "to": "aurobindo",
+      "type": "supplies",
+      "what": "6-APA and penicillin intermediates",
+      "group": "ksm",
+      "criticality": "high",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "north_china_pharma",
+      "to": "teva",
+      "type": "supplies",
+      "what": "Penicillin intermediates",
+      "group": "ksm",
+      "criticality": "high",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "hepalink",
+      "to": "baxter",
+      "type": "supplies",
+      "what": "Crude heparin",
+      "group": "ksm",
+      "criticality": "high",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "hepalink",
+      "to": "fresenius",
+      "type": "supplies",
+      "what": "Crude heparin",
+      "group": "ksm",
+      "criticality": "high",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "zhejiang_huahai",
+      "to": "teva",
+      "type": "supplies",
+      "what": "API and key starting materials",
+      "group": "ksm",
+      "criticality": "high",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "zhejiang_huahai",
+      "to": "viatris",
+      "type": "supplies",
+      "what": "API and key starting materials",
+      "group": "ksm",
+      "criticality": "high",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "divis",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Custom synthesis",
+      "group": "api",
+      "criticality": "medium",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "aurobindo",
+      "to": "viatris",
+      "type": "supplies",
+      "what": "Generic API",
+      "group": "api",
+      "criticality": "medium",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "sun_pharma",
+      "to": "amneal",
+      "type": "supplies",
+      "what": "Generic API",
+      "group": "api",
+      "criticality": "medium",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "dr_reddy",
+      "to": "viatris",
+      "type": "competes",
+      "what": "Generics",
+      "group": "api",
+      "criticality": "medium",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "bachem",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Peptide API",
+      "group": "api",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "bachem",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Peptide API",
+      "group": "api",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "polypeptide",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Peptide API",
+      "group": "api",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "lonza",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Peptide and biologics capacity",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "samsung_bio",
+      "to": "pfizer",
+      "type": "supplies",
+      "what": "Biologics capacity",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "samsung_bio",
+      "to": "bms",
+      "type": "supplies",
+      "what": "Biologics capacity",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "wuxi_bio",
+      "to": "pfizer",
+      "type": "supplies",
+      "what": "Biologics capacity, and the exposure policy names",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://www.crowell.com/en/insights/client-alerts/trump-administration-imposes-section-232-tariffs-on-patented-pharmaceutical-imports-tiered-rate-structure-takes-effect-beginning-july-31-2026"
+    },
+    {
+      "from": "fujifilm",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Biologics capacity",
+      "group": "cdmo",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "agc",
+      "to": "novartis",
+      "type": "supplies",
+      "what": "Biologics capacity",
+      "group": "cdmo",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "siegfried",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Sterile fill-finish",
+      "group": "cdmo",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "charles_river",
+      "to": "bms",
+      "type": "supplies",
+      "what": "Preclinical and cell therapy services",
+      "group": "cdmo",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "west",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Elastomer stoppers and plungers",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "west",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Elastomer stoppers and plungers",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "west",
+      "to": "baxter",
+      "type": "supplies",
+      "what": "Elastomer components",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "west",
+      "to": "pfizer",
+      "type": "supplies",
+      "what": "Elastomer components",
+      "group": "contact",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "stevanato",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Cartridges, syringes and filling equipment",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "stevanato",
+      "to": "novartis",
+      "type": "supplies",
+      "what": "Glass containment",
+      "group": "contact",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "gerresheimer",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Vials, syringes and pen systems",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "gerresheimer",
+      "to": "fresenius",
+      "type": "supplies",
+      "what": "Vials and ampoules",
+      "group": "contact",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "schott_pharma",
+      "to": "baxter",
+      "type": "supplies",
+      "what": "Pharmaceutical containment",
+      "group": "contact",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "corning",
+      "to": "stevanato",
+      "type": "supplies",
+      "what": "Pharmaceutical glass tubing",
+      "group": "glass",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "corning",
+      "to": "gerresheimer",
+      "type": "supplies",
+      "what": "Pharmaceutical glass tubing",
+      "group": "glass",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "bd",
+      "to": "pfizer",
+      "type": "supplies",
+      "what": "Prefilled syringes and needles",
+      "group": "device",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "bd",
+      "to": "hikma",
+      "type": "supplies",
+      "what": "Injection devices",
+      "group": "device",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "ypsomed",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Pen injectors",
+      "group": "device",
+      "criticality": "medium",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "danaher",
+      "to": "lonza",
+      "type": "supplies",
+      "what": "Filtration and chromatography",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "danaher",
+      "to": "samsung_bio",
+      "type": "supplies",
+      "what": "Filtration and chromatography",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "thermo",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Drug product services and consumables",
+      "group": "tools",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "thermo",
+      "to": "charles_river",
+      "type": "competes",
+      "what": "Preclinical and bioprocess services",
+      "group": "tools",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "sartorius",
+      "to": "lonza",
+      "type": "supplies",
+      "what": "Single-use consumables",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "sartorius",
+      "to": "samsung_bio",
+      "type": "supplies",
+      "what": "Single-use consumables",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "repligen",
+      "to": "lonza",
+      "type": "supplies",
+      "what": "Filtration hardware",
+      "group": "tools",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "merck_kgaa",
+      "to": "samsung_bio",
+      "type": "supplies",
+      "what": "Process solutions and media",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "avantor",
+      "to": "lonza",
+      "type": "supplies",
+      "what": "Materials and consumables",
+      "group": "tools",
+      "criticality": "medium",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "bwxt",
+      "to": "novartis",
+      "type": "supplies",
+      "what": "Medical isotopes",
+      "group": "iso",
+      "criticality": "high",
+      "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/"
+    },
+    {
+      "from": "bwxt",
+      "to": "lantheus",
+      "type": "supplies",
+      "what": "Medical isotopes",
+      "group": "iso",
+      "criticality": "high",
+      "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/"
+    },
+    {
+      "from": "telix",
+      "to": "novartis",
+      "type": "competes",
+      "what": "Radioligand therapy",
+      "group": "iso",
+      "criticality": "high",
+      "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/"
+    },
+    {
+      "from": "lantheus",
+      "to": "novartis",
+      "type": "competes",
+      "what": "Diagnostic and therapeutic isotopes",
+      "group": "iso",
+      "criticality": "high",
+      "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/"
+    },
+    {
+      "from": "bms",
+      "to": "novartis",
+      "type": "competes",
+      "what": "Alpha-emitter radiopharmaceuticals",
+      "group": "iso",
+      "criticality": "medium",
+      "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/"
+    },
+    {
+      "from": "cardinal",
+      "to": "novartis",
+      "type": "supplies",
+      "what": "Nuclear pharmacy distribution",
+      "group": "dist",
+      "criticality": "high",
+      "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/"
+    },
+    {
+      "from": "mckesson",
+      "to": "lly",
+      "type": "supplies",
+      "what": "Wholesale distribution",
+      "group": "dist",
+      "criticality": "high",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "from": "cencora",
+      "to": "novo",
+      "type": "supplies",
+      "what": "Wholesale distribution and specialty logistics",
+      "group": "dist",
+      "criticality": "high",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "from": "cardinal",
+      "to": "teva",
+      "type": "supplies",
+      "what": "Wholesale distribution",
+      "group": "dist",
+      "criticality": "high",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "from": "mckesson",
+      "to": "cencora",
+      "type": "competes",
+      "what": "US wholesale distribution",
+      "group": "dist",
+      "criticality": "high",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "from": "cencora",
+      "to": "cardinal",
+      "type": "competes",
+      "what": "US wholesale distribution",
+      "group": "dist",
+      "criticality": "high",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "from": "teva",
+      "to": "viatris",
+      "type": "competes",
+      "what": "Generics",
+      "group": "brand",
+      "criticality": "high",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "from": "hikma",
+      "to": "amneal",
+      "type": "competes",
+      "what": "US sterile injectables",
+      "group": "brand",
+      "criticality": "high",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "from": "baxter",
+      "to": "fresenius",
+      "type": "competes",
+      "what": "IV fluids and injectables",
+      "group": "brand",
+      "criticality": "high",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "from": "lly",
+      "to": "novo",
+      "type": "competes",
+      "what": "Incretins",
+      "group": "brand",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "from": "west",
+      "to": "stevanato",
+      "type": "competes",
+      "what": "Injection contact components",
+      "group": "contact",
+      "criticality": "high",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "from": "danaher",
+      "to": "sartorius",
+      "type": "competes",
+      "what": "Bioprocess consumables",
+      "group": "tools",
+      "criticality": "high",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    }
+  ],
+  "chokepoints": [
+    {
+      "id": "CPR1",
+      "name": "China-only key starting materials",
+      "label": {
+        "en": "China-only KSM"
+      },
+      "blurb": {
+        "en": "Moving finished-dose production does not help when every supplier buys the same upstream chemical from the same country. Nearly 41 percent of the key starting materials in US-approved APIs come solely from China."
+      },
+      "node_ids": [
+        "north_china_pharma",
+        "hepalink",
+        "zhejiang_huahai",
+        "divis",
+        "aurobindo"
+      ],
+      "concentration": "Nearly 41 percent of KSMs used in US-approved APIs come solely from China; China controls 94 percent of amoxicillin raw materials, 74 percent of the US crude heparin supply and 55 percent of global acetaminophen API. Nearly seven hundred medicines approved in the United States depend on at least one chemical made only in China",
+      "geography": "China, India, United States",
+      "dependents": [
+        "teva",
+        "viatris",
+        "baxter",
+        "fresenius",
+        "amneal"
+      ],
+      "substitute": "Indian and Western KSM capacity, which is being built into the same demand rather than standing spare",
+      "substitution_time": "3-5 years",
+      "source": "https://www.cfr.org/reports/the-pharma-choke-point"
+    },
+    {
+      "id": "CPR2",
+      "name": "Sterile injectable capacity",
+      "label": {
+        "en": "sterile injectables"
+      },
+      "blurb": {
+        "en": "The most shortage-prone category in the pharmacy: low-margin, hard to make, and made on lines that are old, few and shared."
+      },
+      "node_ids": [
+        "baxter",
+        "fresenius",
+        "hikma",
+        "amneal",
+        "pfizer"
+      ],
+      "concentration": "A small number of qualified sterile lines, several of them decades old, carrying products whose price does not fund replacing them",
+      "geography": "United States, Europe, India",
+      "dependents": [
+        "mckesson",
+        "cencora",
+        "cardinal"
+      ],
+      "substitute": "Another maker's line, after a regulatory transfer that is measured in quarters",
+      "substitution_time": "12-24 months",
+      "source": "https://www.usp.org/supply-chain/drug-shortages"
+    },
+    {
+      "id": "CPR3",
+      "name": "Medical isotope supply",
+      "label": {
+        "en": "medical isotopes"
+      },
+      "blurb": {
+        "en": "A radioligand is made, shipped and injected against a clock. Lutetium-177 has a useful life measured in days, so a missed reactor window is a missed dose."
+      },
+      "node_ids": [
+        "bwxt",
+        "novartis",
+        "telix",
+        "lantheus",
+        "bms",
+        "cardinal"
+      ],
+      "concentration": "A handful of reactors and generators worldwide, with actinium-225 available only in clinical quantities and molybdenum-99 behind most nuclear imaging",
+      "geography": "United States, Canada, Europe, Australia",
+      "dependents": [
+        "novartis",
+        "bms",
+        "telix"
+      ],
+      "substitute": "New reactor and cyclotron capacity, all of it years out",
+      "substitution_time": "3-6 years",
+      "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/"
+    },
+    {
+      "id": "CPR4",
+      "name": "Biologics CDMO capacity",
+      "label": {
+        "en": "biologics CDMO"
+      },
+      "blurb": {
+        "en": "Large-scale biologics capacity is booked years out, and policy has narrowed who may take the work."
+      },
+      "node_ids": [
+        "lonza",
+        "samsung_bio",
+        "wuxi_bio",
+        "fujifilm",
+        "agc",
+        "charles_river"
+      ],
+      "concentration": "A short list of houses able to absorb work at scale, with the largest China-based incumbent under a policy cloud",
+      "geography": "Switzerland, South Korea, China, Japan, United States",
+      "dependents": [
+        "pfizer",
+        "bms",
+        "novartis",
+        "lly"
+      ],
+      "substitute": "Samsung Biologics, Lonza and Fujifilm, all adding into the same demand",
+      "substitution_time": "2-4 years",
+      "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results"
+    },
+    {
+      "id": "CPR5",
+      "name": "Primary packaging and containment",
+      "label": {
+        "en": "primary packaging"
+      },
+      "blurb": {
+        "en": "Every zone on this map ends at the same handful of component makers. A stopper is qualified to its molecule, so a second source is a regulatory change and not a purchase order."
+      },
+      "node_ids": [
+        "west",
+        "stevanato",
+        "gerresheimer",
+        "schott_pharma",
+        "corning",
+        "bd"
+      ],
+      "concentration": "High-value components were 49 percent of West's sales in the second quarter of 2026, with GLP-1 elastomer alone about a tenth of company revenue",
+      "geography": "United States, Germany, Italy, Switzerland",
+      "dependents": [
+        "lly",
+        "novo",
+        "pfizer",
+        "baxter",
+        "hikma"
+      ],
+      "substitute": "A qualified second supplier, where one has already been through the filing",
+      "substitution_time": "18-36 months",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm"
+    },
+    {
+      "id": "CPR6",
+      "name": "Section 232 tariff exposure",
+      "label": {
+        "en": "tariff exposure"
+      },
+      "blurb": {
+        "en": "A 100 percent duty on patented drugs and on the API and key starting materials behind them, with generics and nuclear medicines exempt for now and Commerce due to report on whether that holds."
+      },
+      "node_ids": [
+        "lly",
+        "novo",
+        "pfizer",
+        "novartis",
+        "bayer",
+        "teva"
+      ],
+      "concentration": "The proclamation issued 2 April 2026 took effect on 31 July 2026 for the seventeen companies named in Annex III and on 29 September 2026 for everyone else, with reduced rates for the EU, Japan, Korea and Switzerland",
+      "geography": "United States, European Union, Japan, Korea, Switzerland",
+      "dependents": [
+        "mckesson",
+        "cencora",
+        "cardinal"
+      ],
+      "substitute": "Onshoring commitments and most-favoured-nation pricing deals, which is what the schedule is designed to buy",
+      "substitution_time": "not applicable -- this is policy, not capacity",
+      "source": "https://www.crowell.com/en/insights/client-alerts/trump-administration-imposes-section-232-tariffs-on-patented-pharmaceutical-imports-tiered-rate-structure-takes-effect-beginning-july-31-2026"
+    }
+  ],
+  "subnodes": [],
+  "sub_edges": [],
+  "flows": [],
+  "etfs": [],
+  "vulnerable": [],
+  "challengers": {},
+  "display_rules": {}
+}

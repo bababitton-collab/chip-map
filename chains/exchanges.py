@@ -17,8 +17,11 @@ returned 70 exchanges.
 
 The important part of that list is what is NOT in it:
 
-    no Japan (Tokyo)      no Singapore
-    no Italy (Milan)      no India
+    no Singapore          no Italy (Milan)
+
+Tokyo, Hong Kong and India came off that list when each was probed directly
+and found to serve. Only what has been probed by hand is changed here; the
+endpoint that produced the original enumeration now answers 404.
 
 Those are not typos to be worked around with a different suffix. The
 subscription does not carry the exchange, so a symbol listed only there has no
@@ -65,6 +68,10 @@ BY_EXCHANGE: dict[str, str] = {
     "Euronext Brussels": "BR",
     "Vienna Stock Exchange": "VI",
     "SIX": "SW",
+    "TSE": "T",
+    "Tokyo Stock Exchange": "T",
+    "NSE": "NS",
+    "ASX": "AU",
     "HKEX": "HK",
     "SEHK": "HK",
     "Hong Kong Exchange": "HK",
@@ -87,19 +94,19 @@ BY_SUFFIX: dict[str, str] = {
     "VI": "VI",
     "SW": "SW",
     "HK": "HK",
+    "T": "T",
+    "NS": "NS",
+    "AX": "AU",
     "TO": "TO",
     "L": "LSE",
 }
 
 # exchanges the subscription does not carry at all, with the reason spelled out
 UNAVAILABLE: dict[str, str] = {
-    "T": "Tokyo Stock Exchange -- not in the EODHD exchange list on this plan",
-    "TSE": "Tokyo Stock Exchange -- not in the EODHD exchange list on this plan",
     "SI": "Singapore Exchange -- not in the EODHD exchange list on this plan",
     "SGX": "Singapore Exchange -- not in the EODHD exchange list on this plan",
     "MI": "Borsa Italiana (Milan) -- not in the EODHD exchange list on this plan",
     "Euronext Milan": "Borsa Italiana (Milan) -- not in the EODHD exchange list",
-    "NS": "India (NSE) -- not in the EODHD exchange list on this plan",
     "BO": "India (BSE) -- not in the EODHD exchange list on this plan",
 }
 

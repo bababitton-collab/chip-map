@@ -138,6 +138,11 @@ html.rec .focusui{display:none!important}
 /* #9ba6b4, not the mock's #9aa4b2: that one computes to 6.99:1 on the chip and
    the rule beside it asks for 7. One step lighter, the same colour to look at,
    and the difference between a test that passes and one that nearly does. */
+/* The plain word, for assistive technology and find-in-page, beside the
+   hyphenated one the eye gets. Absolutely positioned, so it is out of flow
+   and cannot affect the line breaking it exists to keep honest. */
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
 .lchip .n{color:#9ba6b4;font-weight:400}
 .lchip .s{color:#7d8797;margin:0 6px}
 .lchip .t{color:#f3e2b4;font-weight:500;text-shadow:0 0 6px rgba(242,182,50,.55),0 0 14px rgba(242,182,50,.25)}
@@ -1501,6 +1506,28 @@ function resize(){
 // beside its own row. Written as DOM rather than painted on the canvas so the
 // header can be sticky -- a canvas label scrolls away with the pixels it is
 // drawn on -- and so that a test can measure the boxes.
+// HYPHENATION, IN THE DISPLAY LAYER ONLY.
+//
+// A layer name whose longest word is wider than its column has to break
+// somewhere. Left to the breaker it is cut wherever the line ran out --
+// "TRANSMISSIO / N & HVDC" -- which reads as a rendering fault. A soft hyphen
+// gives it a break point that a reader can see, and one that lands between
+// syllables rather than inside one.
+//
+// U+00AD is invisible until it is used. The name in map.json, in the
+// commitments and in anything that is hashed is untouched; so is every string
+// used for matching or handed to assistive technology. A chip that needs one
+// carries the hyphenated text for the eye and the plain word for everything
+// else, and a chip that does not is rendered exactly as before.
+const HYPHENATE = {TRANSMISSION: 5};    // word -> where its first break goes
+function softened(name){
+  return String(name==null?'':name).replace(/[A-Za-z]{8,}/g, w => {
+    const at = HYPHENATE[w.toUpperCase()];
+    // Sliced by offset rather than substituted wholesale, so the source's own
+    // casing survives -- the uppercase is a text-transform, not the data.
+    return at ? w.slice(0, at) + '­' + w.slice(at) : w;
+  });
+}
 function chip(L, name){
   const cut=v=>String(v==null?'':v).replace(/[&<>"]/g,
     c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1508,6 +1535,9 @@ function chip(L, name){
   // them, so "E1·TRANSMISSION" is one unbreakable run to the line breaker and
   // the prefix could never move off the name's line. Zero width, so nothing
   // moves when it is not used.
+  //
+  // The name goes in plain. A soft hyphen is added afterwards, by
+  // hyphenateChips, and only to a chip that measurement says needs one.
   return `<span class="n">${cut(L)}</span><span class="s">·</span><wbr>`
     + `<span class="t">${cut(name)}</span>`;
 }
@@ -1586,10 +1616,77 @@ function chipBudget(items){
     if(w){ it.el.style.width = w+'px'; it.el.style.maxWidth = w+'px'; }
   });
 }
+// The width a single word needs, measured on a copy of the chip itself so
+// that every inherited thing -- family, weight, letter-spacing, the uppercase
+// transform -- is the one that will actually draw it.
+function wordWidthIn(el, word){
+  const clone = el.cloneNode(true);
+  clone.style.position='absolute'; clone.style.visibility='hidden';
+  clone.style.width='auto'; clone.style.maxWidth='none'; clone.style.whiteSpace='nowrap';
+  const t=clone.querySelector('.t');
+  if(t) t.textContent = word;
+  // REMOVED, not emptied: .s carries margin:0 6px, and an emptied span keeps
+  // its margins. Leaving them in added 12px to every measurement, which is
+  // the difference between "this word fits its column" and "it does not".
+  ['.n', '.s', '.vh'].forEach(sel=>{
+    const e = clone.querySelector(sel); if(e) e.remove();
+  });
+  clone.querySelectorAll('wbr').forEach(e=>e.remove());
+  document.body.appendChild(clone);
+  const cs = getComputedStyle(el);
+  const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+            + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+  const w = clone.getBoundingClientRect().width - pad;
+  clone.remove();
+  return w;
+}
+
+// Hyphenate only what has to be hyphenated.
+//
+// A soft hyphen is not a hint the breaker weighs; it is an opportunity, and
+// greedy line breaking takes the LAST opportunity that fits. Baked into the
+// markup, it was therefore used at every width -- including the ones where
+// the name fits perfectly well unbroken. So it is added here, after the
+// column budget is known, and only to a chip whose word cannot fit that
+// budget on a line of its own.
+function hyphenateChips(bar){
+  bar.querySelectorAll('.lchip').forEach(el=>{
+    const t = el.querySelector('.t');
+    if(!t) return;
+    if(t.dataset.plain == null) t.dataset.plain = t.textContent;
+    const plain = t.dataset.plain;
+    const soft = softened(plain);
+    const restore = () => {
+      if(t.textContent !== plain) t.textContent = plain;
+      t.removeAttribute('aria-hidden');
+      const vh = el.querySelector('.vh'); if(vh) vh.remove();
+    };
+    if(soft === plain){ restore(); return; }
+    const word = (plain.match(/[A-Za-z]{8,}/g)||[])
+      .find(w => HYPHENATE[w.toUpperCase()] != null);
+    if(!word){ restore(); return; }
+    const cs = getComputedStyle(el);
+    const inner = parseFloat(cs.width) - parseFloat(cs.paddingLeft)
+                - parseFloat(cs.paddingRight) - parseFloat(cs.borderLeftWidth)
+                - parseFloat(cs.borderRightWidth);
+    if(wordWidthIn(el, word) <= inner){ restore(); return; }
+    // It does not fit. Give the eye a hyphen and everything else the word.
+    if(t.textContent !== soft) t.textContent = soft;
+    t.setAttribute('aria-hidden','true');
+    if(!el.querySelector('.vh')){
+      const vh = document.createElement('span');
+      vh.className = 'vh';
+      vh.textContent = plain;
+      el.appendChild(vh);
+    }
+  });
+}
+
 function spreadChips(bar){
   const items=[...bar.querySelectorAll('.lchip')]
     .map(el=>({el, cx:+el.dataset.cx})).sort((a,b)=>a.cx-b.cx);
   chipBudget(items);
+  hyphenateChips(bar);
   for(let pass=0; pass<4; pass++){
     // The rendered width, rounded up: offsetWidth rounds to the nearest pixel
     // and a chip 0.4px wider than it says closes the gap by that much.

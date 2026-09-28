@@ -210,6 +210,9 @@ def write_landing(src: Path, dom: str, live: list[str] | None = None) -> Path:
     from chains import landing
     p = site_root() / "index.html"
     p.parent.mkdir(parents=True, exist_ok=True)
+    # Before the render, not after: the cards ask the published directory
+    # which previews exist, so the pictures have to be beside it first.
+    copy_map_previews()
     page = landing.render(src, dom, f"https://{CUSTOM_DOMAIN}/", live=live)
     from chains import sitefile
     preview_domain = sitefile.copy("preview", "domain")
@@ -225,6 +228,41 @@ def write_landing(src: Path, dom: str, live: list[str] | None = None) -> Path:
             shutil.copyfile(source, assets / name)
     p.write_text(page, encoding="utf-8", newline="\n")
     return p
+
+
+def copy_map_previews() -> list[str]:
+    """One preview per map, into site/assets/, for the cards on the front door.
+
+    Checked in and copied, exactly like the hero preview above: the build has
+    no browser in it, and rendering a canvas to a PNG needs one. They are made
+    by tools/make_map_previews.py against a local build and committed, so a CI
+    run publishes the same picture a person looked at.
+
+    A map with no preview on file simply has no picture on its card -- see
+    _map_cards_html. A missing file is not an error, because adding a sixth
+    map should not fail the publish before anybody has drawn it.
+    """
+    from chains import domains as registry
+    from chains import sitefile
+    repo = Path(__file__).resolve().parents[1]
+    assets = site_root() / "assets"
+    assets.mkdir(exist_ok=True)
+    written = []
+    for dom in registry.discover():
+        for key, suffix in (("desktop", ""), ("mobile", "-mobile")):
+            rel = sitefile.copy("map_previews", dom, key)
+            if not rel:
+                continue
+            source = (repo / rel).resolve()
+            if not source.is_relative_to(repo):
+                raise ValueError(
+                    f"map preview for {dom} must live inside the repository")
+            if not source.is_file():
+                continue
+            name = f"map-{dom}{suffix}.png"
+            shutil.copyfile(source, assets / name)
+            written.append(name)
+    return written
 
 
 def write_site_record() -> Path:

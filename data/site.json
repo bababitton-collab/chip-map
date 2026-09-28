@@ -1,11 +1,33 @@
 {
- "hero": {
-  "title": "The physical supply chains behind AI — mapped.",
-  "lead": "Chips and the power that runs them: who supplies whom, and where it breaks."
- },
- "preview": {
-  "domain": "semi",
-  "desktop": "tools/tour/map-desktop.png",
-  "mobile": "tools/tour/map-mobile.png"
- }
+  "hero": {
+    "title": "The physical supply chains behind AI — mapped.",
+    "lead": "Chips and the power that runs them: who supplies whom, and where it breaks."
+  },
+  "preview": {
+    "domain": "semi",
+    "desktop": "tools/tour/map-desktop.png",
+    "mobile": "tools/tour/map-mobile.png"
+  },
+  "map_previews": {
+    "semi": {
+      "desktop": "tools/map-previews/semi.png",
+      "mobile": "tools/map-previews/semi-mobile.png"
+    },
+    "defense": {
+      "desktop": "tools/map-previews/defense.png",
+      "mobile": "tools/map-previews/defense-mobile.png"
+    },
+    "energy": {
+      "desktop": "tools/map-previews/energy.png",
+      "mobile": "tools/map-previews/energy-mobile.png"
+    },
+    "medicine": {
+      "desktop": "tools/map-previews/medicine.png",
+      "mobile": "tools/map-previews/medicine-mobile.png"
+    },
+    "pharma": {
+      "desktop": "tools/map-previews/pharma.png",
+      "mobile": "tools/map-previews/pharma-mobile.png"
+    }
+  }
 }

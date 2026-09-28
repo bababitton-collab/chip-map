@@ -262,7 +262,15 @@ def map_cards(root: Path, names: list[str], dom: str,
         # a chokepoint's own pressure -- the holder outrunning the challengers
         # over thirteen weeks -- and nothing here turns that into a risk
         # level, a score or a colour the data does not carry.
+        #
+        # All three states, not just the one. "0 of 5 tightening" was true of
+        # defence and told a reader nothing: all five of its chokepoints have
+        # no priced challenger, so the market cannot be asked. That is a
+        # different fact from five chokepoints that were asked and said no,
+        # and the card said the same thing for both.
         tight = sum(1 for c in cps if (c.get("pressure") or 0) > 0)
+        erode = sum(1 for c in cps if (c.get("pressure") or 0) < 0)
+        unmeasured = len(cps) - tight - erode
         # The next dated question, as PUBLIC metadata only: who and when. The
         # wording, the baskets and the diagram are the paid part and are not
         # in this card at any lock state.
@@ -278,6 +286,8 @@ def map_cards(root: Path, names: list[str], dom: str,
             "chokepoints": len(cps),
             "questions": len(watch),
             "tightening": tight,
+            "eroding": erode,
+            "unmeasured": unmeasured,
             "through": live.get("last_price_date") or "",
             "next_who": (nxt or {}).get("who") or "",
             "next_date": (nxt or {}).get("d") or "",
@@ -314,9 +324,17 @@ def _map_cards_html(cards: list[dict], dom: str) -> str:
                        if c.get("preview_mobile") else "")
                     + f'<img src="{esc(c["preview"])}" alt="" loading="lazy" '
                       f'width="1200" height="520"></picture>')
-        # Counted from the published snapshot, never graded.
-        status = (f'<p class="mapstatus">{c["tightening"]} of {c["chokepoints"]} '
-                  f'chokepoints tightening</p>')
+        # Counted from the published snapshot, never graded. A part that is
+        # zero is left out rather than printed as a zero; the parts that are
+        # printed always sum to the chokepoint count above them.
+        parts = []
+        for n_, word, cls in ((c["tightening"], "tightening", "tight"),
+                              (c["eroding"], "eroding", "erode"),
+                              (c["unmeasured"], "cannot be measured", "unmeas")):
+            if n_:
+                parts.append(f'<span class="{cls}">{n_} {word}</span>')
+        status = (f'<p class="mapstatus">{" · ".join(parts)}</p>'
+                  if parts else "")
         through = (f'<p class="mapthrough">prices through {esc(c["through"])}</p>'
                    if c.get("through") else "")
         nxt = ""

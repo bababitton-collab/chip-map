@@ -65,9 +65,64 @@ def test_the_status_line_is_rendered_as_a_count_and_not_as_a_grade(tmp_path):
     _published(tmp_path, "m", cps=[{"id": "a", "pressure": 0.2},
                                    {"id": "b", "pressure": -0.1}])
     html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
-    assert "1 of 2 chokepoints tightening" in html
+    assert "1 tightening" in html and "1 eroding" in html
     for graded in ("high", "elevated", "critical", "severe", "risk"):
         assert graded not in html.lower(), graded
+
+
+@pytest.mark.parametrize("pressures,want", [
+    ([0.2, -0.1], "1 tightening · 1 eroding"),
+    ([None, None, None, None, None], "5 cannot be measured"),
+    ([0.1, 0.2, -0.3, None], "2 tightening · 1 eroding · 1 cannot be measured"),
+    ([0.4], "1 tightening"),
+])
+def test_the_status_line_gives_all_three_states(pressures, want, tmp_path):
+    """"0 of 5 tightening" was true of defence and said nothing: all five of
+    its chokepoints have no priced challenger, so the market cannot be asked.
+    That is a different fact from five that were asked and said no, and the
+    card said the same thing for both."""
+    _published(tmp_path, "m", cps=[{"id": f"c{i}", "pressure": p}
+                                   for i, p in enumerate(pressures)])
+    html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
+    i = html.index('class="mapstatus"')
+    line = html[i:html.index("</p>", i)]
+    import re as _re
+    assert _re.sub(r"<[^>]+>", "", line.split(">", 1)[1]) == want
+
+
+@pytest.mark.parametrize("pressures", [
+    [0.2, -0.1], [None] * 5, [0.1, 0.2, -0.3, None], [], [0.0, 0.0],
+])
+def test_the_parts_always_sum_to_the_chokepoint_count(pressures, tmp_path):
+    _published(tmp_path, "m", cps=[{"id": f"c{i}", "pressure": p}
+                                   for i, p in enumerate(pressures)])
+    c = cards(tmp_path, ["m"])[0]
+    assert c["tightening"] + c["eroding"] + c["unmeasured"] == c["chokepoints"]
+    assert c["chokepoints"] == len(pressures)
+
+
+def test_a_zero_part_is_left_out_rather_than_printed_as_a_zero(tmp_path):
+    _published(tmp_path, "m", cps=[{"id": "a", "pressure": 0.2}])
+    html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
+    assert "0 eroding" not in html and "0 cannot be measured" not in html
+
+
+def test_a_map_with_no_chokepoints_says_nothing_about_them(tmp_path):
+    _published(tmp_path, "m", cps=[])
+    html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
+    assert 'class="mapstatus"' not in html
+
+
+def test_the_three_states_carry_the_maps_own_colours(tmp_path):
+    """Red tightening, green eroding, dim for what cannot be measured -- the
+    same semantics as the legend on the map the card links to."""
+    _published(tmp_path, "m", cps=[{"id": "a", "pressure": 0.2},
+                                   {"id": "b", "pressure": -0.2},
+                                   {"id": "c", "pressure": None}])
+    html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
+    assert '<span class="tight">1 tightening</span>' in html
+    assert '<span class="erode">1 eroding</span>' in html
+    assert '<span class="unmeas">1 cannot be measured</span>' in html
 
 
 # -- the next checkpoint -------------------------------------------------------

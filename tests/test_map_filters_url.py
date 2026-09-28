@@ -190,7 +190,11 @@ def test_only_three_filters_exist_and_each_names_a_real_field():
     src = tpl()
     assert "const FILTERS = {layer:'', cp:'', pulse:''};" in src
     bar = slice_between(src, "function filterBarHTML()", "function countText()")
-    assert bar.count('data-f="') == 3
+    # One field() helper emits the select, so the three are counted by the
+    # three ids it is called with rather than by the attribute it writes.
+    assert [i for i in ("rf-layer", "rf-cp", "rf-pulse") if f"'{i}'" in bar] \
+        == ["rf-layer", "rf-cp", "rf-pulse"]
+    assert bar.count("field('rf-") == 3
 
 
 def test_no_filter_is_offered_over_a_field_the_map_does_not_have():
@@ -265,9 +269,74 @@ def test_there_is_a_copy_link_control_and_it_is_text():
     assert "<svg" not in bar and "<i " not in bar
 
 
+def test_every_filter_has_a_visible_label_tied_to_its_control():
+    """Three unlabelled selects reading "All layers / Any / Any pulse" were
+    three guesses."""
+    src = tpl()
+    bar = slice_between(src, "function filterBarHTML()", "function countText()")
+    assert 'class="reyebrow" for="${id}"' in bar
+    for ident in ("rf-layer", "rf-cp", "rf-pulse"):
+        assert f"'{ident}'" in bar, ident
+    for label in ("RAIL.lLayer", "RAIL.lCp", "RAIL.lPulse"):
+        assert label in bar, label
+    assert "Layer" in src and "Chokepoint" in src and "Pulse" in src
+
+
+def test_the_chokepoint_options_say_what_they_select():
+    src = tpl()
+    for wording in ("All stations", "Chokepoints only", "Not chokepoints"):
+        assert wording in src, wording
+    assert "anyCp" not in src, "the bare 'Any' is gone"
+
+
+def test_sort_is_labelled_and_kept_apart_from_the_filters():
+    """It changes the order of what is shown, never what is shown."""
+    src = tpl()
+    assert 'class="rfield rsortrow"' in src
+    assert 'for="rf-sort"' in src and 'id="rf-sort"' in src
+    assert ".srail .rsortrow{margin-top:10px;padding-top:10px;border-top:" in src
+    # And it is outside the filter block, so a Clear that resets the filters
+    # does not silently reorder the list as well.
+    bar = slice_between(src, "function filterBarHTML()", "function countText()")
+    assert "rsort" not in bar
+
+
 def test_the_count_is_announced_to_a_screen_reader():
     src = tpl()
     assert 'class="rcount" role="status" aria-live="polite"' in src
+
+
+# -- the drawer overlays the map, it does not narrow it ------------------------
+def test_between_1024_and_1439_the_drawer_is_an_overlay():
+    """As a grid column it took its 300px out of the canvas: at 1200 the map
+    went to 900, every column narrowed with it, and the layer names broke
+    mid-word. This shipped, and P1's round-3 shots missed it because they
+    were all taken with the drawer shut."""
+    src = tpl()
+    block = slice_between(src, "@media (min-width:1024px) and (max-width:1439px){",
+                          "/* Full width, immediately after the map. */")
+    assert "position:absolute" in block
+    assert "--rail-w:300px" not in block, "the grid column is what narrowed the map"
+    assert "border-inline-start:1px solid var(--rule)" in block
+    assert "background:var(--panel)" in block
+
+
+def test_the_docked_rail_above_1440_still_takes_its_own_column():
+    src = tpl()
+    assert "@media (min-width:1440px){ .stage{--rail-w:300px} .srail{display:block} }" in src
+
+
+def test_escape_closes_the_drawer_and_returns_focus_to_its_button():
+    src = tpl()
+    close = slice_between(src, "function closeDrawer()", "function railClose()")
+    assert "classList.remove('rail-open')" in close
+    assert "aria-expanded','false'" in close
+    assert "b.focus()" in close
+    # And it backs out one level at a time: inside a station, Escape returns
+    # to the list rather than throwing the drawer away.
+    key = slice_between(src, "rail.addEventListener('keydown'", "const btn =")
+    assert "if(railOpenId){" in key and "railClose(); return;" in key
+    assert "closeDrawer()" in key
 
 
 def test_clear_filters_resets_every_one_of_them():

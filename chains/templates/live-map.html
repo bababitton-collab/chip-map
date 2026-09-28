@@ -62,7 +62,11 @@ a{color:inherit}
 .srail select{margin-top:6px}
 .srail input:focus-visible,.srail select:focus-visible,.srail button:focus-visible,
 .railbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
-.srail .rfilters{display:grid;gap:6px;margin-top:6px}
+.srail .rfilters{display:grid;gap:8px;margin-top:10px}
+.srail .rfield{display:grid;gap:3px}
+.srail .reyebrow{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink3)}
+.srail .rsortrow{margin-top:10px;padding-top:10px;border-top:1px solid var(--rule)}
 .srail .rcount{margin:8px 0 0;font-family:"IBM Plex Mono",monospace;font-size:.72rem;
   letter-spacing:.08em;color:var(--ink3)}
 .srail .ractions{display:flex;gap:6px;margin-top:8px}
@@ -100,11 +104,17 @@ a{color:inherit}
 .railbtn:hover{border-color:var(--amber)}
 /* Docked. */
 @media (min-width:1440px){ .stage{--rail-w:300px} .srail{display:block} }
-/* Opened from a button, at the same width it docks at. */
+/* Opened from a button, and laid OVER the map rather than beside it.
+   As a grid column it took its 300px out of the canvas: at 1200 the map went
+   to 900, every column narrowed with it, and the layer names broke mid-word
+   -- "REACTOR/S", "EQUIPME/NT". A drawer a reader opens to look something up
+   must not redraw the thing they were looking at. */
 @media (min-width:1024px) and (max-width:1439px){
   .railbtnwrap{display:block}
-  .stage.rail-open{--rail-w:300px}
-  .stage.rail-open .srail{display:block}
+  .stage.rail-open .srail{display:block;position:absolute;inset-block:0;
+    inset-inline-end:0;width:300px;height:auto;z-index:5;
+    border-inline-start:1px solid var(--rule);background:var(--panel);
+    box-shadow:-1px 0 0 rgba(255,255,255,.04)}
 }
 /* Full width, immediately after the map. */
 @media (max-width:1023px){
@@ -1530,7 +1540,12 @@ function resize(){
 // used for matching or handed to assistive technology. A chip that needs one
 // carries the hyphenated text for the eye and the plain word for everything
 // else, and a chip that does not is rendered exactly as before.
-const HYPHENATE = {TRANSMISSION: 5};    // word -> where its first break goes
+// word -> the offset its break goes at. Each one was added because that word,
+// at that map's column width, did not fit on a line of its own: TRANSMISSION
+// at 1200 and 1440, EQUIPMENT and GENERATION at 1024. The hyphen is still
+// applied by measurement, so none of them shows one at a width where the word
+// fits whole.
+const HYPHENATE = {TRANSMISSION: 5, EQUIPMENT: 5, GENERATION: 6};
 function softened(name){
   return String(name==null?'':name).replace(/[A-Za-z]{8,}/g, w => {
     const at = HYPHENATE[w.toUpperCase()];
@@ -2251,9 +2266,9 @@ const RAIL = {stations:'תחנות', search:'חיפוש תחנה', sortName:'ל�
   sortLayer:'לפי שכבה', sortPulse:'לפי דופק', back:'חזרה לתחנות',
   none:'אין תחנה שמתאימה לחיפוש.', cp:'צוואר בקבוק', pulseT:'נעילה מתהדקת',
   pulseE:'נעילה נשחקת', pulseA:'לא נמדד', pulseNo:'ללא דופק',
-  sortBy:'מיון', fLayer:'סינון לפי שכבה', fCp:'סינון לפי צוואר בקבוק',
-  fPulse:'סינון לפי דופק', anyLayer:'כל השכבות', anyCp:'הכול',
-  cpYes:'על צוואר בקבוק', cpNo:'לא על צוואר בקבוק', anyPulse:'כל הדפקים',
+  lLayer:'שכבה', lCp:'צוואר בקבוק', lPulse:'דופק', lSort:'מיון',
+  anyLayer:'כל השכבות', cpAll:'כל התחנות',
+  cpYes:'רק צווארי בקבוק', cpNo:'לא צווארי בקבוק', anyPulse:'כל הדפקים',
   count:'{n} מתוך {N} תחנות', clear:'נקה סינון', copy:'העתק קישור',
   copied:'הקישור הועתק'};
 let railQ='', railSort='layer', railOpenId=null;
@@ -2366,26 +2381,30 @@ function refreshNarrowing(){
 
 // The three selects, built from what the map actually declares: its own
 // layer keys, in its own order, with its own names.
+// Each control says what it does, above itself, in the eyebrow the rest of
+// the site uses for the same job. Three unlabelled selects reading "All
+// layers / Any / Any pulse" were three guesses.
 function filterBarHTML(){
   const layers = Object.keys((D.labels||{}).layers||{}).sort();
   const opt = (v, label, cur) =>
     `<option value="${escHtml(v)}"${cur===v?' selected':''}>${escHtml(label)}</option>`;
+  const field = (id, label, options) =>
+    `<div class="rfield"><label class="reyebrow" for="${id}">${label}</label>`
+    + `<select class="rf" id="${id}" data-f="${id.replace('rf-','')}">${options}</select></div>`;
   return `<div class="rfilters">`
-    + `<select class="rf" data-f="layer" aria-label="${RAIL.fLayer}">`
-    + opt('', RAIL.anyLayer, FILTERS.layer)
-    + layers.map(L=>opt(L, LAYER_HE[L]||L, FILTERS.layer)).join('')
-    + `</select>`
-    + `<select class="rf" data-f="cp" aria-label="${RAIL.fCp}">`
-    + opt('', RAIL.anyCp, FILTERS.cp)
-    + opt('yes', RAIL.cpYes, FILTERS.cp)
-    + opt('no', RAIL.cpNo, FILTERS.cp)
-    + `</select>`
-    + `<select class="rf" data-f="pulse" aria-label="${RAIL.fPulse}">`
-    + opt('', RAIL.anyPulse, FILTERS.pulse)
-    + opt('tightening', RAIL.pulseT, FILTERS.pulse)
-    + opt('eroding', RAIL.pulseE, FILTERS.pulse)
-    + opt('unmeasured', RAIL.pulseA, FILTERS.pulse)
-    + `</select></div>`;
+    + field('rf-layer', RAIL.lLayer,
+        opt('', RAIL.anyLayer, FILTERS.layer)
+        + layers.map(L=>opt(L, LAYER_HE[L]||L, FILTERS.layer)).join(''))
+    + field('rf-cp', RAIL.lCp,
+        opt('', RAIL.cpAll, FILTERS.cp)
+        + opt('yes', RAIL.cpYes, FILTERS.cp)
+        + opt('no', RAIL.cpNo, FILTERS.cp))
+    + field('rf-pulse', RAIL.lPulse,
+        opt('', RAIL.anyPulse, FILTERS.pulse)
+        + opt('tightening', RAIL.pulseT, FILTERS.pulse)
+        + opt('eroding', RAIL.pulseE, FILTERS.pulse)
+        + opt('unmeasured', RAIL.pulseA, FILTERS.pulse))
+    + `</div>`;
 }
 // "n of N stations". Both numbers are counted, never written down.
 function countText(){
@@ -2406,13 +2425,17 @@ function railRender(){
   }
   rail.innerHTML = `<div class="rhead"><h3>${RAIL.stations}</h3>`
     + `<input type="search" class="rq" placeholder="${RAIL.search}" aria-label="${RAIL.search}" value="${escHtml(railQ)}">`
-    + `<select class="rsort" aria-label="${RAIL.sortBy}">`
+    + filterBarHTML()
+    + `<p class="rcount" role="status" aria-live="polite">${countText()}</p>`
+    // Sort is not a filter: it changes the order of what is shown, never what
+    // is shown. It sits under the count, in its own labelled row, so the
+    // three things above it read as the three that narrow.
+    + `<div class="rfield rsortrow"><label class="reyebrow" for="rf-sort">${RAIL.lSort}</label>`
+    + `<select class="rsort" id="rf-sort">`
     + `<option value="layer"${railSort==='layer'?' selected':''}>${RAIL.sortLayer}</option>`
     + `<option value="name"${railSort==='name'?' selected':''}>${RAIL.sortName}</option>`
     + `<option value="pulse"${railSort==='pulse'?' selected':''}>${RAIL.sortPulse}</option>`
-    + `</select>`
-    + filterBarHTML()
-    + `<p class="rcount" role="status" aria-live="polite">${countText()}</p>`
+    + `</select></div>`
     + `<div class="ractions">`
     + `<button type="button" class="rclear"${narrowing()?'':' disabled'}>${RAIL.clear}</button>`
     + `<button type="button" class="rcopy">${RAIL.copy}</button>`
@@ -2542,7 +2565,14 @@ function buildRail(){
   // Escape closes the detail and puts the focus back on the station that
   // opened it -- not at the top of the rail, and not nowhere.
   rail.addEventListener('keydown', ev => {
-    if(ev.key === 'Escape' && railOpenId){ ev.stopPropagation(); railClose(); }
+    if(ev.key !== 'Escape') return;
+    // The detail first: Escape backs out one level at a time, so a reader
+    // inside a station returns to the list rather than losing the drawer.
+    if(railOpenId){ ev.stopPropagation(); railClose(); return; }
+    if(stage && stage.classList.contains('rail-open')){
+      ev.stopPropagation();
+      closeDrawer();
+    }
   });
   const btn = document.getElementById('railbtn');
   if(btn) btn.addEventListener('click', () => {
@@ -2551,6 +2581,16 @@ function buildRail(){
     if(on){ const f = rail.querySelector('.rq'); if(f) f.focus(); }
     writeURL();
   });
+}
+// The drawer, shut, with the focus back on the control that opened it -- not
+// at the top of the document, which is where a closed overlay otherwise
+// leaves a keyboard.
+function closeDrawer(){
+  if(!stage) return;
+  stage.classList.remove('rail-open');
+  const b = document.getElementById('railbtn');
+  if(b){ b.setAttribute('aria-expanded','false'); b.focus(); }
+  writeURL();
 }
 function railClose(){
   const rail = document.getElementById('srail');

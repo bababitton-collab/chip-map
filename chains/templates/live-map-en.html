@@ -294,6 +294,18 @@ abbr.gl{text-decoration:underline dotted var(--ink3);text-underline-offset:3px;c
 .ordlab{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:14px 0 8px}
 .ord{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--rule);border-radius:4px;color:var(--ink3)}
 .ord.o2{border-style:dashed}
+.ldg-next{color:var(--amber);font-family:'IBM Plex Mono',monospace;font-size:.86rem}
+/* Observation-only is NEUTRAL. Not green, not red: it is in the record and
+   out of the score, and colouring it either way would state an outcome the
+   answer never produced. */
+.ldg-obs{border:1px solid var(--rule);border-radius:6px;padding:10px 12px;margin:0 0 8px;background:var(--panel)}
+.ldg-obs .lrow-h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.ldg-tag{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;
+  color:var(--ink2);border:1px solid var(--rule);border-radius:4px;padding:2px 7px}
+.ldg-note{color:var(--ink2);font-size:.92rem;margin-top:5px}
+.ldg-meta{color:var(--ink3);font-family:'IBM Plex Mono',monospace;font-size:.7rem;margin-top:5px}
+/* Scoring still open: amber, and never drawn as a score. */
+.ldg-pending .ldg-tag,.ldg-pending-tag{color:var(--amber);border-color:var(--amber)}
 .ledger h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
 .ledger .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 12px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin:0 0 8px}
@@ -1873,8 +1885,11 @@ function lockedHTML(){
   // visible here. Its own copy, rather than hoisting theirs into a scope two
   // other sections would then share by accident.
   const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};
-  const LT = {h2:'The Forecast Ledger', none:'No answer has been marked yet. The first entry opens here the moment one is.',
-    scored:'recorded', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',
+  const LT = {h2:'The Forecast Ledger', none:'No answers recorded yet.',
+    nextAnswer:'next expected answer', answerRec:'answer recorded', answersRec:'answers recorded',
+    obsLabel:'MIXED \u00b7 OBSERVATION ONLY', obsNote:'This answer remains in the public record but does not enter the score.',
+    pendingLabel:'ANSWERED \u00b7 SCORING PENDING',
+    scored:'scored', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',
     entry:'entry', close:'last', gate:'N=__MIN_N__ before any capital decision', of:'of',
     sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',
     pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \u2191', dirDn:'win basket \u2193',
@@ -1883,10 +1898,60 @@ function lockedHTML(){
     noind:'no indirect forecast yet'};
   const p2 = v => v==null? '—' : ((v>0?'+':'')+(v*100).toFixed(2)+'%');
   const sgn = v => v==null? '' : (v>0?'pos':(v<0?'neg':''));
+  // FOUR STATES, AND THE BUG THAT MADE THEM NECESSARY.
+  //
+  // This branch used to read `rows` alone -- the scored forecasts -- and print
+  // "no answer has been marked yet" whenever it was empty. semi had an answer:
+  // orcl_q1 was answered on 2026-09-10 and recorded mixed the next morning. A
+  // mixed answer points nowhere, so it produces no forecast, so rows stayed
+  // empty, so the page said no answer had been marked while the answer sat in
+  // the record above it.
+  //
+  // The states are therefore read from ANSWERS first and scores second:
+  //   nothing answered      -> neutral, and the next date if one is known
+  //   answered, unscorable  -> neutral, in the record, not in the score
+  //   answered, scoring     -> amber, and never counted as scored
+  //   answered and scored   -> green or red, and only then
+  const ANS = D.answers || {};
+  const answered = Object.keys(ANS).filter(q=>{
+    const st = (ANS[q]||{}).status; return st && st!=='open';
+  });
+  // A mixed or undelivered answer is in the public record and out of the
+  // score. That is not a failure state and it is not coloured like one.
+  const OBSERVED = answered.filter(q=>{
+    const st = (ANS[q]||{}).status; return st==='mixed' || st==='none';
+  });
+  const nextDate = (function(){
+    const c = (D.cal||[]).filter(e=>e && e.days!=null && e.days>0)
+                         .sort((a,b)=>a.days-b.days)[0];
+    return c ? c.d : null;
+  })();
+
   if(!rows.length){
-    tiles.innerHTML = `<p class="lede">${LT.none}</p>`;
+    if(!answered.length){
+      // STATE 1 -- nothing answered. Neutral. Amber may mark the expected
+      // DATE and must never suggest an outcome, so it goes on the date only.
+      tiles.innerHTML = `<p class="lede">${LT.none}` + (nextDate
+        ? ` <span class="ldg-next">${LT.nextAnswer} <b>${nextDate}</b></span>` : '')
+        + `</p>`;
+      if(S){ tiles.innerHTML += gate(S); poolGate(S); }
+      cards.innerHTML=''; return;
+    }
+    // STATE 2 -- answered, and none of it scorable. The count is the honest
+    // pair: what was answered, and what that earned in the score.
+    tiles.innerHTML = `<p class="lede">${answered.length} ${
+      answered.length===1?LT.answerRec:LT.answersRec} · 0 ${LT.scored}</p>`;
     if(S){ tiles.innerHTML += gate(S); poolGate(S); }
-    cards.innerHTML=''; return;
+    cards.innerHTML = OBSERVED.map(q=>{
+      const a = ANS[q]||{}, w = (D.watch||[]).find(r=>r.id===q) || {};
+      return `<article class="lrow ldg-obs">
+        <div class="lrow-h"><b>${w.who||q}</b>
+          <span class="ldg-tag">${LT.obsLabel}</span></div>
+        <div class="ldg-note">${LT.obsNote}</div>
+        ${w.d?`<div class="ldg-meta">${LT.marked} ${a.marked_at||w.d}</div>`:''}
+      </article>`;
+    }).join('');
+    return;
   }
   // The meter counts the OFFICIAL record: events at the primary horizon,
   // across every map the site serves. It used to count S.horizons['5'] --
@@ -1963,6 +2028,13 @@ function lockedHTML(){
       <div class="note"><span class="pending">${LT.pend} — ${LT.noentry}</span></div></div>`;
     const chips = Object.keys(r.horizons||{}).map(h=>{const d=r.horizons[h];
       return `<span class="chip ${d? (d.hit?'hit':'miss') : ''}">${h}: ${d? p2(d.excess) : LT.pend}</span>`;}).join('');
+    // STATE 4 -- answered, and the primary window has not closed. Amber, and
+    // never drawn as a score: green and red are reserved for a registered
+    // direction that was confirmed or refuted, and neither has happened yet.
+    const PH = String((S && S.primary_horizon) || 20);
+    const settled = !!((r.horizons||{})[PH]);
+    const pendTag = settled ? '' :
+      `<span class="ldg-tag ldg-pending-tag">${LT.pendingLabel}</span>`;
     const tbl = (r.symbols||[]).map(x=>`<tr class="${x.side}">
       <td class="name">${nameOf(x.id)}</td><td>${x.sym}</td>
       <td>${x.entry==null?'—':x.entry}</td><td>${x.last==null?'—':x.last}</td>
@@ -1970,7 +2042,7 @@ function lockedHTML(){
     return `<div class="fcard">
       <div class="hd"><b>${w.who||r.qid}</b>
         <span class="dt">${LT.marked} ${String(r.marked_at).slice(0,10)} · ${LT.entry} ${r.entry_session} · ${LT.close} ${r.entry_close} · ${r.sessions} ${LT.sess}</span>
-        ${dir}${ord}</div>
+        ${dir}${ord}${pendTag}</div>
       <div class="note">${STATUS[r.status]||r.status}${a.note?` — ${a.note}`:''}${a.updated?` <em>(${LT.src} ${String(a.updated).slice(0,10)})</em>`:''}</div>
       <div class="chips">${chips}</div>
       <table class="ftab"><tr><th>${LT.sym}</th><th></th><th>${LT.ent}</th><th>${LT.last}</th><th>${LT.ret}</th><th>${LT.exc}</th></tr>${tbl}</table>

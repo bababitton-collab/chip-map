@@ -210,9 +210,20 @@ def write_landing(src: Path, dom: str, live: list[str] | None = None) -> Path:
     from chains import landing
     p = site_root() / "index.html"
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(landing.render(src, dom, f"https://{CUSTOM_DOMAIN}/",
-                                live=live),
-                 encoding="utf-8", newline="\n")
+    page = landing.render(src, dom, f"https://{CUSTOM_DOMAIN}/", live=live)
+    from chains import sitefile
+    preview_domain = sitefile.copy("preview", "domain")
+    if preview_domain and (site_root() / preview_domain / "live_en.json").exists():
+        repo = Path(__file__).resolve().parents[1]
+        assets = site_root() / "assets"
+        assets.mkdir(exist_ok=True)
+        for key, name in (("desktop", "map-preview.png"),
+                          ("mobile", "map-preview-mobile.png")):
+            source = (repo / sitefile.copy("preview", key)).resolve()
+            if not source.is_relative_to(repo) or not source.is_file():
+                raise ValueError(f"preview {key} asset must exist inside the repository")
+            shutil.copyfile(source, assets / name)
+    p.write_text(page, encoding="utf-8", newline="\n")
     return p
 
 

@@ -34,7 +34,7 @@ import json
 import re
 from pathlib import Path
 
-from chains import access, preregister, sitenav
+from chains import access, preregister, sitenav, sitefile
 from chains.answers import PRIMARY_HORIZON
 
 TEMPLATE = "landing.html"
@@ -320,6 +320,11 @@ def render(dom_dir: Path, dom: str, site_url: str,
     # and a number typed in would go stale the first time either map grew.
     cards = map_cards(dom_dir.parent, names, dom, dom_dir)
     many = len(cards) > 1
+    preview_domain = sitefile.copy("preview", "domain")
+    preview = next((c for c in cards if c["name"] == preview_domain), None)
+    has_preview = bool(preview and sitefile.copy("preview", "desktop")
+                       and sitefile.copy("preview", "mobile"))
+    t = _blocks(t, "map_preview", has_preview)
     t = _blocks(t, "domains", many)
     t = _blocks(t, "onemap", not many)
     totals = {k: sum(c[k] for c in cards)
@@ -328,6 +333,8 @@ def render(dom_dir: Path, dom: str, site_url: str,
     values = {
         "hero_title": hero_title,
         "hero_lead": hero_lead,
+        "preview_href": f"/{preview_domain}/" if has_preview else "",
+        "preview_title": preview["title"] if has_preview else "",
         "map_cards": _map_cards_html(cards, dom),
         "n_maps": str(len(cards)),
         "cur_title": _brand(dom, "title") or dom,

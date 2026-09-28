@@ -453,8 +453,9 @@ def value_line(dom: str | None = None) -> str:
     return (str(v).strip() if v else "") or EN_VALUE
 EN_TOP_CSS = (
     ".top .value{font-family:'Source Serif 4',serif;font-size:1.25rem;"
-    "line-height:1.35;color:var(--ink);max-width:62ch;margin:6px 0 10px}"
-    ".top .valuecta{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 12px}"
+    "line-height:1.35;color:var(--ink);max-width:62ch;margin:6px 0 8px}"
+    ".top .story,.top .sub{display:none}"
+    ".top .valuecta{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 6px}"
     ".top .valuecta a{font-family:'IBM Plex Mono',monospace;font-size:.72rem;"
     "letter-spacing:.1em;text-transform:uppercase;text-decoration:none;"
     "border-radius:6px;padding:8px 14px}"

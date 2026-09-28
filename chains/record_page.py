@@ -132,21 +132,26 @@ def _legend(items) -> str:
 
 
 def _question(card: dict) -> str:
-    out = []
+    terms = []
     if card.get("q"):
-        out.append(f'<p class="q">{esc(card["q"])}</p>')
+        terms.append(f'<p class="q">{esc(card["q"])}</p>')
     yes, no = card.get("yes"), card.get("no")
     if yes or no:
-        out.append('<div class="yn">'
-                   + (f'<div class="y"><b>Yes looks like</b>{esc(yes)}</div>' if yes else "")
-                   + (f'<div class="n"><b>No looks like</b>{esc(no)}</div>' if no else "")
-                   + "</div>")
+        terms.append('<div class="yn">'
+                     + (f'<div class="y"><b>Yes looks like</b>{esc(yes)}</div>' if yes else "")
+                     + (f'<div class="n"><b>No looks like</b>{esc(no)}</div>' if no else "")
+                     + "</div>")
     if card.get("why"):
-        out.append(f'<p class="sub">{esc(card["why"])}</p>')
+        terms.append(f'<p class="sub">{esc(card["why"])}</p>')
+    evidence = []
     for key, label in (("note", "What the report said"), ("evidence", "Evidence")):
         if card.get(key):
-            out.append(f'<div class="said"><b>{label}</b>{esc(card[key])}</div>')
-    return "".join(out)
+            evidence.append(f'<div class="said"><b>{label}</b>{esc(card[key])}</div>')
+    if not evidence:
+        return "".join(terms)
+    return ('<div class="question-grid"><div class="question-terms">'
+            + "".join(terms) + '</div><div class="question-evidence">'
+            + "".join(evidence) + '</div></div>')
 
 
 # -- the charts --------------------------------------------------------------
@@ -349,8 +354,8 @@ CHART_JS = """
   try { D = JSON.parse(el.textContent); } catch(e) { return; }
   if(!(D.dates||[]).length) return;
   var THEME = {
-    layout:{background:{color:'#141922'},textColor:'#7d8797',
-            fontFamily:'IBM Plex Mono, monospace',fontSize:10,
+    layout:{background:{color:'#141922'},textColor:'#98a3b2',
+            fontFamily:'IBM Plex Mono, monospace',fontSize:12,
             attributionLogo:false},
     grid:{vertLines:{color:'#1a212c'},horzLines:{color:'#1a212c'}},
     rightPriceScale:{borderColor:'#222a36'},

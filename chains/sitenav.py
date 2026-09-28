@@ -156,7 +156,7 @@ def subscribe_html(url: str | None) -> str:
 
 CSS = (".sitenav{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;"
        "padding:12px 0;margin:0 0 14px;border-bottom:1px solid #222a36;"
-       "font-family:'IBM Plex Mono',monospace;font-size:.72rem;"
+       "font-family:'IBM Plex Mono',monospace;font-size:.82rem;"
        "letter-spacing:.1em;text-transform:uppercase}"
        ".sitenav a{color:#b3bccb;text-decoration:none}"
        ".sitenav a:hover{color:#e8ecf2}"
@@ -166,7 +166,7 @@ CSS = (".sitenav{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;"
        "border-radius:5px;padding:3px 9px}"
        ".sitenav a.rec:hover{border-color:#f2b632}"
        ".sitenav .navdesc{text-transform:none;letter-spacing:0;"
-       "font-family:Inter,system-ui,sans-serif;font-size:.8rem;color:#7d8797}")
+       "font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:.85rem;color:#98a3b2}")
 
 
 __all__ = ["BRAND", "MAP_LABEL", "TRACK_RECORD", "TRACK_RECORD_DESCRIPTOR",

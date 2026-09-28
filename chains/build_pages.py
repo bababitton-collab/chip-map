@@ -153,6 +153,9 @@ TRANSLATIONS = [
  ('    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`\n    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;',
   '    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`\n    + `<span><i class="pa"></i>cannot be measured</span></div>`;'),
     ("רחף על תחנה לדופק שלה · רחף על קו למה שהוא נושא ולחלק שלו אצל הקונה.", "Hover a station for its pulse · hover a line for what it carries and its share at the buyer."),
+    # What the same hint says where there is no hover to give.
+    ("const TOUCH_HINT = 'החלק הצידה כדי לנוע בין השכבות. הקש על תחנה לפרטים.';",
+     "const TOUCH_HINT = 'Swipe sideways to explore layers. Tap a station for details.';"),
     ("מבחן קדימה →", "Forward test →"),
  ('html{direction:rtl}', 'html{direction:ltr}'),
  ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
@@ -180,10 +183,25 @@ TRANSLATIONS = [
  # left, so the column order and the panel's opening direction both reverse.
  ("const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);", "const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);"),
  ("const padR=70, padL=110,", "const padR=110, padL=70,"),
+ # The relationship diagram's phone view.
+ ("  const REL = {view:'הצג קשרים', close:'סגור', title:'קשרים',\n    up:'עולה אם כן', down:'יורד אם כן', none:'אין סל רשום לשאלה הזו.'};",
+  "  const REL = {view:'View relationships', close:'Close', title:'Relationships',\n    up:'up if yes', down:'down if yes', none:'No basket is registered for this question.'};"),
+ # The stations rail: the map's contents as HTML, beside the canvas.
+ ("const RAIL = {stations:'תחנות', search:'חיפוש תחנה', sortName:'לפי שם',\n  sortLayer:'לפי שכבה', sortPulse:'לפי דופק', back:'חזרה לתחנות',\n  none:'אין תחנה שמתאימה לחיפוש.', cp:'צוואר בקבוק', pulseT:'נעילה מתהדקת',\n  pulseE:'נעילה נשחקת', pulseA:'לא נמדד', pulseNo:'ללא דופק'};",
+  "const RAIL = {stations:'Stations', search:'Search stations', sortName:'By name',\n  sortLayer:'By layer', sortPulse:'By pulse', back:'Back to stations',\n  none:'No station matches that search.', cp:'chokepoint', pulseT:'lock tightening',\n  pulseE:'lock eroding', pulseA:'not measured', pulseNo:'no pulse'};"),
+ ('<aside class="srail" id="srail" aria-label="תחנות"></aside>',
+  '<aside class="srail" id="srail" aria-label="Stations"></aside>'),
+ ('<button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">עיון בתחנות</button>',
+  '<button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">Browse stations</button>'),
  # The forecast board.
  ('<h2>לוח החיזוי</h2>', '<h2>The Forecast Board</h2>'),
- ('<p class="lede">ציר הזמן של השאלות. כל עיגול הוא יום שבו מתפרסמת תשובה. החיצים מראים מי מדליף קודם: שאלה שמתבררת מוקדם ונותנת תשובה חלקית לשאלה מאוחרת. רחף על עיגול לראות את שרשרת הרמזים שלו. כשתשובה מגיעה, סמן אותה בטבלה למטה — הלוח צובע אותה ומעדכן את הנטייה של כל מה שתלוי בה. הנטייה היא ספירה של רמזים שכבר נענו, לא תחזית ולא המלצה.</p>',
-  '<p class="lede">The timeline of the questions. Each circle is a day an answer is published. The arrows show who leaks first: an early question that partly answers a later one. Hover a circle to see its chain of hints. When an answer lands, mark it in the table below — the board colors it and updates the lean of everything that depends on it. The lean is a count of hints already answered, not a forecast and not a recommendation.</p>'),
+ # The board lead says what the section IS. The mechanics it used to carry --
+ # contracts, benchmarks, timing, scoring -- are stated once, in the
+ # "How scoring works" disclosure beside the ledger, and linked from here.
+ # Repeating them above every list was how the page got long enough that the
+ # lists below them stopped being read.
+ ('<p class="lede">שאלות קרובות לאורך השרשרת, עם תאריכי תשובה מאושרים או צפויים. <a class="howlink" href="#howscoring">איך הציון עובד</a></p>',
+  '<p class="lede">Upcoming questions across the chain, with confirmed or expected answer dates. <a class="howlink" href="#howscoring">How scoring works</a></p>'),
  ('<div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>מדליף → שאלה</span></div>',
   '<div class="bleg"><span><i class="f"></i>confirmed date</span><span><i></i>expected date</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>leaker → question</span></div>'),
  # The tag on a row a machine marked. An auto mark and a checked mark colour
@@ -195,8 +213,14 @@ TRANSLATIONS = [
  # above, which replaces every occurrence.
  ('<h2>יומן התחזיות</h2>',
   '<h2>The Forecast Ledger</h2>'),
- ('<p class="lede">כל תשובה שסומנה הופכת לרישום: הסלים נקבעו מראש בקובץ שבגיט, לפני האירוע, והציון נמדד מהסגירה הראשונה שאחרי הסימון מול שאר המפה. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>',
-  '<p class="lede">Every marked answer becomes a record: the baskets were fixed in advance, in a file in git, before the event, and the score is measured from the first close after the mark against the rest of the map. There is no backtest here and there cannot be one — the forecast was written before the price moved. The sample is small, and every number here is shown with its N.</p>'),
+ ('<p class="lede">תשובות שפורסמו ותוצאות שנמדדו מופיעות כאן; תשובות חלקיות נשארות גלויות ואינן נכנסות לציון.</p>',
+  '<p class="lede">Published answers and measured outcomes appear here; mixed answers remain visible but do not enter the score.</p>'),
+ # The mechanics, once, where the ledger can be read beside them.
+ ('<summary>איך הציון עובד</summary>', '<summary>How scoring works</summary>'),
+ ('<p>כל שאלה נושאת חוזה ניקוד שנכתב מראש: הסלים, כלל הכן/לא, האופקים ומדדי ההשוואה, מגובבים ומפורסמים עם היום שבו נקבעו. רק חוזים שנקבעו לפני התשובה נחשבים רישום מוקדם.</p>',
+  '<p>Every question carries a scoring contract written in advance: the baskets, the yes/no rule, the horizons and the benchmarks, hashed and published with the day they were set. Only contracts committed before the answer count as preregistered.</p>'),
+ ('<p>הציון נמדד מהסגירה הראשונה שאחרי הסימון, מול המפה בשקלול שווה ומול מדד ההשוואה השני, ונקרא באופק הראשי. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>',
+  '<p>The score is measured from the first close after the mark, against the equal-weight map and against the second benchmark, and read at the primary horizon. There is no backtest here and there cannot be one — the forecast was written before the price moved. The sample is small, and every number here is shown with its N.</p>'),
  ("  const LT = {h2:'יומן התחזיות', none:'עדיין לא נרשמו תשובות.',\n    nextAnswer:'התשובה הבאה הצפויה', answerRec:'תשובה נרשמה', answersRec:'תשובות נרשמו',\n    obsLabel:'חלקי · לתיעוד בלבד', obsNote:'התשובה נשארת ברישום הציבורי ואינה נכנסת לציון.',\n    pendingLabel:'נענתה · הציון ממתין',\n    scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'N=__MIN_N__ לפני כל החלטת הון', of:'מתוך',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',\n    direct:'ישיר — הסל הרשום', indirect:'עקיף — טבעת שנייה לפי המפה',\n    noind:'אין עדיין תחזית עקיפה'};",
   "  const LT = {h2:'The Forecast Ledger', none:'No answers recorded yet.',\n    nextAnswer:'next expected answer', answerRec:'answer recorded', answersRec:'answers recorded',\n    obsLabel:'MIXED \\u00b7 OBSERVATION ONLY', obsNote:'This answer remains in the public record but does not enter the score.',\n    pendingLabel:'ANSWERED \\u00b7 SCORING PENDING',\n    scored:'scored', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'N=__MIN_N__ before any capital decision', of:'of',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark',\n    direct:'direct \\u2014 the registered basket', indirect:'indirect \\u2014 second ring, via the map',\n    noind:'no indirect forecast yet'};"),
  # The teaser layer. A locked row is fully visible and simply has no
@@ -227,8 +251,8 @@ TRANSLATIONS = [
   '<div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div>'),
  # The question cards. The placeholder below is fixed text in both
  # languages and is never the real sentence.
- ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, איך נשמעת תשובה חיובית ושלילית, ומי זז — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    terms:'מונחים',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
-  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, what yes and no sound like, and who moves — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    terms:'Terms',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
+ ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, איך נשמעת תשובה חיובית ושלילית, ומי זז — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    terms:'מונחים',\n    upMore:'תאריכים נוספים', doneMore:'תשובות קודמות',\n    moreDates:'הצג עוד {n} תאריכים', fewer:'הצג פחות', noStatus:'—',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
+  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, what yes and no sound like, and who moves — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    terms:'Terms',\n    upMore:'More dates', doneMore:'Earlier answers',\n    moreDates:'Show {n} more dates', fewer:'Show fewer', noStatus:'—',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
  ("  const PH = {q:'איזה מספר בשיחת התוצאות מכריע את השאלה שכולם כאן כבר מתווכחים עליה',\n    yes:'החברה נוקבת במספר מעל הטווח שעליו הנחתה ברבעון שעבר, ואומרת שהמגבלה זזה.',\n    no:'המספר נוחת בתוך הטווח הישן והשפה על הקיבולת לא משתנה מהפעם הקודמת.',\n    why:'זה קובע איזו משתי החברות מחזיקה את החלק הנדיר בעוד שנה.'};",
   "  const PH = {q:'Which number on the call settles the question that everyone in this room is already arguing about',\n    yes:'The company names a figure above the range it guided to last quarter, and says the constraint has moved.',\n    no:'The number lands inside the old range and the language about capacity is unchanged from last time.',\n    why:'It decides which of two companies is holding the scarce part twelve months from now.'};"),
  ('<div class="eyebrow">04 · שאלות עם תאריך</div>',

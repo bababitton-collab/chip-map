@@ -198,7 +198,15 @@ def test_the_shut_panel_carries_no_border():
     border made that element 1px wide -- one pixel past the viewport, and a
     horizontal scrollbar at every width. The border belongs to the open state,
     which is the only state with anything to divide."""
-    assert ".panel{background:var(--panel);overflow:hidden;height:720px}" in TPL
+    # The height moved to --map-h when the canvas started being cut to its
+    # content, so the declaration is read rather than quoted -- what this test
+    # is about is the border, and the border must not be in it.
+    # At the start of a line: the selector on its own, not the portrait and
+    # open variants that also contain ".panel{".
+    i = TPL.index("\n.panel{") + 1
+    shut = TPL[i:TPL.index("}", i) + 1]
+    assert "border" not in shut, shut
+    assert "var(--map-h" in shut, "the shut panel follows the map's height"
     assert ".stage.open .panel{border-inline-start:1px solid var(--rule)}" in TPL
 
 
@@ -377,7 +385,9 @@ def test_the_hint_is_its_own_element_under_the_map():
 
 
 def test_the_hint_is_ink3_mono_and_small():
-    i = TPL.index(".maphint{")
+    # At the start of a line: the selector on its own, not the ".stage>.maphint"
+    # rule that places it in the grid.
+    i = TPL.index("\n.maphint{") + 1
     css = TPL[i:TPL.index("}", i)]
     assert 'font-family:"IBM Plex Mono",monospace' in css
     assert "font-size:.68rem" in css and "color:var(--ink3)" in css

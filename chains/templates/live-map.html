@@ -25,9 +25,83 @@ a{color:inherit}
 .ev span{display:block;font-size:.95rem;color:var(--ink2);line-height:1.3}
 .ev i{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--amber)}
 .ev.soon i{color:var(--tight)}
-.stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0px;min-height:720px}
-.stage.open{grid-template-columns:minmax(0,1fr) 460px}
-canvas{display:block;width:100%;height:720px;cursor:crosshair;touch-action:manipulation}
+/* --map-h is written by fitHeight() once the stations are laid out. The
+   declared value is the old fixed height, so a page with no JavaScript yet
+   renders exactly as before and never jumps taller. */
+.stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0px var(--rail-w,0px);
+  --map-h:720px;min-height:var(--map-h)}
+/* Placed explicitly rather than left to auto-flow, because the hint has to
+   sit AT the map: row 1 is the map and whatever is docked beside it, row 2 is
+   the hint directly under the canvas, and row 3 is where the stations list
+   drops to when it is no longer a rail. Auto-flow put the hint after the
+   stations list, which is how the swipe instruction ended up at the bottom of
+   the page next to the legend. */
+.stage>.mapwrap{grid-column:1;grid-row:1}
+.stage>.panel{grid-column:2;grid-row:1}
+.stage>.srail{grid-column:3;grid-row:1}
+.stage>.maphint{grid-column:1/-1;grid-row:2}
+.stage.open{grid-template-columns:minmax(0,1fr) 460px var(--rail-w,0px)}
+/* THE STATIONS RAIL.
+   The map is a canvas: to a screen reader, to a keyboard, and to find-in-page
+   it is one image with no contents. The rail is the same stations as real
+   HTML -- a button each, named, grouped by layer, searchable and sortable --
+   so every station is reachable without a pointer and without sight of the
+   drawing. It is not a fallback shown when the canvas fails; it is always
+   there, beside it.
+   Selecting in the rail replaces the RAIL's content with that station's
+   detail. A second panel for the same thing is how two views of one station
+   start disagreeing. */
+.srail{display:none;background:var(--panel);border-inline-start:1px solid var(--rule);
+  overflow-y:auto;height:var(--map-h,720px)}
+.srail .rhead{position:sticky;top:0;background:var(--panel);padding:12px 14px 8px;
+  border-bottom:1px solid var(--rule);z-index:1}
+.srail h3{margin:0 0 8px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400}
+.srail input,.srail select{width:100%;background:var(--bg2);color:var(--ink);
+  border:1px solid var(--rule);border-radius:4px;padding:7px 9px;font:inherit;font-size:.86rem}
+.srail select{margin-top:6px}
+.srail input:focus-visible,.srail select:focus-visible,.srail button:focus-visible,
+.railbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.srail .rgroup{padding:8px 0 2px}
+.srail .rglab{padding:6px 14px;font-family:"IBM Plex Mono",monospace;font-size:.68rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.srail .rstn{display:block;width:100%;text-align:start;background:transparent;border:0;
+  border-bottom:1px solid var(--rule);color:var(--ink);padding:9px 14px;cursor:pointer;font:inherit}
+.srail .rstn:hover{background:var(--bg2)}
+.srail .rstn[aria-current="true"]{background:var(--bg2);box-shadow:inset 3px 0 0 var(--amber)}
+.srail .rstn b{display:block;font-size:.95rem;font-weight:500}
+.srail .rstn .meta{display:block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;
+  letter-spacing:.06em;color:var(--ink3);margin-top:2px}
+.srail .rstn .pz{color:var(--amber)}
+.srail .rstn .pt{color:var(--tight)}
+.srail .rstn .pe{color:var(--erode)}
+.srail .rnone{padding:14px;color:var(--ink3);font-size:.9rem}
+.srail .rback{margin:10px 14px;background:transparent;border:1px solid var(--rule);
+  border-radius:4px;color:var(--amber);font-family:"IBM Plex Mono",monospace;font-size:.72rem;
+  letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;cursor:pointer}
+.srail .rback:hover{border-color:var(--amber)}
+.srail .pin{padding:0 14px 18px}
+.srail .pin .close{display:none}
+.railbtnwrap{display:none;padding:10px 22px 0}
+.railbtn{background:transparent;border:1px solid var(--rule);border-radius:4px;color:var(--amber);
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 14px;cursor:pointer}
+.railbtn:hover{border-color:var(--amber)}
+/* Docked. */
+@media (min-width:1440px){ .stage{--rail-w:300px} .srail{display:block} }
+/* Opened from a button, at the same width it docks at. */
+@media (min-width:1024px) and (max-width:1439px){
+  .railbtnwrap{display:block}
+  .stage.rail-open{--rail-w:300px}
+  .stage.rail-open .srail{display:block}
+}
+/* Full width, immediately after the map. */
+@media (max-width:1023px){
+  /* Row 3: under the map and under the hint, in that order. */
+  .srail,.stage>.srail{display:block;grid-column:1/-1;grid-row:3;height:auto;max-height:70vh;
+    border-inline-start:0;border-top:1px solid var(--rule)}
+}
+canvas{display:block;width:100%;height:var(--map-h,720px);cursor:crosshair;touch-action:manipulation}
 /* A portrait viewport needs a portrait canvas: at a fixed 720px a 1080-wide
    phone frame is still a 1.5:1 letterbox, and layout() -- which reads the
    canvas, not the window -- would go on drawing columns in it. Recording mode
@@ -53,12 +127,22 @@ html.focusing .focusui{display:block}
 .focusui button[hidden]{display:none}
 /* A recording films the arcs, not the buttons beside them. */
 html.rec .focusui{display:none!important}
+/* white-space:normal, and a max-width written per chip from its own column
+   (see layerBar). A long layer name wraps inside its column instead of
+   running past the map; the type size is untouched, because shrinking it is
+   how a header stops being readable at exactly the widths where it matters. */
 .lchip{position:absolute;display:inline-block;background:#141922;border:1px solid #3a3320;border-radius:5px;padding:5px 11px;
-  font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;
+  font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;
+  white-space:normal;text-align:center;line-height:1.35;overflow-wrap:break-word;
   box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 0 0 1px rgba(242,182,50,.08),0 6px 16px rgba(0,0,0,.45),0 0 18px rgba(242,182,50,.10)}
 /* #9ba6b4, not the mock's #9aa4b2: that one computes to 6.99:1 on the chip and
    the rule beside it asks for 7. One step lighter, the same colour to look at,
    and the difference between a test that passes and one that nearly does. */
+/* The plain word, for assistive technology and find-in-page, beside the
+   hyphenated one the eye gets. Absolutely positioned, so it is out of flow
+   and cannot affect the line breaking it exists to keep honest. */
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
 .lchip .n{color:#9ba6b4;font-weight:400}
 .lchip .s{color:#7d8797;margin:0 6px}
 .lchip .t{color:#f3e2b4;font-weight:500;text-shadow:0 0 6px rgba(242,182,50,.55),0 0 14px rgba(242,182,50,.25)}
@@ -83,6 +167,24 @@ html.rec .focusui{display:none!important}
    overflows the canvas, and it was landing on this line. */
 .maphint{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.04em;color:var(--ink3);padding:9px 22px 0;text-align:start}
 .maphint.gone{display:none}
+/* "There is more to the right", and nothing else: a thin fade with a single
+   chevron on it, sitting on the map container that actually scrolls. It is
+   decoration for a fact the scrollbar is too thin to state on a phone, so it
+   is aria-hidden and it disappears the moment the fact stops being true. */
+/* A grid item in the MAP's cell, not a child of the scroller.
+   Inside .mapwrap -- which is the thing that scrolls sideways -- an
+   inset-inline-end:0 pins the arrow to the right edge of the 900px-wide
+   CONTENT, so it sat off-screen until the reader had already scrolled to the
+   end: visible exactly when it had nothing left to say. In the grid cell it
+   stays at the right edge of what is actually on screen. */
+.mapmore{grid-column:1;grid-row:1;justify-self:end;align-self:stretch;
+  width:44px;pointer-events:none;
+  display:flex;align-items:center;justify-content:flex-end;padding-inline-end:6px;
+  background:linear-gradient(to left,rgba(11,14,20,.92),rgba(11,14,20,0));
+  opacity:0;transition:opacity .25s cubic-bezier(0.16,1,0.3,1);z-index:2}
+.mapmore.on{opacity:1}
+.mapmore span{font-family:"IBM Plex Mono",monospace;font-size:1.2rem;color:var(--ink2)}
+@media (prefers-reduced-motion: reduce){ .mapmore{transition:none} }
 .legend{display:block;gap:6px 18px;font-size:.92rem;color:var(--ink2);padding:8px 22px;border-top:1px solid var(--rule);background:var(--bg2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
@@ -129,7 +231,7 @@ html.rec canvas{cursor:none}
   z-index:3;border-top:1px solid var(--rule);border-inline-start:0;
   overflow-y:auto}
 .tip b{font-family:"IBM Plex Mono",monospace;direction:ltr;display:block;text-align:start}
-.panel{background:var(--panel);overflow:hidden;height:720px}
+.panel{background:var(--panel);overflow:hidden;height:var(--map-h,720px)}
 .stage.open .panel{border-inline-start:1px solid var(--rule)}
 .stage.open .panel{overflow-y:auto}
 .pin{padding:16px 18px 30px}
@@ -239,6 +341,69 @@ html.rec canvas{cursor:none}
 .qcards .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
 .qcards h2{font-family:"Source Serif 4",serif;font-weight:400;font-size:1.6rem;margin:0 0 4px}
 .qcards .lede{color:var(--ink2);max-width:72ch;margin:0 0 26px;line-height:1.5}
+/* The compact lists. Metadata the page already publishes, set as a table of
+   mono columns: dense on purpose, because their job is to be scanned for a
+   date rather than read. Hairline rules, no cards, no blur -- there is
+   nothing here to hide. */
+.clist{margin:18px 0 26px}
+.chead{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);padding:0 0 6px;border-bottom:1px solid var(--rule)}
+.crows{list-style:none;margin:0;padding:0}
+/* display:grid on a class outranks the [hidden] display:none the browser
+   supplies, so a collapsed row stayed on screen while its .hidden property
+   read true. The attribute has to be told again, louder. */
+.crow[hidden]{display:none}
+.crow{display:grid;grid-template-columns:10ch minmax(0,1fr) 7ch 9ch 9ch;gap:0 14px;
+  align-items:baseline;padding:9px 0;border-bottom:1px solid var(--rule);
+  font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--ink2)}
+.crow .cwho{font-family:"IBM Plex Sans",system-ui,sans-serif;color:var(--ink);
+  font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow .ctk{color:var(--ink3)}
+.crow .ccert,.crow .cstat{letter-spacing:.1em;text-transform:uppercase;font-size:.72rem;color:var(--ink3)}
+.cmore{margin-top:12px;background:transparent;border:1px solid var(--rule);border-radius:4px;
+  color:var(--amber);font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:8px 14px;cursor:pointer;
+  transition:border-color .2s cubic-bezier(0.16,1,0.3,1)}
+.cmore:hover,.cmore:focus-visible{border-color:var(--amber)}
+@media (max-width:760px){
+  .crow{grid-template-columns:10ch minmax(0,1fr);gap:2px 12px}
+  .crow .ctk,.crow .ccert,.crow .cstat{grid-column:2;font-size:.7rem}
+}
+@media (prefers-reduced-motion: reduce){ .cmore{transition:none} }
+/* The relationship diagram on a phone: a button inline, the diagram and the
+   same relationships as text in a full-screen view. Desktop is untouched --
+   the button is display:none above 768 and the inline diagram stays. */
+.relbtn{display:none;margin-top:10px;background:transparent;border:1px solid var(--rule);
+  border-radius:4px;color:var(--amber);font-family:"IBM Plex Mono",monospace;font-size:.74rem;
+  letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
+.relbtn:focus-visible,.relx:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.relfs{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column}
+.relhd{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 16px;border-bottom:1px solid var(--rule)}
+.relhd b{font-family:"Source Serif 4",serif;font-size:1.1rem;font-weight:600}
+.relx{background:transparent;border:1px solid var(--rule);border-radius:4px;color:var(--ink2);
+  font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:7px 12px;cursor:pointer}
+/* The scroll lives here, inside the view, so the page behind it does not move. */
+.relbody{flex:1;overflow-y:auto;padding:14px 16px 28px}
+.reldiag{width:100%;overflow-x:auto}
+.reldiag .cons{width:100%;max-width:none}
+.reldiag .cons svg{width:100%;height:auto;min-width:340px}
+.rlist{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid var(--rule)}
+.rlrow{display:flex;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px solid var(--rule)}
+.rlmain{flex:1;min-width:0}
+.rlrow b{display:block;font-size:.98rem;font-weight:500}
+.rlwhy{display:block;color:var(--ink3);font-size:.86rem;line-height:1.4;margin-top:3px}
+.rldot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.rlrow.win .rldot{background:var(--erode)}
+.rlrow.lose .rldot{background:var(--tight)}
+.rldir{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink3)}
+.rlnone{color:var(--ink3);font-size:.92rem;margin-top:14px}
+@media (max-width:767px){
+  .qcards .cons{display:none}
+  .relbtn{display:inline-block}
+}
 .card{display:grid;grid-template-columns:150px minmax(0,1fr) 380px;gap:0 28px;padding:24px 26px;background:var(--panel);border:1px solid var(--rule);border-radius:6px;margin-bottom:12px;align-items:start;position:relative}
 .card.next{border-color:#65717f;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
 .ring{position:relative;width:118px;height:118px}
@@ -308,6 +473,18 @@ abbr.gl{text-decoration:underline dotted var(--ink3);text-underline-offset:3px;c
 .ldg-pending .ldg-tag,.ldg-pending-tag{color:var(--amber);border-color:var(--amber)}
 .ledger h2{font-family:"Suez One",serif;font-weight:400;font-size:1.5rem;margin:0 0 4px}
 .ledger .lede{color:var(--ink2);font-size:1.05rem;max-width:78ch;margin:0 0 12px}
+/* The mechanics, stated once. Closed by default: a reader who wants the
+   section wants the list under it, and a reader who wants the rules can say
+   so. Hairline and mono, like every other disclosure on the page. */
+.howscoring{border-top:1px solid var(--rule);margin:18px 0 0;max-width:78ch}
+.howscoring summary{cursor:pointer;padding:12px 0;font-family:"IBM Plex Mono",monospace;
+  font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
+.howscoring[open] summary{margin-bottom:4px}
+.howscoring p{color:var(--ink2);font-size:.98rem;line-height:1.55;margin:0 0 10px}
+.howlink{color:var(--amber);text-decoration:none;border-bottom:1px solid transparent;
+  font-family:"IBM Plex Mono",monospace;font-size:.82rem;letter-spacing:.06em;
+  text-transform:uppercase;white-space:nowrap}
+.howlink:hover,.howlink:focus-visible{border-bottom-color:var(--amber)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin:0 0 8px}
 .tile{background:var(--bg2);border:1px solid var(--rule);padding:9px 12px}
 .tile b{display:block;font-family:"IBM Plex Mono",monospace;font-size:1.35rem;font-weight:600;direction:ltr;text-align:start}
@@ -447,12 +624,14 @@ __CARDS_JS__
     <div class="tip" id="tip"></div>
   </div>
   <div class="panel" id="panel"></div>
+  <div class="maphint" id="maphint">רחף על תחנה לדופק שלה · רחף על קו למה שהוא נושא ולחלק שלו אצל הקונה.</div>
+  <aside class="srail" id="srail" aria-label="תחנות"></aside>
 </div>
-<div class="maphint" id="maphint">רחף על תחנה לדופק שלה · רחף על קו למה שהוא נושא ולחלק שלו אצל הקונה.</div>
+<div class="railbtnwrap"><button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">עיון בתחנות</button></div>
 <div class="legend" id="legend"></div>
 <div class="board" id="board">
 <h2>לוח החיזוי</h2>
-<p class="lede">ציר הזמן של השאלות. כל עיגול הוא יום שבו מתפרסמת תשובה. החיצים מראים מי מדליף קודם: שאלה שמתבררת מוקדם ונותנת תשובה חלקית לשאלה מאוחרת. רחף על עיגול לראות את שרשרת הרמזים שלו. כשתשובה מגיעה, סמן אותה בטבלה למטה — הלוח צובע אותה ומעדכן את הנטייה של כל מה שתלוי בה. הנטייה היא ספירה של רמזים שכבר נענו, לא תחזית ולא המלצה.</p>
+<p class="lede">שאלות קרובות לאורך השרשרת, עם תאריכי תשובה מאושרים או צפויים. <a class="howlink" href="#howscoring">איך הציון עובד</a></p>
 <div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>מדליף → שאלה</span></div>
 <div class="bwrap" id="bwrap"><div class="btip" id="btip"></div></div>
 <div class="hints" id="hints"></div>
@@ -465,9 +644,14 @@ __CARDS_JS__
 <div class="ledger" id="ledger">
 <a class="fwd inline" href="track/">מבחן קדימה →</a>
 <h2>יומן התחזיות</h2>
-<p class="lede">כל תשובה שסומנה הופכת לרישום: הסלים נקבעו מראש בקובץ שבגיט, לפני האירוע, והציון נמדד מהסגירה הראשונה שאחרי הסימון מול שאר המפה. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>
+<p class="lede">תשובות שפורסמו ותוצאות שנמדדו מופיעות כאן; תשובות חלקיות נשארות גלויות ואינן נכנסות לציון.</p>
 <div id="ltiles"></div>
 <div id="lcards"></div>
+<details class="howscoring" id="howscoring">
+<summary>איך הציון עובד</summary>
+<p>כל שאלה נושאת חוזה ניקוד שנכתב מראש: הסלים, כלל הכן/לא, האופקים ומדדי ההשוואה, מגובבים ומפורסמים עם היום שבו נקבעו. רק חוזים שנקבעו לפני התשובה נחשבים רישום מוקדם.</p>
+<p>הציון נמדד מהסגירה הראשונה שאחרי הסימון, מול המפה בשקלול שווה ומול מדד ההשוואה השני, ונקרא באופק הראשי. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>
+</details>
 </div>
 <section class="qcards" id="qcards-section">
 <div class="eyebrow">04 · שאלות עם תאריך</div>
@@ -1006,6 +1190,62 @@ function build(){
 // container -- a 1:1 post, a tablet held upright -- takes the rows too, where
 // seven columns would leave nothing but initials.
 const PORTRAIT_AT = 1.15;
+
+// HOW TALL THE MAP IS, MEASURED RATHER THAN DECLARED.
+//
+// The canvas was 720px on every map. semi fills it; defense, energy and
+// pharma carry half as many stations and spent the difference on empty
+// canvas, which pushed the board and the ledger below the fold on maps that
+// had the least to show. The height is now the content's: the bottom of the
+// lowest station label plus MAP_PAD_BOTTOM, clamped.
+//
+// Clamped at both ends on purpose. The floor keeps a two-station map from
+// collapsing into a strip; the ceiling is the old height, so the dense map
+// does not grow. Between them nothing is stretched to fill: the columns are
+// laid out exactly as before and the canvas is cut to them.
+const MAP_H_MIN = 480, MAP_H_MAX = 720, MAP_PAD_BOTTOM = 48;
+// The band row is pinned to the bottom (y = H - 34), so its own label cannot
+// be measured against a height it defines. It gets a reservation instead.
+const MAP_BAND_RESERVE = 62;
+
+// The lowest label bottom among the stations that are laid out freely. Band
+// stations are excluded: they follow H rather than determining it.
+function contentBottom(){
+  const BAND = bandId();
+  let b = 0;
+  nodes.forEach(n=>{
+    if(n.layer === BAND) return;
+    const y = n.y + ringR(n) + LBL_H;
+    if(y > b) b = y;
+  });
+  return b;
+}
+
+// Lay out, measure, cut, repeat. Iterative because the layout reads H --
+// a column's span is capped at n*52 but its collision pass can push a
+// station down, so the honest way to know what the content needs is to lay
+// it out and look. It converges in two passes on every map here; the loop
+// bounds it, and a pass that wants MORE room always gets it, because
+// clipping a station is worse than an empty strip.
+function fitHeight(){
+  if(REC || !nodes.length) return null;
+  const probeH = cv.clientHeight || MAP_H_MAX;
+  if((W / Math.max(probeH, 1)) < PORTRAIT_AT) return null;   // portrait owns its height
+  const hasBand = nodes.some(n=>n.layer === bandId());
+  const saveH = H;
+  let h = MAP_H_MAX, want = h;
+  for(let pass = 0; pass < 4; pass++){
+    H = h;
+    layoutLandscape();
+    want = Math.round(contentBottom() + MAP_PAD_BOTTOM
+                      + (hasBand ? MAP_BAND_RESERVE : 0));
+    want = Math.max(MAP_H_MIN, Math.min(MAP_H_MAX, want));
+    if(want === h) break;
+    h = want;
+  }
+  H = saveH;
+  return want;
+}
 let MODE='landscape', pitch=0, rowY={};
 // The band layer: the one drawn in its own strip along the bottom rather
 // than as a column. WHICH layer that is belongs to the map -- semi puts its
@@ -1149,7 +1389,9 @@ function layoutLandscape(){
   const order=((D.labels||{}).line_order)||['logic','memory','packaging','network','cloud','power'];
   const groups={};
   nodes.forEach(n=>{ const L=n.layer; (groups[L]=groups[L]||[]).push(n); });
-  const top=70, bottom=H-80;
+  // The first row clears the header strip, which is taller when a layer name
+  // wrapped. 70 stays the floor so nothing moves on a map whose names fit.
+  const top=Math.max(70, HEADER_H+24), bottom=H-80;
   cols.forEach(L=>{
     const g=(groups[L]||[]).sort((a,b)=>order.indexOf(a.line)-order.indexOf(b.line)||(b.cap||0)-(a.cap||0));
     const n=g.length; const span=Math.min(bottom-top, n*52);
@@ -1238,19 +1480,65 @@ function resize(){
   // device nobody chose; when RECORDING the ratio is chosen deliberately, and
   // clamping it to 3 under a 4x surface would upscale the canvas by a third
   // and throw away the pixels the whole run exists to capture.
-  DPR = REC ? (devicePixelRatio||1) : Math.min(3, devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight; cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
+  DPR = REC ? (devicePixelRatio||1) : Math.min(3, devicePixelRatio||1); W=cv.clientWidth; H=cv.clientHeight;
+  // Cut the canvas to its content BEFORE the bitmap is sized, so the bitmap,
+  // the node positions, the connector geometry and the hit targets are all
+  // computed from one height rather than from two.
+  const fit = fitHeight();
+  if(fit == null){
+    // Portrait and recording own their own height. The inline value from a
+    // previous landscape fit would outrank the media query that gives them
+    // one, so it is cleared rather than left to win.
+    if(cv.style.height){ cv.style.height=''; if(stage) stage.style.removeProperty('--map-h'); H = cv.clientHeight; }
+  } else if(Math.abs(fit - H) >= 1){
+    cv.style.height = fit + 'px';
+    if(stage) stage.style.setProperty('--map-h', fit + 'px');
+    H = cv.clientHeight;
+  }
+  cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); layout(); seedParticles();
   SPR={};                      // the sprites were baked at the old DPR
   layerBar();
+  touchHint();
+  moreArrow();
 }
 
 // The header row: one chip per column, centred over it, and one more for L9
 // beside its own row. Written as DOM rather than painted on the canvas so the
 // header can be sticky -- a canvas label scrolls away with the pixels it is
 // drawn on -- and so that a test can measure the boxes.
+// HYPHENATION, IN THE DISPLAY LAYER ONLY.
+//
+// A layer name whose longest word is wider than its column has to break
+// somewhere. Left to the breaker it is cut wherever the line ran out --
+// "TRANSMISSIO / N & HVDC" -- which reads as a rendering fault. A soft hyphen
+// gives it a break point that a reader can see, and one that lands between
+// syllables rather than inside one.
+//
+// U+00AD is invisible until it is used. The name in map.json, in the
+// commitments and in anything that is hashed is untouched; so is every string
+// used for matching or handed to assistive technology. A chip that needs one
+// carries the hyphenated text for the eye and the plain word for everything
+// else, and a chip that does not is rendered exactly as before.
+const HYPHENATE = {TRANSMISSION: 5};    // word -> where its first break goes
+function softened(name){
+  return String(name==null?'':name).replace(/[A-Za-z]{8,}/g, w => {
+    const at = HYPHENATE[w.toUpperCase()];
+    // Sliced by offset rather than substituted wholesale, so the source's own
+    // casing survives -- the uppercase is a text-transform, not the data.
+    return at ? w.slice(0, at) + '­' + w.slice(at) : w;
+  });
+}
 function chip(L, name){
   const cut=v=>String(v==null?'':v).replace(/[&<>"]/g,
     c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  return `<span class="n">${cut(L)}</span><span class="s">·</span>`
+  // <wbr> after the separator: the three spans carry no whitespace between
+  // them, so "E1·TRANSMISSION" is one unbreakable run to the line breaker and
+  // the prefix could never move off the name's line. Zero width, so nothing
+  // moves when it is not used.
+  //
+  // The name goes in plain. A soft hyphen is added afterwards, by
+  // hyphenateChips, and only to a chip that measurement says needs one.
+  return `<span class="n">${cut(L)}</span><span class="s">·</span><wbr>`
     + `<span class="t">${cut(name)}</span>`;
 }
 // Neighbouring header chips never touch. Each chip stays centred on its column
@@ -1259,10 +1547,146 @@ function chip(L, name){
 // or more around the run's own centre -- never shrunk, never cut. Measured
 // after the text is in, because a chip is as wide as its name; measured again
 // after a move, because a chip near the edge can wrap to a new width.
+// How tall the header strip actually rendered, measured in layerBar(). The
+// declared 46 is the one-line height the layout assumed before names were
+// allowed to wrap.
+let HEADER_H = 46, _headerFit = false;
+// WHAT THE MAP TELLS A FINGER.
+//
+// The hint under the map said "hover a station" on every device. A touch
+// screen has no hover: the sentence described an interaction the reader could
+// not perform, on the one form factor where the map is hardest to read. On a
+// touch device it says what a finger can actually do.
+const TOUCH_HINT = 'החלק הצידה כדי לנוע בין השכבות. הקש על תחנה לפרטים.';
+const IS_TOUCH = matchMedia('(hover: none)').matches;
+function touchHint(){
+  if(!IS_TOUCH) return;
+  const h = document.getElementById('maphint');
+  if(h) h.textContent = TOUCH_HINT;
+}
+
+// A restrained arrow at the right edge while there is map to the right of
+// what is on screen, and gone once there is not -- so the reader is told
+// there is more only while it is true. It rides the map container, which is
+// the only thing that scrolls sideways.
+function moreArrow(){
+  const wrap = document.querySelector('.mapwrap');
+  if(!wrap || !stage) return;
+  let el = stage.querySelector('.mapmore');
+  if(!el){
+    el = document.createElement('div');
+    el.className = 'mapmore';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = '<span>›</span>';
+    // On the stage, in the map's cell -- see the note on .mapmore.
+    stage.appendChild(el);
+    wrap.addEventListener('scroll', () => moreArrow(), {passive:true});
+  }
+  const more = wrap.scrollWidth - wrap.clientWidth - wrap.scrollLeft;
+  el.classList.toggle('on', more > 8);
+}
+
 const CHIP_GAP = 12;
+// A chip may use its own column and no more. Its column is the distance to
+// its nearest neighbour; the two at the ends have one neighbour each, so they
+// take that. Minus CHIP_GAP, so two full-width neighbours still clear each
+// other. The floor keeps a very narrow column from producing a chip one
+// character wide -- that column's chip simply overlaps into the spread pass
+// below, which is what the spread pass is for.
+const CHIP_MIN_W = 84;
+function chipBudget(items){
+  items.forEach((it,i)=>{
+    const l = i>0 ? it.cx-items[i-1].cx : Infinity;
+    const r = i<items.length-1 ? items[i+1].cx-it.cx : Infinity;
+    const col = Math.min(l, r);
+    const w = col===Infinity ? 0 : Math.max(CHIP_MIN_W, Math.round(col)-CHIP_GAP);
+    // WIDTH, not max-width.
+    //
+    // A max-width lets an inline-block shrink to fit, and what it shrinks to
+    // is the min-content width -- the widest thing that cannot be broken. The
+    // first version of this used overflow-wrap:anywhere, which ADDS a break
+    // opportunity between every pair of characters and therefore drops
+    // min-content to roughly one character. The box collapsed to nothing and
+    // every name broke mid-word: "E1 · FU/EL", "GE/NERATIO/N". The pairing is
+    // the bug -- either half alone is harmless.
+    //
+    // So the box is told its width outright, and break-word is used instead:
+    // it breaks a word only when that one word does not fit on a line by
+    // itself, and it does not touch min-content.
+    if(w){ it.el.style.width = w+'px'; it.el.style.maxWidth = w+'px'; }
+  });
+}
+// The width a single word needs, measured on a copy of the chip itself so
+// that every inherited thing -- family, weight, letter-spacing, the uppercase
+// transform -- is the one that will actually draw it.
+function wordWidthIn(el, word){
+  const clone = el.cloneNode(true);
+  clone.style.position='absolute'; clone.style.visibility='hidden';
+  clone.style.width='auto'; clone.style.maxWidth='none'; clone.style.whiteSpace='nowrap';
+  const t=clone.querySelector('.t');
+  if(t) t.textContent = word;
+  // REMOVED, not emptied: .s carries margin:0 6px, and an emptied span keeps
+  // its margins. Leaving them in added 12px to every measurement, which is
+  // the difference between "this word fits its column" and "it does not".
+  ['.n', '.s', '.vh'].forEach(sel=>{
+    const e = clone.querySelector(sel); if(e) e.remove();
+  });
+  clone.querySelectorAll('wbr').forEach(e=>e.remove());
+  document.body.appendChild(clone);
+  const cs = getComputedStyle(el);
+  const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+            + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+  const w = clone.getBoundingClientRect().width - pad;
+  clone.remove();
+  return w;
+}
+
+// Hyphenate only what has to be hyphenated.
+//
+// A soft hyphen is not a hint the breaker weighs; it is an opportunity, and
+// greedy line breaking takes the LAST opportunity that fits. Baked into the
+// markup, it was therefore used at every width -- including the ones where
+// the name fits perfectly well unbroken. So it is added here, after the
+// column budget is known, and only to a chip whose word cannot fit that
+// budget on a line of its own.
+function hyphenateChips(bar){
+  bar.querySelectorAll('.lchip').forEach(el=>{
+    const t = el.querySelector('.t');
+    if(!t) return;
+    if(t.dataset.plain == null) t.dataset.plain = t.textContent;
+    const plain = t.dataset.plain;
+    const soft = softened(plain);
+    const restore = () => {
+      if(t.textContent !== plain) t.textContent = plain;
+      t.removeAttribute('aria-hidden');
+      const vh = el.querySelector('.vh'); if(vh) vh.remove();
+    };
+    if(soft === plain){ restore(); return; }
+    const word = (plain.match(/[A-Za-z]{8,}/g)||[])
+      .find(w => HYPHENATE[w.toUpperCase()] != null);
+    if(!word){ restore(); return; }
+    const cs = getComputedStyle(el);
+    const inner = parseFloat(cs.width) - parseFloat(cs.paddingLeft)
+                - parseFloat(cs.paddingRight) - parseFloat(cs.borderLeftWidth)
+                - parseFloat(cs.borderRightWidth);
+    if(wordWidthIn(el, word) <= inner){ restore(); return; }
+    // It does not fit. Give the eye a hyphen and everything else the word.
+    if(t.textContent !== soft) t.textContent = soft;
+    t.setAttribute('aria-hidden','true');
+    if(!el.querySelector('.vh')){
+      const vh = document.createElement('span');
+      vh.className = 'vh';
+      vh.textContent = plain;
+      el.appendChild(vh);
+    }
+  });
+}
+
 function spreadChips(bar){
   const items=[...bar.querySelectorAll('.lchip')]
     .map(el=>({el, cx:+el.dataset.cx})).sort((a,b)=>a.cx-b.cx);
+  chipBudget(items);
+  hyphenateChips(bar);
   for(let pass=0; pass<4; pass++){
     // The rendered width, rounded up: offsetWidth rounds to the nearest pixel
     // and a chip 0.4px wider than it says closes the gap by that much.
@@ -1279,6 +1703,13 @@ function spreadChips(bar){
     });
     let moved=false;
     runs.forEach(r=>{ place(r).at.forEach((x,i)=>{
+      // The first and last chip stay inside the map. A chip pushed past the
+      // edge by the spread above does not just look wrong: it is absolutely
+      // positioned, so it widens the document and gives the whole PAGE a
+      // horizontal scrollbar -- the /energy/ 1280px bug. The map may scroll
+      // sideways; the document may not.
+      const half = r[i].w/2;
+      x = Math.max(half+2, Math.min(W-half-2, x));
       if(Math.abs(x-(r[i].x??r[i].cx))>0.05) moved=true;
       r[i].x=x; r[i].el.style.left=x.toFixed(1)+'px'; }); });
     if(!moved) break;
@@ -1314,6 +1745,26 @@ function layerBar(){
     + `top:6px;transform:translateX(-50%)">${chip(b.L, LAYER_HE[b.L]||'')}</span>`
   ).join('') + '<div class="rule"></div>';
   spreadChips(bar);
+  // The strip is as tall as its tallest chip. A two-line name grows it, a
+  // three-line name grows it again, and the rule under it and the first row
+  // of stations both move down rather than being written over.
+  let chipH = 0;
+  bar.querySelectorAll('.lchip').forEach(el=>{
+    const h = el.getBoundingClientRect().height;
+    if(h > chipH) chipH = h;
+  });
+  if(chipH){
+    const want = Math.round(6 + chipH + 8);
+    const rule = bar.querySelector('.rule');
+    if(rule) rule.style.top = want + 'px';
+    if(Math.abs(want - HEADER_H) > 1){
+      HEADER_H = want;
+      // The stations were laid out against the old strip. One relayout, and
+      // only one: HEADER_H is settled now, so the next pass measures the same
+      // chips and does not ask again.
+      if(!_headerFit){ _headerFit = true; requestAnimationFrame(()=>{ _headerFit=false; resize(); }); }
+    }
+  }
   // L9 is a row along the bottom, not a column, so its chip is never in the
   // header: it sits above the row, centred on l9x with its bottom edge at l9y
   // (see layoutLandscape). If a station, its ring or its label would touch it
@@ -1676,11 +2127,11 @@ function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>מה
 const EXPOSED='חשופה ל־';
 const noteOf=id=>{ const t=(((typeof FOCUS!=='undefined'&&FOCUS)||{}).notes||{})[id];
   return t?`<div class="w nt">${escHtml(t)}</div>`:''; };
-function open(n){
-  // Legacy recording selects the station -- its edges light -- and
-  // stops there. No panel means no 460px column, so the canvas keeps its
-  // full width and the drawing and the hit test stay in the same space.
-  selected=n; if(!REC) stage.classList.add('open');
+// A station's detail -- who supplies it, who is trying to replace them, and
+// why -- as a pure function. The panel and the stations rail both draw it, so
+// they draw the same thing: a second copy written for the rail is how the two
+// would start disagreeing about the same station.
+function detailHTML(n){
   const cps=n.cp||[];
   let h=`<div class="pin"><button class="close" id="pclose">סגור</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span>${priceBadge(n)}<p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):escHtml(n.role||'')}</p>${spark(n.px)}`;
   // One supplier row, for a chokepoint the station holds or one it is exposed to.
@@ -1743,10 +2194,162 @@ function open(n){
   }
   h+=fundTable(n.id);
   h+='</div>';
-  panel.innerHTML=REC?'':h; panel.scrollTop=0;
-  if(!REC) document.getElementById('pclose').addEventListener('click',close);
+  return h;
 }
-function close(){ selected=null; stage.classList.remove('open'); panel.innerHTML=''; }
+function open(n){
+  // Legacy recording selects the station -- its edges light -- and
+  // stops there. No panel means no 460px column, so the canvas keeps its
+  // full width and the drawing and the hit test stay in the same space.
+  selected=n; if(!REC) stage.classList.add('open');
+  panel.innerHTML=REC?'':detailHTML(n); panel.scrollTop=0;
+  if(!REC) document.getElementById('pclose').addEventListener('click',close);
+  if(typeof railMark==='function') railMark(n.id);
+}
+function close(){ selected=null; stage.classList.remove('open'); panel.innerHTML='';
+  if(typeof railMark==='function') railMark(null); }
+
+// ---- the stations rail ----
+// Every station as a button, grouped by its layer, with search and sort. The
+// canvas keeps the picture; this keeps the contents.
+const RAIL = {stations:'תחנות', search:'חיפוש תחנה', sortName:'לפי שם',
+  sortLayer:'לפי שכבה', sortPulse:'לפי דופק', back:'חזרה לתחנות',
+  none:'אין תחנה שמתאימה לחיפוש.', cp:'צוואר בקבוק', pulseT:'נעילה מתהדקת',
+  pulseE:'נעילה נשחקת', pulseA:'לא נמדד', pulseNo:'ללא דופק'};
+let railQ='', railSort='layer', railOpenId=null;
+
+function pulseText(n){
+  const p = pulseOf(n);
+  if(!p) return {t:RAIL.pulseNo, c:''};
+  if(p.kind==='a') return {t:RAIL.pulseA, c:'pz'};
+  return p.kind==='t' ? {t:RAIL.pulseT, c:'pt'} : {t:RAIL.pulseE, c:'pe'};
+}
+// The sort key for pulse: tightening first, then eroding, then unmeasured,
+// then the stations that sit on no chokepoint at all.
+function pulseRank(n){
+  const p = pulseOf(n);
+  if(!p) return 3;
+  if(p.kind==='a') return 2;
+  return p.kind==='t' ? 0 : 1;
+}
+function railRows(){
+  const q = railQ.trim().toLowerCase();
+  let rows = nodes.filter(n=>{
+    if(!q) return true;
+    return (n.name||'').toLowerCase().includes(q)
+        || (n.ticker||'').toLowerCase().includes(q)
+        || (LAYER_HE[n.layer]||'').toLowerCase().includes(q);
+  });
+  const byName = (a,b)=>(a.name||'').localeCompare(b.name||'');
+  if(railSort==='name') rows = rows.slice().sort(byName);
+  else if(railSort==='pulse') rows = rows.slice().sort((a,b)=>pulseRank(a)-pulseRank(b)||byName(a,b));
+  else rows = rows.slice().sort((a,b)=>String(a.layer).localeCompare(String(b.layer))||byName(a,b));
+  return rows;
+}
+function railListHTML(){
+  const rows = railRows();
+  if(!rows.length) return `<div class="rnone">${RAIL.none}</div>`;
+  // Grouped by layer whatever the sort is: the group is how a reader who does
+  // not know a company's name finds it at all.
+  const groups = [];
+  const seen = {};
+  rows.forEach(n=>{
+    const k = n.layer;
+    if(!seen[k]){ seen[k] = []; groups.push([k, seen[k]]); }
+    seen[k].push(n);
+  });
+  if(railSort!=='layer') groups.sort((a,b)=>String(a[0]).localeCompare(String(b[0])));
+  return groups.map(([L, list])=>
+    `<div class="rgroup"><div class="rglab">${escHtml(LAYER_HE[L]||L)}</div>`
+    + list.map(n=>{
+        const p = pulseText(n);
+        const meta = [n.ticker||'', escHtml(LAYER_HE[n.layer]||n.layer),
+                      (n.cp&&n.cp.length)? RAIL.cp : ''].filter(Boolean).join(' · ');
+        return `<button type="button" class="rstn" data-id="${escHtml(n.id)}">`
+          + `<b>${escHtml(n.name||n.id)}</b>`
+          + `<span class="meta">${meta} · <span class="${p.c}">${p.t}</span></span></button>`;
+      }).join('')
+    + `</div>`).join('');
+}
+function railRender(){
+  const rail = document.getElementById('srail');
+  if(!rail) return;
+  if(railOpenId && byId[railOpenId]){
+    rail.innerHTML = `<button type="button" class="rback">← ${RAIL.back}</button>`
+      + detailHTML(byId[railOpenId]);
+    rail.scrollTop = 0;
+    const back = rail.querySelector('.rback');
+    if(back) back.focus();
+    return;
+  }
+  rail.innerHTML = `<div class="rhead"><h3>${RAIL.stations}</h3>`
+    + `<input type="search" class="rq" placeholder="${RAIL.search}" aria-label="${RAIL.search}" value="${escHtml(railQ)}">`
+    + `<select class="rsort" aria-label="${RAIL.stations}">`
+    + `<option value="layer"${railSort==='layer'?' selected':''}>${RAIL.sortLayer}</option>`
+    + `<option value="name"${railSort==='name'?' selected':''}>${RAIL.sortName}</option>`
+    + `<option value="pulse"${railSort==='pulse'?' selected':''}>${RAIL.sortPulse}</option>`
+    + `</select></div>` + railListHTML();
+  railMark(selected && selected.id);
+}
+// Which station the rail is showing as current. Called from open()/close() too,
+// so a canvas click and a rail click agree about what is selected.
+function railMark(id){
+  const rail = document.getElementById('srail');
+  if(!rail) return;
+  rail.querySelectorAll('.rstn').forEach(b=>{
+    if(id && b.dataset.id===id) b.setAttribute('aria-current','true');
+    else b.removeAttribute('aria-current');
+  });
+}
+function buildRail(){
+  const rail = document.getElementById('srail');
+  if(!rail || REC) return;
+  railRender();
+  // Delegated: the list is rebuilt on every search keystroke and sort change.
+  rail.addEventListener('input', ev => {
+    if(ev.target.classList.contains('rq')){
+      railQ = ev.target.value;
+      const list = railListHTML();
+      const head = rail.querySelector('.rhead');
+      // Replace only the list, so the field keeps focus and the caret.
+      [...rail.children].forEach(c=>{ if(c!==head) c.remove(); });
+      head.insertAdjacentHTML('afterend', list);
+      railMark(selected && selected.id);
+    }
+  });
+  rail.addEventListener('change', ev => {
+    if(ev.target.classList.contains('rsort')){ railSort = ev.target.value; railRender(); }
+  });
+  rail.addEventListener('click', ev => {
+    const back = ev.target.closest && ev.target.closest('.rback');
+    if(back){ railClose(); return; }
+    const btn = ev.target.closest && ev.target.closest('.rstn');
+    if(!btn) return;
+    railOpenId = btn.dataset.id;
+    const n = byId[railOpenId];
+    if(n){ selected = n; }
+    railRender();
+  });
+  // Escape closes the detail and puts the focus back on the station that
+  // opened it -- not at the top of the rail, and not nowhere.
+  rail.addEventListener('keydown', ev => {
+    if(ev.key === 'Escape' && railOpenId){ ev.stopPropagation(); railClose(); }
+  });
+  const btn = document.getElementById('railbtn');
+  if(btn) btn.addEventListener('click', () => {
+    const on = stage.classList.toggle('rail-open');
+    btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+    if(on){ const f = rail.querySelector('.rq'); if(f) f.focus(); }
+  });
+}
+function railClose(){
+  const rail = document.getElementById('srail');
+  const id = railOpenId;
+  railOpenId = null;
+  railRender();
+  if(!rail || !id) return;
+  const back = rail.querySelector(`.rstn[data-id="${CSS.escape(id)}"]`);
+  if(back){ back.focus(); back.scrollIntoView({block:'nearest'}); }
+}
 
 function header(){
   const B = (D.labels||{}).brand||{};
@@ -1779,7 +2382,7 @@ function header(){
   document.getElementById('foot').innerHTML=`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`+`<span class="brandline">${BR.footer||''}</span>`;
 }
 function boot(){ if(window.GL) GL.use(D.glossary||{});
-  build(); resize(); header(); requestAnimationFrame(draw); }
+  build(); resize(); header(); buildRail(); requestAnimationFrame(draw); }
 // layout() used to run on a window resize and on nothing else. The canvas
 // changes size for other reasons -- a panel opening takes 460px out of it, a
 // phone turns -- and none of them recomputed anything: the drawing squashed
@@ -2081,6 +2684,8 @@ function lockedHTML(){
     up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',
     answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',
     terms:'מונחים',
+    upMore:'תאריכים נוספים', doneMore:'תשובות קודמות',
+    moreDates:'הצג עוד {n} תאריכים', fewer:'הצג פחות', noStatus:'—',
     marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',
            open:'לא ברור'},
   };
@@ -2369,8 +2974,80 @@ function lockedHTML(){
       </div>
       <div class="mid">${w.locked?midLocked():midOpen(w)}${opts.evidence?`<p class="evid"><b>${T.evidence}</b> ${esc(opts.evidence)}</p>`:''}</div>
       ${w.locked&&!w.observe_only?ghostCons():constellation(w)}
+      ${relButton(w)}
     </article>`;
   }
+
+  // ---- the relationship diagram, on a phone ----
+  // Inline, the diagram is 420 units of SVG squeezed into a column narrower
+  // than a credit card: the node labels come out at four or five pixels and
+  // the whole thing reads as decoration. Below 768 it is replaced by a button
+  // that opens the same diagram full width, with the same relationships
+  // written out underneath it as text -- which is the version that survives
+  // being read on a phone at all.
+  const REL = {view:'הצג קשרים', close:'סגור', title:'קשרים',
+    up:'עולה אם כן', down:'יורד אם כן', none:'אין סל רשום לשאלה הזו.'};
+  function relButton(w){
+    if(w.observe_only) return '';
+    if(w.locked) return '';
+    if(!((w.win||[]).length || (w.lose||[]).length)) return '';
+    return `<button type="button" class="relbtn" data-rel="${esc(w.id)}">${REL.view}</button>`;
+  }
+  // The same relationships the diagram draws, as a list. Not a summary of it:
+  // the same ids, the same split, the same order.
+  function relListHTML(w){
+    const centre = byTicker[String(w.tk||'').toUpperCase()];
+    const centreId = centre ? centre.id : null;
+    const row = (id, win) => {
+      // The diagram clips this to twelve characters and folds the rest into a
+      // <title>, which a finger cannot reach. Here it is written out whole:
+      // the list is the readable copy of the same information, which is what
+      // it is for.
+      const why = centreId ? (reasonOf(centreId, id) || '') : '';
+      return `<li class="rlrow ${win?'win':'lose'}">`
+        + `<span class="rldot" aria-hidden="true"></span>`
+        + `<span class="rlmain"><b>${esc(labelOf(id))}</b>`
+        + (why ? `<span class="rlwhy">${esc(why)}</span>` : '')
+        + `</span>`
+        + `<span class="rldir">${win?REL.up:REL.down}</span></li>`;
+    };
+    const items = (w.win||[]).map(i=>row(i,true))
+      .concat((w.lose||[]).map(i=>row(i,false)));
+    return items.length ? `<ul class="rlist">${items.join('')}</ul>`
+                        : `<p class="rlnone">${REL.none}</p>`;
+  }
+  function relOpen(id, trigger){
+    const w = (D.watch||LIVE.watch||[]).find(x=>x.id===id);
+    if(!w) return;
+    const box = document.createElement('div');
+    box.className = 'relfs';
+    box.setAttribute('role','dialog');
+    box.setAttribute('aria-modal','true');
+    box.setAttribute('aria-label', (w.who||id) + ' — ' + REL.title);
+    box.innerHTML = `<div class="relhd"><b>${esc(w.who||id)}</b>`
+      + `<button type="button" class="relx">${REL.close}</button></div>`
+      + `<div class="relbody"><div class="reldiag">${constellation(w)}</div>`
+      + relListHTML(w) + `</div>`;
+    document.body.appendChild(box);
+    document.documentElement.style.overflow = 'hidden';
+    const x = box.querySelector('.relx');
+    x.focus();
+    const shut = () => {
+      box.remove();
+      document.documentElement.style.overflow = '';
+      // Back to the button that opened it, every time -- a reader who closes
+      // this on a phone is otherwise returned to the top of the document.
+      if(trigger && document.contains(trigger)) trigger.focus();
+      document.removeEventListener('keydown', onKey, true);
+    };
+    const onKey = ev => { if(ev.key === 'Escape'){ ev.stopPropagation(); shut(); } };
+    x.addEventListener('click', shut);
+    document.addEventListener('keydown', onKey, true);
+  }
+  document.addEventListener('click', ev => {
+    const b = ev.target.closest && ev.target.closest('.relbtn');
+    if(b) relOpen(b.dataset.rel, b);
+  });
 
   const marks = Object.assign({}, D.answers||{});
   const markOf = id => { const m=marks[id]; return (m&&m.status&&m.status!=='open')
@@ -2381,17 +3058,74 @@ function lockedHTML(){
     return (m && !w.locked) ? (m.evidence || '') : '';
   };
 
+  // HOW MANY CARDS, AND HOW MANY ROWS.
+  //
+  // Every dated question used to draw a full card: question, yes, no, why and
+  // a mini-map, times thirty-nine on the first map. Most of them were locked,
+  // so most of that height was the same placeholder sentence blurred over and
+  // over -- a page of duplicates that said nothing and buried the two cards
+  // that did.
+  //
+  // A full card now goes to the next question to be answered and to the two
+  // most recently answered, including an observation-only one: the front of
+  // the queue and the back of the record. Everything else becomes a row of
+  // metadata the page already publishes -- date, event, ticker, whether the
+  // date is confirmed, and the answer if there is one. A locked row has no
+  // question text, no baskets and no diagram to blur, because none of that is
+  // in the row at all.
+  const FULL_ANSWERED = 2, UPCOMING_ROWS = 8, ANSWERED_ROWS = 6;
+
   const upcoming = W.filter(w=>dayOf(w.d)>=0).sort((a,b)=>a.d.localeCompare(b.d));
   const done = W.filter(w=>dayOf(w.d)<0).sort((a,b)=>b.d.localeCompare(a.d));
-  list.innerHTML = upcoming.map((w,i)=>card(w,{next:i===0})).join('');
+
+  const crow = w => `<li class="crow" data-id="${esc(w.id)}">`
+    + `<span class="cdate">${esc(w.d)}</span>`
+    + `<span class="cwho">${esc(w.who||w.id)}</span>`
+    + `<span class="ctk">${esc(w.tk||'')}</span>`
+    + `<span class="ccert">${w.confirmed?T.conf:T.exp}</span>`
+    + `<span class="cstat">${esc(markOf(w.id)||T.noStatus)}</span></li>`;
+
+  // The count in the control is computed, never written down: a number typed
+  // here is right on the day it is typed and wrong at the next commitment.
+  function clist(kind, rows, firstN, heading){
+    if(!rows.length) return '';
+    const hidden = Math.max(0, rows.length - firstN);
+    return `<div class="clist" data-kind="${kind}" data-first="${firstN}">`
+      + `<div class="chead">${heading} · ${rows.length}</div>`
+      + `<ul class="crows">`
+      + rows.map((w,i)=>i<firstN ? crow(w)
+          : crow(w).replace('<li class="crow"', '<li class="crow extra" hidden')).join('')
+      + `</ul>`
+      + (hidden ? `<button type="button" class="cmore" aria-expanded="false">`
+                  + `${T.moreDates.replace('{n}', hidden)}</button>` : '')
+      + `</div>`;
+  }
+
+  list.innerHTML = upcoming.slice(0,1).map(w=>card(w,{next:true})).join('')
+    + clist('upcoming', upcoming.slice(1), UPCOMING_ROWS, T.upMore);
+
   const past=document.getElementById('qpast');
   if(past){
-    past.innerHTML = done.length
-      ? `<details class="answered"><summary>${T.answered} · ${done.length}</summary>`
-        + done.map(w=>card(w,{mark:markOf(w.id)||T.marks.open, auto:autoOf(w.id),
-                              evidence:evidenceOf(w)})).join('') + `</details>`
-      : '';
+    past.innerHTML = done.slice(0,FULL_ANSWERED).map(w=>card(w,{
+      mark:markOf(w.id)||T.marks.open, auto:autoOf(w.id),
+      evidence:evidenceOf(w)})).join('')
+      + clist('answered', done.slice(FULL_ANSWERED), ANSWERED_ROWS, T.doneMore);
   }
+
+  // One control per list, and it toggles. Delegated, because the lists are
+  // rebuilt whenever a mark lands.
+  document.addEventListener('click', ev => {
+    const btn = ev.target.closest && ev.target.closest('.cmore');
+    if(!btn) return;
+    const box = btn.closest('.clist');
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    const extra = [...box.querySelectorAll('.crow.extra')];
+    extra.forEach(li => { li.hidden = open; });
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    btn.textContent = open
+      ? T.moreDates.replace('{n}', extra.length)
+      : T.fewer;
+  });
 })();
 
 // ---- the call to action, and what the free page already gave away ----

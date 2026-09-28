@@ -383,6 +383,33 @@ def test_the_arrow_shows_only_while_there_is_map_to_the_right():
     assert 'aria-hidden' in body, "decoration for a fact, not content"
 
 
+def test_the_arrow_is_not_a_child_of_the_thing_that_scrolls():
+    """It was. Inside .mapwrap, inset-inline-end:0 pins it to the right edge
+    of the 900px-wide CONTENT, so it sat off-screen until the reader had
+    scrolled to the end -- visible exactly when it had nothing left to say.
+    It is a grid item in the map's cell instead."""
+    src = tpl(EN)
+    body = slice_between(src, "function moreArrow()", "const CHIP_GAP")
+    assert "stage.appendChild(el)" in body
+    assert "wrap.appendChild(el)" not in body
+    assert ".mapmore{grid-column:1;grid-row:1;justify-self:end" in src
+
+
+def test_the_hint_sits_at_the_map_and_above_the_stations_list():
+    """It rendered after the whole stations list, next to the legend, because
+    the rail was added to the stage and the hint was left to auto-flow after
+    it. The three rows are placed explicitly now."""
+    src = tpl(EN)
+    assert ".stage>.maphint{grid-column:1/-1;grid-row:2}" in src
+    assert ".stage>.mapwrap{grid-column:1;grid-row:1}" in src
+    # Below 1024 the rail drops to the row under the hint.
+    assert "grid-row:3" in slice_between(src, "@media (max-width:1023px){",
+                                         "\n}")
+    # And the element really is inside the stage, before the rail.
+    body = slice_between(src, '<div class="stage"', "</div>\n<div class=\"railbtnwrap\"")
+    assert body.index('id="maphint"') < body.index('id="srail"')
+
+
 # -- 9. the relationship diagram on a phone ------------------------------------
 def test_below_768_the_inline_diagram_is_replaced_by_a_button():
     src = tpl(EN)

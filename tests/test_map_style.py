@@ -385,7 +385,9 @@ def test_the_hint_is_its_own_element_under_the_map():
 
 
 def test_the_hint_is_ink3_mono_and_small():
-    i = TPL.index(".maphint{")
+    # At the start of a line: the selector on its own, not the ".stage>.maphint"
+    # rule that places it in the grid.
+    i = TPL.index("\n.maphint{") + 1
     css = TPL[i:TPL.index("}", i)]
     assert 'font-family:"IBM Plex Mono",monospace' in css
     assert "font-size:.68rem" in css and "color:var(--ink3)" in css

@@ -30,6 +30,16 @@ a{color:inherit}
    renders exactly as before and never jumps taller. */
 .stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0px var(--rail-w,0px);
   --map-h:720px;min-height:var(--map-h)}
+/* Placed explicitly rather than left to auto-flow, because the hint has to
+   sit AT the map: row 1 is the map and whatever is docked beside it, row 2 is
+   the hint directly under the canvas, and row 3 is where the stations list
+   drops to when it is no longer a rail. Auto-flow put the hint after the
+   stations list, which is how the swipe instruction ended up at the bottom of
+   the page next to the legend. */
+.stage>.mapwrap{grid-column:1;grid-row:1}
+.stage>.panel{grid-column:2;grid-row:1}
+.stage>.srail{grid-column:3;grid-row:1}
+.stage>.maphint{grid-column:1/-1;grid-row:2}
 .stage.open{grid-template-columns:minmax(0,1fr) 460px var(--rail-w,0px)}
 /* THE STATIONS RAIL.
    The map is a canvas: to a screen reader, to a keyboard, and to find-in-page
@@ -87,7 +97,8 @@ a{color:inherit}
 }
 /* Full width, immediately after the map. */
 @media (max-width:1023px){
-  .srail{display:block;grid-column:1/-1;height:auto;max-height:70vh;
+  /* Row 3: under the map and under the hint, in that order. */
+  .srail,.stage>.srail{display:block;grid-column:1/-1;grid-row:3;height:auto;max-height:70vh;
     border-inline-start:0;border-top:1px solid var(--rule)}
 }
 canvas{display:block;width:100%;height:var(--map-h,720px);cursor:crosshair;touch-action:manipulation}
@@ -122,7 +133,7 @@ html.rec .focusui{display:none!important}
    how a header stops being readable at exactly the widths where it matters. */
 .lchip{position:absolute;display:inline-block;background:#141922;border:1px solid #3a3320;border-radius:5px;padding:5px 11px;
   font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;
-  white-space:normal;text-align:center;line-height:1.35;overflow-wrap:anywhere;
+  white-space:normal;text-align:center;line-height:1.35;overflow-wrap:break-word;
   box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 0 0 1px rgba(242,182,50,.08),0 6px 16px rgba(0,0,0,.45),0 0 18px rgba(242,182,50,.10)}
 /* #9ba6b4, not the mock's #9aa4b2: that one computes to 6.99:1 on the chip and
    the rule beside it asks for 7. One step lighter, the same colour to look at,
@@ -155,7 +166,14 @@ html.rec .focusui{display:none!important}
    chevron on it, sitting on the map container that actually scrolls. It is
    decoration for a fact the scrollbar is too thin to state on a phone, so it
    is aria-hidden and it disappears the moment the fact stops being true. */
-.mapmore{position:absolute;inset-block:0;inset-inline-end:0;width:44px;pointer-events:none;
+/* A grid item in the MAP's cell, not a child of the scroller.
+   Inside .mapwrap -- which is the thing that scrolls sideways -- an
+   inset-inline-end:0 pins the arrow to the right edge of the 900px-wide
+   CONTENT, so it sat off-screen until the reader had already scrolled to the
+   end: visible exactly when it had nothing left to say. In the grid cell it
+   stays at the right edge of what is actually on screen. */
+.mapmore{grid-column:1;grid-row:1;justify-self:end;align-self:stretch;
+  width:44px;pointer-events:none;
   display:flex;align-items:center;justify-content:flex-end;padding-inline-end:6px;
   background:linear-gradient(to left,rgba(11,14,20,.92),rgba(11,14,20,0));
   opacity:0;transition:opacity .25s cubic-bezier(0.16,1,0.3,1);z-index:2}
@@ -368,7 +386,9 @@ html.rec canvas{cursor:none}
 .reldiag .cons svg{width:100%;height:auto;min-width:340px}
 .rlist{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid var(--rule)}
 .rlrow{display:flex;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px solid var(--rule)}
-.rlrow b{font-size:.98rem;font-weight:500;flex:1}
+.rlmain{flex:1;min-width:0}
+.rlrow b{display:block;font-size:.98rem;font-weight:500}
+.rlwhy{display:block;color:var(--ink3);font-size:.86rem;line-height:1.4;margin-top:3px}
 .rldot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
 .rlrow.win .rldot{background:var(--erode)}
 .rlrow.lose .rldot{background:var(--tight)}
@@ -599,10 +619,10 @@ __CARDS_JS__
     <div class="tip" id="tip"></div>
   </div>
   <div class="panel" id="panel"></div>
+  <div class="maphint" id="maphint">Hover a station for its pulse · hover a line for what it carries and its share at the buyer.</div>
   <aside class="srail" id="srail" aria-label="Stations"></aside>
 </div>
 <div class="railbtnwrap"><button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">Browse stations</button></div>
-<div class="maphint" id="maphint">Hover a station for its pulse · hover a line for what it carries and its share at the buyer.</div>
 <div class="legend" id="legend"></div>
 <div class="board" id="board">
 <h2>The Forecast Board</h2>
@@ -1484,7 +1504,11 @@ function resize(){
 function chip(L, name){
   const cut=v=>String(v==null?'':v).replace(/[&<>"]/g,
     c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  return `<span class="n">${cut(L)}</span><span class="s">·</span>`
+  // <wbr> after the separator: the three spans carry no whitespace between
+  // them, so "E1·TRANSMISSION" is one unbreakable run to the line breaker and
+  // the prefix could never move off the name's line. Zero width, so nothing
+  // moves when it is not used.
+  return `<span class="n">${cut(L)}</span><span class="s">·</span><wbr>`
     + `<span class="t">${cut(name)}</span>`;
 }
 // Neighbouring header chips never touch. Each chip stays centred on its column
@@ -1517,14 +1541,15 @@ function touchHint(){
 // the only thing that scrolls sideways.
 function moreArrow(){
   const wrap = document.querySelector('.mapwrap');
-  if(!wrap) return;
-  let el = wrap.querySelector('.mapmore');
+  if(!wrap || !stage) return;
+  let el = stage.querySelector('.mapmore');
   if(!el){
     el = document.createElement('div');
     el.className = 'mapmore';
     el.setAttribute('aria-hidden', 'true');
     el.innerHTML = '<span>›</span>';
-    wrap.appendChild(el);
+    // On the stage, in the map's cell -- see the note on .mapmore.
+    stage.appendChild(el);
     wrap.addEventListener('scroll', () => moreArrow(), {passive:true});
   }
   const more = wrap.scrollWidth - wrap.clientWidth - wrap.scrollLeft;
@@ -1545,7 +1570,20 @@ function chipBudget(items){
     const r = i<items.length-1 ? items[i+1].cx-it.cx : Infinity;
     const col = Math.min(l, r);
     const w = col===Infinity ? 0 : Math.max(CHIP_MIN_W, Math.round(col)-CHIP_GAP);
-    if(w) it.el.style.maxWidth = w+'px';
+    // WIDTH, not max-width.
+    //
+    // A max-width lets an inline-block shrink to fit, and what it shrinks to
+    // is the min-content width -- the widest thing that cannot be broken. The
+    // first version of this used overflow-wrap:anywhere, which ADDS a break
+    // opportunity between every pair of characters and therefore drops
+    // min-content to roughly one character. The box collapsed to nothing and
+    // every name broke mid-word: "E1 · FU/EL", "GE/NERATIO/N". The pairing is
+    // the bug -- either half alone is harmless.
+    //
+    // So the box is told its width outright, and break-word is used instead:
+    // it breaks a word only when that one word does not fit on a line by
+    // itself, and it does not touch min-content.
+    if(w){ it.el.style.width = w+'px'; it.el.style.maxWidth = w+'px'; }
   });
 }
 function spreadChips(bar){
@@ -2861,10 +2899,21 @@ function lockedHTML(){
   // The same relationships the diagram draws, as a list. Not a summary of it:
   // the same ids, the same split, the same order.
   function relListHTML(w){
-    const row = (id, win) => `<li class="rlrow ${win?'win':'lose'}">`
-      + `<span class="rldot" aria-hidden="true"></span>`
-      + `<b>${esc(labelOf(id))}</b>`
-      + `<span class="rldir">${win?REL.up:REL.down}</span></li>`;
+    const centre = byTicker[String(w.tk||'').toUpperCase()];
+    const centreId = centre ? centre.id : null;
+    const row = (id, win) => {
+      // The diagram clips this to twelve characters and folds the rest into a
+      // <title>, which a finger cannot reach. Here it is written out whole:
+      // the list is the readable copy of the same information, which is what
+      // it is for.
+      const why = centreId ? (reasonOf(centreId, id) || '') : '';
+      return `<li class="rlrow ${win?'win':'lose'}">`
+        + `<span class="rldot" aria-hidden="true"></span>`
+        + `<span class="rlmain"><b>${esc(labelOf(id))}</b>`
+        + (why ? `<span class="rlwhy">${esc(why)}</span>` : '')
+        + `</span>`
+        + `<span class="rldir">${win?REL.up:REL.down}</span></li>`;
+    };
     const items = (w.win||[]).map(i=>row(i,true))
       .concat((w.lose||[]).map(i=>row(i,false)));
     return items.length ? `<ul class="rlist">${items.join('')}</ul>`

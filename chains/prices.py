@@ -44,7 +44,10 @@ chart with a step in it that no corporate action explains.
 
 ADJUSTED, AND WHY IT IS THE VENDOR'S ADJUSTMENT HERE
 ----------------------------------------------------
-``adjusted_close`` comes from EODHD. The swing lake computes its own adjustment
+``adjusted_close`` comes from Yahoo Finance, fetched over httpx by
+chains/providers/yahoo.py with no API key -- it replaced EODHD, whose
+subscription is gone, and the column name and row shape were kept so nothing
+downstream had to change. The swing lake computes its own adjustment
 factors and validates them against corporate actions, because a strategy trades
 on them and a wrong split silently rewrites history. This is a chart. The
 vendor's adjustment is fit for that, and rebuilding the validation machinery

@@ -21,8 +21,9 @@ its own. Every chart shares one axis convention -- everything is rebased to
 100 at the session the contract was signed on -- because two scales on one
 picture is how a chart lies without saying anything false.
 
-Everything here was measured by chains/record.py at build time from EODHD
-end-of-day data. The page fetches nothing; the numbers are already in it.
+Everything here was measured by chains/record.py at build time from Yahoo
+Finance end-of-day bars, fetched over httpx by chains/providers/yahoo.py with
+no API key. The page fetches nothing; the numbers are already in it.
 
 WHAT IT REFUSES TO SAY
 ----------------------
@@ -52,8 +53,9 @@ DESC = ("What the pre-registered basket did after {who} reported on {date}, "
 
 NOT_ADVICE = "Research and analysis only. Not investment advice."
 METHOD = (
-    "Every price is EODHD end-of-day. The window runs from the session the "
-    "scoring contract was signed on to the last close, and every chart on "
+    "Every price is Yahoo Finance end-of-day. The window runs from the "
+    "session the scoring contract was signed on to the last close, and "
+    "every chart on "
     "this page is rebased to 100 at that first session so one axis carries "
     "all of them. A basket is the equal weight of the legs that have a clean "
     "series, held from the first day of the window; each leg's contribution "

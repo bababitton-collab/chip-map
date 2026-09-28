@@ -95,7 +95,7 @@ def test_the_chip_is_the_approved_one():
     assert "border:1px solid #3a3320" in css and "border-radius:5px" in css
     assert "padding:5px 11px" in css
     assert 'font-family:"IBM Plex Mono",monospace' in css
-    assert "font-size:.72rem" in css and "letter-spacing:.14em" in css
+    assert "font-size:.8rem" in css and "letter-spacing:.14em" in css
     assert "text-transform:uppercase" in css
 
 
@@ -236,7 +236,7 @@ def test_the_narrow_map_scrolls_sideways_and_the_header_rides_with_it():
     body = TPL[i:TPL.index(".layerbar .rule{top:44px}", i)]
     assert "overflow-x:auto" in body and "min-width:900px" in body
     assert ".layerbar{position:absolute}" in body
-    assert "font-size:.62rem" in body and "padding:4px 8px" in body
+    assert "font-size:.72rem" in body and "padding:4px 8px" in body
 
 
 # -- the inner shadow, on canvas ---------------------------------------------

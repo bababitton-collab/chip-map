@@ -151,20 +151,19 @@ def _blocks(per: dict, order: list[str], titles: dict) -> str:
         rec = b["record"]
         bench = (b.get("benchmark") or {}).get("label") or ""
         title = titles.get(dom) or dom
-        rows = [
-            ("scored", str(rec.get("n") or 0)),
-            ("hit rate", _pct(rec.get("hit_rate"))),
-            ("mean excess vs EW_MAP", _signed_pct(rec.get("mean_excess"))),
-            ("median excess vs EW_MAP", _signed_pct(rec.get("median_excess"))),
-        ]
+        rows = [("scored", str(rec.get("n") or 0))]
+        if rec.get("n"):
+            rows.extend([
+                ("hit rate", _pct(rec.get("hit_rate"))),
+                ("mean excess vs EW_MAP", _signed_pct(rec.get("mean_excess"))),
+                ("median excess vs EW_MAP", _signed_pct(rec.get("median_excess"))),
+            ])
         cells = "".join(f'<li><span>{esc(k)}</span><b>{esc(v)}</b></li>'
                         for k, v in rows)
         out.append(
             f'<li class="domrec">'
             f'<h3><a href="/{esc(dom)}/track/">{esc(title)}</a></h3>'
-            f'<p class="bench">second benchmark: <b>{esc(bench)}</b>'
-            f' — reported beside this map\'s numbers and pooled with nothing'
-            f'</p>'
+            f'<p class="bench">Second benchmark: <b>{esc(bench)}</b></p>'
             f'<ul class="domstat">{cells}</ul>'
             f'<p class="more"><a href="/{esc(dom)}/track/">'
             f'Every question on this map →</a></p>'

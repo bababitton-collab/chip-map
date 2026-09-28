@@ -235,19 +235,19 @@ def test_the_advice_answer_is_exact(tmp_path):
             "recommendations. It is not investment advice.") in _text(_page(tmp_path))
 
 
-SUBSCRIBE_FAQ = (" Subscribe (free), confirm in the first email, and the key "
-                 "arrives in the welcome email right after.")
+SUBSCRIBE_FAQ = (" Subscribe, confirm the first email, and the key arrives "
+                 "in the welcome email.")
 
 
 def test_the_free_and_key_answer_is_held_to_access_py(tmp_path, monkeypatch):
     monkeypatch.delenv("SUBSCRIBE_EMBED_URL", raising=False)
     text = _text(_page(tmp_path))
-    assert ("Everything is free. The map, every chokepoint, the calendar, and "
-            "every resolved question with its verification are open. The "
-            "questions still ahead — their wording, baskets and live board — "
-            "unlock with a key sent in the weekly mail." + SUBSCRIBE_FAQ) in text
+    assert ("The map, every chokepoint, the calendar, and every resolved "
+            "question with its verification are public. Upcoming questions "
+            "and their baskets unlock with a free key sent by email."
+            + SUBSCRIBE_FAQ) in text
     bare = _text(_page(tmp_path / "bare", commitments=False))
-    assert "every resolved question are open" in bare, \
+    assert "every resolved question are public" in bare, \
         "verification is claimed only with its proof"
     monkeypatch.setattr(access, "tier", lambda item, ctx=None: "free")
     with pytest.raises(landing.LandingError, match="access.py"):

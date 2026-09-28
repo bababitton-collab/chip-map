@@ -7,56 +7,73 @@
 <meta name="description" content="<!--IF:onemap-->A semiconductor supply chain map of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:onemap--><!--IF:domains-->{{n_maps}} maps of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:domains--><!--IF:prereg--> Each question's scoring rules are published as a dated SHA-256 commitment.<!--END:prereg--> No backtests.">
 <link rel="canonical" href="{{site_url}}">
 {{analytics}}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <script type="application/ld+json">{{jsonld}}</script>
 <style>
 :root{
-  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#7d8797; --rule:#222a36;
+  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#98a3b2; --rule:#2b3440;
   --amber:#f2b632;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.6}
-.wrap{max-width:1100px;margin:0 auto;padding:14px 26px 70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.6}
+.wrap{max-width:1640px;margin:0 auto;padding:14px 32px 70px}
 a{color:var(--amber)}
 {{site_nav_css}}
-.hero{padding:44px 0 34px;border-bottom:1px solid var(--rule)}
-.hero h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.8rem;line-height:1.12;margin:0 0 16px;max-width:22ch}
-.hero .sub{color:var(--ink2);font-size:1.2rem;max-width:62ch;margin:0 0 26px}
-.proof{list-style:none;padding:0;margin:0 0 28px;display:flex;flex-wrap:wrap;gap:12px}
-.proof li{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px 16px;font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
-.proof b{font-size:1.25rem;font-weight:500;color:var(--ink);margin-inline-end:6px;letter-spacing:0}
-.cta{display:flex;flex-wrap:wrap;gap:12px}
-.cta a{font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:8px;padding:12px 20px}
+.hero{padding:24px 0 32px;border-bottom:1px solid var(--rule)}
+.hero h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:3rem;line-height:1.08;margin:0 0 10px;max-width:28ch}
+.hero .sub{color:var(--ink2);font-size:1.08rem;max-width:76ch;margin:0 0 18px}
+.proof{list-style:none;padding:12px 0;margin:0 0 18px;display:flex;flex-wrap:wrap;gap:8px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.proof li{padding:2px 22px 2px 0;margin-right:22px;border-right:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:.82rem;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
+.proof li:last-child{border-right:0;margin-right:0;padding-right:0}
+.proof b{font-size:1.14rem;font-weight:500;color:var(--ink);margin-inline-end:5px}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.cta a{font-family:"IBM Plex Mono",monospace;font-size:.85rem;text-transform:uppercase;text-decoration:none;border-radius:4px;padding:10px 16px}
 .cta .primary{background:var(--amber);color:#0b0e14;border:1px solid var(--amber)}
-.cta .secondary{color:var(--amber);border:1px solid #3a3320;background:var(--panel)}
+.cta .secondary{color:var(--ink2);border:1px solid var(--rule);background:transparent}
 .cta .secondary:hover{border-color:var(--amber)}
-main section{padding:34px 0 8px;border-bottom:1px solid var(--rule)}
+.map-preview{position:relative;margin:12px 0 24px;height:clamp(210px,28vh,320px);overflow:hidden;border:1px solid var(--rule);background:var(--bg)}
+.map-preview a{display:block;width:100%;height:100%}
+.map-preview img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 60%;filter:contrast(1.08)}
+.map-preview figcaption{position:absolute;left:0;bottom:0;width:100%;padding:9px 16px;background:rgba(11,14,20,.94);font-family:"IBM Plex Mono",monospace;font-size:.82rem;text-transform:uppercase;color:var(--ink)}
+main section{padding:28px 0 18px;border-bottom:1px solid var(--rule)}
 main section.steps{padding:28px 0 28px}
 .steps ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.steps li{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:16px 18px}
-.steps .n{display:block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.14em;color:var(--amber);margin-bottom:6px}
+.steps li{border-top:1px solid var(--rule);padding:12px 4px 0}
+.steps .n{display:block;font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--amber);margin-bottom:6px}
 .steps h3{margin:0 0 6px;font-family:"Source Serif 4",serif;font-size:1.3rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
 .steps p{margin:0;color:var(--ink2);font-size:.98rem;line-height:1.5}
-.mapcards{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}
-.mapcard{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:18px 20px}
+.mapcards{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
+.mapcard{border-top:1px solid var(--rule);padding:17px 4px 19px}
 .mapcard h3{margin:0 0 8px;font-family:"Source Serif 4",serif;font-size:1.35rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
-.mapcard h3 a{text-decoration:none}
+.mapcard h3 a{text-decoration:none;color:var(--ink)}
 .mapcard h3 a:hover{text-decoration:underline}
-.mapcard .blurb{margin:0 0 12px;font-size:.97rem;line-height:1.5}
-.mapstat{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:6px 14px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.mapcard .blurb{margin:0 0 12px;font-size:1rem;line-height:1.55}
+.mapstat{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:6px 14px;font-family:"IBM Plex Mono",monospace;font-size:.82rem;text-transform:uppercase;color:var(--ink2)}
 .mapstat b{font-size:1rem;font-weight:500;color:var(--ink2);margin-inline-end:4px;letter-spacing:0}
-.mapcard .maplinks{margin:0;font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase}
+.mapcard .maplinks{margin:0;font-family:"IBM Plex Mono",monospace;font-size:.83rem;text-transform:uppercase}
 main h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:1.8rem;line-height:1.2;margin:0 0 18px}
-main h3{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:26px 0 8px}
-main p{color:var(--ink2);max-width:74ch;margin:0 0 14px}
-#faq h3{font-family:Inter,system-ui,sans-serif;font-size:1.05rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
+main h3{font-family:"IBM Plex Mono",monospace;font-size:.85rem;text-transform:uppercase;color:var(--ink2);font-weight:500;margin:26px 0 8px}
+main p{color:var(--ink2);max-width:66ch;margin:0 0 14px}
+.method-details{max-width:66ch;margin:20px 0 0;border-top:1px solid var(--rule)}
+.method-details summary{cursor:pointer;padding:12px 0;font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--amber)}
+.method-details[open] summary{margin-bottom:8px}
+@media (min-width:1100px){
+  main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px}
+  main #maps,main #steps{grid-column:1/-1}
+  main #how,main #faq{min-width:0}
+}
+@media (min-width:1500px){.mapcards{grid-template-columns:repeat(4,minmax(0,1fr));gap:0 24px}}
+#faq h3{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.05rem;text-transform:none;color:var(--ink);font-weight:600}
 footer{margin-top:34px;color:var(--ink3);font-size:.85rem}
 footer a{color:var(--ink2)}
 @media (max-width:760px){
   .wrap{padding:10px 14px 50px}
   .hero h1{font-size:2rem}
   .hero .sub{font-size:1.05rem}
+  .proof li{margin-right:12px;padding-right:12px}
+  .proof li:last-child{display:none}
+  .mapcards{grid-template-columns:minmax(0,1fr)}
   .steps ol{grid-template-columns:minmax(0,1fr)}
 }
 </style>
@@ -81,15 +98,19 @@ footer a{color:var(--ink2)}
 <!--IF:onemap--><a class="primary" href="{{map_href}}">Explore the map</a><!--END:onemap--><!--IF:domains--><a class="primary" href="#maps">Explore the map</a><!--END:domains-->
 <!--IF:onemap--><a class="secondary" href="{{track_href}}">See the track record</a><!--END:onemap--><!--IF:domains--><a class="secondary" href="/track/">See the track record</a><!--END:domains-->
   </div>
-{{subscribe}}
+<!--IF:onemap-->{{subscribe}}<!--END:onemap-->
 </header>
 
 <main>
 <!--IF:domains-->
 <section id="maps" aria-label="The maps">
   <h2>{{n_maps}} maps, one method</h2>
-  <p>Each map is a chain in its own right, with its own companies, chokepoints and dated questions — and its own second benchmark. The method below is the same for all of them.</p>
+<!--IF:map_preview-->
+  <figure class="map-preview"><a href="{{preview_href}}" aria-label="Open the interactive {{preview_title}}"><picture><source media="(max-width:760px)" srcset="/assets/map-preview-mobile.png"><img src="/assets/map-preview.png" alt="Supply-chain stations and links in {{preview_title}}" loading="eager"></picture></a><figcaption>{{preview_title}} · open the interactive map</figcaption></figure>
+<!--END:map_preview-->
+  <p>Each map follows its own supply chain, questions and benchmark. All {{n_maps}} use the same scoring method.</p>
   <ul class="mapcards">{{map_cards}}</ul>
+  {{subscribe}}
 </section>
 <!--END:domains-->
 <section id="steps" class="steps" aria-label="How it works in three steps">
@@ -114,12 +135,13 @@ footer a{color:var(--ink2)}
   <h2>How it works: supply chain maps with dated questions</h2>
 
   <h3>The chain, in layers</h3>
-  <p>Each map is drawn in layers — the {{cur_title}} in {{n_layers}}: {{layers}}. Across {{n_maps}} maps the site covers {{companies}} listed companies and who supplies whom among them — the AI infrastructure behind the models, from raw materials to data centers and the power that runs them.</p>
+  <p>In {{cur_title}}, {{n_layers}} layers trace the chain: {{layers}}. Across {{n_maps}} maps, the site covers {{companies}} listed companies and their supply relationships.</p>
 
   <h3>Chokepoints</h3>
-  <p>{{chokepoints}} chokepoints are marked across the maps: highly concentrated dependencies with few viable alternatives, such as {{chokepoint_examples}} on the {{cur_title}}. Where a listed challenger exists, a pulse compares the holder's 13-week return with the challengers'.</p>
+  <p>{{chokepoints}} chokepoints mark concentrated dependencies with few alternatives, including {{chokepoint_examples}} in {{cur_title}}. Where a listed challenger exists, the map compares their 13-week returns.</p>
 <!--END:domains-->
 
+  <details class="method-details"><summary>Scoring and verification</summary>
   <h3>Dated questions</h3>
   <p><!--IF:onemap-->The map is<!--END:onemap--><!--IF:domains-->The maps are<!--END:domains--> paired with {{questions}} dated questions across the chain — questions tied to upcoming reports, policy decisions and industry events. Each comes with pre-written yes/no criteria, and each scored question names an impact basket: the companies its answer bears on.<!--IF:observe--> Observation-only questions ({{observe_only}} today) carry no basket and are not scored.<!--END:observe--></p>
 
@@ -131,6 +153,7 @@ footer a{color:var(--ink2)}
 <!--END:prereg-->
   <h3>Forward testing, no backtests</h3>
   <p>Nothing here is backtested. Every forecast is scored forward from the day its question is marked, and the record — resolved questions, and the hit rate and excess returns with their sample size — is on the <a href="{{track_href}}">Track Record</a>.</p>
+  </details>
 </section>
 
 <section id="faq">
@@ -145,10 +168,10 @@ footer a{color:var(--ink2)}
 <!--END:domains-->
 <!--IF:prereg-->
   <h3>How are forecasts registered?</h3>
-  <p>Each question's scoring contract is serialised canonically and hashed with SHA-256, and the hash is published with its commit date in <a href="{{commitments_href}}">commitments.json</a>. The build stops if a committed contract no longer matches its hash. When a question resolves, the exact contract text is published with its card, and the Verify button recomputes the SHA-256 in your browser with the Web Crypto API and compares it with the published hash. A commitment made on or after the answer date is marked as not a valid preregistration.</p>
+  <p>The scoring contract is hashed and dated in <a href="{{commitments_href}}">commitments.json</a>. When a question resolves, its exact contract is published with the result. Verify recomputes the hash in your browser. Commitments made on or after the answer date are marked invalid as preregistrations.</p>
 <!--END:prereg-->
   <h3>What's free, and what needs the key?</h3>
-  <p>Everything is free. The map, every chokepoint, the calendar, and every resolved question<!--IF:prereg--> with its verification<!--END:prereg--> are open. The questions still ahead — their wording, baskets and live board — unlock with a key sent in the weekly mail.<!--IF:subscribe--> Subscribe (free), confirm in the first email, and the key arrives in the welcome email right after.<!--END:subscribe--></p>
+  <p>The map, every chokepoint, the calendar, and every resolved question<!--IF:prereg--> with its verification<!--END:prereg--> are public. Upcoming questions and their baskets unlock with a free key sent by email.<!--IF:subscribe--> Subscribe, confirm the first email, and the key arrives in the welcome email.<!--END:subscribe--></p>
 
   <h3>Is this investment advice?</h3>
   <p>No. {{brand}} publishes questions and measurements, not recommendations. It is not investment advice.</p>

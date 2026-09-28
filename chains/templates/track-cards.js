@@ -625,7 +625,7 @@
     const revised = revisedLine(c);
     const previous = previousCommitments(c);
     return `<div class="prereg" data-prereg="${esc(r.qid)}" data-sha="${esc(p.sha256)}" data-valid="${ok?'1':'0'}" data-committed="${esc(p.committed_at)}" data-answer="${esc(p.answer_date)}" data-contract="${esc(p.contract)}" style="margin-top:12px;padding:10px 12px;border:1px solid #222a36;border-radius:6px;font-family:IBM Plex Mono,monospace;font-size:.7rem;color:#b3bccb">
-      <div>Pre-registered ${esc(p.committed_at)} · answer date ${esc(p.answer_date)} · primary horizon ${esc(p.primary_horizon)} sessions${ok?'':' · <b style="color:#f2b632">not a valid preregistration</b>'}</div>${revised}
+      <div>${ok?'Pre-registered':'Committed'} ${esc(p.committed_at)} · answer date ${esc(p.answer_date)} · primary horizon ${esc(p.primary_horizon)} sessions</div>${ok?'':`<div class="late-commit" style="margin-top:6px;padding:5px 8px;border:1px solid #f2b632;border-radius:4px;color:#f2b632;letter-spacing:.1em;font-weight:600">LATE COMMITMENT · NOT PREREGISTERED</div><div style="margin-top:4px;color:#b3bccb">Committed ${esc(p.committed_at)}, after the answer date ${esc(p.answer_date)}. It stays in the public record and is never counted as preregistered.</div>`}${revised}
       <div style="word-break:break-all;margin:6px 0;color:#7d8797">SHA-256 ${esc(p.sha256)} · ${p.hash_source==='commitments.json'?'read from commitments.json':'as carried in this page'}</div>
       <button type="button" data-verify style="font:inherit;color:#e8ecf2;background:#141922;border:1px solid #31405a;border-radius:4px;padding:4px 10px;cursor:pointer">Verify preregistration</button>
       <span class="pr-result" role="status" style="margin-left:8px"></span>${previous}

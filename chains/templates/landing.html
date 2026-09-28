@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{brand}} —<!--IF:onemap--> AI supply chain map, semiconductor chokepoints and forward-tested questions<!--END:onemap--><!--IF:domains--> AI supply chain maps, chokepoints and forward-tested questions<!--END:domains--></title>
-<meta name="description" content="<!--IF:onemap-->A semiconductor supply chain map of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:onemap--><!--IF:domains-->{{n_maps}} maps of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:domains--><!--IF:prereg--> Each question's scoring rules are published as a dated SHA-256 commitment.<!--END:prereg--> No backtests.">
+<meta name="description" content="<!--IF:onemap-->A semiconductor supply chain map of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:onemap--><!--IF:domains-->{{n_maps}} maps of the physical AI supply chain: {{companies}} companies, {{chokepoints}} chokepoints and {{questions}} dated questions, measured forward against the market.<!--END:domains--><!--IF:prereg--> Each question's scoring rules are published as a dated SHA-256 commitment; only those committed before the answer count as preregistered.<!--END:prereg--> No backtests.">
 <link rel="canonical" href="{{site_url}}">
 {{analytics}}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
@@ -67,7 +67,7 @@ footer a{color:var(--ink2)}
 
 <header class="hero">
   <h1>{{hero_title}}</h1>
-  <p class="sub">{{hero_lead}}<!--IF:prereg--> Every forecast's scoring rules are set before the answer.<!--END:prereg--> No backtests.</p>
+  <p class="sub">{{hero_lead}}<!--IF:prereg--> Dated questions, public scoring contracts, and forward results. Late commitments are labeled and never counted as preregistered.<!--END:prereg--> No backtests.</p>
   <ul class="proof" aria-label="At a glance">
     <li><b>{{companies}}</b> companies</li>
     <li><b>{{chokepoints}}</b> chokepoints</li>
@@ -95,8 +95,8 @@ footer a{color:var(--ink2)}
 <section id="steps" class="steps" aria-label="How it works in three steps">
   <ol>
     <li><span class="n">01</span><h3>Map</h3><p>Who supplies whom across the AI supply chain, and where the chokepoints are.</p></li>
-    <li><span class="n">02</span><h3>Question</h3><p>Dated questions across the chain, each with yes/no criteria set before the answer.</p></li>
-    <li><span class="n">03</span><h3>Score</h3><p>When the answer lands, the forecast is measured against the market<!--IF:prereg--> — pre-registered, so anyone can verify it<!--END:prereg-->.</p></li>
+    <li><span class="n">02</span><h3>Question</h3><p>Dated questions across the chain, each with its yes/no criteria written down in advance.<!--IF:prereg--> The criteria are hashed and published; only contracts committed before the answer count as preregistered.<!--END:prereg--></p></li>
+    <li><span class="n">03</span><h3>Score</h3><p>When the answer lands, the forecast is measured against the market<!--IF:prereg--> under a scoring contract published in advance, which anyone can verify it against. Only contracts committed before the answer count as preregistered<!--END:prereg-->.</p></li>
   </ol>
 </section>
 

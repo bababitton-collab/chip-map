@@ -18,7 +18,12 @@ MAPS_ANCHOR = "#maps"
 # The way back out of a map, to the site that holds them all.
 ALL_MAPS = "All maps"
 TRACK_RECORD = "Track Record"
-TRACK_RECORD_DESCRIPTOR = "Every forecast recorded before the answer."
+# Not "every forecast recorded before the answer": one was not. orcl_q1
+# was committed three days after its answer date and is labelled late
+# wherever it appears. A claim the record itself contradicts is worth
+# less than the record.
+TRACK_RECORD_DESCRIPTOR = ("Only contracts committed before the answer "
+                           "count as preregistered.")
 SUBSCRIBE_LABEL = "Get the key — subscribe to the weekly mail (free)"
 # The embed is double opt-in: Substack sends a confirmation first, and only a
 # confirmed reader gets the welcome email that carries the key.

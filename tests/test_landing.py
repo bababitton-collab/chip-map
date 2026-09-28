@@ -69,8 +69,14 @@ def test_the_hero_sub_is_the_short_one(tmp_path):
     html = _page(tmp_path)
     i = html.index('<p class="sub">')
     sub = _text(html[i:html.index("</p>", i)])
-    assert sub == ("See who supplies whom — and where it breaks. Every forecast's "
-                   "scoring rules are set before the answer. No backtests.")
+    # It used to say "Every forecast's scoring rules are set before the answer",
+    # which one commitment on file contradicts: semi's orcl_q1 was committed
+    # three days after its answer date. The hero now states the rule instead of
+    # a count, so the sentence stays true whatever the next commitment does.
+    assert sub == ("See who supplies whom — and where it breaks. Dated "
+                   "questions, public scoring contracts, and forward results. "
+                   "Late commitments are labeled and never counted as "
+                   "preregistered. No backtests.")
     bare = _text(_page(tmp_path / "bare", commitments=False))
     assert "See who supplies whom — and where it breaks. No backtests." in bare
 
@@ -83,10 +89,14 @@ def test_the_three_steps_sit_above_the_full_explanation(tmp_path):
     assert strip == (
         "01 Map Who supplies whom across the AI supply chain, and where the "
         "chokepoints are. "
-        "02 Question Dated questions across the chain, each with yes/no criteria "
-        "set before the answer. "
+        "02 Question Dated questions across the chain, each with its yes/no "
+        "criteria written down in advance. The criteria are hashed and "
+        "published; only contracts committed before the answer count as "
+        "preregistered. "
         "03 Score When the answer lands, the forecast is measured against the "
-        "market — pre-registered, so anyone can verify it.")
+        "market under a scoring contract published in advance, which anyone "
+        "can verify it against. Only contracts committed before the answer "
+        "count as preregistered.")
     # The detailed prose is still all there, beneath it.
     for h in ("The chain, in layers", "Semiconductor chokepoints",
               "Dated questions", "Scored forward against the market",
@@ -187,8 +197,13 @@ def test_the_scoring_sentence_is_the_scoring_code(tmp_path):
 
 # -- capabilities appear only with their proof ------------------------------------
 
+# Each of these is a claim about a capability, and each needs its file on disk
+# to be true. The nav descriptor is deliberately not here: "only contracts
+# committed before the answer count as preregistered" defines the word, and a
+# definition holds on a build with no contracts at all.
 PREREG_WORDS = ("SHA-256", "commitments.json", "track_public.json", "Verify",
-                "scoring rules are set before the answer",
+                "Late commitments are labeled",
+                "hashed and published",
                 "with its verification", "anyone can verify it")
 
 
@@ -444,7 +459,8 @@ def test_track_record_is_in_the_landing_nav(tmp_path):
     for s in NAV:
         assert s in html, s
     assert sitenav.TRACK_RECORD == "Track Record"
-    assert sitenav.TRACK_RECORD_DESCRIPTOR == "Every forecast recorded before the answer."
+    assert sitenav.TRACK_RECORD_DESCRIPTOR == (
+        "Only contracts committed before the answer count as preregistered.")
 
 
 def test_track_record_is_in_the_track_page_nav_and_the_title_stays():

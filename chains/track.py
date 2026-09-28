@@ -1100,6 +1100,37 @@ def cards_js() -> str:
 
 BENCH_PLACEHOLDER = "__BENCH_LABEL__"
 BENCH_JS_PLACEHOLDER = "__BENCH_JS__"
+AUDIT_PLACEHOLDER = "__PREREG_AUDIT__"
+
+
+def prereg_audit(dom: str | None = None) -> str:
+    """One line saying how many of this map's contracts beat their answer.
+
+    Counted from the map's own commitments.json at build time, never typed
+    in: a number typed in is true on the day it is typed, and this one moves
+    every time a question commits. The field it counts is the one the
+    engine already decides with -- valid_preregistration, which
+    chains/preregister.py sets from committed_at < answer_date -- so the
+    page cannot disagree with the gate.
+
+    An empty or missing file gives an empty line rather than "0/0": a map
+    with nothing registered yet should say nothing here, not make a claim
+    about zero.
+    """
+    from chains import preregister
+    from chains.paths import commitments_path
+
+    try:
+        entries = preregister.load(commitments_path(dom))
+    except (FileNotFoundError, ValueError):
+        return ""
+    if not entries:
+        return ""
+    committed = len(entries)
+    valid = sum(1 for e in entries if e.get("valid_preregistration"))
+    late = committed - valid
+    return (f"{valid}/{committed} contracts committed before the answer "
+            f"· {late} committed late.")
 
 
 def render(data: dict, template: str | None = None) -> str:
@@ -1142,6 +1173,9 @@ def render(data: dict, template: str | None = None) -> str:
         t = t.replace(BENCH_PLACEHOLDER, label)
         t = t.replace(BENCH_JS_PLACEHOLDER,
                       f"window.BENCH_LABEL={json.dumps(label)};")
+    if AUDIT_PLACEHOLDER in t:
+        from chains.paths import domain
+        t = t.replace(AUDIT_PLACEHOLDER, prereg_audit(domain()))
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "

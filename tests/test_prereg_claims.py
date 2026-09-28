@@ -84,10 +84,24 @@ def test_the_rule_is_only_claimed_where_there_is_a_commitment_file():
     assert s.lower().count(rule) == covered.count(rule) == 2
 
 
-def test_the_already_correct_sentence_was_left_alone():
-    """landing.html's methods section already said the true thing."""
-    assert ("A commitment made on or after the answer date is marked as not a "
-            "valid preregistration.") in tpl("landing.html")
+def test_the_methods_section_says_what_happens_to_a_late_commitment():
+    """This asserted one exact sentence, and a later copy pass reworded it.
+
+    The wording is not the thing worth pinning; the fact is. A page that
+    explains the hashing and then leaves out what happens when a commitment
+    arrives late is back to implying there are none, which is the failure
+    this module exists to catch. Both wordings below say it, so both pass --
+    dropping it altogether does not.
+    """
+    s = tpl("landing.html")
+    accepted = (
+        "A commitment made on or after the answer date is marked as not a "
+        "valid preregistration.",
+        "Commitments made on or after the answer date are marked invalid as "
+        "preregistrations.",
+    )
+    assert any(a in s for a in accepted), (
+        "landing.html no longer states what happens to a late commitment")
 
 
 def test_no_backtests_is_still_claimed_because_it_is_still_true():

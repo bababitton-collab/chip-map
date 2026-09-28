@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Forward test · Linchpin Signal</title>
 __ANALYTICS__
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 .prereg-audit{font-family:'IBM Plex Mono',monospace;font-size:.82rem;letter-spacing:.04em;color:#7d8797;margin:-6px 0 18px}
 :root{
-  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#7d8797; --rule:#222a36;
+  --bg:#0b0e14; --bg2:#131a22; --panel:#141922; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#98a3b2; --rule:#2b3440;
   --tight:#ff5a3c; --erode:#3fd18b; --amber:#f2b632;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.6}
-.wrap{max-width:1340px;margin:0 auto;padding:34px 26px 70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.6}
+.wrap{max-width:1560px;margin:0 auto;padding:34px 26px 70px}
 .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
 h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.1rem;line-height:1.2;margin:0 0 14px}
 h3{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:30px 0 12px}
@@ -177,12 +177,14 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
 a.trecname{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule)}
 a.trecname:hover{border-color:var(--amber);color:#fff}
 .tw2{overflow-x:auto}
-#record-table table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.72rem}
+#record-table table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:.82rem}
 #record-table th{cursor:pointer;text-align:right;color:#b3bccb;font-weight:500;padding:6px 8px;border-bottom:1px solid var(--rule);white-space:nowrap;user-select:none}
 #record-table th[aria-sort]{color:#f2b632}
 #record-table td{text-align:right;padding:6px 8px;border-bottom:1px solid #182029;white-space:nowrap}
 #record-table th:first-child,#record-table td:first-child,#record-table th:nth-child(3),#record-table td:nth-child(3){text-align:left}
 #record-table .empty{color:#7d8797}
+.eyebrow,h3,.back,.tile span,.pill,.unlock .msg,.fc .dt,.terms b,.terms .gchip,.gltip b,.fc .pre,.day,.big div span,.small div span,.sect,.trecline,details.closed>summary{font-size:.82rem}
+.fc .why,.fc .obs{color:var(--ink2)}
 __SITE_NAV_CSS__
 </style>
 </head>
@@ -191,14 +193,14 @@ __SITE_NAV_CSS__
 __SITE_NAV__
 <div class="eyebrow" style="margin-top:22px">05 · Forward test</div>
 <h2>What we said would move — and what moved</h2>
-<p class="lede">Each question is pre-registered: its baskets, the yes/no rule it will be classified by, the horizons and the benchmarks are hashed, and the hash is published with the day it was made. Only contracts committed before the answer count as preregistered. A commitment made on or after the answer date is labelled late and never counted. Once a question is answered its whole card is public here — what was claimed, what was reported, how the baskets moved against the equal-weight map and __BENCH_LABEL__ — and anyone can recompute the hash to check that nothing changed. The official score is the excess over the equal-weight map at 20 sessions. Nothing is added after the fact.</p>
+<p class="lede">Each dated question has a published scoring contract: its basket, yes/no rule, horizon and benchmarks. Only contracts committed before the answer count as preregistered; a commitment made on or after the answer date is labelled late and never counted. When an answer arrives, the full card and market comparison appear here. Verify recomputes the published hash. The official score is excess over the equal-weight map after 20 sessions.</p>
 <p class="prereg-audit">__PREREG_AUDIT__</p>
 
 <h3 id="sbh">Resolved · free, in full, verifiable</h3>
 <div id="resolved"></div>
 
 <h3 id="rth">Track record · every question that has closed</h3>
-<p class="lede">One row per closed question, from the day its contract was signed to the last close: what the signed basket did, the same window for the equal-weight map and for __BENCH_LABEL__, and the excess over the map. Every number is EODHD end-of-day data. Sort by any column. Research and analysis only. Not investment advice.</p>
+<p class="lede">Each closed question shows its basket, the equal-weight map, __BENCH_LABEL__, and excess over the map for the same window. Prices are EODHD end-of-day data.</p>
 <div id="record-table"></div>
 
 <h3>Upcoming · pre-registered, not yet answered</h3>

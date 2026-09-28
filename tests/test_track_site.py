@@ -118,6 +118,16 @@ def test_the_page_shows_the_pooled_n_and_a_block_per_map(tmp_path):
     assert "GRID" in which[1] and "SOX" not in which[1]
 
 
+def test_an_empty_map_does_not_show_unearned_rates(tmp_path):
+    root = _site(tmp_path, {"semi": []})
+    page = track_site.render(root, ["semi"], "https://x/")
+    block = page.split('class="domrec"')[1].split("</ul>", 1)[0]
+    assert "scored" in block
+    assert "hit rate" not in block
+    assert "mean excess" not in block
+    assert "Second benchmark" in block
+
+
 def test_the_page_names_only_maps_that_published_a_record(tmp_path):
     root = _site(tmp_path, {"semi": [_card("a", 0.01, True)]})
     html = track_site.render(root, ["semi", "energy"], "https://x/")

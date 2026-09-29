@@ -183,8 +183,8 @@ TRANSLATIONS = [
  # market caps or the price-derived returns, which carry none; what IS true is
  # the supplier shares, 88 sourced and 42 published blank rather than
  # unsourced, so the claim is narrowed to them.
- ("`<span class=\"eyebrow\">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. כרגע: ${nt} מתהדקים, ${ne} מתרופפים, ${na} בלי מתחרה נסחר. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה\"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מתחרים. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`",
-  "`<span class=\"eyebrow\">PRESSURE METHOD</span><b>Pressure</b> compares the chokepoint holder's 13-week return with its listed challengers. Positive values indicate tightening; negative values indicate easing. No value is shown when there is no listed challenger. Right now: ${nt} tightening, ${ne} easing, ${na} with no listed challenger. A station with a recorded market value is drawn to it; the rest are drawn at one fixed size. Prices remain in each company's trading currency; Japanese names via US depositary receipts. Supplier shares are shown with their source and left blank where none is recorded; estimates are labelled. Market data may lag by up to one week. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal and not investment advice.`"),
+ ("`<span class=\"eyebrow\">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה\"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`",
+  "`<span class=\"eyebrow\">PRESSURE METHOD</span><b>Pressure</b> compares the chokepoint holder's 13-week return with its listed challengers. Positive values indicate tightening; negative values indicate easing. No value is shown when there is no listed challenger. A station with a recorded market value is drawn to it; the rest are drawn at one fixed size. Prices remain in each company's trading currency; Japanese names via US depositary receipts. Supplier shares are shown with their source and left blank where none is recorded; estimates are labelled. Market data may lag by up to one week. This is a map of exposures, not a trading signal and not investment advice.`"),
  # The private watch table. The public build replaces this whole section, but
  # the private English page needs it translated too.
  ("const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};", "const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};"),
@@ -230,14 +230,17 @@ TRANSLATIONS = [
   '<p>Every question carries a scoring contract written in advance: the baskets, the yes/no rule, the horizons and the benchmarks, hashed and published with the day they were set. Only contracts committed before the answer count as preregistered.</p>'),
  ('<p>הציון נמדד מהסגירה הראשונה שאחרי הסימון, מול המפה בשקלול שווה ומול מדד ההשוואה השני, ונקרא באופק הראשי. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>',
   '<p>The score is measured from the first close after the mark, against the equal-weight map and against the second benchmark, and read at the primary horizon. There is no backtest here and there cannot be one — the forecast was written before the price moved. The sample is small, and every number here is shown with its N.</p>'),
- ("  const LT = {h2:'תוצאות שנמדדו', none:'עדיין לא נרשמו תשובות.',\n    nextAnswer:'התשובה הבאה הצפויה', answerRec:'תשובה נרשמה', answersRec:'תשובות נרשמו',\n    obsLabel:'חלקי · לתיעוד בלבד', obsNote:'התשובה נשארת ברישום הציבורי ואינה נכנסת לציון.',\n    pendingLabel:'נענתה · הציון ממתין',\n    scored:'נרשמו', pending:'ממתינות', rate:'שיעור פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'N=__MIN_N__ לפני כל החלטת הון', of:'מתוך',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',\n    direct:'סל ישיר', indirect:'טבעת שנייה',\n    noind:'אין עדיין תחזית לטבעת השנייה'};",
-  "  const LT = {h2:'Measured outcomes', none:'No answers recorded yet.',\n    nextAnswer:'next expected answer', answerRec:'answer recorded', answersRec:'answers recorded',\n    obsLabel:'Partial \\u00b7 observation only', obsNote:'This answer remains in the public record but does not enter the score.',\n    pendingLabel:'Answered \\u00b7 scoring pending',\n    scored:'Scored', pending:'Pending', rate:'Hit rate', mean:'Mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'N=__MIN_N__ before any capital decision', of:'of',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark',\n    direct:'Direct basket', indirect:'Second ring',\n    noind:'No second-ring forecast yet'};"),
+ ("  const LT = {h2:'תוצאות שנמדדו', none:'עדיין לא נרשמו תשובות.',\n    nextAnswer:'התשובה הבאה הצפויה', answerRec:'תשובה נרשמה', answersRec:'תשובות נרשמו',\n    obsLabel:'חלקי · לתיעוד בלבד', obsNote:'התשובה נשארת ברישום הציבורי ואינה נכנסת לציון.',\n    pendingLabel:'נענתה · הציון ממתין',\n    scored:'נרשמו', pending:'ממתינות', rate:'שיעור פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'תוצאות מקבלות משמעות ב-n=__MIN_N__', of:'מתוך', scoredLow:'נרשמו',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',\n    direct:'סל ישיר', indirect:'טבעת שנייה',\n    noind:'אין עדיין תחזית לטבעת השנייה'};",
+  "  const LT = {h2:'Measured outcomes', none:'No answers recorded yet.',\n    nextAnswer:'next expected answer', answerRec:'answer recorded', answersRec:'answers recorded',\n    obsLabel:'Partial \\u00b7 observation only', obsNote:'This answer remains in the public record but does not enter the score.',\n    pendingLabel:'Answered \\u00b7 scoring pending',\n    scored:'Scored', pending:'Pending', rate:'Hit rate', mean:'Mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'Results become meaningful at n=__MIN_N__', of:'of', scoredLow:'scored',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark',\n    direct:'Direct basket', indirect:'Second ring',\n    noind:'No second-ring forecast yet'};"),
  # The teaser layer. A locked row is fully visible and simply has no
  # sentence; the dummy below is fixed and is never the real text.
  ("const LOCK = {\n  line: 'שאלה קרובה', mail: 'זמינה עם המפתח השבועי',\n  badge: 'השאלה הפתוחה השבוע',\n  marked: 'סומן', };",
   "const LOCK = {\n  line: 'Upcoming question', mail: 'available with the weekly key',\n  badge: 'this week\\'s open question',\n  marked: 'marked', };"),
- ("  const T = {head:'קבל כל שאלה לפני התשובה',\n    promise:'התדריך השבועי החינמי כולל שאלות קרובות, כללי הכרעה, סלים רשומים ותוצאות עם מקור.',\n    btn:'קבל את המפתח השבועי', soon:'בקרוב',\n    disc:'חינם. בלי המלצות. אפשר להסיר את ההרשמה בכל רגע.',\n    q:'שאלות', open:'פתוחות', next:'התשובה הבאה', days:'ימים', today:'היום', tomorrow:'מחר'};",
-  "  const T = {head:'Get every question before the answer',\n    promise:'The free weekly briefing includes upcoming questions, decision rules, registered baskets and source-backed outcomes.',\n    btn:'Get the weekly key', soon:'coming soon',\n    disc:'Free. No recommendations. Unsubscribe at any time.',\n    q:'questions', open:'open', next:'next answer', days:'days', today:'today', tomorrow:'tomorrow'};"),
+ # The map's counts line. Its heading, promise, button and disclaimer
+ # went to sitenav.subscribe_html(), which is not translated because it
+ # is English-only copy spliced into both builds.
+ ("  const T = {q:'\u05e9\u05d0\u05dc\u05d5\u05ea', open:'\u05e4\u05ea\u05d5\u05d7\u05d5\u05ea', next:'\u05d4\u05ea\u05e9\u05d5\u05d1\u05d4 \u05d4\u05d1\u05d0\u05d4', days:'\u05d9\u05de\u05d9\u05dd', today:'\u05d4\u05d9\u05d5\u05dd', tomorrow:'\u05de\u05d7\u05e8'};",
+  "  const T = {q:'questions', open:'open', next:'next answer', days:'days', today:'today', tomorrow:'tomorrow'};"),
  # One visual language: plain words for holder/challenger, a two-row
  # legend, and the peer panel's section titles.
  ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מתחרים נסחרים',\n  buys:'ספקים ישירים', sells:'לקוחות', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'קשר', legendRing:'לחץ על צוואר הבקבוק',\n  legendZone:'אזור'};",
@@ -372,6 +375,34 @@ def _fill_min_n(text: str) -> str:
     """
     from chains.forecast import MIN_N_FOR_CAPITAL
     return text.replace(MIN_N_PLACEHOLDER, str(MIN_N_FOR_CAPITAL))
+
+
+# The subscription call, from the one place it is written
+# (chains/sitenav.subscribe_html). The track page fills the same placeholder
+# through chains/track.py; the map fills it here, so the public map, the
+# private map, the landing and the track page draw one component and cannot
+# say four different things about the same key.
+SUBSCRIBE_PLACEHOLDER = "__SUBSCRIBE__"
+
+
+def _fill_subscribe(text: str, public: bool = True) -> str:
+    """With no mail service configured this is the empty string, which is the
+    point: a page built before the service exists makes no claim about a
+    signup, and never a "coming soon".
+
+    ``public`` is False for the private map. The component carries the mail
+    service's one analytics event, and the private page carries no analytics
+    at all -- see tests/test_analytics.py -- so there it becomes nothing.
+    A reader of the private page is already the person who writes the mail.
+    """
+    if SUBSCRIBE_PLACEHOLDER not in text:
+        return text
+    if not public:
+        return text.replace(SUBSCRIBE_PLACEHOLDER, "")
+    from chains import sitenav
+    from chains.paths import subscribe_embed_url
+    return text.replace(SUBSCRIBE_PLACEHOLDER,
+                        sitenav.subscribe_html(subscribe_embed_url()))
 
 
 def _inline_cards(text: str) -> str:
@@ -592,8 +623,8 @@ def public_page(template: str, live: str, cfg: dict,
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n" + extra_head + "</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return _fill_min_n(
-        doc.replace("__FOCUS__", focus).replace("__LIVE__", live))
+    return _fill_subscribe(_fill_min_n(
+        doc.replace("__FOCUS__", focus).replace("__LIVE__", live)))
 
 
 def private_page(template: str, live: str, focus: str = "null") -> str:
@@ -618,8 +649,9 @@ def private_page(template: str, live: str, focus: str = "null") -> str:
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return _fill_min_n(
-        doc.replace("__FOCUS__", focus).replace("__LIVE__", live))
+    return _fill_subscribe(_fill_min_n(
+        doc.replace("__FOCUS__", focus).replace("__LIVE__", live)),
+                           public=False)
 
 
 def build_private(template=None, live=None, out=None):

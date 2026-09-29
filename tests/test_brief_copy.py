@@ -284,3 +284,104 @@ def test_an_answer_is_confirmed_refuted_or_partial_wherever_it_is_named():
     # And the raw value is still what the code branches on.
     for src in (s, cards):
         assert "'mixed'" in src, "the status value must not have been renamed"
+
+
+# -- 7. one subscription component, and no promise of a thing that is not ----
+# The map page drew its own call, with a "coming soon" chip where the site is
+# built without a mail service. A chip that says a feature is coming is a
+# claim about a date nobody has set, and it was the one surface that did not
+# use sitenav's component -- so it was also the one that could drift.
+
+def test_no_page_promises_something_is_coming():
+    for name in PAGES + ("track-site.html",):
+        s = tpl(name).lower()
+        for wrong in ("coming soon", "launching soon", "available soon"):
+            assert wrong not in s, f"{name}: {wrong}"
+    for mod in ("sitenav.py", "landing.py", "track.py", "track_site.py",
+                "build_pages.py"):
+        # The emitted strings, not the comments: build_pages explains in prose
+        # why there is no longer a "coming soon" to emit.
+        src = (templates_dir().parent / mod).read_text(encoding="utf-8")
+        code = "\n".join(l for l in src.splitlines()
+                         if not l.lstrip().startswith("#"))
+        code = re.sub(r'"""[\s\S]*?"""', " ", code).lower()
+        assert "coming soon" not in code, mod
+
+
+def test_every_page_that_offers_the_key_offers_it_the_same_way():
+    """One component, from chains/sitenav.py, on all three surfaces. The map
+    fills the same placeholder the track page does."""
+    from chains import build_pages, track
+    assert build_pages.SUBSCRIBE_PLACEHOLDER == track.SUBSCRIBE_PLACEHOLDER
+    for name in ("live-map.html", "live-map-en.html", "track.html"):
+        assert build_pages.SUBSCRIBE_PLACEHOLDER in tpl(name), name
+    # And the landing takes it from the same function.
+    assert "{{subscribe}}" in tpl("landing.html")
+
+
+def test_the_component_is_the_only_wording_for_the_key():
+    """The map used to carry a second heading, a second promise and a second
+    button label for the same thing."""
+    s = tpl("live-map-en.html")
+    for gone in ("Get every question before the answer",
+                 "The free weekly briefing includes upcoming questions",
+                 "Get the weekly key"):
+        assert gone not in s, gone
+
+
+# -- 8. the sample-size caveat is about the sample ---------------------------
+
+def test_no_page_tells_a_reader_what_to_do_with_capital():
+    from chains import forecast
+    assert "capital" not in forecast.SAMPLE_RULE.lower()
+    assert str(forecast.MIN_N_FOR_CAPITAL) in forecast.SAMPLE_RULE
+    banned = ("capital decision", "before any capital", "no capital")
+    for name in PAGES + ("track-site.html",):
+        s = tpl(name).lower()
+        for wrong in banned:
+            assert wrong not in s, f"{name}: {wrong}"
+
+
+def test_the_threshold_on_the_page_is_the_threshold_in_the_code():
+    """One number. It was typed into three files once, and a threshold raised
+    in the scoring code left two pages promising the old one."""
+    from chains import forecast
+    for name in ("live-map.html", "live-map-en.html"):
+        s = tpl(name)
+        assert "__MIN_N__" in s, f"{name}: the placeholder is gone"
+        assert str(forecast.MIN_N_FOR_CAPITAL) not in s.split("<style>")[0]
+
+
+# -- 9. one navigation bar ---------------------------------------------------
+
+def test_the_bar_is_the_same_bar_on_every_kind_of_page():
+    from chains import sitenav
+    want = [sitenav.MAPS_LABEL, sitenav.TRACK_RECORD]
+    for kwargs in ({"several": True, "site_wide": True},   # landing, pooled
+                   {"several": True}):                      # a map, its record
+        got = [l for _k, l, _u in sitenav.links("semi", **kwargs)]
+        assert got == want, (kwargs, got)
+
+
+# -- 10. the built pages, not only the templates -----------------------------
+# The map inlines its own snapshot, so a sentence can reach the DOM through
+# the DATA rather than through the template: `capital_rule` travels with every
+# summary and its value was the old wording until the snapshot was rebuilt.
+# Skips where nothing is published, because the suite runs before the build.
+
+BUILT = ("index.html", "semi/index.html", "semi/track/index.html",
+         "track/index.html")
+NEVER_ON_A_PAGE = ("coming soon", "capital decision", "all maps",
+                   "every number carries a source",
+                   "station size reflects market capitalization")
+
+
+@pytest.mark.parametrize("path", BUILT)
+def test_nothing_banned_survives_into_a_published_page(path):
+    site = templates_dir().parents[1] / "site"
+    p = site / path
+    if not p.exists():
+        pytest.skip("site/ is not published; run chains.publish_site first")
+    s = p.read_text(encoding="utf-8").lower()
+    for wrong in NEVER_ON_A_PAGE:
+        assert wrong not in s, f"{path}: {wrong}"

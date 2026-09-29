@@ -185,7 +185,7 @@ def test_the_hebrew_template_has_the_ledger_section():
 def test_the_english_template_has_the_ledger_in_english():
     t = EN_TEMPLATE.read_text(encoding="utf-8")
     assert "Measured outcomes" in t
-    assert "N=__MIN_N__ before any capital decision" in t
+    assert "Results become meaningful at n=__MIN_N__" in t
     assert bp.hebrew_runs(t) == []
 
 

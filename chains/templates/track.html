@@ -379,14 +379,15 @@ __CARDS_JS__
   if(saved) tryKey(saved, true);
 
   document.getElementById('foot').innerHTML =
+    // The definitions, and only the ones that appear nowhere else on the
+    // page. The official-score rule used to be restated here; it is in the
+    // introduction at the top and on the label over the record tiles.
     'Entry is the close of the first session after a mark. Baskets are equal-weight,'
     + ' held from entry; the map is the equal-weight average of every priced station,'
     + ' rebalanced daily. A member with no close on a session carries its last one.'
-    + ' Report-day close is the close on the day the question is answered, or the last'
+    + ' Answer-day close is the close on the day the question is answered, or the last'
     + ' one before it. Direct and second-ring results are reported separately — never'
-    + ' averaged together. The official score is the excess over the equal-weight map'
-    + ' at 20 sessions; 5, 10 and 40 sessions and __BENCH_LABEL__ are diagnostics, and the official'
-    + ' N counts questions, not horizons. Not a recommendation and not investment advice.';
+    + ' averaged together. Not a recommendation and not investment advice.';
 })();
 </script>
 </body>

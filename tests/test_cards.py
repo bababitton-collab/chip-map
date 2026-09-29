@@ -283,7 +283,7 @@ def test_the_locked_placeholder_is_fixed_text():
 def test_the_english_page_has_no_hebrew_in_the_cards():
     from chains import build_pages
     i = EN.index("// ---- question cards ----")
-    j = EN.index("// ---- the call to action", i)
+    j = EN.index("// ---- what this map has ahead of it", i)
     assert build_pages.hebrew_runs(EN[i:j]) == []
 
 

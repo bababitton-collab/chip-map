@@ -288,8 +288,8 @@ def test_below_the_threshold_the_pooled_sample_is_short(fixture_cards):
     rec = one["record"]
     assert rec["n"] == 17
     assert rec["n"] < rec["min_n_for_capital"]
-    assert rec["capital_rule"] == forecast.CAPITAL_RULE
-    assert "N=30" in rec["capital_rule"]
+    assert rec["capital_rule"] == forecast.SAMPLE_RULE
+    assert "n=30" in rec["capital_rule"]
 
 
 def test_at_and_above_the_threshold_the_sample_clears_it(pooled):
@@ -306,7 +306,7 @@ def test_the_rule_goes_quiet_once_the_sample_clears_the_threshold(
     short = track.pooled({"semi": {"forecasts": fixture_cards["semi"]}})
     assert short["record"]["n"] < 30 <= pooled["record"]["n"]
     assert short["record"]["capital_gated"] is True
-    assert short["record"]["capital_rule"] == forecast.CAPITAL_RULE
+    assert short["record"]["capital_rule"] == forecast.SAMPLE_RULE
     assert pooled["record"]["capital_gated"] is False
     assert pooled["record"]["capital_rule"] is None
 
@@ -356,7 +356,10 @@ def _slim(data: dict) -> dict:
 def test_record_json_has_the_same_shape_when_it_has_numbers_in_it(pooled):
     doc = _slim(pooled)
     assert set(doc) == {"primary_horizon", "domains", "record", "by_domain"}
-    assert doc["domains"] == ["energy", "semi"]
+    # The site's own order, from chains.domains.discover(): the default
+    # map first, then the rest by name. The landing page lists them this
+    # way and the pooled record follows it rather than sorting again.
+    assert doc["domains"] == ["semi", "energy"]
     for dom, block in doc["by_domain"].items():
         assert set(block) == {"domain", "record", "benchmark"}
         assert set(block["benchmark"]) == {"key", "symbol", "label"}
@@ -444,7 +447,7 @@ def test_the_pooled_gate_turns_off_at_the_threshold(fixture_cards, n, gated):
     assert rec["capital_gated"] is gated
     assert (rec["capital_rule"] is None) is not gated
     if gated:
-        assert rec["capital_rule"] == forecast.CAPITAL_RULE
+        assert rec["capital_rule"] == forecast.SAMPLE_RULE
 
 
 @pytest.mark.parametrize("n,gated", [(29, True), (30, False), (31, False)])
@@ -475,7 +478,7 @@ def test_the_threshold_is_read_from_the_scoring_code_not_retyped():
     assert forecast.capital_gated(forecast.MIN_N_FOR_CAPITAL - 1) is True
     assert forecast.capital_gated(forecast.MIN_N_FOR_CAPITAL) is False
     assert forecast.capital_note(forecast.MIN_N_FOR_CAPITAL) is None
-    assert forecast.capital_note(0) == forecast.CAPITAL_RULE
+    assert forecast.capital_note(0) == forecast.SAMPLE_RULE
 
 
 # -- what the page actually renders -----------------------------------------
@@ -491,7 +494,7 @@ def test_the_page_prints_the_caveat_while_the_sample_is_short(tmp_path,
             json.dumps({"forecasts": _n_cards(fixture_cards, 10)}),
             encoding="utf-8")
     html = track_site.render(root, ["semi", "energy"], "https://x/")
-    assert forecast.CAPITAL_RULE in html
+    assert forecast.SAMPLE_RULE in html
     assert 'class="gate"' in html
 
 

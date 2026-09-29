@@ -572,6 +572,20 @@ EXCESS_NOT_POOLED = ("excess is measured against each map's own equal-weight "
 POOLED_EXCESS_KEYS = ("mean_excess", "median_excess", "mean_excess_interval")
 
 
+def _order(names) -> list[str]:
+    """The site's own order: the default map first, then the rest by name.
+
+    chains.domains.discover() decides it and the landing page follows it, so
+    the pooled record lists the same maps in the same order rather than in
+    whatever order a directory listing sorts to. A name the registry does not
+    know still appears -- after the ones it does, by name -- because this
+    function orders a record, it does not filter one.
+    """
+    from chains import domains
+    known = [d for d in domains.discover() if d in names]
+    return known + sorted(n for n in names if n not in known)
+
+
 def pooled(by_domain: dict[str, dict]) -> dict:
     """One record across every map the site serves.
 
@@ -584,7 +598,7 @@ def pooled(by_domain: dict[str, dict]) -> dict:
     It does NOT carry an excess: see EXCESS_NOT_POOLED above.
     """
     cards, per = [], {}
-    for dom in sorted(by_domain):
+    for dom in _order(by_domain):
         payload = by_domain[dom] or {}
         got = []
         for r in payload.get("forecasts") or []:
@@ -603,11 +617,11 @@ def pooled(by_domain: dict[str, dict]) -> dict:
     for k in POOLED_EXCESS_KEYS:
         record.pop(k, None)
     record["excess"] = EXCESS_NOT_POOLED
-    record["domains"] = sorted(by_domain)
+    record["domains"] = _order(by_domain)
     return {"primary_horizon": PRIMARY_HORIZON,
             "record": record,
             "by_domain": per,
-            "domains": sorted(by_domain)}
+            "domains": _order(by_domain)}
 
 
 def record_stats(records: list[dict]) -> dict:

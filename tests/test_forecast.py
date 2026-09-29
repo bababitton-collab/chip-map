@@ -199,7 +199,8 @@ def test_the_capital_rule_travels_with_every_summary(book, monkeypatch,
     """The number is never readable without the caveat attached to it."""
     led = scored(book, monkeypatch, tmp_path,
                  [fc("f", "mu_fq4", "2026-03-02", 1, ["up"], ["down"])])
-    assert led["summary"]["capital_rule"] == "no capital decision below N=30"
+    assert led["summary"]["capital_rule"] == forecast.SAMPLE_RULE
+    assert "capital" not in forecast.SAMPLE_RULE.lower()
     assert led["summary"]["min_n"] == 30
 
 

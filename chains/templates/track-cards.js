@@ -17,6 +17,15 @@
   // dashed equal-weight map it sits beside. The map stays first.
   const SOX='#f2b632', SOX_DASH=' stroke-dasharray="1 3" stroke-linecap="round"';
   const hasPoints = v => (v||[]).some(x=>x!=null);
+  // "N sessions since <what>, <date>". Two windows on a resolved card start
+  // in two places -- the record from the session the contract was signed on,
+  // the observation from the session the question was answered on -- and
+  // printing two bare counts beside each other reads as a contradiction. One
+  // helper, so the two lines say what they are counting from.
+  const sessionsSince = (n, from, what) =>
+    (n == null ? 'not yet measured'
+               : `over ${n} session${n === 1 ? '' : 's'} since ${what}`)
+    + (from ? ', ' + esc(from) : '');
   // What an empty metric says. "0 / 0" is not a figure -- it reads as a
   // result of zero out of zero rather than as an absent denominator.
   const NOT_ENOUGH = 'Not enough scored questions yet';
@@ -413,7 +422,7 @@
       <svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
       ${legend(lines, 'yes', up2!=null)}
       ${nums}
-      <p class="obsfoot">${o.sessions} session${o.sessions===1?'':'s'} since ${esc(o.from)} · not scored, not in the hit rate</p>`;
+      <p class="obsfoot">${sessionsSince(o.sessions, o.from, 'the answer')} · not scored, not in the hit rate</p>`;
   }
 
   function table(r){
@@ -651,7 +660,7 @@
       <span class="trecnums">basket <b class="${sgn(b.win)}">${p2(b.win)}</b>
         · EW_MAP <b class="${sgn(b.ew)}">${p2(b.ew)}</b>
         · <b class="${sgn(b.win_ew)}">${p2(b.win_ew)}</b> vs the map
-        over ${n==null?'—':n} session${n===1?'':'s'}</span>
+        ${sessionsSince(n, b.from, 'the commitment')}</span>
       <a class="trecmore" href="${esc(r.qid)}/">Full record →</a></p>`;
   }
 

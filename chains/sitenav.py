@@ -109,8 +109,13 @@ def links(dom: str, *, several: bool = False,
     if site_wide:
         return [("map", MAPS_LABEL, MAPS_ANCHOR),
                 ("track", TRACK_RECORD, "/track/")]
-    return [("all", ALL_MAPS, "/"),
-            ("map", MAP_LABEL, f"/{dom}/"),
+    # Two items on a map's own page as well, and the same two. A third that
+    # appeared only inside a map -- "All maps · Map" -- made the bar a
+    # different bar on every kind of page, and on a phone it was the item
+    # that pushed the brand into the viewport edge. "Maps" leads back out to
+    # the choice between them; "Track record" stays this map's, because a
+    # reader inside a chain wants that chain's record.
+    return [("map", MAPS_LABEL, "/"),
             ("track", TRACK_RECORD, f"/{dom}/track/")]
 
 

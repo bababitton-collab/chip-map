@@ -27,7 +27,7 @@ a{color:var(--amber)}
 .head{list-style:none;padding:0;margin:0 0 18px;display:flex;flex-wrap:wrap;gap:12px}
 .head li{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);padding:11px 16px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);min-width:132px}
 .head b{display:block;font-size:1.45rem;font-weight:500;color:var(--ink);letter-spacing:0}
-.head li.empty{display:flex;align-items:center;letter-spacing:.04em;text-transform:none;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.95rem;color:var(--ink2);max-width:34ch}
+.head li.empty i{display:block;margin-top:4px;letter-spacing:.02em;text-transform:none;font-style:normal;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.9rem;color:var(--ink2);max-width:30ch}
 .head .ci{text-transform:none;letter-spacing:0;color:var(--ink3);margin-inline-start:6px}
 .head .note{text-transform:none;letter-spacing:0;color:var(--ink3);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.9rem}
 .gate{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:0}
@@ -78,7 +78,7 @@ footer a{color:var(--ink2)}
 <main>
 <section id="maps">
   <h2>Results by map</h2>
-  <p>Each map is scored against its own equal-weight universe. Combined figures are shown only where the methodology supports aggregation: {{excess_note}}, so the hit rate below combines all {{n_maps}} maps and the excess does not.</p>
+  <p>Each map is scored against its own equal-weight universe. Combined figures are shown only where the methodology supports aggregation.</p>
   <ul class="domrecs">{{blocks}}</ul>
 </section>
 

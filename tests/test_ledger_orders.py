@@ -148,7 +148,7 @@ def test_the_capital_gate_reads_the_direct_row_only(book):
             + [fc(f"r{i}", "mu_fq4", ["s1"], ["s2"], order=2,
                   marked=CAL[i].isoformat()) for i in range(5)])["summary"]
     assert s["horizons"]["5"]["n"] == 1
-    assert s["capital_rule"] == "no capital decision below N=30"
+    assert s["capital_rule"] == forecast.SAMPLE_RULE
 
 
 def test_both_summaries_carry_the_capital_rule(book):

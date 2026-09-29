@@ -3,13 +3,15 @@
 Three of the brief's requirements are layout facts, not strings, and none of
 them can be checked by reading the CSS. "At least 20px of horizontal padding"
 depends on which rule wins at that width. "TRACK RECORD and the brand must not
-touch or clip at 390" depends on the loaded font, the number of nav items --
-the map page has one more than the landing page -- and the flex wrap. And a
-two-pixel horizontal scroll is invisible in the source and obvious on a phone.
+touch or clip at 390" depends on the loaded font, on how the bar wraps, and on
+how many items it has. And a two-pixel horizontal scroll is invisible in the
+source and obvious on a phone.
 
 The map page was failing all three: its nav is inserted above the first screen
 rather than inside it, so it inherited no gutter at all and ran 0 to 390, with
-the brand against the left edge and the track-record border off the right.
+the brand against the left edge and the track-record border off the right. It
+also carried a third link the other pages do not, which is what pushed them
+there; every page now draws the same two.
 
 Skips where the machine has no Chrome, like every other browser check here.
 """
@@ -36,8 +38,11 @@ def live(tmp_path_factory):
     for p in PAGES:
         if not (site / p / "index.html").exists():
             pytest.skip(f"site/{p} is not published")
-    srv = Served(site, port=8936)
-    br = Browser(port=9447)
+    # Ports of its own. 9447 is test_drawer_overlay_browser's, and two
+    # modules asking Chrome for the same debugging port is a flake that only
+    # shows up in a full run.
+    srv = Served(site, port=8937)
+    br = Browser(port=9448)
     yield br, srv
     br.close()
     srv.close()

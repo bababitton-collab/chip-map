@@ -120,9 +120,8 @@ def _counts(root: Path, docs: dict[str, dict]) -> dict:
 # answer "excess over what?" with "over a mixture of markets nobody holds".
 # The brief asks for a MEAN EXCESS tile here; this page prints the sentence
 # instead and every map's own excess in its own block below.
-NO_POOLED_EXCESS = ("Mean excess is not pooled: each map is measured against "
-                    "its own equal-weight universe. See the per-map figures "
-                    "below.")
+NO_POOLED_EXCESS = (f"There is no pooled mean excess: {track.EXCESS_NOT_POOLED}. "
+                    f"See the per-map figures below.")
 NOT_ENOUGH = "Not enough scored questions yet"
 
 
@@ -144,7 +143,10 @@ def _headline(rec: dict, counts: dict) -> str:
     bits = [_tile(str(counts["resolved"]), "Resolved"),
             _tile(str(n), "Scored")]
     if rec.get("hit_rate") is None:
-        bits.append(f'<li class="empty">{html.escape(NOT_ENOUGH)}</li>')
+        # A tile like the others, so a reader can see WHICH metric is
+        # missing. A bare sentence in the row named nothing.
+        bits.append(f'<li class="empty"><b>&mdash;</b><span>Hit rate</span>'
+                    f'<i>{html.escape(NOT_ENOUGH)}</i></li>')
     else:
         span = _interval(rec.get("hit_rate_interval"))
         bits.append(_tile(_pct(rec["hit_rate"]), f"Hit rate (N={n})",

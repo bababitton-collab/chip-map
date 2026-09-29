@@ -23,7 +23,10 @@ written down first and cannot be edited.
 The consequence is that the sample grows one question at a time and is small
 for a long while. ``capital_rule`` says so in the output for as long as it is
 true -- while N is under MIN_N_FOR_CAPITAL -- and goes quiet once the sample
-clears it. It used to be emitted at every N, which meant a reader could not
+clears it. The key is the shape the published record has always had; the
+SENTENCE it carries says what the threshold is about (a sample too small to
+read) rather than what a reader should do about it, which this site does not
+say anywhere else. It used to be emitted at every N, which meant a reader could not
 tell from the sentence whether it still applied; a caveat that never leaves
 is furniture, not a warning. ``capital_gated`` is the one place that decides,
 and every page reads it rather than comparing the two numbers itself.
@@ -79,11 +82,13 @@ MAX_SERIES = 60
 # Below this the hit rate is noise dressed as evidence. It is emitted with the
 # summary at every N so the number is never read without it.
 MIN_N_FOR_CAPITAL = 30
-CAPITAL_RULE = f"no capital decision below N={MIN_N_FOR_CAPITAL}"
+# Named for the threshold it carries, not for what a reader should do
+# with it. The site publishes measurements, not instructions.
+SAMPLE_RULE = f"Results become meaningful at n={MIN_N_FOR_CAPITAL}"
 
 
 def capital_gated(n: int | None) -> bool:
-    """Is the sample still too small to carry a capital decision?
+    """Is the sample still too small for the hit rate to mean anything?
 
     The ONE comparison. Every summary, every record and every page asks this
     rather than putting ``n < 30`` of its own somewhere: three copies of a
@@ -96,7 +101,7 @@ def capital_gated(n: int | None) -> bool:
 
 def capital_note(n: int | None) -> str | None:
     """The sentence while it applies, and nothing once it does not."""
-    return CAPITAL_RULE if capital_gated(n) else None
+    return SAMPLE_RULE if capital_gated(n) else None
 
 # The second benchmark. EW_MAP stays the one every hit and every summary
 # is scored against; this is a separate market line reported beside it and

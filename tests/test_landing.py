@@ -97,10 +97,14 @@ def test_the_three_steps_sit_above_the_full_explanation(tmp_path):
         "Scoring contracts are hashed and dated. Late commitments remain "
         "public but do not count as preregistered.")
     # The detailed prose is still all there, beneath it.
-    for h in ("The chain, in layers", "Semiconductor chokepoints",
-              "Dated questions", "Forward measurement",
+    for h in ("Dated questions", "Forward measurement",
               "Public commitments", "Forward testing, no backtests"):
         assert f"<h3>{h}</h3>" in html, h
+    # And the explainer that said all of it a second time is not.
+    for gone in ("How it works: a semiconductor supply chain map",
+                 "How it works: supply chain maps with dated questions",
+                 "The chain, in layers"):
+        assert gone not in html, gone
 
 
 def test_the_score_step_only_claims_verification_with_its_proof(tmp_path):
@@ -137,9 +141,13 @@ def test_the_layers_are_the_maps_own(tmp_path):
     text = _text(_page(tmp_path))
     layers = MAP["labels"]["layers"]
     order = sorted(layers, key=lambda k: int(k[1:]))
-    assert f"in {len(order)} layers: " in text
-    for k in order:
-        assert layers[k]["en"] in text, k
+    assert "traces its chain in layers: " in text
+    # Every one of them, in the map's own order. A page that named a subset,
+    # or named them alphabetically, would be describing a different chain.
+    seen = [layers[k]["en"] for k in order]
+    assert all(n in text for n in seen), seen
+    at = [text.index(n) for n in seen]
+    assert at == sorted(at), "the layers are listed out of order"
 
 
 def test_the_published_label_shape_and_the_maps_shape_read_the_same(tmp_path):
@@ -160,8 +168,10 @@ def test_the_chokepoint_examples_are_chokepoints_on_the_map(tmp_path):
     names = " ".join(c["name"] for c in MAP["chokepoints"]).lower()
     for example in ("euv lithography", "hbm", "advanced packaging"):
         assert example in names, example
-    assert "such as EUV lithography, HBM memory and advanced packaging" in \
-        _text(_page(tmp_path))
+    text = _text(_page(tmp_path))
+    assert "such as EUV lithography, HBM memory and advanced packaging" in text
+    # And the kind of chokepoint is the map's word for it, not the engine's.
+    assert "semiconductor chokepoints are concentrated dependencies" in text
 
 
 def test_the_page_never_says_every_question_sits_on_a_chokepoint(tmp_path):
@@ -201,10 +211,9 @@ def test_the_scoring_sentence_is_the_scoring_code(tmp_path):
 # committed before the answer count as preregistered" defines the word, and a
 # definition holds on a build with no contracts at all.
 PREREG_WORDS = ("SHA-256", "commitments.json", "track_public.json", "Verify",
-                "Late commitments are labeled",
                 "Late commitments remain public",
                 "hashed with SHA-256 and published",
-                "with its verification", "anyone can verify it")
+                "anyone can verify it")
 
 
 def test_with_both_files_the_preregistration_is_described(tmp_path):
@@ -258,14 +267,15 @@ SUBSCRIBE_FAQ = (" Subscribe, confirm the first email, and the key arrives "
 def test_the_free_and_key_answer_is_held_to_access_py(tmp_path, monkeypatch):
     monkeypatch.delenv("SUBSCRIBE_EMBED_URL", raising=False)
     text = _text(_page(tmp_path))
-    assert ("Every map, chokepoint, event date and resolved question with "
-            "its verification is public, and so is every measured result. "
-            "Upcoming question details and registered baskets require the "
-            "free weekly key."
-            + SUBSCRIBE_FAQ) in text
+    assert ("Every map, chokepoint, event date, resolved question and "
+            "measured result is public. Upcoming question details and "
+            "registered baskets require the free weekly key.") in text
+    # The instruction that used to follow it is in the subscription
+    # component, which exists only where a mail service is configured --
+    # so the sentence and the thing it describes appear and vanish together.
+    assert SUBSCRIBE_FAQ.strip() not in text
     bare = _text(_page(tmp_path / "bare", commitments=False))
-    assert "resolved question is public" in bare, \
-        "verification is claimed only with its proof"
+    assert "resolved question and measured result is public" in bare
     monkeypatch.setattr(access, "tier", lambda item, ctx=None: "free")
     with pytest.raises(landing.LandingError, match="access.py"):
         _page(tmp_path)
@@ -313,7 +323,7 @@ def test_the_live_publication_is_the_configured_form(monkeypatch):
 def test_without_the_embed_url_neither_page_offers_a_signup(tmp_path,
                                                             monkeypatch):
     monkeypatch.setenv("SUBSCRIBE_EMBED_URL", "")
-    assert SUBSCRIBE_FAQ.strip() not in _text(_page(tmp_path))
+    assert sitenav.SUBSCRIBE_CONFIRM not in _text(_page(tmp_path))
     for html in (_page(tmp_path), _track_page()):
         assert "<iframe" not in html
         assert 'class="subscribe"' not in html
@@ -354,7 +364,7 @@ def test_with_the_embed_url_both_pages_call_out_under_the_label(
         assert sitenav.SUBSCRIBE_CTA in _text(html)
         assert (html.index(sitenav.SUBSCRIBE_LABEL)
                 < html.index(sitenav.SUBSCRIBE_CONFIRM) < html.index(link))
-    assert SUBSCRIBE_FAQ.strip() in _text(land)
+    assert sitenav.SUBSCRIBE_CONFIRM in _text(land)
     # Beside the call to the track record, and beside the key field.
     assert (land.index("View track record</a>") < land.index(link)
             < land.index("</header>"))
@@ -406,9 +416,8 @@ def test_title_description_canonical_and_keywords(tmp_path):
     assert '<meta name="description" content="' in html
     assert f'<link rel="canonical" href="{URL}">' in html
     text = _text(html)
-    for kw in ("AI supply chain", "semiconductor chokepoints",
-               "semiconductor supply chain map", "HBM", "EUV",
-               "advanced packaging", "AI infrastructure", "Forward testing"):
+    for kw in ("AI supply chain", "semiconductor chokepoints", "HBM", "EUV",
+               "advanced packaging", "Forward testing"):
         assert kw.lower() in (text + html).lower(), kw
 
 

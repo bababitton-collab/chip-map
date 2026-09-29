@@ -353,12 +353,6 @@ html.rec canvas{cursor:none}
 .whints{color:var(--ink3);font-size:.8rem;font-family:"IBM Plex Mono",monospace}
 .cta2{border-top:1px solid var(--rule);margin-top:18px;padding:16px 22px 8px}
 .cta2 .stats{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--ink3);margin-bottom:8px;direction:ltr;text-align:start}
-.cta2 h3{font-family:"Suez One",serif;font-weight:400;font-size:1.3rem;margin:0 0 6px}
-.cta2 p{color:var(--ink2);max-width:70ch;margin:0 0 12px}
-.cta2 a.btn{display:inline-block;background:var(--tight);color:#fff;text-decoration:none;font-weight:700;padding:10px 22px}
-.cta2 a.btn:hover{filter:brightness(1.1)}
-.cta2 .soon{display:inline-block;border:1px dashed var(--rule);color:var(--ink3);padding:10px 22px}
-.cta2 .disc{color:var(--ink3);font-size:.82rem;margin-top:10px;max-width:70ch}
 .qcards{padding:18px 22px 6px;border-top:1px solid var(--rule)}
 .qcards .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
 .qcards h2{font-family:"Source Serif 4",serif;font-weight:400;font-size:1.6rem;margin:0 0 4px}
@@ -688,7 +682,10 @@ __CARDS_JS__
 <div id="qcards"></div>
 <div id="qpast"></div>
 </section>
-<div class="cta2" id="cta2"></div>
+<div class="cta2" id="cta2">
+  <div class="stats" id="cta2stats"></div>
+  __SUBSCRIBE__
+</div>
 </div>
 <div class="foot" id="foot"></div>
 
@@ -2640,9 +2637,8 @@ function header(){
     `<div class="row"><b>${WORDS.legendZone}</b>`
     + ZORDER.map(k=>`<span><i class="zn" style="border-color:${ZCOL[k]}"></i>${ZNAME[k]}</span>`).join('')
     + `</div>`;
-  const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
   const BR = (D.labels||{}).brand||{};
-  document.getElementById('foot').innerHTML=`<span class="eyebrow">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. כרגע: ${nt} מתהדקים, ${ne} מתרופפים, ${na} בלי מתחרה נסחר. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מתחרים. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`+`<span class="brandline">${BR.footer||''}</span>`;
+  document.getElementById('foot').innerHTML=`<span class="eyebrow">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`+`<span class="brandline">${BR.footer||''}</span>`;
 }
 function boot(){ if(window.GL) GL.use(D.glossary||{});
   build(); resize(); header(); buildRail(); requestAnimationFrame(draw); }
@@ -2770,7 +2766,7 @@ function lockedHTML(){
     obsLabel:'חלקי · לתיעוד בלבד', obsNote:'התשובה נשארת ברישום הציבורי ואינה נכנסת לציון.',
     pendingLabel:'נענתה · הציון ממתין',
     scored:'נרשמו', pending:'ממתינות', rate:'שיעור פגיעה', mean:'עודף ממוצע', sess:'מפגשים',
-    entry:'כניסה', close:'אחרון', gate:'N=__MIN_N__ לפני כל החלטת הון', of:'מתוך',
+    entry:'כניסה', close:'אחרון', gate:'תוצאות מקבלות משמעות ב-n=__MIN_N__', of:'מתוך', scoredLow:'נרשמו',
     sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',
     pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',
     marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',
@@ -2849,7 +2845,7 @@ function lockedHTML(){
                    || S.horizons['20'] || S.horizons['5'] || {n:0}).n || 0;
     const n = (pooled==null ? local : pooled);
     const pctv = Math.min(100, Math.round(100*n/S.min_n));
-    return `<div class="gate" id="lgate"><span>${LT.gate} — ${n} ${LT.of} ${S.min_n}</span>
+    return `<div class="gate" id="lgate"><span>${LT.gate} · ${n} ${LT.of} ${S.min_n} ${LT.scoredLow}</span>
       <div class="bar"><i style="width:${pctv}%"></i></div></div>`;
   }
   // The site-wide record, written by chains/publish_site.py after every map
@@ -3392,15 +3388,15 @@ function lockedHTML(){
   });
 })();
 
-// ---- the call to action, and what the free page already gave away ----
+// ---- what this map has ahead of it ----
+// The subscription call beneath this line is sitenav.subscribe_html(), the
+// same component the landing and the track page draw, spliced in at build
+// time. This script writes the one thing those pages cannot: the counts from
+// this map's own snapshot.
 (function(){
-  const el = document.getElementById('cta2'); if(!el) return;
+  const el = document.getElementById('cta2stats'); if(!el) return;
   const W = D.watch||LIVE.watch||[]; if(!W.length) return;
-  const T = {head:'קבל כל שאלה לפני התשובה',
-    promise:'התדריך השבועי החינמי כולל שאלות קרובות, כללי הכרעה, סלים רשומים ותוצאות עם מקור.',
-    btn:'קבל את המפתח השבועי', soon:'בקרוב',
-    disc:'חינם. בלי המלצות. אפשר להסיר את ההרשמה בכל רגע.',
-    q:'שאלות', open:'פתוחות', next:'התשובה הבאה', days:'ימים', today:'היום', tomorrow:'מחר'};
+  const T = {q:'שאלות', open:'פתוחות', next:'התשובה הבאה', days:'ימים', today:'היום', tomorrow:'מחר'};
   const today = new Date(D.as_of+'T00:00:00Z'); const now=new Date(); const ref = now>today?now:today;
   const dd = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
   const nOpen = W.filter(w=>!w.locked).length;
@@ -3409,10 +3405,7 @@ function lockedHTML(){
   const when = n => n===0?T.today : (n===1?T.tomorrow : n+' '+T.days);
   const stats = `${W.length} ${T.q} · ${nOpen} ${T.open}`
     + (nd==null? '' : ` · ${T.next} ${when(nd)}`);
-  const url = D.signup||null;
-  el.innerHTML = `<div class="stats">${stats}</div><h3>${T.head}</h3><p>${T.promise}</p>`
-    + (url? `<a class="btn" href="${url}">${T.btn}</a>` : `<span class="soon">${T.soon}</span>`)
-    + `<div class="disc">${T.disc}</div>`;
+  el.textContent = stats;
 })();
 
 // The forward test, in full, from the copy the 07:00 task decrypts into the

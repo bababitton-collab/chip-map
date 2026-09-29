@@ -35,20 +35,35 @@ def test_a_site_wide_page_with_several_maps_points_at_the_choice():
     assert "/semi/" not in h.values()
 
 
-def test_a_maps_own_page_keeps_its_own_record_and_gains_a_way_out():
+def test_a_maps_own_page_keeps_its_own_record_and_a_way_out():
     """A reader inside a chain wants that chain's record. What they did not
-    have was any way back to the site that holds both."""
+    have was any way back to the site that holds both -- and the way out is
+    the same "Maps" item every other page carries, not a third one."""
     links = sitenav.links("energy", several=True)
     h = _hrefs(links)
-    assert h["all"] == "/"
-    assert h["map"] == "/energy/"
+    assert h["map"] == "/", "the way out is Maps"
     assert h["track"] == "/energy/track/"
-    assert [k for k, _l, _u in links][0] == "all", "the way out comes first"
+    assert [k for k, _l, _u in links] == ["map", "track"]
+
+
+def test_every_kind_of_page_carries_the_same_two_items():
+    """Brand, Maps, Track record, and the trust line under it. A bar that
+    grows an extra item inside a map is a different bar on every page, and
+    at 390 it was the item that pushed the brand off the edge."""
+    labels = {
+        "landing": [l for _k, l, _u in sitenav.links("semi", several=True,
+                                                     site_wide=True)],
+        "map": [l for _k, l, _u in sitenav.links("semi", several=True)],
+        "pooled": [l for _k, l, _u in sitenav.links("semi", several=True,
+                                                    site_wide=True)],
+    }
+    assert all(v == [sitenav.MAPS_LABEL, sitenav.TRACK_RECORD]
+               for v in labels.values()), labels
 
 
 def test_the_bar_renders_every_item_it_is_given():
     html = sitenav.html("energy", "map", several=True)
-    assert 'href="/"' in html and sitenav.ALL_MAPS in html
+    assert 'href="/"' in html and sitenav.MAPS_LABEL in html
     assert 'href="/energy/track/"' in html
 
 

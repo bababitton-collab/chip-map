@@ -166,6 +166,44 @@ def _epoch(day: str | dt.date, end: bool = False) -> int:
     return int(t.replace(tzinfo=dt.timezone.utc).timestamp())
 
 
+def _session_open(result: Any, last_ts: float, now: float | None = None) -> bool:
+    """Is the last bar the session that is still trading?
+
+    Three answers, in order of how much the payload actually tells us:
+
+    1. ``meta.currentTradingPeriod.regular`` gives the current session's start
+       and end as epochs. A bar that begins at or after that start IS that
+       session, and it is unfinished while the clock is short of the end.
+       Epochs are compared directly -- no timezone arithmetic, and no table of
+       venue hours to maintain and get wrong.
+
+    2. No trading period, but ``gmtoffset``: fall back to the exchange's own
+       calendar date. A bar dated locally today cannot be shown to be closed,
+       so it is not kept.
+
+    3. Neither: the bar is kept only if its date is behind today in UTC.
+
+    The rule throughout is that a bar is dropped unless the payload
+    DEMONSTRATES the session ended. Silence is not a close.
+    """
+    meta = (result or {}).get("meta") or {}
+    t = dt.datetime.now(dt.timezone.utc).timestamp() if now is None else now
+
+    period = ((meta.get("currentTradingPeriod") or {}).get("regular")) or {}
+    start, end = period.get("start"), period.get("end")
+    if isinstance(start, (int, float)) and isinstance(end, (int, float)):
+        return last_ts >= start and t < end
+
+    off = meta.get("gmtoffset")
+    if isinstance(off, (int, float)):
+        local = dt.timezone(dt.timedelta(seconds=off))
+        return (dt.datetime.fromtimestamp(last_ts, local).date()
+                >= dt.datetime.fromtimestamp(t, local).date())
+
+    return (dt.datetime.fromtimestamp(last_ts, dt.timezone.utc).date()
+            >= dt.datetime.fromtimestamp(t, dt.timezone.utc).date())
+
+
 class YahooClient:
     """Daily bars, on the EODHD client's interface.
 
@@ -231,7 +269,8 @@ class YahooClient:
         return self._rows(symbol, y, payload)
 
     @staticmethod
-    def _rows(symbol: str, y: str, payload: Any) -> list[dict]:
+    def _rows(symbol: str, y: str, payload: Any,
+              now: float | None = None) -> list[dict]:
         chart = (payload or {}).get("chart") or {}
         if chart.get("error"):
             raise NoData(f"{symbol} (as {y}): Yahoo returned "
@@ -268,6 +307,20 @@ class YahooClient:
                 "adjusted_close": adjusted if adjusted is not None else close,
                 "volume": at("volume"),
             })
+            out[-1]["_ts"] = ts
+        # THE LAST BAR IS NOT A CLOSE UNTIL THE SESSION HAS CLOSED.
+        #
+        # interval=1d returns the day in progress as the final row, and its
+        # "close" is the last trade so far -- identical to
+        # meta.regularMarketPrice. Published as end-of-day it is a live quote
+        # wearing a settled price's name.
+        #
+        # This is the only place a bar enters the system, so it is the only
+        # place that has to know.
+        if out and _session_open(res, out[-1]["_ts"], now):
+            out.pop()
+        for row in out:
+            row.pop("_ts", None)
         return out
 
     def currency(self, symbol: str) -> str | None:

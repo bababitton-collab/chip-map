@@ -127,6 +127,18 @@ R2_SUFFIX = "-r2"
 HTTP_TIMEOUT = 10.0
 
 
+class MintError(RuntimeError):
+    """A forecast that cannot be registered without misstating the claim.
+
+    Everything else in this module degrades: a bad row is dropped with a
+    reason and the build goes on, because a build that stops takes the whole
+    site down over one question. This does not degrade. Minting a contract-v2
+    question from the wrong basket would put a number on the record under a
+    hash that promised a different one, and there is no version of that worth
+    shipping.
+    """
+
+
 def known_ids() -> set[str]:
     """The question ids an answer is allowed to refer to."""
     return {r["id"] for r in
@@ -206,22 +218,51 @@ def twin_id(qid: str, marked_at: str) -> str:
     return f"{qid}-{marked_at[:10]}{R2_SUFFIX}"
 
 
-def derived_baskets() -> dict[str, tuple[list[str], list[str]]]:
-    """The order-2 baskets: the second ring of each registered basket.
+def registered_ring2() -> dict[str, tuple[list[str], list[str]]]:
+    """The second-ring baskets a contract-v2 question registered BY HAND.
 
-    This is a pre-registration too, and it is a stricter one than the direct
-    baskets get. Those are typed by hand into watch.json; these are a pure
-    function of watch.json and map.json, both in git with commit dates. There
-    is no way to write an indirect basket without first committing an edge that
-    produces it -- so an incoming r2 record whose legs drifted is refused for
-    the same reason a drifted direct one is.
+    Only v2 questions appear here. For them this is the scored basket, typed
+    into watch.json, hashed into the contract and committed before the answer
+    date -- a pre-registration in exactly the sense the first ring is, and not
+    a derivation of anything.
     """
-    from chains import mapfile, rings
+    from chains import preregister
+    out = {}
+    for r in json.loads(watch_path().read_text(encoding="utf-8")):
+        if preregister.is_v2(r):
+            out[r["id"]] = preregister.ring2_of(r)
+    return out
+
+
+def derived_baskets() -> dict[str, tuple[list[str], list[str]]]:
+    """The order-2 baskets, from whichever source the question registered.
+
+    TWO KINDS OF SECOND RING, AND THEY ARE NOT THE SAME CLAIM
+    ---------------------------------------------------------
+    A contract-v1 question has no second ring of its own, so its twin is
+    DERIVED: a pure function of watch.json and map.json, both in git with
+    commit dates. There is no way to write an indirect basket without first
+    committing an edge that produces it. It is also the weaker of the two --
+    it says what the map happens to record, not what anybody claimed.
+
+    A contract-v2 question REGISTERED one, by hand, before the answer date,
+    and it is hashed into the contract. That basket is the scored claim, so
+    it is what the twin is minted from. It is never re-derived and never
+    reconciled against the map's edges: the map's edges did not make this
+    claim and cannot amend it.
+
+    v2 wins where both could apply. A v2 question whose twin came out of the
+    edge derivation would be scored on a basket nobody signed.
+    """
+    from chains import mapfile, preregister, rings
     doc = mapfile.load()
     by_ticker = {str(n.get("ticker", "")).upper(): n["id"]
                  for n in doc.get("nodes", []) if n.get("ticker")}
     out = {}
     for r in json.loads(watch_path().read_text(encoding="utf-8")):
+        if preregister.is_v2(r):
+            out[r["id"]] = preregister.ring2_of(r)
+            continue
         got = rings.second_ring(doc, r.get("win") or [], r.get("lose") or [],
                                 by_ticker.get(str(r.get("tk") or "").upper()))
         out[r["id"]] = (got["win2"], got["lose2"])
@@ -230,9 +271,15 @@ def derived_baskets() -> dict[str, tuple[list[str], list[str]]]:
 
 def check_forecast(rec: object, ids: set[str],
                    baskets: dict[str, tuple[list, list]],
-                   baskets2: dict[str, tuple[list, list]] | None = None
+                   baskets2: dict[str, tuple[list, list]] | None = None,
+                   ring2: dict[str, tuple[list, list]] | None = None
                    ) -> str | None:
-    """The reason this forecast cannot be used, or None if it can."""
+    """The reason this forecast cannot be used, or None if it can.
+
+    ``ring2`` is the REGISTERED second ring, for contract-v2 questions only.
+    A question in it is held to its contract; a question absent from it has a
+    derived second ring, which is frozen instead. See the order-2 branch.
+    """
     if not isinstance(rec, dict):
         return f"expected an object, got {type(rec).__name__}"
     fid = rec.get("id")
@@ -286,6 +333,24 @@ def check_forecast(rec: object, ids: set[str],
                     f"lose={rec['lose']}. A forecast whose hypothesis moved "
                     f"after the event is not a forecast.")
         return None
+    # A CONTRACT-V2 TWIN IS NOT FROZEN -- IT IS REGISTERED.
+    #
+    # The freeze below exists because a DERIVED ring changes when the
+    # derivation improves. A v2 ring is not derived: it was typed, hashed and
+    # committed before the answer date, exactly like a first-ring basket. So
+    # it is held to the first ring's rule instead -- it must still be the
+    # basket that was registered -- and drift is refused rather than kept.
+    reg2 = (ring2 or {}).get(qid)
+    if reg2 is not None:
+        if (sorted(rec["win"]), sorted(rec["lose"])) != (sorted(reg2[0]),
+                                                         sorted(reg2[1])):
+            return (f"{fid}: second-ring baskets do not match the ones "
+                    f"registered for {qid} in its contract. Registered "
+                    f"win={list(reg2[0])} lose={list(reg2[1])}; received "
+                    f"win={rec['win']} lose={rec['lose']}. The scored basket "
+                    f"of a v2 question is hashed into its preregistration "
+                    f"and cannot move after the event.")
+        return None
     # ORDER 2 IS FROZEN ONCE IT IS IN THE FILE.
     #
     # It used to be re-derived here and compared exactly, which reads as the
@@ -335,7 +400,8 @@ def _second_ring_legs_are_legal(fid: str, qid: str, rec: dict,
 
 def collect_forecasts(rows: object, ids: set[str] | None = None,
                       baskets: dict | None = None,
-                      baskets2: dict | None = None
+                      baskets2: dict | None = None,
+                      ring2: dict | None = None
                       ) -> tuple[list[dict], list[str]]:
     """The usable forecasts and the reasons the rest were dropped."""
     if rows is None:
@@ -344,11 +410,12 @@ def collect_forecasts(rows: object, ids: set[str] | None = None,
         return [], [f"forecasts must be a list, got {type(rows).__name__}"]
     ids = known_ids() if ids is None else ids
     baskets = registered_baskets() if baskets is None else baskets
+    ring2 = registered_ring2() if ring2 is None else ring2
     good: list[dict] = []
     problems: list[str] = []
     seen: set[str] = set()
     for rec in rows:
-        why = check_forecast(rec, ids, baskets, baskets2)
+        why = check_forecast(rec, ids, baskets, baskets2, ring2)
         if why:
             problems.append(why)
             continue
@@ -394,6 +461,7 @@ def with_twins(forecasts: list[dict],
     """
     have = {f["id"] for f in forecasts}
     made = []
+    registered = None
     for f in forecasts:
         if f.get("order", DEFAULT_ORDER) != 1:
             continue
@@ -403,6 +471,27 @@ def with_twins(forecasts: list[dict],
         if baskets2 is None:
             baskets2 = derived_baskets()
         win2, lose2 = baskets2.get(f["qid"], ([], []))
+        # THE V2 MINTING GUARD.
+        #
+        # A contract-v2 question is SCORED on the basket it registered. If the
+        # baskets handed to this function do not carry that basket -- because
+        # a caller built them from the edge derivation, or from a version of
+        # this code that predates v2 -- then minting would quietly produce a
+        # twin nobody signed and score the question on it. That is the one
+        # failure mode a preregistration cannot survive, so it stops here
+        # loudly instead of proceeding.
+        if registered is None:
+            registered = registered_ring2()
+        want = registered.get(f["qid"])
+        if want is not None and (sorted(win2), sorted(lose2)) != (
+                sorted(want[0]), sorted(want[1])):
+            raise MintError(
+                f"{f['qid']} is a contract-v2 question: its scored basket is "
+                f"win={list(want[0])} lose={list(want[1])}, registered and "
+                f"hashed before its answer date. Minting was handed "
+                f"win={list(win2)} lose={list(lose2)} instead, which is a "
+                f"basket nobody signed. The v2 minting path is missing or "
+                f"was bypassed; no forecast is registered until it is back.")
         # No second ring, no second forecast. An empty basket is not a claim.
         if not win2 and not lose2:
             continue

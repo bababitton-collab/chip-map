@@ -402,11 +402,22 @@ def test_the_marks_come_from_the_repository_with_no_url_at_all(monkeypatch,
     assert a["mu_fq4"]["note"] == "from git"
     direct = [r for r in f if r["order"] == 1]
     assert [r["id"] for r in direct] == ["f-1"]
-    # mu_fq4 gets NO twin: every supplier its second ring would have drawn --
+    # mu_fq4's DERIVED ring is empty: every supplier it would have drawn --
     # ASML, Advantest, Applied Materials, Hanmi, Siltronic -- sells into the
     # memory layer, which is the layer the question is asked inside, so none
-    # of them has a direction. No ring, no claim, no twin.
-    assert [r["id"] for r in f if r["order"] == 2] == []
+    # of them has a direction from the map alone.
+    #
+    # Which is why its author registered one by hand. mu_fq4 is contract v2,
+    # so its twin is minted from the basket in its contract, not from the
+    # edges, and it is the basket the question is SCORED on.
+    from chains import preregister
+    twins = [r for r in f if r["order"] == 2]
+    assert [r["id"] for r in twins] == ["mu_fq4-2026-09-30-r2"]
+    row = next(r for r in json.loads(
+        watch_path().read_text(encoding="utf-8")) if r["id"] == "mu_fq4")
+    want = preregister.ring2_of(row)
+    assert (twins[0]["win"], twins[0]["lose"]) == (list(want[0]),
+                                                   list(want[1]))
     assert problems == []
 
 

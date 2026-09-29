@@ -369,6 +369,17 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
                              + list(ring2.get("lose2") or []))},
     }
     out["has_r2"] = bool(out["win2"] or out["lose2"])
+    # Which contract this question was committed under, and therefore which
+    # ring carries its official score. Read off the watch row, which is the
+    # same row preregister.contract() hashes, so the card and the published
+    # hash cannot disagree about which basket is the claim.
+    #
+    # Written only for v2. v1 is the default everywhere and stamping it on
+    # thirty-nine cards would grow a file with a hard ceiling to say what its
+    # absence already says.
+    from chains import preregister as _prereg
+    if _prereg.is_v2(w):
+        out["contract_version"] = 2
     if commitment:
         out["commitment"] = {k: v for k, v in commitment.items() if k != "qid"}
 
@@ -543,6 +554,28 @@ def t_interval(vals: list[float]) -> tuple[float, float]:
     return m - h, m + h
 
 
+# ------------------------------------------------- which ring is the score
+# A contract-v1 question is scored on the basket it registered: the first
+# ring, in ``horizons``. A contract-v2 question is scored on the SECOND ring
+# it registered, in ``horizons2`` -- that is the whole point of v2, and the
+# first ring survives beside it as a diagnostic.
+#
+# Every place that asks "what did this question score" asks here, so the
+# card, the official verdict and the record cannot end up reading different
+# blocks for the same question.
+SCORED_RING_LABEL = {1: "first", 2: "second"}
+
+
+def scored_ring(r: dict) -> int:
+    return 2 if r.get("contract_version") == 2 else 1
+
+
+def scored_horizons(r: dict) -> dict:
+    """The horizon block this question's OFFICIAL score is read from."""
+    key = "horizons2" if scored_ring(r) == 2 else "horizons"
+    return (r.get(key) or {})
+
+
 def _signed(r: dict, h: str, key: str = "spread") -> float | None:
     """A horizon's excess, signed toward the prediction.
 
@@ -550,8 +583,12 @@ def _signed(r: dict, h: str, key: str = "spread") -> float | None:
     falls. Averaging raw excesses across yes and no answers would cancel right
     calls against each other, so a "no" whose basket fell counts as positive --
     the same sign the hit is judged by.
+
+    Read from the block this question is scored on, never from ``horizons``
+    by name: a v2 question's first ring is a diagnostic and must not reach
+    the official mean.
     """
-    got = (r.get("horizons") or {}).get(h) or {}
+    got = scored_horizons(r).get(h) or {}
     v = got.get(key)
     if v is None:
         return None
@@ -607,13 +644,13 @@ def pooled(by_domain: dict[str, dict]) -> dict:
         cards.extend(got)
         per[dom] = {
             "domain": dom,
-            "record": record_stats(got),
+            "record": unpooled(record_stats(got), got),
             # This map's own second benchmark, named as its own. The block
             # below prints this one and no other.
             "benchmark": forecast.benchmark_for(dom),
             "n_resolved": payload.get("n_resolved"),
         }
-    record = record_stats(cards)
+    record = unpooled(record_stats(cards), cards)
     for k in POOLED_EXCESS_KEYS:
         record.pop(k, None)
     record["excess"] = EXCESS_NOT_POOLED
@@ -644,7 +681,7 @@ def record_stats(records: list[dict]) -> dict:
     seen: set[tuple] = set()
     events = []
     for r in records:
-        got = (r.get("horizons") or {}).get(ph)
+        got = scored_horizons(r).get(ph)
         key = (r.get("domain"), r["qid"])
         if not got or got.get("spread") is None or key in seen:
             continue
@@ -670,7 +707,7 @@ def record_stats(records: list[dict]) -> dict:
                     "note": f"No forecast has completed its {PRIMARY_HORIZON}"
                             f"-session window yet"})
     else:
-        k = sum(1 for r in events if r["horizons"][ph]["hit"])
+        k = sum(1 for r in events if scored_horizons(r)[ph]["hit"])
         xs = [_signed(r, ph) for r in events]
         wide = n >= MIN_N_FOR_INTERVAL
         out.update({
@@ -692,14 +729,103 @@ def record_stats(records: list[dict]) -> dict:
                                     if sox else None)}
     diag = {}
     for h in DIAGNOSTIC_HORIZONS:
-        rows = [r for r in records if (r.get("horizons") or {}).get(h)]
+        rows = [r for r in records if scored_horizons(r).get(h)]
         vals = [v for v in (_signed(r, h) for r in rows) if v is not None]
         diag[h] = {"diagnostic": True, "n": len(rows),
-                   "hits": sum(1 for r in rows if r["horizons"][h]["hit"]),
+                   "hits": sum(1 for r in rows
+                               if scored_horizons(r)[h]["hit"]),
                    "mean_excess": (round(statistics.fmean(vals), 4)
                                    if vals else None)}
     out["diagnostic"] = diag
+
+    # The direct reaction of a v2 question: its first ring, measured the same
+    # way and reported beside the score it is not part of. Only where there
+    # are v2 questions -- on an all-v1 record this block would be an empty
+    # count of a thing that does not exist.
+    direct = [r for r in records if scored_ring(r) == 2
+              and (r.get("horizons") or {}).get(ph)]
+    if any(scored_ring(r) == 2 for r in records):
+        out["direct"] = {
+            "diagnostic": True, "horizon": PRIMARY_HORIZON, "n": len(direct),
+            "hits": sum(1 for r in direct if r["horizons"][ph]["hit"]),
+            "label": DIRECT_LABEL,
+        }
     return out
+
+
+# v1 scores the first ring; v2 scores a second ring registered by hand. The
+# two answer different questions -- "did the named companies move" and "did
+# what stands behind them move, later" -- and a hit rate over a mixture of
+# the two answers neither. So they are tallied separately and the pooled
+# headline refuses to exist as soon as both are present. This is the same
+# rule POOLED_EXCESS_KEYS applies across maps, for the same reason.
+CONTRACT_LABEL = {1: "Direct (contract v1)", 2: "Second ring (scored)"}
+DIRECT_LABEL = "Direct (diagnostic)"
+SCORED_LABEL = "Second ring (scored)"
+VERSIONS_NOT_POOLED = (
+    "a contract-v1 hit rate is measured on the first ring and a contract-v2 "
+    "one on the second. They answer different questions and are never "
+    "averaged together; each version's record is reported on its own.")
+
+
+# What a per-version block carries. Deliberately not a whole record_stats:
+# primary_horizon, the benchmark, the interval thresholds and the diagnostic
+# horizons are identical across versions and already at the top level, and
+# repeating them per version doubles the free payload to say nothing.
+VERSION_KEYS = ("n", "hits", "hit_rate", "hit_rate_interval", "mean_excess",
+                "median_excess", "mean_excess_interval", "capital_gated",
+                "capital_rule", "note")
+
+
+def record_by_contract(records: list[dict]) -> dict:
+    """One record per contract version, and never a record across them.
+
+    Returns ``{"versions": {...}, "scored_versions": [...], "mixed": bool}``.
+    """
+    by: dict[int, list[dict]] = {}
+    for r in records:
+        by.setdefault(scored_ring(r), []).append(r)
+    versions = {}
+    for v in sorted(by):
+        stats = record_stats(by[v])
+        keep = {k: stats[k] for k in VERSION_KEYS if k in stats}
+        keep["contract_version"] = v
+        keep["label"] = CONTRACT_LABEL[v]
+        versions[str(v)] = keep
+    live = [v for v, s in versions.items() if s["n"] > 0]
+    return {"versions": versions, "scored_versions": sorted(live),
+            "mixed": len(live) > 1}
+
+
+# What a pooled headline may not claim once two contract versions have both
+# scored something. N stays -- it is a count of questions and counting them
+# is honest -- but a hit rate or a mean excess over a mixture of two
+# different claims is a number with no referent.
+POOLED_VERSION_KEYS = ("hits", "hit_rate", "hit_rate_interval",
+                       "mean_excess", "median_excess", "mean_excess_interval")
+
+
+def unpooled(record: dict, records: list[dict]) -> dict:
+    """A record with its per-version split attached, and pooled only while
+    pooling means nothing.
+
+    Today every question on the site is v1, so there is no split to report
+    and the record is byte-identical to what it has always been -- a block
+    saying "100% of this record is v1" is noise in a file with a hard size
+    ceiling. The split appears as soon as a second version does, and the
+    pooled hit rate goes the moment both have actually scored something.
+    """
+    versions = {scored_ring(r) for r in records}
+    if len(versions) < 2:
+        return record
+    split = record_by_contract(records)
+    record["by_contract"] = split
+    if split["mixed"]:
+        for k in POOLED_VERSION_KEYS:
+            record.pop(k, None)
+        record["versions_not_pooled"] = VERSIONS_NOT_POOLED
+        record["note"] = VERSIONS_NOT_POOLED
+    return record
 
 
 def summarise(records: list[dict]) -> dict:
@@ -741,7 +867,7 @@ def summarise(records: list[dict]) -> dict:
         "ring2_spread_5": at("horizons2", 5, "mean"),
         # The official record: the primary horizon, events not horizons,
         # every number with its N and no range below MIN_N_FOR_INTERVAL.
-        "record": record_stats(records),
+        "record": unpooled(record_stats(records), records),
     }
 
 
@@ -864,8 +990,16 @@ def official(r: dict) -> dict:
     One number per question counts: the excess over EW_MAP at the primary
     horizon, frozen at PRIMARY_HORIZON before the first scored forecast. The
     official N is the count of questions scored there, never of horizons.
+
+    WHICH basket that number comes from is the question's own contract. v1
+    scores the first ring. v2 scores the second ring it registered, and its
+    first ring is reported beside it as a direct-reaction diagnostic that
+    never reaches the score.
     """
     ph = PRIMARY_HORIZON
+    ring = scored_ring(r)
+    which = ("the second ring it registered" if ring == 2
+             else "the registered basket")
     if r.get("observe_only"):
         return {"counts": False, "state": "unscored",
                 "reason": "observation-only policy question: no basket was "
@@ -877,11 +1011,16 @@ def official(r: dict) -> dict:
                 "reason": f"answered {word}: no direction, so no forecast -- "
                           f"shown as an observation, not in the score"}
     if st in ("tracking", "closed"):
-        if (r.get("horizons") or {}).get(str(ph)):
+        if scored_horizons(r).get(str(ph)):
             return {"counts": True, "state": "scored",
+                    "contract_version": r.get("contract_version", 1),
+                    "scored_ring": ring,
                     "reason": f"scored: excess vs EW_MAP at {ph} sessions, "
-                              f"the pre-registered primary horizon"}
+                              f"the pre-registered primary horizon, on "
+                              f"{which}"}
         return {"counts": False, "state": "pending",
+                "contract_version": r.get("contract_version", 1),
+                "scored_ring": ring,
                 "reason": f"counts once the {ph}-session horizon locks "
                           f"(day {r.get('day_index')} of {ph})"}
     if st == "marked":

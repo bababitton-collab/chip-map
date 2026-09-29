@@ -416,6 +416,14 @@ html.rec canvas{cursor:none}
 .rldir{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ink3)}
 .rlnone{color:var(--ink3);font-size:.92rem;margin-top:14px}
+/* Contract v2: two lists, each under its own heading, so the diagnostic
+   ring is never read as the claim. The diagnostic dot is grey and carries
+   no direction, because it has none. */
+.rlhead{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);margin:20px 0 0}
+.rlist+.rlwhy{margin-top:10px}
+.rlrow.diag .rldot{background:var(--ink3);opacity:.6}
+.rlrow.diag b{color:var(--ink2)}
 @media (max-width:767px){
   .qcards .cons{display:none}
   .relbtn{display:inline-block}
@@ -2944,6 +2952,7 @@ function lockedHTML(){
     day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',
     up:'up if yes', down:'down if yes', ring2:'second ring · via the map',
     mixed:'{n} suppliers serve both sides — not drawn',
+    diag:'direct reaction · diagnostic', scored:'second ring · the scored basket',
     answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',
     terms:'Terms',
     upMore:'More dates', doneMore:'Earlier answers',
@@ -3131,8 +3140,35 @@ function lockedHTML(){
     return `<div class="cons policy"><div class="pband">${POLICY_STATE}</div></div>`;
   }
 
+  // A contract-v2 question registered its OWN second ring, by hand, before
+  // the answer date, and that basket is the one it is scored on. So the card
+  // inverts: the second ring carries the green and the red, and the first
+  // ring -- which still reprices on the report day, and is still minted --
+  // is drawn in grey and labelled for what it is, a diagnostic.
+  //
+  // Nothing here is derived. There are no supply edges behind these circles
+  // because the author did not claim any; the legs came out of the contract.
+  const V2_R = 12;         // the scored ring's circle: bigger than a derived one
+  function isV2(w){ return w.contract_version === 2; }
+
+  function ring2Registered(w){
+    const side = [...(w.win2||[]).map(i=>({id:i, win:true})),
+                  ...(w.lose2||[]).map(i=>({id:i, win:false}))];
+    const show = side.slice(0, R2_MAX);
+    if(!show.length) return {show:[], hidden:0};
+    // Spread over the whole box, not hung off a parent: a registered leg has
+    // no parent in the first ring, and drawing one would invent the edge.
+    const top = 26, bottom = VBH - 26;
+    show.forEach((k, i) => {
+      k.y = show.length === 1 ? CY
+          : top + i * ((bottom - top) / (show.length - 1));
+    });
+    return {show: show, hidden: side.length - show.length};
+  }
+
   function constellation(w){
     if(w.observe_only) return policyState();
+    const v2 = isV2(w);
     const centre = byTicker[String(w.tk||'').toUpperCase()];
     const centreId = centre?centre.id:null;
     const wins=(w.win||[]).slice(0,3), loses=(w.lose||[]).slice(0,3);
@@ -3143,15 +3179,26 @@ function lockedHTML(){
       : all.map((_,i)=>45+i*(130/(all.length-1)));
     let g='', drawn=[];
     all.forEach((o,i)=>{
-      const y=ys[i], col=o.win?'#3fd18b':'#ff5a3c';
-      const lab=labelOf(o.id), r=lab.length<=4?16:15;
+      const y=ys[i], col=v2?'#7d8797':(o.win?'#3fd18b':'#ff5a3c');
+      const lab=labelOf(o.id), r=v2?7:(lab.length<=4?16:15);
+      if(v2){
+        // A small grey dot with the WHOLE name beside it. Squeezed inside a
+        // circle the diagnostic ring reads "SK hyn" and "Samsun", which is
+        // not a name; beside it there is room, and the ring it is deferring
+        // to has the weight anyway.
+        g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X-r},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1" opacity=".4"/>`;
+        g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="1.4" opacity=".85"/>`;
+        g+=`<text x="${R1X+r+5}" y="${(y+3).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#7d8797">${esc(labelBeside(o.id))}</text>`;
+        drawn.push({id:o.id, y:y, col:col, r:r});
+        return;
+      }
       // Fit the label inside the node instead of letting it cross the stroke.
       const fs=Math.max(7.5, Math.min(11, (r*1.9)/Math.max(1,lab.length)*1.35));
       const m=bezMid(y);
       drawn.push({id:o.id, y:y, col:col, r:r});
-      g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".8"/>`;
-      g+=`<circle cx="${m.x.toFixed(1)}" cy="${m.y.toFixed(1)}" r="2.2" fill="${col}"/>`;
-      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="2" filter="url(#inset)"/>`;
+      g+=`<path d="M${CX},${CY} C160,${CY} 180,${y.toFixed(1)} ${R1X},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${v2?1.1:1.6}" opacity="${v2?.5:.8}"/>`;
+      g+=`<circle cx="${m.x.toFixed(1)}" cy="${m.y.toFixed(1)}" r="2.2" fill="${col}" opacity="${v2?.6:1}"/>`;
+      g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="${v2?1.4:2}" opacity="${v2?.8:1}" filter="url(#inset)"/>`;
       g+=`<circle cx="${R1X}" cy="${y.toFixed(1)}" r="${r-2}" fill="url(#hilite)" pointer-events="none"/>`;
       g+=`<text x="${R1X}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2">${esc(lab)}</text>`;
       const full=reasonOf(centreId,o.id);
@@ -3163,7 +3210,34 @@ function lockedHTML(){
     });
     if(total>6) g+=`<text x="${R1X}" y="215" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#7d8797">+${total-6} ${T.more}</text>`;
 
-    // --- ring 2 -----------------------------------------------------------
+    // --- ring 2, registered by hand (contract v2) -------------------------
+    if(v2){
+      const reg = ring2Registered(w);
+      const why = w.ring2_rationale || {};
+      let gv='';
+      reg.show.forEach(k=>{
+        const y=k.y, col=k.win?'#3fd18b':'#ff5a3c';
+        // From the CENTRE, not from a first-ring node: the claim is about
+        // this company's answer, and no edge between them is being asserted.
+        gv+=`<path d="M${CX+22},${CY} C${CX+70},${CY} ${R2X-90},${y.toFixed(1)} ${R2X-V2_R},${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="1.3" opacity=".55"/>`;
+        gv+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${V2_R}" fill="#0b0e14" stroke="${col}" stroke-width="2" filter="url(#inset)"/>`;
+        gv+=`<circle cx="${R2X}" cy="${y.toFixed(1)}" r="${V2_R-2}" fill="url(#hilite)" pointer-events="none"/>`;
+        const lab=labelBeside(k.id);
+        const tip=String(why[k.win?'win':'lose']||'');
+        gv+=`<text x="${R2X+V2_R+5}" y="${(y+3).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#c7d0dc">${esc(lab)}${tip?`<title>${esc(tip)}</title>`:''}</text>`;
+      });
+      if(reg.hidden>0) gv+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#7d8797">+${reg.hidden}</text>`;
+      const ctr2=esc(w.tk||(centre?centre.short:'')||'');
+      return `<div class="cons v2"><svg viewBox="0 0 ${VBW} ${VBH}">
+      <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
+      ${g}${gv}
+      <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"/>
+      <circle cx="${CX}" cy="${CY}" r="20" fill="url(#hilite)" pointer-events="none"/>
+      <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr2}</text>
+    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span><span><i style="border-color:#7d8797"></i>${T.diag}</span><span class="mixnote">${T.scored}</span></div></div>`;
+    }
+
+    // --- ring 2, derived from the map's edges (contract v1) ---------------
     const r2 = ring2For(w, drawn);
     let g2='';
     r2.show.forEach(k=>{
@@ -3254,7 +3328,8 @@ function lockedHTML(){
   // written out underneath it as text -- which is the version that survives
   // being read on a phone at all.
   const REL = {view:'View relationships', close:'Close', title:'Relationships',
-    up:'up if yes', down:'down if yes', none:'No basket is registered for this question.'};
+    up:'up if yes', down:'down if yes', none:'No basket is registered for this question.',
+    scored:'second ring · the scored basket', diag:'direct reaction · diagnostic'};
   function relButton(w){
     if(w.observe_only) return '';
     if(w.locked) return '';
@@ -3270,15 +3345,42 @@ function lockedHTML(){
       // The diagram clips this to twelve characters and folds the rest into a
       // <title>, which a finger cannot reach. Here it is written out whole:
       // the list is the readable copy of the same information, which is what
-      // it is for.
+      // it is for. labelBeside, not labelOf -- labelOf exists to fit six
+      // characters inside a 30px circle, and "SK hyn" is not a name.
       const why = centreId ? (reasonOf(centreId, id) || '') : '';
       return `<li class="rlrow ${win?'win':'lose'}">`
         + `<span class="rldot" aria-hidden="true"></span>`
-        + `<span class="rlmain"><b>${esc(labelOf(id))}</b>`
+        + `<span class="rlmain"><b>${esc(labelBeside(id))}</b>`
         + (why ? `<span class="rlwhy">${esc(why)}</span>` : '')
         + `</span>`
         + `<span class="rldir">${win?REL.up:REL.down}</span></li>`;
     };
+    // On a contract-v2 card the first ring is NOT the claim, so the list may
+    // not print "up if yes" beside it. The scored basket comes first, under
+    // its own heading, and the first ring follows under its own -- the same
+    // split the diagram draws, in the version a finger can read.
+    if(isV2(w)){
+      const why = w.ring2_rationale || {};
+      const leg = (id, win) =>
+        `<li class="rlrow ${win?'win':'lose'}">`
+        + `<span class="rldot" aria-hidden="true"></span>`
+        + `<span class="rlmain"><b>${esc(labelBeside(id))}</b></span>`
+        + `<span class="rldir">${win?REL.up:REL.down}</span></li>`;
+      const scored = (w.win2||[]).map(i=>leg(i,true))
+        .concat((w.lose2||[]).map(i=>leg(i,false)));
+      const plain = id =>
+        `<li class="rlrow diag"><span class="rldot" aria-hidden="true"></span>`
+        + `<span class="rlmain"><b>${esc(labelBeside(id))}</b></span></li>`;
+      const first = (w.win||[]).concat(w.lose||[]).map(plain);
+      const note = [why.win, why.lose].filter(Boolean)
+        .map(s=>`<p class="rlwhy">${esc(s)}</p>`).join('');
+      return `<p class="rlhead">${REL.scored}</p>`
+        + (scored.length ? `<ul class="rlist">${scored.join('')}</ul>`
+                         : `<p class="rlnone">${REL.none}</p>`)
+        + note
+        + `<p class="rlhead">${REL.diag}</p>`
+        + `<ul class="rlist">${first.join('')}</ul>`;
+    }
     const items = (w.win||[]).map(i=>row(i,true))
       .concat((w.lose||[]).map(i=>row(i,false)));
     return items.length ? `<ul class="rlist">${items.join('')}</ul>`

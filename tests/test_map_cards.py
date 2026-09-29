@@ -65,16 +65,17 @@ def test_the_status_line_is_rendered_as_a_count_and_not_as_a_grade(tmp_path):
     _published(tmp_path, "m", cps=[{"id": "a", "pressure": 0.2},
                                    {"id": "b", "pressure": -0.1}])
     html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
-    assert "1 tightening" in html and "1 eroding" in html
+    assert "1 tightening" in html and "1 easing" in html
     for graded in ("high", "elevated", "critical", "severe", "risk"):
         assert graded not in html.lower(), graded
 
 
 @pytest.mark.parametrize("pressures,want", [
-    ([0.2, -0.1], "1 tightening · 1 eroding"),
-    ([None, None, None, None, None], "5 cannot be measured"),
-    ([0.1, 0.2, -0.3, None], "2 tightening · 1 eroding · 1 cannot be measured"),
-    ([0.4], "1 tightening"),
+    ([0.2, -0.1], "Pressure 1 tightening · 1 easing"),
+    ([None] * 5, "Pressure 5 with no listed challenger"),
+    ([0.1, 0.2, -0.3, None],
+     "Pressure 2 tightening · 1 easing · 1 with no listed challenger"),
+    ([0.4], "Pressure 1 tightening"),
 ])
 def test_the_status_line_gives_all_three_states(pressures, want, tmp_path):
     """"0 of 5 tightening" was true of defence and said nothing: all five of
@@ -87,7 +88,10 @@ def test_the_status_line_gives_all_three_states(pressures, want, tmp_path):
     i = html.index('class="mapstatus"')
     line = html[i:html.index("</p>", i)]
     import re as _re
-    assert _re.sub(r"<[^>]+>", "", line.split(">", 1)[1]) == want
+    # The label is part of the line now, so it is read with it: a row of
+    # counts with nothing naming them was the thing the label fixed.
+    assert _re.sub(r"\s+", " ",
+                   _re.sub(r"<[^>]+>", " ", line.split(">", 1)[1])).strip() == want
 
 
 @pytest.mark.parametrize("pressures", [
@@ -104,7 +108,7 @@ def test_the_parts_always_sum_to_the_chokepoint_count(pressures, tmp_path):
 def test_a_zero_part_is_left_out_rather_than_printed_as_a_zero(tmp_path):
     _published(tmp_path, "m", cps=[{"id": "a", "pressure": 0.2}])
     html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
-    assert "0 eroding" not in html and "0 cannot be measured" not in html
+    assert "0 easing" not in html and "0 with no listed challenger" not in html
 
 
 def test_a_map_with_no_chokepoints_says_nothing_about_them(tmp_path):
@@ -121,8 +125,8 @@ def test_the_three_states_carry_the_maps_own_colours(tmp_path):
                                    {"id": "c", "pressure": None}])
     html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
     assert '<span class="tight">1 tightening</span>' in html
-    assert '<span class="erode">1 eroding</span>' in html
-    assert '<span class="unmeas">1 cannot be measured</span>' in html
+    assert '<span class="erode">1 easing</span>' in html
+    assert '<span class="unmeas">1 with no listed challenger</span>' in html
 
 
 # -- the next checkpoint -------------------------------------------------------
@@ -164,7 +168,7 @@ def test_the_card_never_carries_a_locked_question(tmp_path):
 
 
 def test_the_date_says_whether_it_is_confirmed_or_expected(tmp_path):
-    for confirmed, word in ((True, "confirmed"), (False, "expected")):
+    for confirmed, word in ((True, "date confirmed"), (False, "date expected")):
         root = Path(tmp_path) / ("y" if confirmed else "n")
         _published(root, "m", as_of="2026-09-29", watch=[
             {"id": "q", "who": "Acme Q3", "d": "2026-10-10",
@@ -178,13 +182,13 @@ def test_prices_through_is_read_from_the_snapshot(tmp_path):
     _published(tmp_path, "m", last_price_date="2026-09-18")
     c = cards(tmp_path, ["m"])[0]
     assert c["through"] == "2026-09-18"
-    assert "prices through 2026-09-18" in landing._map_cards_html([c], "m")
+    assert "Market data through 2026-09-18" in landing._map_cards_html([c], "m")
 
 
 def test_a_snapshot_with_no_price_date_says_nothing_about_prices(tmp_path):
     _published(tmp_path, "m", last_price_date="")
     html = landing._map_cards_html(cards(tmp_path, ["m"]), "m")
-    assert "prices through" not in html
+    assert "Market data through" not in html
 
 
 # -- the preview ---------------------------------------------------------------
@@ -222,7 +226,7 @@ def test_the_whole_card_is_one_link_to_its_map(tmp_path):
     assert '<a class="mapcard-hit" href="/m/"' in html
     # And the two explicit links stay, outside it -- a link inside a link is
     # not a thing, and Track Record has to be reachable separately.
-    assert '<a href="/m/track/">Track Record</a>' in html
+    assert '<a href="/m/track/">Track record</a>' in html
 
 
 def test_every_published_map_gets_a_card(tmp_path):

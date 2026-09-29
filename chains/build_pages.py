@@ -112,15 +112,13 @@ TRACK_GONE = ("// the forward test is not on the public page: the payload is "
 
 FETCH_READ = """(async()=>{ try{ const r=await fetch('%s',{cache:'no-store'}); if(!r.ok) return; const doc=await r.json(); if(doc&&doc.as_of&&doc.as_of>D.as_of&&doc.nodes){ doc.watch=doc.watch||LIVE.watch; D=doc; close(); boot(); } }catch(e){} })();"""
 
-# The Hebrew footer sentence gains the full disclaimer on the public page. The
-# English one does not need this step: its translated form below already
-# carries the disclaimer, so there is nothing left to append.
-# Ends at the backtick, not at the semicolon: the brand line now follows
-# this sentence inside the same expression.
-HE_FOOT_FROM = "זו מפה להבנת חשיפות, לא אות מסחר.`"
-HE_FOOT_TO = ("זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה "
-              "לאף אדם. כל מספר עם מקור; אומדן פירושו שלא נמצא מקור. מחירים "
-              "באיחור של עד שבוע.`")
+# The Hebrew footer used to be short on the private page and gain the full
+# disclaimer on the public one, by substitution here. The pressure-method
+# footer now carries the disclaimer in the source, in both languages, so there
+# is nothing left to append -- and a substitution that adds nothing is a step
+# that can silently stop running. What is still worth enforcing is that the
+# sentence is THERE, so the step became an assertion.
+HE_FOOT_MUST = "לא אות מסחר ולא ייעוץ השקעות."
 
 PUB = {
     "he": {
@@ -148,18 +146,21 @@ PUB = {
 TRANSLATIONS = [
  ("const FWD = {tracked:'שאלות במעקב', through:'מחירים עד'};",
   "const FWD = {tracked:'questions tracked', through:'prices through'};"),
- ('<h2>מבחן קדימה</h2>',
-  '<h2>Forward test</h2>'),
- ('    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`\n    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;',
-  '    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`\n    + `<span><i class="pa"></i>cannot be measured</span></div>`;'),
-    ("רחף על תחנה לדופק שלה · רחף על קו למה שהוא נושא ולחלק שלו אצל הקונה.", "Hover a station for its pulse · hover a line for what it carries and its share at the buyer."),
+ ('<h2>לוח התוצאות</h2>',
+  '<h2>Track record</h2>'),
+ ('    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>מתרופף</span>`\n    + `<span><i class="pa"></i>אין מתחרה נסחר</span></div>`;',
+  '    `<div class="row"><b>${WORDS.legendLine}</b>`\n    + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join(\'\')\n    + `</div><div class="row"><b>${WORDS.legendRing}</b>`\n    + `<span><i class="pl"></i>Tightening</span><span><i class="pe"></i>Easing</span>`\n    + `<span><i class="pa"></i>No listed challenger</span></div>`;'),
+    ("רחף לבדיקה · בחר תחנה לפרטים · \"עיון בתחנות\" לחיפוש וסינון", "Hover to inspect · select to open details · use Browse stations to search and filter"),
     # What the same hint says where there is no hover to give.
     ("const TOUCH_HINT = 'החלק הצידה כדי לנוע בין השכבות. הקש על תחנה לפרטים.';",
      "const TOUCH_HINT = 'Swipe sideways to explore layers. Tap a station for details.';"),
-    ("מבחן קדימה →", "Forward test →"),
+    ("לוח התוצאות →", "Track record →"),
  ('html{direction:rtl}', 'html{direction:ltr}'),
- ('<span class="lbl">הבדיקות הקרובות</span>', '<span class="lbl">NEXT CHECKPOINTS</span>'),
- ("`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`", "`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`"),
+ ('<span class="lbl">האירועים הקרובים</span>', '<span class="lbl">UPCOMING EVENTS</span>'),
+ # The cadence, from .github/workflows/build.yml: `30 5 * * 2-6` is once
+ # after each US trading session, not weekly.
+ ("`מפה ${D.map_version} · נתוני שוק עד <b>${stale}</b> · נבנה מחדש אחרי כל יום מסחר`",
+  "`map ${D.map_version} · market data through <b>${stale}</b> · rebuilt after each trading session`"),
  ("`<b>${e.who}</b><i>${e.days<=0?'היום':(e.days===1?'מחר':'בעוד '+e.days+' ימים')} · ${e.d}</i>`", "`<b>${e.who}</b><i>${e.days<=0?'today':(e.days===1?'tomorrow':'in '+e.days+' days')} · ${e.d}</i>`"),
  ("`13 שבועות <span dir=\"ltr\">${pct(px.r13w)}</span> · שנה <span dir=\"ltr\">${pct(px.r52w)}</span>`:'אין קו מחיר'", "`13 weeks <span dir=\"ltr\">${pct(px.r13w)}</span> · 1 year <span dir=\"ltr\">${pct(px.r52w)}</span>`:'no price line'"),
  ("return '<p class=\"role\">אין קו מחיר.</p>'", "return '<p class=\"role\">No price line.</p>'"),
@@ -174,8 +175,16 @@ TRANSLATIONS = [
  ("' · '+d+' ימים'", "' · '+d+' days'"),
  ("'<span style=\"color:var(--ink3)\">אומדן</span>'", "'<span style=\"color:var(--ink3)\">estimate</span>'"),
  ("`<div class=\"nextcp\">הבדיקה הבאה: <b>${nx.who}</b> · ${nx.d} · בעוד ${nx.days} ימים</div>`", "`<div class=\"nextcp\">Next checkpoint: <b>${nx.who}</b> · ${nx.d} · in ${nx.days} days</div>`"),
- ("`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה\"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`",
-  "`<b>The pulse</b> is the market's vote over the last 13 weeks: the holder's return minus its listed challengers' return. Positive — the lock is tightening, red and fast. Negative — eroding, green and slow. Right now: ${nt} tightening, ${ne} eroding, ${na} with no listed challenger. Station size is market cap. Each company in its own currency; Japanese names via US depositary receipts. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone. Every number carries a source; \"estimate\" means none was found. Prices lag by up to a week.`"),
+ # The pressure method, as the brief words it, minus two claims the data does
+ # not carry. "Station size reflects market capitalization" holds for 34 of
+ # 178 stations -- four of the five maps record no market value at all and
+ # draw every station at one fixed radius -- so the sentence now says where it
+ # applies. "Every published figure carries a source" is not true of the
+ # market caps or the price-derived returns, which carry none; what IS true is
+ # the supplier shares, 88 sourced and 42 published blank rather than
+ # unsourced, so the claim is narrowed to them.
+ ("`<span class=\"eyebrow\">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה\"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`",
+  "`<span class=\"eyebrow\">PRESSURE METHOD</span><b>Pressure</b> compares the chokepoint holder's 13-week return with its listed challengers. Positive values indicate tightening; negative values indicate easing. No value is shown when there is no listed challenger. A station with a recorded market value is drawn to it; the rest are drawn at one fixed size. Prices remain in each company's trading currency; Japanese names via US depositary receipts. Supplier shares are shown with their source and left blank where none is recorded; estimates are labelled. Market data may lag by up to one week. This is a map of exposures, not a trading signal and not investment advice.`"),
  # The private watch table. The public build replaces this whole section, but
  # the private English page needs it translated too.
  ("const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};", "const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};"),
@@ -187,23 +196,23 @@ TRANSLATIONS = [
  ("  const REL = {view:'הצג קשרים', close:'סגור', title:'קשרים',\n    up:'עולה אם כן', down:'יורד אם כן', none:'אין סל רשום לשאלה הזו.'};",
   "  const REL = {view:'View relationships', close:'Close', title:'Relationships',\n    up:'up if yes', down:'down if yes', none:'No basket is registered for this question.'};"),
  # The stations rail: the map's contents as HTML, beside the canvas.
- ("const RAIL = {stations:'תחנות', search:'חיפוש תחנה', sortName:'לפי שם',\n  sortLayer:'לפי שכבה', sortPulse:'לפי דופק', back:'חזרה לתחנות',\n  none:'אין תחנה שמתאימה לחיפוש.', cp:'צוואר בקבוק', pulseT:'נעילה מתהדקת',\n  pulseE:'נעילה נשחקת', pulseA:'לא נמדד', pulseNo:'ללא דופק',\n  lLayer:'שכבה', lCp:'צוואר בקבוק', lPulse:'דופק', lSort:'מיון',\n  anyLayer:'כל השכבות', cpAll:'כל התחנות',\n  cpYes:'רק צווארי בקבוק', cpNo:'לא צווארי בקבוק', anyPulse:'כל הדפקים',\n  count:'{n} מתוך {N} תחנות', clear:'נקה סינון', copy:'העתק קישור',\n  copied:'הקישור הועתק'};",
-  "const RAIL = {stations:'Stations', search:'Search stations', sortName:'By name',\n  sortLayer:'By layer', sortPulse:'By pulse', back:'Back to stations',\n  none:'No station matches that search.', cp:'chokepoint', pulseT:'lock tightening',\n  pulseE:'lock eroding', pulseA:'not measured', pulseNo:'no pulse',\n  lLayer:'Layer', lCp:'Chokepoint', lPulse:'Pulse', lSort:'Sort',\n  anyLayer:'All layers', cpAll:'All stations',\n  cpYes:'Chokepoints only', cpNo:'Not chokepoints', anyPulse:'Any pulse',\n  count:'{n} of {N} stations', clear:'Clear filters', copy:'Copy link',\n  copied:'Link copied'};"),
+ ("const RAIL = {stations:'תחנות', search:'חיפוש לפי חברה או סימול', sortName:'שם',\n  sortLayer:'שכבה', sortPulse:'לחץ', back:'חזרה לתחנות',\n  none:'אין תחנה שמתאימה לסינון הזה.', cp:'צוואר בקבוק', pulseT:'מתהדק',\n  pulseE:'מתרופף', pulseA:'אין מתחרה נסחר', pulseNo:'לא צוואר בקבוק',\n  lLayer:'שכבה', lCp:'צוואר בקבוק', lPulse:'לחץ', lSort:'מיון',\n  anyLayer:'כל השכבות', cpAll:'כל התחנות',\n  cpYes:'רק צווארי בקבוק', cpNo:'לא צווארי בקבוק', anyPulse:'כל מצבי הלחץ',\n  count:'{n} מתוך {N} תחנות', clear:'נקה סינון', copy:'העתק קישור לתצוגה',\n  copied:'הקישור הועתק'};",
+  "const RAIL = {stations:'Stations', search:'Search by company or ticker', sortName:'Name',\n  sortLayer:'Layer', sortPulse:'Pressure', back:'Back to stations',\n  none:'No stations match these filters.', cp:'chokepoint', pulseT:'Tightening',\n  pulseE:'Easing', pulseA:'No listed challenger', pulseNo:'Not a chokepoint',\n  lLayer:'Layer', lCp:'Chokepoint', lPulse:'Pressure', lSort:'Sort',\n  anyLayer:'All layers', cpAll:'All stations',\n  cpYes:'Chokepoints only', cpNo:'Non-chokepoints', anyPulse:'All pressure states',\n  count:'{n} of {N} stations', clear:'Clear filters', copy:'Copy view link',\n  copied:'View link copied'};"),
  ('<aside class="srail" id="srail" aria-label="תחנות"></aside>',
   '<aside class="srail" id="srail" aria-label="Stations"></aside>'),
  ('<button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">עיון בתחנות</button>',
   '<button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">Browse stations</button>'),
  # The forecast board.
- ('<h2>לוח החיזוי</h2>', '<h2>The Forecast Board</h2>'),
+ ('<h2>לוח התאריכים</h2>', '<h2>Forecast calendar</h2>'),
  # The board lead says what the section IS. The mechanics it used to carry --
  # contracts, benchmarks, timing, scoring -- are stated once, in the
  # "How scoring works" disclosure beside the ledger, and linked from here.
  # Repeating them above every list was how the page got long enough that the
  # lists below them stopped being read.
- ('<p class="lede">שאלות קרובות לאורך השרשרת, עם תאריכי תשובה מאושרים או צפויים. <a class="howlink" href="#howscoring">איך הציון עובד</a></p>',
-  '<p class="lede">Upcoming questions across the chain, with confirmed or expected answer dates. <a class="howlink" href="#howscoring">How scoring works</a></p>'),
- ('<div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>מדליף → שאלה</span></div>',
-  '<div class="bleg"><span><i class="f"></i>confirmed date</span><span><i></i>expected date</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>leaker → question</span></div>'),
+ ('<p class="lede">שאלות מתוארכות לאורך השרשרת. סימון מלא — תאריך תשובה מאושר; סימון חלול — תאריך צפוי. <a class="howlink" href="#howscoring">שיטת המדידה</a></p>',
+  '<p class="lede">Dated questions across the chain. Solid markers have confirmed answer dates; outlined markers have expected dates. <a class="howlink" href="#howscoring">Measurement method</a></p>'),
+ ('<div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>תשובה מוקדמת → שאלה מאוחרת</span></div>',
+  '<div class="bleg"><span><i class="f"></i>date confirmed</span><span><i></i>date expected</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>earlier answer → later question</span></div>'),
  # The tag on a row a machine marked. An auto mark and a checked mark colour
  # the board identically, so the page labels the difference rather than hiding
  # it -- a reader who cannot tell them apart is reading a stronger claim than
@@ -211,56 +220,57 @@ TRANSLATIONS = [
  (".btip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);padding:10px 12px;font-size:.95rem;max-width:380px;line-height:1.35;z-index:5;display:none;direction:rtl;", ".btip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--rule);padding:10px 12px;font-size:.95rem;max-width:380px;line-height:1.35;z-index:5;display:none;direction:ltr;"),
  # The forecast ledger. Its own STATUS copy is caught by the STATUS pair
  # above, which replaces every occurrence.
- ('<h2>יומן התחזיות</h2>',
-  '<h2>The Forecast Ledger</h2>'),
- ('<p class="lede">תשובות שפורסמו ותוצאות שנמדדו מופיעות כאן; תשובות חלקיות נשארות גלויות ואינן נכנסות לציון.</p>',
-  '<p class="lede">Published answers and measured outcomes appear here; mixed answers remain visible but do not enter the score.</p>'),
+ ('<h2>תוצאות שנמדדו</h2>',
+  '<h2>Measured outcomes</h2>'),
+ ('<p class="lede">שאלות שנענו והתוצאות שנמדדו אחריהן בשוק. תשובות חלקיות נשארות ברישום הציבורי ואינן נכנסות לציון.</p>',
+  '<p class="lede">Resolved questions and their forward market results. Partial answers remain in the public record but do not enter the score.</p>'),
  # The mechanics, once, where the ledger can be read beside them.
- ('<summary>איך הציון עובד</summary>', '<summary>How scoring works</summary>'),
+ ('<summary>שיטת המדידה</summary>', '<summary>Measurement method</summary>'),
  ('<p>כל שאלה נושאת חוזה ניקוד שנכתב מראש: הסלים, כלל הכן/לא, האופקים ומדדי ההשוואה, מגובבים ומפורסמים עם היום שבו נקבעו. רק חוזים שנקבעו לפני התשובה נחשבים רישום מוקדם.</p>',
   '<p>Every question carries a scoring contract written in advance: the baskets, the yes/no rule, the horizons and the benchmarks, hashed and published with the day they were set. Only contracts committed before the answer count as preregistered.</p>'),
  ('<p>הציון נמדד מהסגירה הראשונה שאחרי הסימון, מול המפה בשקלול שווה ומול מדד ההשוואה השני, ונקרא באופק הראשי. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>',
   '<p>The score is measured from the first close after the mark, against the equal-weight map and against the second benchmark, and read at the primary horizon. There is no backtest here and there cannot be one — the forecast was written before the price moved. The sample is small, and every number here is shown with its N.</p>'),
- ("  const LT = {h2:'יומן התחזיות', none:'עדיין לא נרשמו תשובות.',\n    nextAnswer:'התשובה הבאה הצפויה', answerRec:'תשובה נרשמה', answersRec:'תשובות נרשמו',\n    obsLabel:'חלקי · לתיעוד בלבד', obsNote:'התשובה נשארת ברישום הציבורי ואינה נכנסת לציון.',\n    pendingLabel:'נענתה · הציון ממתין',\n    scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'N=__MIN_N__ לפני כל החלטת הון', of:'מתוך',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',\n    direct:'ישיר — הסל הרשום', indirect:'עקיף — טבעת שנייה לפי המפה',\n    noind:'אין עדיין תחזית עקיפה'};",
-  "  const LT = {h2:'The Forecast Ledger', none:'No answers recorded yet.',\n    nextAnswer:'next expected answer', answerRec:'answer recorded', answersRec:'answers recorded',\n    obsLabel:'MIXED \\u00b7 OBSERVATION ONLY', obsNote:'This answer remains in the public record but does not enter the score.',\n    pendingLabel:'ANSWERED \\u00b7 SCORING PENDING',\n    scored:'scored', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'N=__MIN_N__ before any capital decision', of:'of',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark',\n    direct:'direct \\u2014 the registered basket', indirect:'indirect \\u2014 second ring, via the map',\n    noind:'no indirect forecast yet'};"),
+ ("  const LT = {h2:'תוצאות שנמדדו', none:'עדיין לא נרשמו תשובות.',\n    nextAnswer:'התשובה הבאה הצפויה', answerRec:'תשובה נרשמה', answersRec:'תשובות נרשמו',\n    obsLabel:'חלקי · לתיעוד בלבד', obsNote:'התשובה נשארת ברישום הציבורי ואינה נכנסת לציון.',\n    pendingLabel:'נענתה · הציון ממתין',\n    scored:'נרשמו', pending:'ממתינות', rate:'שיעור פגיעה', mean:'עודף ממוצע', sess:'מפגשים',\n    entry:'כניסה', close:'אחרון', gate:'תוצאות מקבלות משמעות ב-n=__MIN_N__', of:'מתוך', scoredLow:'נרשמו',\n    sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',\n    pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',\n    marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',\n    direct:'סל ישיר', indirect:'טבעת שנייה',\n    noind:'אין עדיין תחזית לטבעת השנייה'};",
+  "  const LT = {h2:'Measured outcomes', none:'No answers recorded yet.',\n    nextAnswer:'next expected answer', answerRec:'answer recorded', answersRec:'answers recorded',\n    obsLabel:'Partial \\u00b7 observation only', obsNote:'This answer remains in the public record but does not enter the score.',\n    pendingLabel:'Answered \\u00b7 scoring pending',\n    scored:'Scored', pending:'Pending', rate:'Hit rate', mean:'Mean excess', sess:'sessions',\n    entry:'entry', close:'last', gate:'Results become meaningful at n=__MIN_N__', of:'of', scoredLow:'scored',\n    sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',\n    pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \\u2191', dirDn:'win basket \\u2193',\n    marked:'marked', src:'source', noentry:'no session has closed since the mark',\n    direct:'Direct basket', indirect:'Second ring',\n    noind:'No second-ring forecast yet'};"),
  # The teaser layer. A locked row is fully visible and simply has no
  # sentence; the dummy below is fixed and is never the real text.
- ("const LOCK = {\n  dummy: 'שאלה נעולה — הטקסט המלא מגיע במייל השבועי יחד עם מה שצריך להקשיב לו בשיחת התוצאות',\n  line: 'הטקסט המלא', mail: 'במייל השבועי',\n  badge: 'השאלה הפתוחה השבוע',\n  marked: 'סומן', };",
-  "const LOCK = {\n  dummy: 'Locked question — the full text arrives in the weekly mail, with what to listen for on the call',\n  line: 'The full question', mail: 'in the weekly mail',\n  badge: 'this week\\'s open question',\n  marked: 'marked', };"),
- ("  const T = {head:'כל שאלה, לפני שהיא נענית',\n    promise:'כל שאלה עם תאריך, מה להקשיב לו, מי מדליף קודם, והתשובה עם המקור שלה — לפני כל אירוע ואחריו.',\n    btn:'קבל את המייל השבועי', soon:'בקרוב',\n    disc:'חינם ובתשלום, בלי המלצות. זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה לאף אדם.',\n    q:'שאלות', open:'פתוחות', next:'התשובה הבאה', days:'ימים', today:'היום', tomorrow:'מחר'};",
-  "  const T = {head:'Every question, before it is answered',\n    promise:'Every dated question, what to listen for, who leaks first, and the answer with its source — before and after each event.',\n    btn:'Get the weekly mail', soon:'coming soon',\n    disc:'Free, no recommendations. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone.',\n    q:'questions', open:'open', next:'next answer', days:'days', today:'today', tomorrow:'tomorrow'};"),
+ ("const LOCK = {\n  line: 'שאלה קרובה', mail: 'זמינה עם המפתח השבועי',\n  badge: 'השאלה הפתוחה השבוע',\n  marked: 'סומן', };",
+  "const LOCK = {\n  line: 'Upcoming question', mail: 'available with the weekly key',\n  badge: 'this week\\'s open question',\n  marked: 'marked', };"),
+ # The map's counts line. Its heading, promise, button and disclaimer
+ # went to sitenav.subscribe_html(), which is not translated because it
+ # is English-only copy spliced into both builds.
+ ("  const T = {q:'\u05e9\u05d0\u05dc\u05d5\u05ea', open:'\u05e4\u05ea\u05d5\u05d7\u05d5\u05ea', next:'\u05d4\u05ea\u05e9\u05d5\u05d1\u05d4 \u05d4\u05d1\u05d0\u05d4', days:'\u05d9\u05de\u05d9\u05dd', today:'\u05d4\u05d9\u05d5\u05dd', tomorrow:'\u05de\u05d7\u05e8'};",
+  "  const T = {q:'questions', open:'open', next:'next answer', days:'days', today:'today', tomorrow:'tomorrow'};"),
  # One visual language: plain words for holder/challenger, a two-row
  # legend, and the peer panel's section titles.
- ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',\n  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?',\n  legendZone:'איזה אזור?'};",
-  "const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',\n  buys:'Buys from', sells:'Sells to', peers:'Others in this layer',\n  via:'Challenges through', against:'against', sells1:'sells', to:'to ',\n  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?',\n  legendZone:'Which zone?'};"),
- ('    h+=`<h3>מי מספק למי ש${WORDS.holder} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;',
-  '    h+=`<h3>Who supplies the company that ${WORDS.holder} · ${t1.length} direct, ${t2.length} beneath them</h3>`;'),
- ('    h+=`<h3>מי ${WORDS.challenger} · ${c.sigs.length}</h3>`;',
-  '    h+=`<h3>Who is ${WORDS.challenger} · ${c.sigs.length}</h3>`;'),
- ("'למי ששולט אין קו מחיר.':'אין מי שמנסה להחליף אותו ונסחר. הטבעת כתומה: אי אפשר למדוד את הלחץ בשוק.'",
-  "'The company that controls it has no price line.':'Nobody listed is trying to replace them. Amber ring: the market pressure cannot be measured.'"),
- ("'הנעילה מתהדקת: מי ששולט עוקף את מי שמנסה להחליף אותו.' : 'הנעילה נשחקת: מי שמנסה להחליף עוקף את מי ששולט.'",
-  "'The lock is tightening: the company in control is outrunning the ones trying to replace it.' : 'The lock is eroding: the ones trying to replace it are outrunning the company in control.'"),
+ ("const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מתחרים נסחרים',\n  buys:'ספקים ישירים', sells:'לקוחות', peers:'אחרים בשכבה הזאת',\n  via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',\n  legendLine:'קשר', legendRing:'לחץ על צוואר הבקבוק',\n  legendZone:'אזור'};",
+  "const WORDS = {holder:'Controls this chokepoint', challenger:'Listed challengers',\n  buys:'Direct suppliers', sells:'Customers', peers:'Peers in this layer',\n  via:'Challenges through', against:'against', sells1:'sells', to:'to ',\n  legendLine:'Relationship', legendRing:'Chokepoint pressure',\n  legendZone:'Zone'};"),
+ ('    h+=`<h3>${WORDS.buys} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;',
+  '    h+=`<h3>${WORDS.buys} · ${t1.length} direct, ${t2.length} beneath them</h3>`;'),
+ ('    h+=`<h3>${WORDS.challenger} · ${c.sigs.length}</h3>`;',
+  '    h+=`<h3>${WORDS.challenger} · ${c.sigs.length}</h3>`;'),
+ ("'למי ששולט אין קו מחיר.':'אין מתחרה נסחר. הטבעת כתומה: אין מול מי למדוד את הלחץ.'",
+  "'The company that controls it has no price line.':'No listed challenger. Amber ring: there is nothing to measure the holder against.'"),
+ ("'הנעילה מתהדקת: המחזיק מקדים את המתחרים הנסחרים.' : 'הנעילה מתרופפת: המתחרים הנסחרים מקדימים את המחזיק.'",
+  "'Tightening: the holder is outrunning its listed challengers.' : 'Easing: the listed challengers are outrunning the holder.'"),
  # The board's own words. The lane NAMES come from the map now; the
  # rest of BT is still prose that has to be translated.
- ("const BT = {lanes:(D.labels||{}).lanes||{}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};",
-  "const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};"),
+ ("const BT = {lanes:(D.labels||{}).lanes||{}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'תאריך מאושר', exp:'תאריך צפוי', leaksIn:'תשובות מוקדמות שמגיעות לפני:', leaksOut:'משפיעה על:', noLeaks:'אין שאלה מוקדמת שמשפיעה עליה.', later:'מעבר לטווח הלוח:', hintsH:'מה תשובות קודמות מרמזות', hintsNone:'אף תשובה מוקדמת עוד לא שינתה את הלוח. הראשונה בתור:', of:'מתוך', answered:'נענו', leanY:'תשובות קודמות נוטות לכן', leanN:'תשובות קודמות נוטות ללא', leanM:'תשובות קודמות מעורבות', leanO:'עוד אין עדות כיוונית', stillOpen:'עוד פתוחים:', pulse:'לחץ', autoSuffix:' (אוטומטי)', locked:'שאלה קרובה · זמינה עם המפתח השבועי'};",
+  "const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'date confirmed', exp:'date expected', leaksIn:'Earlier answers that arrive first:', leaksOut:'Feeds into:', noLeaks:'No earlier question feeds into this one.', later:'Beyond the board:', hintsH:'What earlier answers imply', hintsNone:'No earlier answer has changed the board yet. First in line:', of:'of', answered:'answered', leanY:'Earlier answers lean YES', leanN:'Earlier answers lean NO', leanM:'Earlier answers are mixed', leanO:'No directional evidence yet', stillOpen:'still open:', pulse:'pressure', autoSuffix:' (auto)', locked:'Upcoming question · available with the weekly key'};"),
  # The map's one-line instruction. It used to travel with the <h1> that
  # the brand header replaced; it is still here and still needs a pair.
- ('<div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div>',
-  '<div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div>'),
+ ('<div class="sub">עקוב אחרי השרשרת מחומרי הגלם ועד המערכות בקצה. בחר תחנה לפרטים.</div>',
+  '<div class="sub">Follow the chain from upstream inputs to downstream systems. Select a station for details.</div>'),
  # The question cards. The placeholder below is fixed text in both
  # languages and is never the real sentence.
- ("  const T = {\n    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',\n    lockA:'\\u{1F512} השאלה, איך נשמעת תשובה חיובית ושלילית, ומי זז — ',\n    lockB:'במייל השבועי',\n    conf:'מאושר', exp:'צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    terms:'מונחים',\n    upMore:'תאריכים נוספים', doneMore:'תשובות קודמות',\n    moreDates:'הצג עוד {n} תאריכים', fewer:'הצג פחות', noStatus:'—',\n    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',\n           open:'לא ברור'},\n  };",
-  "  const T = {\n    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',\n    lockA:'\\u{1F512} The question, what yes and no sound like, and who moves — ',\n    lockB:'in the weekly mail',\n    conf:'confirmed', exp:'expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    terms:'Terms',\n    upMore:'More dates', doneMore:'Earlier answers',\n    moreDates:'Show {n} more dates', fewer:'Show fewer', noStatus:'—',\n    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',\n           open:'unclear'},\n  };"),
- ("  const PH = {q:'איזה מספר בשיחת התוצאות מכריע את השאלה שכולם כאן כבר מתווכחים עליה',\n    yes:'החברה נוקבת במספר מעל הטווח שעליו הנחתה ברבעון שעבר, ואומרת שהמגבלה זזה.',\n    no:'המספר נוחת בתוך הטווח הישן והשפה על הקיבולת לא משתנה מהפעם הקודמת.',\n    why:'זה קובע איזו משתי החברות מחזיקה את החלק הנדיר בעוד שנה.'};",
-  "  const PH = {q:'Which number on the call settles the question that everyone in this room is already arguing about',\n    yes:'The company names a figure above the range it guided to last quarter, and says the constraint has moved.',\n    no:'The number lands inside the old range and the language about capacity is unchanged from last time.',\n    why:'It decides which of two companies is holding the scarce part twelve months from now.'};"),
- ('<div class="eyebrow">04 · שאלות עם תאריך</div>',
-  '<div class="eyebrow">04 · Questions with a date</div>'),
- ('<h2>מה מתברר בהמשך — ואיך תיראה התשובה</h2>',
-  '<h2>What gets answered next — and what the answer will look like</h2>'),
- ('<p class="lede">כל כרטיס הוא שאלה שמתבררת ביום ידוע. לא "מה לקנות": איך נשמעת תשובה חיובית ואיך נשמעת שלילית בשיחת התוצאות, ואילו תחנות על המפה זזות אם היא חיובית. השאלה הבאה פתוחה; השאר מגיעות במייל השבועי.</p>',
-  '<p class="lede">Every card is a question that gets answered on a known day. Not "what to buy": what "yes" and "no" sound like on the call, and which stations on the map move if it is yes. The next question is open; the rest arrive in the weekly mail.</p>'),
+ ("  const T = {\n    yes:'כן אם', no:'לא אם', why:'למה זה משנה.',\n    lockEyebrow:'שאלה קרובה',\n    lockBody:'השאלה המלאה, כלל ההכרעה והחברות המושפעות זמינים עם המפתח השבועי.',\n    lockCta:'קבל את המפתח החינמי',\n    conf:'תאריך מאושר', exp:'תאריך צפוי',\n    day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',\n    up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',\n    answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',\n    terms:'מונחים',\n    upMore:'תאריכים נוספים', doneMore:'תשובות קודמות',\n    moreDates:'הצג עוד {n} תאריכים', fewer:'הצג פחות', noStatus:'—',\n    marks:{yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר',\n           open:'לא ברור'},\n  };",
+  "  const T = {\n    yes:'Yes if', no:'No if', why:'Why it matters.',\n    lockEyebrow:'Upcoming question',\n    lockBody:'The full question, decision rule and affected companies are available with the weekly key.',\n    lockCta:'Get the free key',\n    conf:'date confirmed', exp:'date expected',\n    day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',\n    up:'up if yes', down:'down if yes', ring2:'second ring · via the map',\n    answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',\n    terms:'Terms',\n    upMore:'More dates', doneMore:'Earlier answers',\n    moreDates:'Show {n} more dates', fewer:'Show fewer', noStatus:'—',\n    marks:{yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed',\n           open:'unclear'},\n  };"),
+ ('<div class="eyebrow">04 · שאלות מתוארכות</div>',
+  '<div class="eyebrow">04 · Dated questions</div>'),
+ ('<h2>שאלות שנוסחו לפני האירוע</h2>',
+  '<h2>Questions defined before the event</h2>'),
+ ('<p class="lede">כל כרטיס אומר מה ייחשב כן, מה ייחשב לא, למה התשובה משנה, ואילו חברות צפויות לזוז.</p>',
+  '<p class="lede">Each card states what would count as YES, what would count as NO, why the answer matters and which companies are expected to move.</p>'),
  # Focus mode's two buttons.
  ("const FOCUSW = {details:'פרטים', more:'נוספים'};",
   "const FOCUSW = {details:'Details', more:'more'};"),
@@ -367,6 +377,34 @@ def _fill_min_n(text: str) -> str:
     return text.replace(MIN_N_PLACEHOLDER, str(MIN_N_FOR_CAPITAL))
 
 
+# The subscription call, from the one place it is written
+# (chains/sitenav.subscribe_html). The track page fills the same placeholder
+# through chains/track.py; the map fills it here, so the public map, the
+# private map, the landing and the track page draw one component and cannot
+# say four different things about the same key.
+SUBSCRIBE_PLACEHOLDER = "__SUBSCRIBE__"
+
+
+def _fill_subscribe(text: str, public: bool = True) -> str:
+    """With no mail service configured this is the empty string, which is the
+    point: a page built before the service exists makes no claim about a
+    signup, and never a "coming soon".
+
+    ``public`` is False for the private map. The component carries the mail
+    service's one analytics event, and the private page carries no analytics
+    at all -- see tests/test_analytics.py -- so there it becomes nothing.
+    A reader of the private page is already the person who writes the mail.
+    """
+    if SUBSCRIBE_PLACEHOLDER not in text:
+        return text
+    if not public:
+        return text.replace(SUBSCRIBE_PLACEHOLDER, "")
+    from chains import sitenav
+    from chains.paths import subscribe_embed_url
+    return text.replace(SUBSCRIBE_PLACEHOLDER,
+                        sitenav.subscribe_html(subscribe_embed_url()))
+
+
 def _inline_cards(text: str) -> str:
     """Fill the shared card renderer into a page that asks for it.
 
@@ -428,14 +466,14 @@ def _must_replace(h: str, a: str, b: str, what: str) -> str:
 EN_TOP_FROM = (
     '<div class="top">\n'
     '  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div>'
-    '<div class="story" id="story"></div><div class="sub">Raw materials on the '
-    'left, data centers on the right. A pulsing station is a chokepoint. Click '
-    'it.</div></div>\n'
+    '<div class="story" id="story"></div><div class="sub">Follow the chain '
+    'from upstream inputs to downstream systems. Select a station for '
+    'details.</div></div>\n'
     '  <div class="asof" id="asof"></div>\n'
-    '  <a class="fwd" href="track/">Forward test →</a>\n'
+    '  <a class="fwd" href="track/">Track record →</a>\n'
     '</div>')
-EN_FWD_LINK_FROM = '<a class="fwd inline" href="track/">Forward test →</a>'
-EN_FWD_H2_FROM = '<h2>Forward test</h2>'
+EN_FWD_LINK_FROM = '<a class="fwd inline" href="track/">Track record →</a>'
+EN_FWD_H2_FROM = '<h2>Track record</h2>'
 EN_VALUE = ("The physical supply chain behind AI — who supplies whom, where the "
             "chokepoints are, and which dated questions come next.")
 
@@ -465,20 +503,41 @@ def desc_line(lang: str, dom: str | None = None) -> str:
 def value_line(dom: str | None = None) -> str:
     """The sentence under the brand, from the domain's own map when it names
     one. The line above is the first domain's and stays its exact wording, so
-    a map that declares nothing reads today exactly as it read yesterday."""
+    a map that declares nothing reads today exactly as it read yesterday.
+
+    ``line`` is the map's own one-line description of the chain it draws and
+    ``value`` is the blurb the landing card carries. The map page wants the
+    first; where a map declares only the second, the second still reads
+    correctly here. Never ``desc``: that is the <meta> description TEMPLATE,
+    with {nodes} and {cps} in it, and it belongs to desc_line above.
+    """
     from chains import mapfile
     try:
         brand = ((mapfile.load(dom=dom).get("labels") or {}).get("brand") or {})
     except (FileNotFoundError, ValueError):
         return EN_VALUE
-    v = brand.get("value")
-    if isinstance(v, dict):
-        v = v.get("en")
-    return (str(v).strip() if v else "") or EN_VALUE
+    for key in ("line", "value"):
+        v = brand.get(key)
+        if isinstance(v, dict):
+            v = v.get("en")
+        if v and str(v).strip():
+            return str(v).strip()
+    return EN_VALUE
 EN_TOP_CSS = (
+    # The nav is inserted above .top, not inside it, so it inherits no
+    # gutter. Without one the brand sat against the viewport edge at
+    # 390 and the track-record button's border ran off the right.
+    ".sitenav{padding-inline:22px}"
+    "@media (max-width:760px){.sitenav{padding-inline:20px}}"
     ".top .value{font-family:'Source Serif 4',serif;font-size:1.25rem;"
     "line-height:1.35;color:var(--ink);max-width:62ch;margin:6px 0 8px}"
-    ".top .story,.top .sub{display:none}"
+    # The map-specific description carries the first screen; the instruction
+    # under it is the only other sentence. The global story line says the same
+    # thing as the instruction ("select a company/station for details") and is
+    # already the blurb on the landing map cards, so the map page does not
+    # repeat it.
+    ".top .story{display:none}"
+    ".top .sub{color:var(--ink3);font-size:.92rem;max-width:62ch;margin:0 0 8px}"
     ".top .valuecta{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 6px}"
     ".top .valuecta a{font-family:'IBM Plex Mono',monospace;font-size:.72rem;"
     "letter-spacing:.1em;text-transform:uppercase;text-decoration:none;"
@@ -496,10 +555,10 @@ def en_top(dom: str) -> str:
             '  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div>\n'
             f'  <p class="value">{value_line(dom)}</p>\n'
             '  <div class="valuecta"><a class="cta1" href="#stage">Explore the map</a>'
-            f'<a class="cta2" href="/{dom}/track/">See the live record</a></div>\n'
-            '  <div class="story" id="story"></div><div class="sub">Raw materials on '
-            'the left, data centers on the right. A pulsing station is a chokepoint. '
-            'Click it.</div></div>\n'
+            f'<a class="cta2" href="/{dom}/track/">View track record</a></div>\n'
+            '  <div class="story" id="story"></div><div class="sub">Follow the chain '
+            'from upstream inputs to downstream systems. Select a station for '
+            'details.</div></div>\n'
             '  <div class="asof" id="asof"></div>\n'
             '</div>')
 
@@ -531,8 +590,10 @@ def public_page(template: str, live: str, cfg: dict,
     h = _must_replace(h, TRACK_DB_READ, TRACK_GONE,
                       "forward-test database read")
 
-    if cfg["lang"] == "he":
-        h = _must_replace(h, HE_FOOT_FROM, HE_FOOT_TO, "footer disclaimer")
+    if cfg["lang"] == "he" and HE_FOOT_MUST not in h:
+        raise ValueError(
+            "footer disclaimer: the Hebrew page no longer carries "
+            f"{HE_FOOT_MUST!r}. It was reworded; say it again or say why not.")
 
     extra_head = ""
     if cfg["lang"] == "en":
@@ -562,8 +623,8 @@ def public_page(template: str, live: str, cfg: dict,
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n" + extra_head + "</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return _fill_min_n(
-        doc.replace("__FOCUS__", focus).replace("__LIVE__", live))
+    return _fill_subscribe(_fill_min_n(
+        doc.replace("__FOCUS__", focus).replace("__LIVE__", live)))
 
 
 def private_page(template: str, live: str, focus: str = "null") -> str:
@@ -588,8 +649,9 @@ def private_page(template: str, live: str, focus: str = "null") -> str:
     k = h.index("</style>") + len("</style>")
     doc = (head + h[:k] + "\n</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
-    return _fill_min_n(
-        doc.replace("__FOCUS__", focus).replace("__LIVE__", live))
+    return _fill_subscribe(_fill_min_n(
+        doc.replace("__FOCUS__", focus).replace("__LIVE__", live)),
+                           public=False)
 
 
 def build_private(template=None, live=None, out=None):

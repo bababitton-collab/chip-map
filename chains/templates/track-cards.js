@@ -17,6 +17,18 @@
   // dashed equal-weight map it sits beside. The map stays first.
   const SOX='#f2b632', SOX_DASH=' stroke-dasharray="1 3" stroke-linecap="round"';
   const hasPoints = v => (v||[]).some(x=>x!=null);
+  // "N sessions since <what>, <date>". Two windows on a resolved card start
+  // in two places -- the record from the session the contract was signed on,
+  // the observation from the session the question was answered on -- and
+  // printing two bare counts beside each other reads as a contradiction. One
+  // helper, so the two lines say what they are counting from.
+  const sessionsSince = (n, from, what) =>
+    (n == null ? 'not yet measured'
+               : `over ${n} session${n === 1 ? '' : 's'} since ${what}`)
+    + (from ? ', ' + esc(from) : '');
+  // What an empty metric says. "0 / 0" is not a figure -- it reads as a
+  // result of zero out of zero rather than as an absent denominator.
+  const NOT_ENOUGH = 'Not enough scored questions yet';
 
   // Percent in, percent out. chains/track.py converts the ledger's fractions
   // once, at the boundary, so nothing here multiplies anything by a hundred.
@@ -29,8 +41,11 @@
   // opposite of the question, none means the report did not address it.
   const word = r => ['yes','no','mixed','none'].indexOf(r.status)>=0
     ? r.status : 'yes';
-  const MARK_LABEL = {yes:'yes', no:'no', mixed:'mixed',
-                      none:'no clear signal'};
+  // confirmed / refuted / partial is the vocabulary everywhere a reader
+  // sees an answer. The status VALUE stays 'mixed': it is in the data, in
+  // the contract and in every hash.
+  const MARK_LABEL = {yes:'confirmed', no:'refuted', mixed:'partial',
+                      none:'not disclosed'};
   // A basket is always defined as "up if yes" -- that is how the question was
   // written, before anyone knew the answer. The legend and the column head
   // name that, not the mark: "up if mixed" describes nothing.
@@ -319,11 +334,11 @@
   // an entry, and captioned so nobody reads it as a position.
   function observed(r){
     const m = word(r);
-    const heads = {win:['up if yes','up'], lose:['down if yes','dn'],
-      win2:['up if yes · second ring','up'],
-      lose2:['down if yes · second ring','dn']};
-    const cols = `<tr><th>Station</th><th>Expected if yes</th>`
-      + `<th>Report-day close</th><th>Last</th><th>Since report</th></tr>`;
+    const heads = {win:['Up if yes','up'], lose:['Down if yes','dn'],
+      win2:['Up if yes · second ring','up'],
+      lose2:['Down if yes · second ring','dn']};
+    const cols = `<tr><th>Company</th><th>Direction if yes</th>`
+      + `<th>Answer-day close</th><th>Latest close</th><th>Return</th></tr>`;
     const ms = r.members||[];
     const cap = `<p class="obs">No position taken — this question resolved `
       + `${esc(MARK_LABEL[m]||m)}. Shown for observation; not part of the `
@@ -407,7 +422,7 @@
       <svg viewBox="0 0 ${CW} ${CH}">${g}</svg></div>
       ${legend(lines, 'yes', up2!=null)}
       ${nums}
-      <p class="obsfoot">${o.sessions} session${o.sessions===1?'':'s'} since ${esc(o.from)} · not scored, not in the hit rate</p>`;
+      <p class="obsfoot">${sessionsSince(o.sessions, o.from, 'the answer')} · not scored, not in the hit rate</p>`;
   }
 
   function table(r){
@@ -420,9 +435,9 @@
     const heads = {win:['up if '+m,'up'], lose:['down if '+m,'dn'],
       win2:['up if '+m+' · second ring','up'],
       lose2:['down if '+m+' · second ring','dn']};
-    const cols = `<tr><th>Station</th><th>Expected if ${esc(m)}</th>`
-      + `<th>Report-day close</th><th>Entry close</th><th>Last</th>`
-      + `<th>Today</th><th>Since entry</th></tr>`;
+    const cols = `<tr><th>Company</th><th>Direction if ${esc(m)}</th>`
+      + `<th>Answer-day close</th><th>Entry close</th><th>Latest close</th>`
+      + `<th>Today</th><th>Return</th></tr>`;
     const ms = r.members||[];
     if(!ms.length) return `<div class="tw"><table class="mem">${cols}
       <tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
@@ -463,8 +478,8 @@
     const M = t => (window.GL ? GL.mark(t, r.terms) : esc(t));
     const both = !!(r.yes && r.no);
     const yn = (r.yes || r.no) ? `<div class="yn${both?'':' one'}">`
-      + (r.yes?`<div class="y"><b>Yes looks like</b>${M(r.yes)}</div>`:'')
-      + (r.no?`<div class="no"><b>No looks like</b>${M(r.no)}</div>`:'')
+      + (r.yes?`<div class="y"><b>Yes if</b>${M(r.yes)}</div>`:'')
+      + (r.no?`<div class="no"><b>No if</b>${M(r.no)}</div>`:'')
       + `</div>` : '';
     return (r.q?`<p class="q">${M(r.q)}</p>`:'')
       + yn
@@ -645,7 +660,7 @@
       <span class="trecnums">basket <b class="${sgn(b.win)}">${p2(b.win)}</b>
         · EW_MAP <b class="${sgn(b.ew)}">${p2(b.ew)}</b>
         · <b class="${sgn(b.win_ew)}">${p2(b.win_ew)}</b> vs the map
-        over ${n==null?'—':n} session${n===1?'':'s'}</span>
+        ${sessionsSince(n, b.from, 'the commitment')}</span>
       <a class="trecmore" href="${esc(r.qid)}/">Full record →</a></p>`;
   }
 
@@ -655,16 +670,17 @@
                    ['answer_date','Answered',0], ['verdict','Verdict',0],
                    ['basket','Basket',1], ['ew','EW_MAP',1],
                    ['sox',(window.BENCH_LABEL||'SOX'),1],
-                   ['excess_ew','vs EW_MAP',1], ['sessions','Sessions',2],
+                   ['excess_ew','Excess vs map',1], ['sessions','Sessions',2],
                    ['committed_at','Signed',0], ['sha','Hash',0]];
   function recordTable(rows){
     if(!rows || !rows.length)
-      return '<p class="empty">No question has closed yet.</p>';
+      return `<p class="empty">${NOT_ENOUGH}. No question has closed yet.</p>`;
     // The index links into the detail page; everything heavy lives there.
     const cell = (r, k, kind) =>
       k === 'qid' ? `<td><a href="${esc(r.qid)}/">${esc(r.qid)}</a></td>`
       : kind === 1 ? `<td class="${sgn(r[k])}">${p2(r[k])}</td>`
       : kind === 2 ? `<td>${r[k]==null?'—':r[k]}</td>`
+      : k === 'verdict' ? `<td>${esc(MARK_LABEL[r[k]] || (r[k]==null?'—':r[k]))}</td>`
       : `<td>${esc(r[k]==null?'—':r[k])}</td>`;
     const head = RT_COLS.map(([k,l]) =>
       `<th data-col="${esc(k)}" scope="col">${esc(l)}</th>`).join('');
@@ -738,9 +754,8 @@
   function tiles(S){
     const tile = (v,label,cls,attr) =>
       `<div class="tile ${cls||''}"${attr||''}><b>${v}</b><span>${esc(label)}</span></div>`;
-    const rate = s => (s && s.value!=null) ? Math.round(s.value*100)+'%' : '0 / 0';
-    const cap = (s,txt) => (s && s.n) ? txt+' (n='+s.n+')'
-                                      : 'no scored forecasts yet';
+    const rate = s => (s && s.value!=null) ? Math.round(s.value*100)+'%' : '—';
+    const cap = (s,txt) => (s && s.n) ? txt+' (n='+s.n+')' : NOT_ENOUGH;
     const pct = v => v==null ? '—' : Math.round(v*100)+'%';
     const R = S.record || null;
     const PH = (R && R.primary_horizon) || 20;
@@ -756,7 +771,7 @@
     if(!N){
       head = `<div class="record" data-record-n="0">
         ${lbl(`Official score · ${PH}-session excess vs EW_MAP`)}
-        <p class="empty" data-record-empty>No forecast has completed its ${PH}-session window yet.</p>
+        <p class="empty" data-record-empty>${NOT_ENOUGH}. No forecast has completed its ${PH}-session window yet.</p>
       </div>`;
     } else {
       const few = N < (R.min_n_for_interval||8);
@@ -777,20 +792,24 @@
     const X = (R && R.sox) || {};
     const dtiles = ['5','10','40']
       .filter(h => D[h] && (h !== '40' || D[h].n))
-      .map(h => tile(D[h].n ? `${D[h].hits}/${D[h].n}` : '0 / 0',
-                     D[h].n ? `hit at ${h}d (n=${D[h].n})` : 'no scored forecasts yet')
-              + tile(D[h].n && D[h].mean_excess!=null ? p2(D[h].mean_excess) : '0 / 0',
-                     D[h].n ? `mean excess at ${h}d (n=${D[h].n})` : 'no scored forecasts yet'))
+      .map(h => tile(D[h].n ? `${D[h].hits}/${D[h].n}` : '—',
+                     D[h].n ? `hit at ${h}d (n=${D[h].n})` : NOT_ENOUGH)
+              + tile(D[h].n && D[h].mean_excess!=null ? p2(D[h].mean_excess) : '—',
+                     D[h].n ? `mean excess at ${h}d (n=${D[h].n})` : NOT_ENOUGH))
       .join('');
+    const anyDiag = ['5','10','40'].some(h => D[h] && D[h].n) || X.n;
+    const upcoming = tile(S.n_upcoming||0,
+      nu ? 'pre-registered · next '+nu.d+' '+nu.who : 'pre-registered');
     const diag = `<div class="diag" data-diagnostic-row style="margin-top:6px">
       ${lbl('Diagnostic, not the score')}
-      <div class="tiles">
+      ${anyDiag ? `<div class="tiles">
         ${dtiles}
-        ${tile(X.n ? p2(X.mean_excess) : '0 / 0', X.n ? `excess vs ${(window.BENCH_LABEL||'SOX')} at ${PH}d (n=${X.n})` : 'no scored forecasts yet', '', ' data-stat="sox"')}
+        ${tile(X.n ? p2(X.mean_excess) : '—', `excess vs ${(window.BENCH_LABEL||'SOX')} at ${PH}d (n=${X.n||0})`, '', ' data-stat="sox"')}
         ${tile(rate(S.ring2_hit_5), cap(S.ring2_hit_5,'second ring hit 5d'))}
-        ${tile(S.n_upcoming||0, nu ? 'pre-registered · next '+nu.d+' '+nu.who
-                                   : 'pre-registered')}
-      </div>
+        ${upcoming}
+      </div>` : `<p class="empty" data-diagnostic-empty>${NOT_ENOUGH}, so the
+        other horizons and the second benchmark have nothing to report.</p>
+      <div class="tiles">${upcoming}</div>`}
     </div>`;
     return counts + head + diag;
   }

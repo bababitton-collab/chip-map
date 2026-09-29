@@ -15,9 +15,14 @@ import pytest
 from chains import domains, sitenav, track
 from chains.paths import commitments_path, templates_dir
 
-RULE = "Only contracts committed before the answer count as preregistered."
-HERO = ("Dated questions, public scoring contracts, and forward results. "
-        "Late commitments are labeled and never counted as preregistered.")
+RULE = sitenav.PREREGISTRATION_RULE
+# Where each template says it: a literal, or the slot the engine fills with it.
+RULE_SLOT = {"landing.html": "{{prereg_rule}}",
+             "track-site.html": RULE,
+             "track.html": "__PREREG_RULE__"}
+# The hero no longer carries the caveat; the trust line under it does, and it
+# is the line that has to hold on a build with nothing committed.
+HERO = "Public contracts · Forward results · No backtests"
 
 
 def tpl(name: str) -> str:
@@ -58,10 +63,12 @@ def test_no_page_claims_that_every_contract_beat_its_answer():
 def test_the_qualified_rule_replaces_them():
     """Sentence case and the closing period vary with where it sits in the
     prose; the rule itself does not."""
-    rule = RULE.rstrip(".").lower()
-    for name in ("landing.html", "track-site.html", "track.html"):
-        assert rule in tpl(name).lower(), name
-    assert sitenav.TRACK_RECORD_DESCRIPTOR == RULE
+    for name, slot in RULE_SLOT.items():
+        assert slot in tpl(name), name
+    # The descriptor is a label, not the rule: it says what the record is,
+    # and says nothing about when any contract was committed.
+    assert sitenav.TRACK_RECORD_DESCRIPTOR == "Public contracts · Forward scored"
+    assert "every" not in sitenav.TRACK_RECORD_DESCRIPTOR.lower()
 
 
 def test_the_rule_is_only_claimed_where_there_is_a_commitment_file():
@@ -79,9 +86,13 @@ def test_the_rule_is_only_claimed_where_there_is_a_commitment_file():
         b = s.index("<!--END:prereg-->", a)
         blocks.append(s[a:b])
         i = b
-    covered = "".join(blocks).lower()
-    rule = RULE.rstrip(".").lower()
-    assert s.lower().count(rule) == covered.count(rule) == 2
+    covered = "".join(blocks)
+    slot = RULE_SLOT["landing.html"]
+    assert s.count(slot) == covered.count(slot) == 1
+    # And the shorter restatement beside the three steps, which is the same
+    # claim in fewer words and needs the same file behind it.
+    short = "Late commitments remain public but do not count as preregistered"
+    assert s.count(short) == covered.count(short) == 1
 
 
 def test_the_methods_section_says_what_happens_to_a_late_commitment():
@@ -99,6 +110,8 @@ def test_the_methods_section_says_what_happens_to_a_late_commitment():
         "valid preregistration.",
         "Commitments made on or after the answer date are marked invalid as "
         "preregistrations.",
+        "Late commitments are labeled and never counted as preregistered.",
+        "Late commitments remain public but do not count as preregistered.",
     )
     assert any(a in s for a in accepted), (
         "landing.html no longer states what happens to a late commitment")
@@ -180,10 +193,10 @@ def test_all_four_states_have_their_own_words(name):
     s = tpl(name)
     for want in ("No answers recorded yet",
                  "next expected answer",
-                 "MIXED \\u00b7 OBSERVATION ONLY",
+                 "Partial \\u00b7 observation only",
                  "This answer remains in the public record but does not "
                  "enter the score.",
-                 "ANSWERED \\u00b7 SCORING PENDING"):
+                 "Answered \\u00b7 scoring pending"):
         assert want in s, want
 
 
@@ -278,7 +291,7 @@ def _ledger(D, rows, S, tmp_path):
         # so each section owns its own; the ledger is anchored on its LT,
         # which is the one thing in the file unique to it.
         "prelude": (_slice(src, "const STATUS = {open:", "};") + "\n"
-                    + _slice(src, "const LT = {h2:'The Forecast Ledger'",
+                    + _slice(src, "const LT = {h2:'Measured outcomes'",
                              "}).join('');\n    return;\n  }")),
         "rowcards": _slice(src, "function spark(series){",
                            "\n  }).join('');"),
@@ -326,7 +339,7 @@ def test_state_2_is_the_bug_semi_had(tmp_path):
                    "watch": WATCH, "cal": []}, [], SUM, tmp_path)
     assert "No answers recorded yet." not in got["tiles"]
     assert "1 answer recorded" in got["tiles"] and "0 scored" in got["tiles"]
-    assert "MIXED · OBSERVATION ONLY" in got["cards"]
+    assert "Partial · observation only" in got["cards"]
     assert ("This answer remains in the public record but does not enter the "
             "score.") in got["cards"]
     assert "Acme Q3" in got["cards"] and "marked 2026-09-11" in got["cards"]
@@ -361,7 +374,7 @@ def test_state_3_answered_and_still_scoring_is_amber_not_a_score(tmp_path):
                         "10": {"excess": 0.02, "hit": True}, "20": None})],
         SUM, tmp_path)
     assert got["reached"] == "scored-branch"
-    assert "ANSWERED · SCORING PENDING" in got["cards"]
+    assert "Answered · scoring pending" in got["cards"]
     assert "ldg-pending-tag" in got["cards"]
 
 
@@ -372,7 +385,7 @@ def test_state_4_scored_at_the_primary_horizon_drops_the_pending_tag(tmp_path):
                         "20": {"excess": 0.03, "hit": True}})],
         SUM, tmp_path)
     assert got["reached"] == "scored-branch"
-    assert "ANSWERED · SCORING PENDING" not in got["cards"]
+    assert "Answered · scoring pending" not in got["cards"]
     assert "hit" in got["cards"]
 
 
@@ -382,7 +395,7 @@ def test_the_pending_tag_follows_the_primary_horizon_and_not_the_number_20(tmp_p
         {"answers": {"q1": {"status": "yes"}}, "watch": WATCH, "cal": []},
         [_row(horizons={"20": {"excess": 0.03, "hit": True}})],
         {"primary_horizon": 40, "n": 0}, tmp_path)
-    assert "ANSWERED · SCORING PENDING" in got["cards"]
+    assert "Answered · scoring pending" in got["cards"]
 
 
 # -- the late commitment, as the card actually draws it ------------------------

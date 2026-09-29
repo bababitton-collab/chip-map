@@ -263,7 +263,7 @@ def test_the_search_restored_from_a_url_is_bounded():
 def test_there_is_a_copy_link_control_and_it_is_text():
     src = tpl()
     assert "class=\"rcopy\"" in src
-    assert "Copy link" in src and "Link copied" in src
+    assert "Copy view link" in src and "View link copied" in src
     # No icon font, no SVG sprite: a mono label, like every other control.
     bar = slice_between(src, '<div class="ractions">', '</div>')
     assert "<svg" not in bar and "<i " not in bar
@@ -284,7 +284,7 @@ def test_every_filter_has_a_visible_label_tied_to_its_control():
 
 def test_the_chokepoint_options_say_what_they_select():
     src = tpl()
-    for wording in ("All stations", "Chokepoints only", "Not chokepoints"):
+    for wording in ("All stations", "Chokepoints only", "Non-chokepoints"):
         assert wording in src, wording
     assert "anyCp" not in src, "the bare 'Any' is gone"
 

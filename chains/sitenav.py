@@ -17,24 +17,47 @@ MAPS_LABEL = "Maps"
 MAPS_ANCHOR = "#maps"
 # The way back out of a map, to the site that holds them all.
 ALL_MAPS = "All maps"
-TRACK_RECORD = "Track Record"
-# Not "every forecast recorded before the answer": one was not. orcl_q1
-# was committed three days after its answer date and is labelled late
-# wherever it appears. A claim the record itself contradicts is worth
-# less than the record.
-TRACK_RECORD_DESCRIPTOR = ("Only contracts committed before the answer "
-                           "count as preregistered.")
-SUBSCRIBE_LABEL = "Get the key — subscribe to the weekly mail (free)"
-# The embed is double opt-in: Substack sends a confirmation first, and only a
-# confirmed reader gets the welcome email that carries the key.
-SUBSCRIBE_CONFIRM = ("Confirm in the first email — the key arrives in the "
-                     "welcome email right after.")
+TRACK_RECORD = "Track record"
+# The bar carries the short claim; the rule itself carries conditions and
+# belongs where they can be read -- the measurement method. It used to say
+# "Only contracts committed before the answer count as preregistered", which
+# is the rule, in a nav bar, on every page.
+#
+# Still not "every forecast recorded before the answer": one was not. orcl_q1
+# was committed three days after its answer date and is labelled late wherever
+# it appears. Neither line claims otherwise.
+TRACK_RECORD_DESCRIPTOR = "Public contracts · Forward scored"
+# The rule in full, stated once per page that explains the method, and never
+# in the navigation.
+PREREGISTRATION_RULE = (
+    "A contract counts as preregistered only when it was committed before "
+    "the answer date. Late commitments remain public and are excluded from "
+    "preregistered results.")
+SUBSCRIBE_LABEL = "Unlock upcoming questions"
+# One vocabulary, used wherever the key is offered.
+SUBSCRIBE_BODY = ("The maps and all resolved questions are public. A free "
+                  "weekly key unlocks upcoming questions and their "
+                  "registered baskets.")
+# The embed is double opt-in: the mail service sends a confirmation first, and
+# only a confirmed reader gets the welcome email that carries the key.
+SUBSCRIBE_CONFIRM = ("Confirm your email. The key arrives in the welcome "
+                     "message.")
 # The signup is a link out, not an embedded frame. Substack serves its embed as
 # its own white page inside the iframe, and a cross-origin frame cannot be
 # restyled from here, so on a dark page it landed as a white rectangle. A link
 # carries the reader to the same form on Substack's own page, where the white
 # belongs, and leaves this page dark all the way down.
-SUBSCRIBE_CTA = "Subscribe on Substack →"
+#
+# The label says what the reader gets, not where the form lives. The
+# destination is still that service; the button is not the place to name it.
+SUBSCRIBE_CTA = "Get the free key"
+# The footer's third clause used to read "Sources attached to every published
+# measure". It is not true: 44 of semi's 136 subnode share rows carry no
+# source, and energy's six carry none at all. What IS true is the rule the map
+# already follows -- a figure with a source shows it, and one without is
+# labelled an estimate.
+FOOTER_NOTE = ("Supply-chain research, not investment advice · Sources shown "
+               "where recorded; estimates labelled")
 
 # Plausible: cookie-less page analytics, in the <head> of every public page and
 # of nothing private. Site-specific but public -- it is in every page's source
@@ -86,8 +109,13 @@ def links(dom: str, *, several: bool = False,
     if site_wide:
         return [("map", MAPS_LABEL, MAPS_ANCHOR),
                 ("track", TRACK_RECORD, "/track/")]
-    return [("all", ALL_MAPS, "/"),
-            ("map", MAP_LABEL, f"/{dom}/"),
+    # Two items on a map's own page as well, and the same two. A third that
+    # appeared only inside a map -- "All maps · Map" -- made the bar a
+    # different bar on every kind of page, and on a phone it was the item
+    # that pushed the brand into the viewport edge. "Maps" leads back out to
+    # the choice between them; "Track record" stays this map's, because a
+    # reader inside a chain wants that chain's record.
+    return [("map", MAPS_LABEL, "/"),
             ("track", TRACK_RECORD, f"/{dom}/track/")]
 
 
@@ -138,8 +166,12 @@ def subscribe_html(url: str | None) -> str:
         return ""
     label = _html.escape(SUBSCRIBE_LABEL, quote=True)
     return ('<div id="mailkey" style="margin:18px 0 0;max-width:480px">'
-            '<p style="margin:0 0 2px;font-size:.95rem;color:#b3bccb">'
+            '<p style="margin:0 0 4px;font-size:1rem;color:#e8ecf2;'
+            'font-weight:500">'
             f'{label}</p>'
+            '<p style="margin:0 0 6px;font-size:.92rem;color:#b3bccb;'
+            'line-height:1.5">'
+            f'{_html.escape(SUBSCRIBE_BODY)}</p>'
             '<p style="margin:0 0 8px;font-size:.85rem;color:#7d8797">'
             f'{_html.escape(SUBSCRIBE_CONFIRM)}</p>'
             f'<a href="{_html.escape(subscribe_link(url), quote=True)}" '
@@ -165,11 +197,23 @@ CSS = (".sitenav{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;"
        ".sitenav a.rec{color:#f2b632;border:1px solid #3a3320;"
        "border-radius:5px;padding:3px 9px}"
        ".sitenav a.rec:hover{border-color:#f2b632}"
-       ".sitenav .navdesc{text-transform:none;letter-spacing:0;"
-       "font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:.85rem;color:#98a3b2}")
+       ".sitenav .navdesc{color:#7d8797;font-size:.72rem;letter-spacing:.14em}"
+       # On a phone the four items competed for one row and the brand ended up
+       # against the viewport edge. The trust line takes its own full-width
+       # row, and the three that are links keep theirs.
+       "@media (max-width:640px){"
+       ".sitenav{gap:4px 14px;font-size:.74rem}"
+       ".sitenav a.home{margin-inline-end:auto}"
+       ".sitenav .navdesc{flex:0 0 100%;order:9;padding-top:6px;"
+       "border-top:1px solid #222a36;margin-top:2px}"
+       # 44px of target, without making the bar taller than it reads.
+       ".sitenav a{display:inline-flex;align-items:center;min-height:44px}"
+       "}")
 
 
 __all__ = ["BRAND", "MAP_LABEL", "TRACK_RECORD", "TRACK_RECORD_DESCRIPTOR",
-           "SUBSCRIBE_LABEL", "SUBSCRIBE_CONFIRM", "ANALYTICS",
+           "PREREGISTRATION_RULE", "FOOTER_NOTE",
+           "SUBSCRIBE_LABEL", "SUBSCRIBE_BODY", "SUBSCRIBE_CONFIRM",
+           "SUBSCRIBE_CTA", "ANALYTICS",
            "ANALYTICS_ORIGIN", "EVENTS", "event_js", "links", "html",
            "subscribe_html", "CSS"]

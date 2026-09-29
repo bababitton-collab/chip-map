@@ -16,23 +16,29 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.6}
-.wrap{max-width:1560px;margin:0 auto;padding:14px 26px 70px}
+.wrap{width:min(100%,1600px);margin-inline:auto;padding:14px clamp(20px,4vw,64px) 72px}
 a{color:var(--amber)}
 {{site_nav_css}}
 .hero{padding:40px 0 30px;border-bottom:1px solid var(--rule)}
+.hero .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.hero .trustline{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:0 0 22px}
 .hero h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.6rem;line-height:1.14;margin:0 0 14px;max-width:20ch}
-.hero .sub{color:var(--ink2);font-size:1.15rem;max-width:64ch;margin:0 0 24px}
+.hero .sub{color:var(--ink2);font-size:1.15rem;max-width:60ch;margin:0 0 16px}
 .head{list-style:none;padding:0;margin:0 0 18px;display:flex;flex-wrap:wrap;gap:12px}
-.head li{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:10px 16px;font-family:"IBM Plex Mono",monospace;font-size:.85rem;text-transform:uppercase;color:var(--ink2)}
-.head b{font-size:1.25rem;font-weight:500;color:var(--ink);margin-inline-end:6px;letter-spacing:0}
+.head li{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);padding:11px 16px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);min-width:132px}
+.head b{display:block;font-size:1.45rem;font-weight:500;color:var(--ink);letter-spacing:0}
+.head li.empty i{display:block;margin-top:4px;letter-spacing:.02em;text-transform:none;font-style:normal;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.9rem;color:var(--ink2);max-width:30ch}
 .head .ci{text-transform:none;letter-spacing:0;color:var(--ink3);margin-inline-start:6px}
 .head .note{text-transform:none;letter-spacing:0;color:var(--ink3);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.9rem}
 .gate{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:0}
+.notpooled{color:var(--ink3);font-size:.92rem;max-width:68ch;margin:0 0 6px}
 main section{padding:32px 0 10px;border-bottom:1px solid var(--rule)}
 main h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:1.7rem;line-height:1.2;margin:0 0 10px}
-main p{color:var(--ink2);max-width:74ch;margin:0 0 16px}
+main p{color:var(--ink2);max-width:68ch;margin:0 0 16px}
+main #method p{max-width:66ch}
 .domrecs{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.domrec{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:18px 20px}
+.domrec{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);padding:18px 20px;display:flex;flex-direction:column}
+.domrec .empty{margin:0 0 12px;color:var(--ink3);font-size:.92rem}
 .domrec h3{margin:0 0 6px;font-family:"Source Serif 4",serif;font-size:1.3rem;font-weight:600;color:var(--ink)}
 .domrec h3 a{text-decoration:none;color:var(--ink)}
 .domrec h3 a:hover{text-decoration:underline;color:var(--amber)}
@@ -43,12 +49,12 @@ main p{color:var(--ink2);max-width:74ch;margin:0 0 16px}
 .domstat li:last-child{border-bottom:0}
 .domstat span{color:var(--ink2);font-size:.95rem}
 .domstat b{font-family:"IBM Plex Mono",monospace;font-weight:500;color:var(--ink)}
-.domrec .more{margin:0;font-family:"IBM Plex Mono",monospace;font-size:.85rem;text-transform:uppercase}
+.domrec .more{margin:auto 0 0;font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}
 footer{margin-top:34px;color:var(--ink3);font-size:.85rem}
 footer a{color:var(--ink2)}
 @media (min-width:1450px){.domrecs{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:760px){
-  .wrap{padding:10px 14px 50px}
+  .wrap{padding:10px 20px 50px}
   .hero h1{font-size:1.9rem}
   .hero .sub{font-size:1.02rem}
   .domrecs{grid-template-columns:minmax(0,1fr)}
@@ -60,27 +66,31 @@ footer a{color:var(--ink2)}
 {{site_nav}}
 
 <header class="hero">
-  <h1>The record, across every map.</h1>
-  <p class="sub">Questions are measured against published scoring contracts. Only contracts committed before the answer count as preregistered. The record shows what was committed, when, and what happened next.</p>
+  <div class="eyebrow">Public track record</div>
+  <h1>Every resolved question. Every measured result.</h1>
+  <p class="sub">See what was committed, when it was committed and what happened next. Results are measured forward against published scoring rules.</p>
+  <p class="trustline">Public contracts · Sample size shown · No backtests</p>
   <ul class="head" aria-label="The pooled record">{{headline}}</ul>
+  <p class="notpooled">{{no_pooled_excess}}</p>
   {{capital_gate}}
 </header>
 
 <main>
 <section id="maps">
-  <h2>By map</h2>
-  <p>Across maps, {{excess_note}}. The hit rate combines all {{n_maps}} maps.</p>
+  <h2>Results by map</h2>
+  <p>Each map is scored against its own equal-weight universe. Combined figures are shown only where the methodology supports aggregation.</p>
   <ul class="domrecs">{{blocks}}</ul>
 </section>
 
 <section id="method">
-  <h2>How it is scored</h2>
-  <p>A question is scored from the close of the first session after its answer is marked. The official measure is the registered basket's excess over an equal-weight benchmark of every priced company on that map, at the primary horizon. Shorter and longer horizons, and each map's second benchmark, are kept as diagnostics and never as a second chance. Mixed or unclear answers are recorded as observations and are not scored.</p>
-  <p>Nothing here is backtested. Every number is measured forward from a mark, against a published contract. Only contracts committed before the answer count as preregistered. A late one stays in the record, labelled, and is never counted as preregistered.</p>
+  <h2>How results are measured</h2>
+  <p>A question is measured from the first market close after its answer is marked. The official result is the registered basket's excess return versus the equal-weight map at the registered primary horizon.</p>
+  <p>Other horizons and each map's second benchmark remain diagnostic. Partial answers are preserved as observations and are not scored. Every result is shown with its sample size.</p>
+  <p>A contract counts as preregistered only when it was committed before the answer date. Late commitments remain public and are excluded from preregistered results. No results are backtested.</p>
 </section>
 </main>
 
-<footer>{{brand}} · not investment advice · <a href="/">Home</a></footer>
+<footer>{{brand}} · {{footer_note}}<br><a href="/">Maps</a> · <a href="/track/">Track record</a> · <a href="/#method">Method</a></footer>
 </div>
 </body>
 </html>

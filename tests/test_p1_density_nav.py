@@ -349,18 +349,19 @@ def test_sideways_scroll_belongs_to_the_map_container():
 
 # -- 7. the section leads ------------------------------------------------------
 def test_the_board_lead_is_exactly_what_was_asked_for():
-    assert ("Upcoming questions across the chain, with confirmed or expected "
-            "answer dates.") in tpl(EN)
+    assert ("Dated questions across the chain. Solid markers have confirmed "
+            "answer dates; outlined markers have expected dates.") in tpl(EN)
 
 
 def test_the_ledger_lead_is_exactly_what_was_asked_for():
-    assert ("Published answers and measured outcomes appear here; mixed "
-            "answers remain visible but do not enter the score.") in tpl(EN)
+    assert ("Resolved questions and their forward market results. Partial "
+            "answers remain in the public record but do not enter the "
+            "score.") in tpl(EN)
 
 
 def test_the_mechanics_are_stated_once_and_linked_from_the_board():
     src = tpl(EN)
-    assert src.count("<summary>How scoring works</summary>") == 1
+    assert src.count("<summary>Measurement method</summary>") == 1
     assert 'href="#howscoring"' in src
     assert 'id="howscoring"' in src
     # The long mechanics paragraph is no longer sitting above the lists.

@@ -23,16 +23,19 @@
         "en": "The Living Pharma Map"
       },
       "value": {
-        "en": "The physical supply chain behind medicine — seven chains, from Chinese key starting materials to the pharmacy shelf, and where each one breaks."
+        "en": "Seven medicine chains, from key starting materials to the pharmacy shelf."
       },
       "desc": {
         "en": "A living map of the medicine supply chain in seven zones — generics and Chinese API, sterile injectables, biologics, radiopharma, cell and gene, incretins and distribution — with {nodes} companies, {cps} chokepoints pulsing with the market, a forecast board and questions with a date."
       },
+   "line": {
+    "en": "Seven medicine chains from key starting materials and APIs to manufacturing and distribution."
+   },
       "story": {
-        "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."
+        "en": "Trace suppliers, customers and concentrated dependencies across the chain. Select any company to inspect its role, evidence and relationships."
       },
       "footer": {
-        "en": "Linchpin Signal · not investment advice · every number carries a source"
+        "en": "Linchpin Signal · not investment advice · sources shown where recorded; estimates labelled"
       }
     },
     "layers": {

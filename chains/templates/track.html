@@ -15,11 +15,12 @@ __ANALYTICS__
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.6}
-.wrap{max-width:1560px;margin:0 auto;padding:34px 26px 70px}
+.wrap{width:min(100%,1600px);margin-inline:auto;padding:14px clamp(20px,4vw,64px) 72px}
 .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
 h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.1rem;line-height:1.2;margin:0 0 14px}
 h3{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin:30px 0 12px}
-.lede{color:var(--ink2);font-size:1.05rem;max-width:74ch;margin:0 0 26px}
+.lede{color:var(--ink2);font-size:1.05rem;max-width:68ch;margin:0 0 18px}
+.lede.rule{font-size:.95rem;color:var(--ink3);margin:0 0 26px}
 .back{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);text-decoration:none;border-bottom:1px solid var(--rule)}
 .back:hover{color:var(--ink2)}
 
@@ -51,6 +52,7 @@ table.sb td:first-child{color:var(--ink2)}
 .lockover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px}
 .lockover div{background:rgba(20,25,34,.88);border:1px solid var(--rule);padding:14px 20px;border-radius:10px;font-size:.98rem;color:var(--ink2);backdrop-filter:blur(2px);max-width:52ch;text-align:center}
 .lockover b{color:var(--amber);font-weight:600}
+.lockover .lk{display:block;font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
 .ghost{display:grid;grid-template-columns:240px minmax(0,1fr) 575px;gap:0 22px;align-items:start}
 .ghost .gb{height:14px;border-radius:3px;background:#243043;margin-bottom:10px}
 .ghost .gring{width:112px;height:112px;border-radius:50%;border:7px solid #243043}
@@ -161,7 +163,7 @@ details.closed .fc{border:0;background:transparent;margin:0;border-top:1px solid
 
 .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);color:var(--ink3);font-size:.85rem;max-width:80ch}
 @media (max-width:900px){
-  .wrap{padding:22px 14px 50px}
+  .wrap{padding:14px 20px 50px}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fc,.ghost{grid-template-columns:minmax(0,1fr);gap:22px 0}
   h2{font-size:1.6rem}
@@ -191,25 +193,28 @@ __SITE_NAV_CSS__
 <body>
 <div class="wrap">
 __SITE_NAV__
-<div class="eyebrow" style="margin-top:22px">05 · Forward test</div>
-<h2>What we said would move — and what moved</h2>
-<p class="lede">Each dated question has a published scoring contract: its basket, yes/no rule, horizon and benchmarks. Only contracts committed before the answer count as preregistered; a commitment made on or after the answer date is labelled late and never counted. When an answer arrives, the full card and market comparison appear here. Verify recomputes the published hash. The official score is excess over the equal-weight map after 20 sessions.</p>
+<div class="eyebrow" style="margin-top:22px">05 · Track record</div>
+<h2>What the forecast said — and what happened</h2>
+<p class="lede">Every resolved question is shown with its registered basket, answer, market entry and forward result. Verify recomputes the published contract hash in your browser.</p>
+<p class="lede rule">__PREREG_RULE__ The official score is excess over the equal-weight map after 20 sessions.</p>
 <p class="prereg-audit">__PREREG_AUDIT__</p>
 
-<h3 id="sbh">Resolved · free, in full, verifiable</h3>
+<h3 id="sbh">Resolved questions</h3>
+<p class="lede">Full question, decision rule, evidence, registered basket and verification data.</p>
 <div id="resolved"></div>
 
-<h3 id="rth">Track record · every question that has closed</h3>
-<p class="lede">Each closed question shows its basket, the equal-weight map, __BENCH_LABEL__, and excess over the map for the same window. Prices are Yahoo Finance end-of-day data.</p>
+<h3 id="rth">Market results</h3>
+<p class="lede">Returns for the registered basket, the equal-weight map and __BENCH_LABEL__, measured over the same window. Prices use Yahoo Finance end-of-day market data.</p>
 <div id="record-table"></div>
 
-<h3>Upcoming · pre-registered, not yet answered</h3>
+<h3>Upcoming questions</h3>
+<p class="lede">Dates and preregistration status are public. The free weekly key unlocks question details and registered baskets.</p>
 <div class="locked" id="locked"></div>
 
 <div class="unlock" id="unlock">
   <input id="key" type="password" autocomplete="off" spellcheck="false"
-         placeholder="Key from the mail">
-  <button id="go" type="button">Unlock</button>
+         placeholder="Weekly access key">
+  <button id="go" type="button">Unlock upcoming questions</button>
   <span class="msg" id="msg"></span>
 </div>
 __SUBSCRIBE__
@@ -251,8 +256,8 @@ __CARDS_JS__
   function drawResolved(){
     const root = document.getElementById('resolved');
     if(!resolved.length){
-      root.innerHTML = `<p class="empty">No question has been answered yet. The
-        first one lands here, whole and verifiable, the day it is.</p>`;
+      root.innerHTML = `<p class="empty">No questions have resolved yet. The first complete result
+        will appear here when its answer is published.</p>`;
       return;
     }
     // record_table rides along: the master table of everything that has closed
@@ -296,15 +301,15 @@ __CARDS_JS__
   document.getElementById('locked').innerHTML = `
     <div class="count">${P.n_upcoming||0} question${P.n_upcoming===1?'':'s'}
       pre-registered, not yet answered${nu ? ' · next '+esc(nu.d)+' '+esc(nu.who) : ''}</div>
-    <div class="ghost blur" aria-hidden="true">
+    <div class="ghost" aria-hidden="true">
       <div><div class="gring"></div>${bars(3)}</div>
       <div>${bars(6)}</div>
       <div>${bars(9)}</div>
     </div>
-    <div class="lockover"><div>🔒 The questions still ahead — what yes and no
-      sound like, which stations move, and every price since entry. Each is
-      already committed by hash in commitments.json. <b>Unlocks with the key
-      from the weekly mail.</b></div></div>`;
+    <div class="lockover"><div><span class="lk">Upcoming question</span>
+      The full question, decision rule and affected companies are available
+      with the weekly key. Each is already committed by hash in
+      commitments.json.</div></div>`;
 
   // ---- the key ----------------------------------------------------------
   const msg = document.getElementById('msg');
@@ -339,8 +344,7 @@ __CARDS_JS__
     document.getElementById('locked').style.display = 'none';
     const mk = document.getElementById('mailkey');
     if(mk) mk.hidden = true;
-    say(n + ' upcoming card' + (n===1?'':'s') + ' open · this key stays in this browser',
-        'ok');
+    say('Upcoming questions unlocked on this device.', 'ok');
   }
 
   async function tryKey(k, quiet){
@@ -353,14 +357,14 @@ __CARDS_JS__
       window.plausible&&plausible('unlock_success');
       return true;
     } catch(e) {
-      if(!quiet) say('That key does not open this month’s data.', 'bad');
+      if(!quiet) say('That key was not recognized. Check the welcome email and try again.', 'bad');
       return false;
     }
   }
 
   document.getElementById('go').addEventListener('click', () => {
     const k = document.getElementById('key').value;
-    if(!k) return say('Paste the key from the mail.', '');
+    if(!k) return say('Paste the weekly access key.', '');
     say('opening…', '');
     tryKey(k, false);
   });
@@ -375,14 +379,15 @@ __CARDS_JS__
   if(saved) tryKey(saved, true);
 
   document.getElementById('foot').innerHTML =
+    // The definitions, and only the ones that appear nowhere else on the
+    // page. The official-score rule used to be restated here; it is in the
+    // introduction at the top and on the label over the record tiles.
     'Entry is the close of the first session after a mark. Baskets are equal-weight,'
     + ' held from entry; the map is the equal-weight average of every priced station,'
     + ' rebalanced daily. A member with no close on a session carries its last one.'
-    + ' Report-day close is the close on the day the question is answered, or the last'
+    + ' Answer-day close is the close on the day the question is answered, or the last'
     + ' one before it. Direct and second-ring results are reported separately — never'
-    + ' averaged together. The official score is the excess over the equal-weight map'
-    + ' at 20 sessions; 5, 10 and 40 sessions and __BENCH_LABEL__ are diagnostics, and the official'
-    + ' N counts questions, not horizons. Not a recommendation and not investment advice.';
+    + ' averaged together. Not a recommendation and not investment advice.';
 })();
 </script>
 </body>

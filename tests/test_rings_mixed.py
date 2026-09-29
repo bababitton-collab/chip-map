@@ -22,7 +22,7 @@ import json
 import pytest
 
 from chains import domains, mapfile, rings
-from chains.paths import map_path, out_dir, watch_path
+from chains.paths import map_path, watch_path
 
 
 @pytest.fixture(scope="module")
@@ -176,17 +176,22 @@ def test_the_warning_needs_a_real_imbalance_not_just_a_thin_map():
     assert len(rings.warnings_for(rows, doc)) == 1
 
 
-def test_every_published_map_is_checked_not_only_semi():
+def test_every_map_is_checked_not_only_semi():
     """The warning is computed per map, so a second industry with a thin side
-    reports it too rather than silently drawing one."""
-    seen = []
+    reports it too rather than silently drawing one.
+
+    Reads the TRACKED map and watch list, never a built artifact: this has to
+    run in CI, which checks out the repo and builds nothing.
+    """
+    seen = {}
     for dom in domains.discover():
-        p = out_dir(dom) / "live_en.json"
-        if not p.exists():
-            continue
         doc = mapfile.load(dom=dom)
         watch = json.loads(watch_path(dom).read_text(encoding="utf-8"))
-        seen.append((dom, rings.warnings_for(watch, doc)))
-    assert seen, "no map is built; run python -m chains.live_snapshot"
-    flat = [w for _d, ws in seen for w in ws]
+        seen[dom] = rings.warnings_for(watch, doc)
+    assert set(seen) == set(domains.discover()), seen
+    flat = [w for ws in seen.values() for w in ws]
     assert all(": the " in w for w in flat), flat
+    # Today exactly one question is lopsided enough to warn about, and it is
+    # on the semi map. A second one appearing is a map worth looking at, not
+    # a test worth loosening -- add it here when you have.
+    assert [q.split(":")[0] for q in seen["semi"]] == ["amkr_q3"], seen

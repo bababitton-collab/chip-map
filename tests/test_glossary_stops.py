@@ -199,12 +199,8 @@ def every_question_text():
     return got
 
 
-def test_the_python_and_javascript_matchers_agree_on_every_question(tmp_path):
-    if shutil.which("node") is None:
-        pytest.skip("node is not installed")
-    texts = every_question_text()
-    if not texts:
-        pytest.skip("no built payload; run python -m chains.track first")
+def js_find(tmp_path, texts):
+    """window.GL.find over each text, in node, with the shipped term store."""
     ts = terms()
     shipped = {t["id"]: {"label": t["label"], "def": t["en"],
                          "match": list(t["match"]),
@@ -217,7 +213,40 @@ def test_the_python_and_javascript_matchers_agree_on_every_question(tmp_path):
                    encoding="utf-8")
     out = subprocess.run(["node", str(src)], capture_output=True,
                          check=True).stdout.decode("utf-8")
-    from_js = json.loads(out)
+    return json.loads(out)
+
+
+def test_the_javascript_matcher_stops_on_the_same_idioms(tmp_path):
+    """The rule that matters most, checked where CI can reach it.
+
+    CI checks out the repo and builds nothing, and the question text lives in
+    the private source rather than in git, so the whole-site comparison below
+    can only run locally. This one runs everywhere, over the same table the
+    Python side is held to.
+    """
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    texts = {f"idiom-{i}": t for i, (_w, _tid, t) in enumerate(IDIOMS)}
+    texts.update({f"real-{i}": t for i, (_tid, t) in enumerate(REAL)})
+    got = js_find(tmp_path, texts)
+    for i, (where, tid, _t) in enumerate(IDIOMS):
+        assert tid not in got[f"idiom-{i}"], (where, got[f"idiom-{i}"])
+    for i, (tid, _t) in enumerate(REAL):
+        assert tid in got[f"real-{i}"], (tid, got[f"real-{i}"])
+    # And byte for byte the same answer as Python, on every one of them.
+    ts = terms()
+    for key, text in texts.items():
+        assert got[key] == glossary.find(text, ts, limit=99), key
+
+
+def test_the_python_and_javascript_matchers_agree_on_every_question(tmp_path):
+    if shutil.which("node") is None:
+        pytest.skip("node is not installed")
+    texts = every_question_text()
+    if not texts:
+        pytest.skip("no built payload; run python -m chains.track first")
+    ts = terms()
+    from_js = js_find(tmp_path, texts)
     disagree = {}
     for qid, text in texts.items():
         py = glossary.find(text, ts, limit=99)

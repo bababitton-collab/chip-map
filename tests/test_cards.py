@@ -270,9 +270,14 @@ def test_every_basket_id_can_be_labelled():
 # -- the placeholder is never the real thing ---------------------------------
 
 def test_the_locked_placeholder_is_fixed_text():
-    i = TPL.index("const PH = {")
-    body = TPL[i:TPL.index("};", i)]
-    assert "w." not in body, "the placeholder must not read from the row"
+    assert "const PH = {" not in TPL, "the dummy prose is gone, not hidden"
+    assert 'class="blur"' not in TPL, "a CSS blur is a picture, not a lock"
+    i = TPL.index("function midLocked(")
+    body = TPL[i:TPL.index("\n  }", i)]
+    assert "midLocked()" in TPL, "it takes no row, so it can print none of one"
+    for read in ("w.", "r.", "esc(PH"):
+        assert read not in body, f"a locked card must not read {read}"
+    assert 'class="redact"' in body and "aria-hidden" in body
 
 
 def test_the_english_page_has_no_hebrew_in_the_cards():
@@ -469,4 +474,4 @@ def test_each_ledger_row_says_which_order_it_is():
     body = TPL[i:TPL.index("// ---- question cards ----", i)]
     assert "r.order===2?LT.indirect:LT.direct" in body
     # the em dash is an escape in the template source, not a character
-    assert "second ring, via the map" in EN
+    assert "indirect:'Second ring'" in EN

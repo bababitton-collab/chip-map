@@ -85,27 +85,80 @@ def _interval(lo_hi) -> str:
     return f"{lo * 100:.0f}–{hi * 100:.0f}%"
 
 
-def _headline(rec: dict) -> str:
-    """N and the hit rate, with its interval when there is one.
+def _counts(root: Path, docs: dict[str, dict]) -> dict:
+    """The counts the headline states, pooled across the published maps.
+
+    ``resolved`` and ``pending`` come from each map's own published record.
+    ``preregistered`` is read from the commitments beside it and counts the
+    contracts whose commit date precedes their answer date -- the same test
+    chains/preregister.py writes into each entry. A map with no commitments
+    file contributes nothing rather than a zero: the figure is "how many
+    contracts are preregistered", not "how many maps have a file".
+    """
+    resolved = sum(int(d.get("n_resolved") or 0) for d in docs.values())
+    pending = sum(int(d.get("n_upcoming") or 0) for d in docs.values())
+    committed = valid = 0
+    for name in docs:
+        p = root / name / "commitments.json"
+        if not p.exists():
+            continue
+        try:
+            entries = json.loads(p.read_text(encoding="utf-8"))
+        except ValueError as e:
+            raise TrackSiteError(f"{p} is not readable JSON ({e})") from None
+        if not isinstance(entries, list):
+            continue
+        committed += len(entries)
+        valid += sum(1 for e in entries
+                     if isinstance(e, dict) and e.get("valid_preregistration"))
+    return {"resolved": resolved, "pending": pending,
+            "committed": committed, "preregistered": valid}
+
+
+# What the site cannot state in one number, and why. The excess is measured
+# against each map's own equal-weight universe, so a pooled mean excess would
+# answer "excess over what?" with "over a mixture of markets nobody holds".
+# The brief asks for a MEAN EXCESS tile here; this page prints the sentence
+# instead and every map's own excess in its own block below.
+NO_POOLED_EXCESS = ("Mean excess is not pooled: each map is measured against "
+                    "its own equal-weight universe. See the per-map figures "
+                    "below.")
+NOT_ENOUGH = "Not enough scored questions yet"
+
+
+def _tile(value: str, label: str, extra: str = "") -> str:
+    return (f'<li><b>{html.escape(value)}</b>'
+            f'<span>{html.escape(label)}</span>{extra}</li>')
+
+
+def _headline(rec: dict, counts: dict) -> str:
+    """The pooled counts, and the rates only where a denominator exists.
 
     Below MIN_N_FOR_INTERVAL record_stats returns no interval and says why.
     The sentence it returns is printed rather than replaced: a range invented
-    at small N is the one number on this page that would flatter it.
+    at small N is the one number on this page that would flatter it. Where
+    nothing has scored at all, the rate tiles are replaced by one sentence --
+    a row of dashes reads as a broken page, and "0 / 0" reads as a result.
     """
     n = rec.get("n") or 0
-    esc = html.escape
-    bits = [f'<li><b>{n}</b> scored questions</li>']
+    bits = [_tile(str(counts["resolved"]), "Resolved"),
+            _tile(str(n), "Scored")]
     if rec.get("hit_rate") is None:
-        bits.append('<li><b>—</b> hit rate</li>')
+        bits.append(f'<li class="empty">{html.escape(NOT_ENOUGH)}</li>')
     else:
         span = _interval(rec.get("hit_rate_interval"))
-        bits.append(f'<li><b>{_pct(rec["hit_rate"])}</b> hit rate'
-                    + (f' <span class="ci">95% CI {span}</span>' if span
-                       else "") + '</li>')
-    bits.append(f'<li><b>{rec.get("primary_horizon")}</b> session horizon</li>')
+        bits.append(_tile(_pct(rec["hit_rate"]), f"Hit rate (N={n})",
+                          f' <span class="ci">95% CI {span}</span>'
+                          if span else ""))
+    if counts["committed"]:
+        # A slash, not "of": the tile is uppercase mono, where a lowercase
+        # "of" sets as 0F and reads as part of the number.
+        bits.append(_tile(f'{counts["preregistered"]} / {counts["committed"]}',
+                          "Preregistered"))
+    bits.append(_tile(str(counts["pending"]), "Pending"))
     note = rec.get("note")
-    if note:
-        bits.append(f'<li class="note">{esc(str(note))}</li>')
+    if note and n:
+        bits.append(f'<li class="note">{html.escape(str(note))}</li>')
     return "".join(bits)
 
 
@@ -151,12 +204,14 @@ def _blocks(per: dict, order: list[str], titles: dict) -> str:
         rec = b["record"]
         bench = (b.get("benchmark") or {}).get("label") or ""
         title = titles.get(dom) or dom
-        rows = [("scored", str(rec.get("n") or 0))]
-        if rec.get("n"):
+        n = rec.get("n") or 0
+        rows = [("Resolved", str(b.get("n_resolved") or 0)),
+                ("Scored", str(n))]
+        if n:
             rows.extend([
-                ("hit rate", _pct(rec.get("hit_rate"))),
-                ("mean excess vs EW_MAP", _signed_pct(rec.get("mean_excess"))),
-                ("median excess vs EW_MAP", _signed_pct(rec.get("median_excess"))),
+                (f"Hit rate (N={n})", _pct(rec.get("hit_rate"))),
+                ("Mean excess vs map", _signed_pct(rec.get("mean_excess"))),
+                ("Median excess vs map", _signed_pct(rec.get("median_excess"))),
             ])
         cells = "".join(f'<li><span>{esc(k)}</span><b>{esc(v)}</b></li>'
                         for k, v in rows)
@@ -165,8 +220,9 @@ def _blocks(per: dict, order: list[str], titles: dict) -> str:
             f'<h3><a href="/{esc(dom)}/track/">{esc(title)}</a></h3>'
             f'<p class="bench">Second benchmark: <b>{esc(bench)}</b></p>'
             f'<ul class="domstat">{cells}</ul>'
-            f'<p class="more"><a href="/{esc(dom)}/track/">'
-            f'Every question on this map →</a></p>'
+            + ("" if n else f'<p class="empty">{esc(NOT_ENOUGH)}</p>')
+            + f'<p class="more"><a href="/{esc(dom)}/track/">'
+            f'View map record →</a></p>'
             f'</li>')
     return "".join(out)
 
@@ -196,7 +252,7 @@ def render(root: Path, names: list[str], site_url: str,
                                  site_wide=True),
         "site_nav_css": sitenav.CSS,
         "analytics": sitenav.ANALYTICS,
-        "headline": _headline(rec),
+        "headline": _headline(rec, _counts(root, docs)),
         "blocks": _blocks(data["by_domain"], data["domains"], titles),
         "n_maps": str(len(data["domains"])),
         # The whole element, or nothing at all. An empty <p class="gate">
@@ -204,6 +260,8 @@ def render(root: Path, names: list[str], site_url: str,
         # to be, which reads as something failing to load.
         "capital_gate": _gate(rec),
         "excess_note": rec.get("excess") or "",
+        "no_pooled_excess": NO_POOLED_EXCESS,
+        "footer_note": sitenav.FOOTER_NOTE,
     }
     raw = {"site_nav", "site_nav_css", "analytics", "headline", "blocks",
            "capital_gate"}

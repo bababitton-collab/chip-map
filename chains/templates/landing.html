@@ -17,12 +17,29 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:17px;line-height:1.6}
-.wrap{max-width:1640px;margin:0 auto;padding:14px 32px 70px}
+/* One container rule. The old 14px edge padding put the first character of
+   every line a thumb's width from the bezel on a phone; clamp gives 20px
+   there and room to breathe on a wide screen. */
+.wrap{width:min(100%,1600px);margin-inline:auto;padding:14px clamp(20px,4vw,64px) 72px}
 a{color:var(--amber)}
 {{site_nav_css}}
 .hero{padding:24px 0 32px;border-bottom:1px solid var(--rule)}
 .hero h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:3rem;line-height:1.08;margin:0 0 10px;max-width:28ch}
-.hero .sub{color:var(--ink2);font-size:1.08rem;max-width:76ch;margin:0 0 18px}
+.hero .sub{color:var(--ink2);font-size:1.08rem;max-width:60ch;margin:0 0 14px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.hero .trustline{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink2);margin:0 0 16px}
+/* The one live number on the front door. Amber because it is a reading that
+   is expected to move, not a verdict -- the same amber the map uses for a
+   date that has not arrived. */
+.hipressure{border:1px solid var(--rule);border-radius:6px;padding:12px 16px;margin:0 0 18px;
+  max-width:60ch;background:var(--bg2);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.hipressure .eyebrow{margin:0 0 6px}
+.hp-what{margin:0;font-size:1.02rem;color:var(--ink)}
+.hp-what span{color:var(--ink2)}
+.hp-meta{margin:4px 0 0;font-family:"IBM Plex Mono",monospace;font-size:.76rem;
+  letter-spacing:.06em;color:var(--amber)}
 .proof{list-style:none;padding:12px 0;margin:0 0 18px;display:flex;flex-wrap:wrap;gap:8px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .proof li{padding:2px 22px 2px 0;margin-right:22px;border-right:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:.82rem;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
 .proof li:last-child{border-right:0;margin-right:0;padding-right:0}
@@ -43,7 +60,14 @@ main section.steps{padding:28px 0 28px}
 .steps .n{display:block;font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--amber);margin-bottom:6px}
 .steps h3{margin:0 0 6px;font-family:"Source Serif 4",serif;font-size:1.3rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
 .steps p{margin:0;color:var(--ink2);font-size:.98rem;line-height:1.5}
-.mapcards{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
+/* Two columns, and the featured card across both. Four only where each card
+   still has a comfortable measure -- below that the text crushes before the
+   grid does. */
+.mapcards{list-style:none;padding:0;margin:0;display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.mapcard.featured{grid-column:1/-1}
+.mapcard.featured .mapshot img{aspect-ratio:auto;max-height:340px}
+.mapcard.featured h3{font-size:1.6rem}
 /* The whole card is the link. A hairline that brightens on hover is the
    whole of the hover state -- no lift, no shadow, no scale. */
 .mapcard{border:1px solid var(--rule);border-radius:4px;padding:0 0 14px;overflow:hidden;
@@ -52,9 +76,15 @@ main section.steps{padding:28px 0 28px}
 .mapcard-hit{display:block;text-decoration:none;color:inherit;padding:0 16px}
 .mapcard-hit:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
 .mapshot{display:block;margin:0 -16px 14px}
-.mapshot img{display:block;width:100%;height:auto;border-bottom:1px solid var(--rule)}
-.mapstatus,.mapnext,.mapthrough{margin:0;font-family:"IBM Plex Mono",monospace;
+.mapshot img{display:block;width:100%;height:auto;aspect-ratio:1200/440;
+  object-fit:cover;object-position:center 45%;border-bottom:1px solid var(--rule)}
+.mapstatus,.mapnext,.mapthrough,.mapbench{margin:0;font-family:"IBM Plex Mono",monospace;
   font-size:.78rem;letter-spacing:.04em;color:var(--ink3)}
+/* The label in front of each metadata line, so a reader knows what the
+   figure after it is without decoding it. */
+.mapstat,.mapbench,.mapstatus,.mapnext{margin-top:6px}
+.lbl{display:inline-block;min-width:11ch;color:var(--ink3);letter-spacing:.14em;
+  text-transform:uppercase;font-size:.68rem}
 /* The map legend's own semantics: red where the lock is tightening, green
    where it is eroding, and the dim ink for a chokepoint the market cannot be
    asked about. Text first -- the words say it, the colour agrees with the
@@ -87,16 +117,23 @@ main p{color:var(--ink2);max-width:66ch;margin:0 0 14px}
   main #maps,main #steps{grid-column:1/-1}
   main #how,main #faq{min-width:0}
 }
-@media (min-width:1500px){.mapcards{grid-template-columns:repeat(4,minmax(0,1fr));gap:0 24px}}
+@media (min-width:1660px){.mapcards{grid-template-columns:repeat(4,minmax(0,1fr));gap:0 24px}}
 #faq h3{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.05rem;text-transform:none;color:var(--ink);font-weight:600}
 footer{margin-top:34px;color:var(--ink3);font-size:.85rem}
 footer a{color:var(--ink2)}
 @media (max-width:760px){
-  .wrap{padding:10px 14px 50px}
+  .wrap{padding:10px 20px 50px}
   .hero h1{font-size:2rem}
   .hero .sub{font-size:1.05rem}
-  .proof li{margin-right:12px;padding-right:12px}
-  .proof li:last-child{display:none}
+  /* The dividers go, not the facts. A vertical rule after the last item on
+     a wrapped row hangs in space, and which item that is depends on the
+     width -- so below 760 the gap does the separating.
+     `li:last-child{display:none}` used to hide the map count here, which on
+     a one-map site (where that item does not exist) hid the question count
+     instead. The item that should go is named. */
+  .proof{gap:8px 18px}
+  .proof li{margin-right:0;padding-right:0;border-right:0}
+  .proof li.maps{display:none}
   .mapcards{grid-template-columns:minmax(0,1fr)}
   .steps ol{grid-template-columns:minmax(0,1fr)}
 }
@@ -107,20 +144,28 @@ footer a{color:var(--ink2)}
 {{site_nav}}
 
 <header class="hero">
+  <p class="eyebrow">Supply-chain intelligence · Publicly scored</p>
   <h1>{{hero_title}}</h1>
-  <p class="sub">{{hero_lead}}<!--IF:prereg--> Dated questions, public scoring contracts, and forward results. Late commitments are labeled and never counted as preregistered.<!--END:prereg--> No backtests.</p>
+  <p class="sub">{{hero_lead}}</p>
+  <p class="trustline">Public contracts · Forward results · No backtests</p>
   <ul class="proof" aria-label="At a glance">
     <li><b>{{companies}}</b> companies</li>
     <li><b>{{chokepoints}}</b> chokepoints</li>
     <li><b>{{questions}}</b> dated questions</li>
 <!--IF:domains-->
-    <li><b>{{n_maps}}</b> maps</li>
+    <li class="maps"><b>{{n_maps}}</b> maps</li>
 <!--END:domains-->
-    <li><b>No backtests</b></li>
   </ul>
+<!--IF:pressure-->
+  <div class="hipressure">
+    <p class="eyebrow">Highest pressure</p>
+    <p class="hp-what">{{pressure_name}} · <span>{{pressure_map}}</span></p>
+    <p class="hp-meta">{{pressure_value}} over 13 weeks · Market data through {{pressure_as_of}}</p>
+  </div>
+<!--END:pressure-->
   <div class="cta">
-<!--IF:onemap--><a class="primary" href="{{map_href}}">Explore the map</a><!--END:onemap--><!--IF:domains--><a class="primary" href="#maps">Explore the map</a><!--END:domains-->
-<!--IF:onemap--><a class="secondary" href="{{track_href}}">See the track record</a><!--END:onemap--><!--IF:domains--><a class="secondary" href="/track/">See the track record</a><!--END:domains-->
+<!--IF:onemap--><a class="primary" href="{{map_href}}">Explore the map</a><!--END:onemap--><!--IF:domains--><a class="primary" href="#maps">Explore maps</a><!--END:domains-->
+<!--IF:onemap--><a class="secondary" href="{{track_href}}">View track record</a><!--END:onemap--><!--IF:domains--><a class="secondary" href="/track/">View track record</a><!--END:domains-->
   </div>
 <!--IF:onemap-->{{subscribe}}<!--END:onemap-->
 </header>
@@ -128,21 +173,21 @@ footer a{color:var(--ink2)}
 <main>
 <!--IF:domains-->
 <section id="maps" aria-label="The maps">
-  <h2>{{n_maps}} maps, one method</h2>
-<!--IF:map_preview-->
-  <figure class="map-preview"><a href="{{preview_href}}" aria-label="Open the interactive {{preview_title}}"><picture><source media="(max-width:760px)" srcset="/assets/map-preview-mobile.png"><img src="/assets/map-preview.png" alt="Supply-chain stations and links in {{preview_title}}" loading="eager"></picture></a><figcaption>{{preview_title}} · open the interactive map</figcaption></figure>
-<!--END:map_preview-->
-  <p>Each map follows its own supply chain, questions and benchmark. All {{n_maps}} use the same scoring method.</p>
+  <h2>{{n_maps}} supply chains. One public method.</h2>
+  <p>Each map traces a different physical system. Every dated question follows the same published scoring rules.</p>
   <ul class="mapcards">{{map_cards}}</ul>
   {{subscribe}}
 </section>
 <!--END:domains-->
 <section id="steps" class="steps" aria-label="How it works in three steps">
   <ol>
-    <li><span class="n">01</span><h3>Map</h3><p>Who supplies whom across the AI supply chain, and where the chokepoints are.</p></li>
-    <li><span class="n">02</span><h3>Question</h3><p>Dated questions across the chain, each with its yes/no criteria written down in advance.<!--IF:prereg--> The criteria are hashed and published; only contracts committed before the answer count as preregistered.<!--END:prereg--></p></li>
-    <li><span class="n">03</span><h3>Score</h3><p>When the answer lands, the forecast is measured against the market<!--IF:prereg--> under a scoring contract published in advance, which anyone can verify it against. Only contracts committed before the answer count as preregistered<!--END:prereg-->.</p></li>
+    <li><span class="n">01</span><h3>Map</h3><p>Trace suppliers, customers and concentrated dependencies.</p></li>
+    <li><span class="n">02</span><h3>Question</h3><p>Define a dated, falsifiable question before the event.</p></li>
+    <li><span class="n">03</span><h3>Score</h3><p>Publish the answer and measure the market response forward<!--IF:prereg-->, against a scoring contract published in advance that anyone can verify it against<!--END:prereg-->.</p></li>
   </ol>
+<!--IF:prereg-->
+  <p class="stepnote">Scoring contracts are hashed and dated. Late commitments remain public but do not count as preregistered.</p>
+<!--END:prereg-->
 </section>
 
 <section id="how">
@@ -165,18 +210,21 @@ footer a{color:var(--ink2)}
   <p>{{chokepoints}} chokepoints mark concentrated dependencies with few alternatives, including {{chokepoint_examples}} in {{cur_title}}. Where a listed challenger exists, the map compares their 13-week returns.</p>
 <!--END:domains-->
 
-  <details class="method-details"><summary>Scoring and verification</summary>
+  <details class="method-details"><summary>Measurement method</summary>
   <h3>Dated questions</h3>
-  <p><!--IF:onemap-->The map is<!--END:onemap--><!--IF:domains-->The maps are<!--END:domains--> paired with {{questions}} dated questions across the chain — questions tied to upcoming reports, policy decisions and industry events. Each comes with pre-written yes/no criteria, and each scored question names an impact basket: the companies its answer bears on.<!--IF:observe--> Observation-only questions ({{observe_only}} today) carry no basket and are not scored.<!--END:observe--></p>
+  <p><!--IF:onemap-->The map is<!--END:onemap--><!--IF:domains-->The maps are<!--END:domains--> paired with {{questions}} dated questions across the chain. Each has a fixed answer date, a written YES/NO rule and a registered impact basket: the companies its answer bears on.<!--IF:observe--> Observation-only questions ({{observe_only}} today) carry no basket and are not scored.<!--END:observe--></p>
 
-  <h3>Scored forward against the market</h3>
-  <p>When a yes or no answer lands, the basket is measured from the close of the next trading session against an equal-weight benchmark of every priced company on the map (EW_MAP), with<!--IF:onemap--> the PHLX Semiconductor Sector Index (SOX), tracked through {{sox}},<!--END:onemap--><!--IF:domains--> that map's own second benchmark — named on its card above —<!--END:domains--> shown alongside it. The official score is the basket's excess over EW_MAP at a primary horizon of {{primary_horizon}} trading sessions; {{diagnostic_horizons}} sessions are kept as diagnostics. Mixed or unclear answers are recorded as observations and are not scored.</p>
+  <h3>Forward measurement</h3>
+  <p>After an answer is marked, the registered basket is measured from the close of the next trading session. The official result is excess return versus the equal-weight map (EW_MAP) at the registered primary horizon of {{primary_horizon}} trading sessions; {{diagnostic_horizons}} sessions are kept as diagnostics, alongside<!--IF:onemap--> the PHLX Semiconductor Sector Index (SOX), tracked through {{sox}}<!--END:onemap--><!--IF:domains--> each map's own second benchmark, named on its card above<!--END:domains-->. Mixed or unclear answers are recorded as observations and are not scored.</p>
 <!--IF:prereg-->
-  <h3>Pre-registered and verifiable</h3>
-  <p>Each question's scoring contract — its baskets, yes/no criteria, horizons and benchmarks — is hashed with SHA-256 and published, with the date it was committed, in <a href="{{commitments_href}}">commitments.json</a>. {{n_valid}} of the {{n_committed}} questions committed so far were committed before their answer date, and commitments.json marks any that were not. Once a question resolves, its full card is published free in <a href="{{track_public_href}}">track_public.json</a> with the exact contract text, and a Verify button on the Track Record recomputes the hash in your browser and compares it with the published commitment.</p>
+  <h3>Public commitments</h3>
+  <p>The complete scoring contract — baskets, YES/NO criteria, horizons and benchmarks — is hashed with SHA-256 and published with the date it was committed, in <a href="{{commitments_href}}">commitments.json</a>. {{n_valid}} of the {{n_committed}} contracts committed so far were committed before their answer date. {{prereg_rule}} Once a question resolves, its full card is published in <a href="{{track_public_href}}">track_public.json</a> with the exact contract text, and Verify recomputes the hash in your browser.</p>
 <!--END:prereg-->
   <h3>Forward testing, no backtests</h3>
-  <p>Nothing here is backtested. Every forecast is scored forward from the day its question is marked, and the record — resolved questions, and the hit rate and excess returns with their sample size — is on the <a href="{{track_href}}">Track Record</a>.</p>
+  <p>Questions enter the record before outcomes and subsequent price moves are known. Nothing here is backtested: every published result is measured forward from the day its question is marked, and shown with its sample size on the <a href="{{track_href}}">Track record</a>.</p>
+<!--IF:prereg-->
+  <p class="auditline">Audit the commitments, resolved contracts and verification data in the <a href="{{commitments_href}}">published record</a>.</p>
+<!--END:prereg-->
   </details>
 </section>
 
@@ -184,25 +232,20 @@ footer a{color:var(--ink2)}
   <h2>Questions</h2>
 
   <h3>What is Linchpin Signal?</h3>
-<!--IF:onemap-->
-  <p>{{brand}} is a map of the physical supply chain behind AI — {{companies}} companies in {{n_layers}} layers, with {{chokepoints}} {{chokepoint_kind}} chokepoints marked — paired with {{questions}} dated questions whose answers are measured forward against the market and published once they resolve.</p>
-<!--END:onemap-->
-<!--IF:domains-->
-  <p>{{brand}} maps the physical supply chain behind AI — {{n_maps}} maps covering {{companies}} companies, with {{chokepoints}} chokepoints marked — paired with {{questions}} dated questions whose answers are measured forward against the market and published once they resolve.</p>
-<!--END:domains-->
-<!--IF:prereg-->
-  <h3>How are forecasts registered?</h3>
-  <p>The scoring contract is hashed and dated in <a href="{{commitments_href}}">commitments.json</a>. When a question resolves, its exact contract is published with the result. Verify recomputes the hash in your browser. Commitments made on or after the answer date are marked invalid as preregistrations.</p>
-<!--END:prereg-->
-  <h3>What's free, and what needs the key?</h3>
-  <p>The map, every chokepoint, the calendar, and every resolved question<!--IF:prereg--> with its verification<!--END:prereg--> are public. Upcoming questions and their baskets unlock with a free key sent by email.<!--IF:subscribe--> Subscribe, confirm the first email, and the key arrives in the welcome email.<!--END:subscribe--></p>
+  <p>{{brand}} maps physical supply chains, identifies concentrated dependencies and publishes dated questions whose outcomes are measured forward against the market<!--IF:onemap--> — {{companies}} companies in {{n_layers}} layers, with {{chokepoints}} {{chokepoint_kind}} chokepoints marked, paired with {{questions}} dated questions<!--END:onemap--><!--IF:domains--> — {{n_maps}} maps covering {{companies}} companies, with {{chokepoints}} chokepoints marked, paired with {{questions}} dated questions<!--END:domains-->.</p>
 
+  <h3>What is public?</h3>
+  <p>Every map, chokepoint, event date and resolved question<!--IF:prereg--> with its verification<!--END:prereg--> is public, and so is every measured result. Upcoming question details and registered baskets require the free weekly key.<!--IF:subscribe--> Subscribe, confirm the first email, and the key arrives in the welcome email.<!--END:subscribe--></p>
+<!--IF:prereg-->
+  <h3>How are questions registered?</h3>
+  <p>Each scoring contract is hashed with SHA-256 and dated in <a href="{{commitments_href}}">commitments.json</a>. When the question resolves, the full contract is published and Verify recomputes the hash in your browser. Late commitments are labeled and never counted as preregistered.</p>
+<!--END:prereg-->
   <h3>Is this investment advice?</h3>
-  <p>No. {{brand}} publishes questions and measurements, not recommendations. It is not investment advice.</p>
+  <p>No. {{brand}} publishes supply-chain research, questions and measurements. It does not publish recommendations.</p>
 </section>
 </main>
 
-<footer>{{brand}} · not investment advice · <a href="{{map_href}}">Map</a> · <a href="{{track_href}}">Track Record</a></footer>
+<footer>{{brand}} · {{footer_note}}<br><a href="{{map_href}}">Maps</a> · <a href="{{track_href}}">Track record</a> · <a href="#how">Method</a></footer>
 </div>
 </body>
 </html>

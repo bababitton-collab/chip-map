@@ -409,8 +409,9 @@ def test_the_hint_goes_on_the_first_hover_of_anything():
 
 
 def test_it_says_both_halves_in_both_languages():
-    he = "רחף על תחנה לדופק שלה"
-    en = "Hover a station for its pulse · hover a line for what it carries"
+    he = "רחף לבדיקה · בחר תחנה לפרטים"
+    en = ("Hover to inspect · select to open details · use Browse stations "
+          "to search and filter")
     assert he in TPL
-    assert en in EN and "its share at the buyer" in EN
+    assert en in EN
     assert bp.hebrew_runs(EN[EN.index("maphint"):EN.index("maphint") + 400]) == []

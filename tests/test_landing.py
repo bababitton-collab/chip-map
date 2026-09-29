@@ -58,9 +58,9 @@ def _text(html):
 
 def test_the_hero_leads_with_the_value_and_both_calls(tmp_path):
     html = _page(tmp_path)
-    assert "<h1>The physical supply chain behind AI — mapped.</h1>" in html
+    assert f"<h1>{landing.ONE_MAP_TITLE}</h1>" in html
     assert '<a class="primary" href="/semi/">Explore the map</a>' in html
-    assert '<a class="secondary" href="/semi/track/">See the track record</a>' in html
+    assert '<a class="secondary" href="/semi/track/">View track record</a>' in html
     assert "See the live record" not in html
     assert html.index("<h1>") < html.index('class="proof"') < html.index('class="cta"')
 
@@ -73,12 +73,14 @@ def test_the_hero_sub_is_the_short_one(tmp_path):
     # which one commitment on file contradicts: semi's orcl_q1 was committed
     # three days after its answer date. The hero now states the rule instead of
     # a count, so the sentence stays true whatever the next commitment does.
-    assert sub == ("See who supplies whom — and where it breaks. Dated "
-                   "questions, public scoring contracts, and forward results. "
-                   "Late commitments are labeled and never counted as "
-                   "preregistered. No backtests.")
+    assert sub == landing.ONE_MAP_LEAD
+    # The trust line beside it is where the preregistration caveat lives now,
+    # and it is the half that has to hold with nothing committed on disk.
+    i = html.index('<p class="trustline">')
+    assert (_text(html[i:html.index("</p>", i)])
+            == "Public contracts · Forward results · No backtests")
     bare = _text(_page(tmp_path / "bare", commitments=False))
-    assert "See who supplies whom — and where it breaks. No backtests." in bare
+    assert "No backtests" in bare
 
 
 def test_the_three_steps_sit_above_the_full_explanation(tmp_path):
@@ -87,20 +89,17 @@ def test_the_three_steps_sit_above_the_full_explanation(tmp_path):
     i = html.index('<section id="steps"')
     strip = _text(html[i:html.index("</section>", i)])
     assert strip == (
-        "01 Map Who supplies whom across the AI supply chain, and where the "
-        "chokepoints are. "
-        "02 Question Dated questions across the chain, each with its yes/no "
-        "criteria written down in advance. The criteria are hashed and "
-        "published; only contracts committed before the answer count as "
-        "preregistered. "
-        "03 Score When the answer lands, the forecast is measured against the "
-        "market under a scoring contract published in advance, which anyone "
-        "can verify it against. Only contracts committed before the answer "
-        "count as preregistered.")
+        "01 Map Trace suppliers, customers and concentrated dependencies. "
+        "02 Question Define a dated, falsifiable question before the event. "
+        "03 Score Publish the answer and measure the market response forward, "
+        "against a scoring contract published in advance that anyone can "
+        "verify it against. "
+        "Scoring contracts are hashed and dated. Late commitments remain "
+        "public but do not count as preregistered.")
     # The detailed prose is still all there, beneath it.
     for h in ("The chain, in layers", "Semiconductor chokepoints",
-              "Dated questions", "Scored forward against the market",
-              "Pre-registered and verifiable", "Forward testing, no backtests"):
+              "Dated questions", "Forward measurement",
+              "Public commitments", "Forward testing, no backtests"):
         assert f"<h3>{h}</h3>" in html, h
 
 
@@ -108,7 +107,7 @@ def test_the_score_step_only_claims_verification_with_its_proof(tmp_path):
     html = _page(tmp_path, track_public=False)
     i = html.index('<section id="steps"')
     strip = _text(html[i:html.index("</section>", i)])
-    assert strip.endswith("the forecast is measured against the market.")
+    assert strip.endswith("measure the market response forward.")
     assert "verify" not in strip.lower()
 
 
@@ -203,7 +202,8 @@ def test_the_scoring_sentence_is_the_scoring_code(tmp_path):
 # definition holds on a build with no contracts at all.
 PREREG_WORDS = ("SHA-256", "commitments.json", "track_public.json", "Verify",
                 "Late commitments are labeled",
-                "hashed and published",
+                "Late commitments remain public",
+                "hashed with SHA-256 and published",
                 "with its verification", "anyone can verify it")
 
 
@@ -212,7 +212,7 @@ def test_with_both_files_the_preregistration_is_described(tmp_path):
     for w in PREREG_WORDS:
         assert w in text, w
     n_valid = sum(1 for e in COMMITS if e["valid_preregistration"])
-    assert f"{n_valid} of the {len(COMMITS)} questions committed so far" in text
+    assert f"{n_valid} of the {len(COMMITS)} contracts committed so far" in text
 
 
 @pytest.mark.parametrize("missing", ["commitments", "track_public"])
@@ -239,15 +239,16 @@ def test_every_registered_forecast_was_committed_before_its_answer():
 
 def test_the_faq_asks_the_four_questions(tmp_path):
     html = _page(tmp_path)
-    for q in ("What is Linchpin Signal?", "How are forecasts registered?",
-              "What's free, and what needs the key?",
+    for q in ("What is Linchpin Signal?", "How are questions registered?",
+              "What is public?",
               "Is this investment advice?"):
         assert f"<h3>{q}</h3>" in html, q
 
 
 def test_the_advice_answer_is_exact(tmp_path):
-    assert ("No. Linchpin Signal publishes questions and measurements, not "
-            "recommendations. It is not investment advice.") in _text(_page(tmp_path))
+    assert ("No. Linchpin Signal publishes supply-chain research, questions "
+            "and measurements. It does not publish recommendations."
+            ) in _text(_page(tmp_path))
 
 
 SUBSCRIBE_FAQ = (" Subscribe, confirm the first email, and the key arrives "
@@ -257,12 +258,13 @@ SUBSCRIBE_FAQ = (" Subscribe, confirm the first email, and the key arrives "
 def test_the_free_and_key_answer_is_held_to_access_py(tmp_path, monkeypatch):
     monkeypatch.delenv("SUBSCRIBE_EMBED_URL", raising=False)
     text = _text(_page(tmp_path))
-    assert ("The map, every chokepoint, the calendar, and every resolved "
-            "question with its verification are public. Upcoming questions "
-            "and their baskets unlock with a free key sent by email."
+    assert ("Every map, chokepoint, event date and resolved question with "
+            "its verification is public, and so is every measured result. "
+            "Upcoming question details and registered baskets require the "
+            "free weekly key."
             + SUBSCRIBE_FAQ) in text
     bare = _text(_page(tmp_path / "bare", commitments=False))
-    assert "every resolved question are public" in bare, \
+    assert "resolved question is public" in bare, \
         "verification is claimed only with its proof"
     monkeypatch.setattr(access, "tier", lambda item, ctx=None: "free")
     with pytest.raises(landing.LandingError, match="access.py"):
@@ -281,7 +283,8 @@ def test_no_public_page_describes_a_charge(tmp_path):
     tpl = (templates_dir() / "track.html").read_text(encoding="utf-8")
     i = tpl.index("// ---- the locked panel")
     locked = re.sub(r"\s+", " ", tpl[i:tpl.index("// ---- the key", i)])
-    assert "Unlocks with the key from the weekly mail." in locked
+    assert ("available with the weekly key" in locked
+            and "Upcoming question" in locked)
     pages = {"landing": _text(_page(tmp_path)),
              "track": build_pages.visible_text(_track_page()),
              "track locked panel": locked,
@@ -291,8 +294,8 @@ def test_no_public_page_describes_a_charge(tmp_path):
         for word in ("paid", "subscribers:", "subscribers pay", "pricing",
                      "checkout"):
             assert word not in low, (name, word)
-    assert "Key from the mail" in _track_page() and ">Unlock</button>" in \
-        _track_page()
+    assert ("Weekly access key" in _track_page()
+            and ">Unlock upcoming questions</button>" in _track_page())
 
 
 # -- the subscribe slot: dormant until SUBSCRIBE_EMBED_URL is set ------------------
@@ -313,8 +316,10 @@ def test_without_the_embed_url_neither_page_offers_a_signup(tmp_path,
     assert SUBSCRIBE_FAQ.strip() not in _text(_page(tmp_path))
     for html in (_page(tmp_path), _track_page()):
         assert "<iframe" not in html
-        assert sitenav.SUBSCRIBE_LABEL not in html
+        assert 'class="subscribe"' not in html
+        assert sitenav.SUBSCRIBE_BODY not in html
         assert sitenav.SUBSCRIBE_CONFIRM not in html
+        assert sitenav.SUBSCRIBE_CTA not in html
         assert "mailkey" not in build_pages.visible_text(html)
         assert "subscribe" not in build_pages.visible_text(html).lower()
 
@@ -329,11 +334,10 @@ def test_the_signup_links_to_the_publication_not_to_the_embed():
 def test_with_the_embed_url_both_pages_call_out_under_the_label(
         tmp_path, monkeypatch):
     monkeypatch.setenv("SUBSCRIBE_EMBED_URL", EMBED)
-    assert sitenav.SUBSCRIBE_LABEL == \
-        "Get the key — subscribe to the weekly mail (free)"
+    assert sitenav.SUBSCRIBE_LABEL == "Unlock upcoming questions"
     # The embed is double opt-in: the confirm step is said before the call.
-    assert sitenav.SUBSCRIBE_CONFIRM == ("Confirm in the first email — the key "
-                                         "arrives in the welcome email right after.")
+    assert sitenav.SUBSCRIBE_CONFIRM == ("Confirm your email. The key arrives "
+                                         "in the welcome message.")
     land, trk = _page(tmp_path), _track_page()
     link = 'href="https://linchpinsignal.substack.com"'
     for html in (land, trk):
@@ -352,9 +356,9 @@ def test_with_the_embed_url_both_pages_call_out_under_the_label(
                 < html.index(sitenav.SUBSCRIBE_CONFIRM) < html.index(link))
     assert SUBSCRIBE_FAQ.strip() in _text(land)
     # Beside the call to the track record, and beside the key field.
-    assert (land.index("See the track record</a>") < land.index(link)
+    assert (land.index("View track record</a>") < land.index(link)
             < land.index("</header>"))
-    assert (trk.index('placeholder="Key from the mail"') < trk.index(link)
+    assert (trk.index('placeholder="Weekly access key"') < trk.index(link)
             < trk.index('<div id="full">'))
 
 
@@ -458,16 +462,19 @@ def test_track_record_is_in_the_landing_nav(tmp_path):
     html = _page(tmp_path)
     for s in NAV:
         assert s in html, s
-    assert sitenav.TRACK_RECORD == "Track Record"
+    assert sitenav.TRACK_RECORD == "Track record"
     assert sitenav.TRACK_RECORD_DESCRIPTOR == (
-        "Only contracts committed before the answer count as preregistered.")
+        "Public contracts · Forward scored")
+    # The rule itself is still stated in full, once, where the method is
+    # explained -- it is a definition, not a navigation label.
+    assert sitenav.PREREGISTRATION_RULE in _page(tmp_path)
 
 
 def test_track_record_is_in_the_track_page_nav_and_the_title_stays():
     page = track.render(track.public({"summary": {}, "forecasts": []}))
     for s in NAV:
         assert s in page, s
-    assert 'aria-current="page">Track Record</a>' in page
+    assert 'aria-current="page">Track record</a>' in page
     assert "<title>Forward test" in page
     assert "__SITE_NAV" not in page
 
@@ -487,10 +494,10 @@ def test_the_map_leads_with_the_value_and_the_calls_above_the_instructions():
     page = _map_page()
     i_value = page.index('<p class="value">')
     i_cta = page.index('<div class="valuecta">')
-    i_how = page.index('<div class="sub">Raw materials on the left')
+    i_how = page.index('<div class="sub">Follow the chain')
     assert i_value < i_cta < i_how
     assert 'href="#stage">Explore the map</a>' in page
-    assert 'href="/semi/track/">See the live record</a>' in page
+    assert 'href="/semi/track/">View track record</a>' in page
     assert '<a class="fwd" href="track/">Forward test →</a>' not in page
 
 
@@ -499,8 +506,8 @@ def test_the_map_names_the_track_record_one_way():
     "Forward test" label is left on the public map -- including in the cards
     the build inlines into it."""
     page = build_pages._inline_cards(_map_page())
-    assert '<a class="fwd inline" href="track/">Track Record →</a>' in page
-    assert "<h2>Track Record</h2>" in page
+    assert '<a class="fwd inline" href="track/">Track record →</a>' in page
+    assert "<h2>Track record</h2>" in page
     assert "Forward test" not in page
 
 
@@ -555,7 +562,7 @@ def test_every_published_map_gets_a_card(tmp_path):
         title = ((load_map(dom=dom)["labels"]["brand"].get("title") or {})
                  .get("en"))
         assert f'<a href="/{dom}/"' in html_, dom
-        assert f'<a href="/{dom}/track/">Track Record</a>' in html_, dom
+        assert f'<a href="/{dom}/track/">Track record</a>' in html_, dom
         assert title and title in html_, dom
 
 
@@ -613,7 +620,7 @@ def test_one_map_still_reads_exactly_as_it_did(tmp_path):
     map must be byte-for-byte the page it was."""
     one = landing.render(_site(tmp_path), "semi", URL)
     assert one == landing.render(_site(tmp_path), "semi", URL, live=["semi"])
-    assert '<li class="mapcard">' not in one and "2 maps" not in one
+    assert 'class="mapcard' not in one and "2 maps" not in one
 
 
 # -- the front door is written after every map, not during the first ----------
@@ -704,7 +711,7 @@ def test_the_front_door_names_every_map_from_an_empty_site(walked):
     html_ = (root / "index.html").read_text(encoding="utf-8")
     for dom in ("semi", ENERGY):
         assert f'<a href="/{dom}/"' in html_, dom
-    assert html_.count('<li class="mapcard">') == 2
+    assert html_.count('<li class="mapcard') == 2
     text = _text(html_)
     assert f"{len(WATCH) + n_energy} dated questions" in text
     assert "2 maps" in text

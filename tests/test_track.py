@@ -549,8 +549,9 @@ def test_the_page_never_shows_a_bare_dash_in_a_tile():
     renderer now, over the free resolved cards, so that is where it is checked."""
     assert "summary:P.summary" in template()
     cards = cards_source()
-    assert "'0 / 0'" in cards
-    assert "no scored forecasts yet" in cards
+    assert "'0 / 0'" not in cards, "0 / 0 reads as a result, not an absence"
+    assert "NOT_ENOUGH = 'Not enough scored questions yet'" in cards
+    assert cards.count("NOT_ENOUGH") >= 5, "every empty tile carries it"
 
 
 # -- what the edge carries ----------------------------------------------------
@@ -900,7 +901,7 @@ def test_the_page_asks_for_a_key_and_keeps_it_in_the_browser():
     assert "crypto.subtle.decrypt" in body and "AES-GCM" in body
     assert "track.enc.json" in body
     assert "localStorage.setItem" in body
-    assert "That key does not open this month" in body
+    assert "That key was not recognized" in body
 
 
 def test_the_key_input_is_a_password_field():
@@ -1040,7 +1041,7 @@ def test_only_paid_outputs_unlock_every_row():
 def test_the_renderer_draws_the_question_block():
     body = cards_source()
     assert "function question(r){" in body
-    assert "Yes looks like" in body and "No looks like" in body
+    assert "Yes if" in body and "No if" in body
     assert "Why it matters." in body
 
 
@@ -1405,10 +1406,14 @@ def test_the_master_table_carries_one_row_per_closed_question(tmp_path):
     html = _render_table({"as_of": SES[-1], "summary": {}, "forecasts": [],
                           "record_table": [RT_ROW]}, tmp_path)
     assert 'data-qid="q1"' in html
-    for cell in ("Acme Q3", "2026-09-10", "mixed", "-3.19%", "-3.68%",
+    # The verdict column prints the reader's word. The status VALUE behind it
+    # is unchanged -- 'mixed' is what the row is keyed and hashed on -- and
+    # that is checked from the payload rather than from the rendered cell.
+    assert RT_ROW["verdict"] == "mixed"
+    for cell in ("Acme Q3", "2026-09-10", "partial", "-3.19%", "-3.68%",
                  "-5.83%", "+0.49%", "2026-09-13", "6a02cce2d486"):
         assert cell in html, cell
-    assert "vs EW_MAP" in html and "Sessions" in html
+    assert "Excess vs map" in html and "Sessions" in html
 
 
 def test_with_nothing_closed_the_table_says_so_rather_than_drawing_zeros(tmp_path):

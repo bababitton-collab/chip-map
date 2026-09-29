@@ -38,7 +38,7 @@ def test_no_template_names_the_dead_vendor():
 def test_the_rendered_track_page_names_the_live_source():
     page = track.render(track.public({"summary": {}, "forecasts": []}))
     assert DEAD not in page
-    assert "Prices are Yahoo Finance end-of-day data." in page
+    assert "Prices use Yahoo Finance end-of-day market data." in page
 
 
 def test_the_method_paragraph_on_a_question_page_names_the_live_source():

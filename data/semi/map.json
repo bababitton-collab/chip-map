@@ -10527,15 +10527,18 @@
     "en": "The Living Chip Map"
    },
    "value": {
-    "en": "The physical supply chain behind AI — who supplies whom, where the chokepoints are, and which dated questions come next."
+    "en": "From materials and lithography to advanced packaging, systems, cloud and power."
+   },
+   "line": {
+    "en": "Materials and equipment through design, fabrication, packaging, systems, cloud and power."
    },
    "story": {
     "he": "לינצ'פין הוא הפין הקטן שמחזיק את הגלגל על הציר. מוציאים אותו — והכל נעצר. אנחנו מוצאים את הפינים האלה בשרשרת האספקה, ומודדים מה קורה להם, כל יום.",
-    "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."
+    "en": "Trace suppliers, customers and concentrated dependencies across the chain. Select any company to inspect its role, evidence and relationships."
    },
    "footer": {
-    "he": "לינצ'פין סיגנל · לא ייעוץ השקעות · לכל מספר יש מקור",
-    "en": "Linchpin Signal · not investment advice · every number carries a source"
+    "he": "לינצ'פין סיגנל · לא ייעוץ השקעות · מקורות מוצגים היכן שנרשמו; אומדנים מסומנים",
+    "en": "Linchpin Signal · not investment advice · sources shown where recorded; estimates labelled"
    }
   }
  }

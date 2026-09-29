@@ -138,7 +138,7 @@ html.rec canvas{height:100vh;height:100svh;min-height:0}
 .l9bar{position:absolute;inset:0;z-index:2;pointer-events:none}
 /* Focus mode: the checkpoints strip and the layer tags stay, dimmed with the map
    to the same 12%. */
-#next,.layerbar,.l9bar{transition:opacity .3s}
+#next,.layerbar,.l9bar{transition:opacity .3s cubic-bezier(0.16,1,0.3,1)}
 html.focusing #next,html.focusing .layerbar,html.focusing .l9bar{opacity:.12}
 .focusui{position:absolute;inset:0;pointer-events:none;z-index:5;display:none}
 html.focusing .focusui{display:block}
@@ -308,6 +308,8 @@ html.rec canvas{cursor:none}
 .more{background:none;border:none;color:var(--logic);font:inherit;font-size:.8rem;cursor:pointer;padding:4px 0}
 .foot{padding:16px 22px 30px;color:var(--ink3);font-size:.95rem;max-width:70ch;border-top:1px solid var(--rule)}
 .foot b{color:var(--ink2)}
+.foot .eyebrow{display:block;margin-bottom:8px;font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
 @media (max-width:900px){.stage.open{grid-template-columns:minmax(0,1fr)}.stage.open .panel{position:absolute;inset:0;height:100%;z-index:3}}
 
 .watch{padding:18px 22px 10px;border-top:1px solid var(--rule)}
@@ -341,7 +343,6 @@ html.rec canvas{cursor:none}
 .autotag{display:inline-block;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);border:1px dashed var(--rule);padding:0 4px;margin-inline-start:6px;vertical-align:middle;font-family:"IBM Plex Mono",monospace}
 .hb .bar i.autohint{outline:1px dashed var(--ink3);outline-offset:1px}
 @media (max-width:820px){.wrow{grid-template-columns:80px minmax(0,1fr)}.wrow .wq,.wrow .ws{grid-column:2}}
-.wq .blur{filter:blur(4px);user-select:none;pointer-events:none;color:var(--ink2);display:block}
 .wq .lockline{display:block;margin-top:6px;color:var(--ink3);font-size:.85rem}
 .wq .lockline b{color:var(--amber);font-weight:600}
 .wrow.locked{cursor:pointer}
@@ -350,7 +351,7 @@ html.rec canvas{cursor:none}
 .wmark{display:block;margin-top:6px;font-size:.86rem;color:var(--ink2)}
 .wmark b{color:var(--ink)}
 .whints{color:var(--ink3);font-size:.8rem;font-family:"IBM Plex Mono",monospace}
-.cta2{border-top:1px solid var(--rule);margin-top:18px;padding:16px 0 8px}
+.cta2{border-top:1px solid var(--rule);margin-top:18px;padding:16px 22px 8px}
 .cta2 .stats{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--ink3);margin-bottom:8px;direction:ltr;text-align:start}
 .cta2 h3{font-family:"Suez One",serif;font-weight:400;font-size:1.3rem;margin:0 0 6px}
 .cta2 p{color:var(--ink2);max-width:70ch;margin:0 0 12px}
@@ -452,10 +453,15 @@ html.rec canvas{cursor:none}
 .cons.policy{display:flex;align-items:center;justify-content:center;min-height:208px}
 .cons .pband{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);border:1px solid var(--rule);border-radius:3px;padding:10px 14px;text-align:center}
 .mid{position:relative}
-.lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.lock div{background:rgba(20,25,34,.85);border:1px solid var(--rule);padding:12px 18px;border-radius:10px;font-size:.95rem;color:var(--ink2);backdrop-filter:blur(2px)}
-.lock div b{color:var(--amber);font-weight:600}
-.blur{filter:blur(6px);opacity:.55;user-select:none}
+.redact{display:grid;gap:7px;margin:0 0 12px}
+.redact i{display:block;height:9px;border-radius:2px;
+  background:repeating-linear-gradient(135deg,var(--rule) 0 6px,transparent 6px 12px)}
+.lockmsg{border:1px solid var(--rule);border-radius:6px;padding:12px 14px;background:var(--bg2)}
+.lockmsg .eyebrow{display:block;font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:0 0 6px}
+.lockmsg p{margin:0 0 10px;color:var(--ink2);font-size:.92rem;line-height:1.45}
+.lockmsg .lockcta{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--amber);border:1px solid #3a3320;border-radius:5px;padding:7px 13px;background:var(--panel)}
+.wq .redact{gap:5px;margin:0 0 6px}
+.wq .redact i{height:8px}
 /* A term the reader may not know, underlined where it stands. The
    definition is free: it explains a word already on the page and never adds
    a fact the map does not carry. */
@@ -591,12 +597,13 @@ abbr.gl{text-decoration:underline dotted var(--ink3);text-underline-offset:3px;c
 .top .maptitle{font-family:"Suez One",serif;font-weight:400;font-size:1.15rem;color:var(--ink2);margin:0 0 6px}
 .top .story{color:var(--ink2);max-width:74ch;margin:0 0 8px;font-size:1rem}
 @media (max-width:760px){
-  .top{padding:10px 14px 9px}
+  .top{padding:10px 20px 9px}
   .top h1{font-size:1.8rem}
   .top .story{margin-bottom:4px}
-  .next{padding:6px 14px}
+  .next{padding:6px 20px}
+  .qcards,.ledger,.board,.cta2,.foot{padding-inline:20px}
   .ev{min-width:190px;padding:5px 12px}
-  .card{padding:18px 16px}
+  .card{padding:18px 20px}
 }
 .foot .brandline{display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--rule);color:var(--ink3);font-size:.86rem}
 .focusui button,.maphint,.pin .close,.cpbox .cpid,.sub .sh,.more,.wf button,.wrow .wd em,.wrow .ww .cp,.wrow .ws .saved,.autotag,.wbadge,.whints,.qcards .eyebrow,.tag,.yn b,.cons .cap,.cons .pband,.terms b,.terms .gchip,.gltip b,.evid b,.fwd,.ordlab,.ord,.tile span,.gate span,.chip,.ring .n small{font-size:.82rem}
@@ -632,11 +639,11 @@ __CARDS_JS__
 </script>
 
 <div class="top">
-  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">Raw materials on the left, data centers on the right. A pulsing station is a chokepoint. Click it.</div></div>
+  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">Follow the chain from upstream inputs to downstream systems. Select a station for details.</div></div>
   <div class="asof" id="asof"></div>
-  <a class="fwd" href="track/">Forward test →</a>
+  <a class="fwd" href="track/">Track record →</a>
 </div>
-<div class="next" id="next"><span class="lbl">NEXT CHECKPOINTS</span></div>
+<div class="next" id="next"><span class="lbl">UPCOMING EVENTS</span></div>
 <div class="stage" id="stage">
   <div class="mapwrap">
     <div class="layerbar" id="layerbar"></div>
@@ -645,39 +652,39 @@ __CARDS_JS__
     <div class="tip" id="tip"></div>
   </div>
   <div class="panel" id="panel"></div>
-  <div class="maphint" id="maphint">Hover a station for its pulse · hover a line for what it carries and its share at the buyer.</div>
+  <div class="maphint" id="maphint">Hover to inspect · select to open details · use Browse stations to search and filter</div>
   <aside class="srail" id="srail" aria-label="Stations"></aside>
 </div>
 <div class="railbtnwrap"><button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">Browse stations</button></div>
 <div class="legend" id="legend"></div>
 <div class="board" id="board">
-<h2>The Forecast Board</h2>
-<p class="lede">Upcoming questions across the chain, with confirmed or expected answer dates. <a class="howlink" href="#howscoring">How scoring works</a></p>
-<div class="bleg"><span><i class="f"></i>confirmed date</span><span><i></i>expected date</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>leaker → question</span></div>
+<h2>Forecast calendar</h2>
+<p class="lede">Dated questions across the chain. Solid markers have confirmed answer dates; outlined markers have expected dates. <a class="howlink" href="#howscoring">Measurement method</a></p>
+<div class="bleg"><span><i class="f"></i>date confirmed</span><span><i></i>date expected</span><span><i class="y"></i>confirmed</span><span><i class="n"></i>refuted</span><span><i class="m"></i>partial</span><span><s></s>earlier answer → later question</span></div>
 <div class="bwrap" id="bwrap"><div class="btip" id="btip"></div></div>
 <div class="hints" id="hints"></div>
 </div>
 <div class="fwd-sect" id="fwdsect" hidden>
-  <h2>Forward test</h2>
+  <h2>Track record</h2>
   <p class="lede" id="fwdlede"></p>
   <div id="fwdcards"></div>
 </div>
 <div class="ledger" id="ledger">
-<a class="fwd inline" href="track/">Forward test →</a>
-<h2>The Forecast Ledger</h2>
-<p class="lede">Published answers and measured outcomes appear here; mixed answers remain visible but do not enter the score.</p>
+<a class="fwd inline" href="track/">Track record →</a>
+<h2>Measured outcomes</h2>
+<p class="lede">Resolved questions and their forward market results. Partial answers remain in the public record but do not enter the score.</p>
 <div id="ltiles"></div>
 <div id="lcards"></div>
 <details class="howscoring" id="howscoring">
-<summary>How scoring works</summary>
+<summary>Measurement method</summary>
 <p>Every question carries a scoring contract written in advance: the baskets, the yes/no rule, the horizons and the benchmarks, hashed and published with the day they were set. Only contracts committed before the answer count as preregistered.</p>
 <p>The score is measured from the first close after the mark, against the equal-weight map and against the second benchmark, and read at the primary horizon. There is no backtest here and there cannot be one — the forecast was written before the price moved. The sample is small, and every number here is shown with its N.</p>
 </details>
 </div>
 <section class="qcards" id="qcards-section">
-<div class="eyebrow">04 · Questions with a date</div>
-<h2>What gets answered next — and what the answer will look like</h2>
-<p class="lede">Every card is a question that gets answered on a known day. Not "what to buy": what "yes" and "no" sound like on the call, and which stations on the map move if it is yes. The next question is open; the rest arrive in the weekly mail.</p>
+<div class="eyebrow">04 · Dated questions</div>
+<h2>Questions defined before the event</h2>
+<p class="lede">Each card states what would count as YES, what would count as NO, why the answer matters and which companies are expected to move.</p>
 <div id="qcards"></div>
 <div id="qpast"></div>
 </section>
@@ -709,11 +716,11 @@ readLabels();
 // Plain words. "Holder" and "challenger" are the field names in the data and
 // they stay there; nobody reading a map should have to learn them.
 const FWD = {tracked:'questions tracked', through:'prices through'};
-const WORDS = {holder:'controls the chokepoint', challenger:'trying to replace them',
-  buys:'Buys from', sells:'Sells to', peers:'Others in this layer',
+const WORDS = {holder:'Controls this chokepoint', challenger:'Listed challengers',
+  buys:'Direct suppliers', sells:'Customers', peers:'Peers in this layer',
   via:'Challenges through', against:'against', sells1:'sells', to:'to ',
-  legendLine:'Which line?', legendRing:'Is the market pressing on the chokepoint?',
-  legendZone:'Which zone?'};
+  legendLine:'Relationship', legendRing:'Chokepoint pressure',
+  legendZone:'Zone'};
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Recording hook. The whole script is a closure, so a recorder driving the
@@ -2189,17 +2196,17 @@ function detailHTML(n){
   const subRow=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">sole source</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">private</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">estimate</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div>${noteOf(s.id)}</div>`;
   cps.forEach(c=>{
     const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');
-    const sent = pu==null ? (c.n_chal_priced? 'The company that controls it has no price line.':'Nobody listed is trying to replace them. Amber ring: the market pressure cannot be measured.') : (pu>0? 'The lock is tightening: the company in control is outrunning the ones trying to replace it.' : 'The lock is eroding: the ones trying to replace it are outrunning the company in control.');
+    const sent = pu==null ? (c.n_chal_priced? 'The company that controls it has no price line.':'No listed challenger. Amber ring: there is nothing to measure the holder against.') : (pu>0? 'Tightening: the holder is outrunning its listed challengers.' : 'Easing: the listed challengers are outrunning the holder.');
     h+=`<div class="cpbox"><span class="cpid">${c.id}</span><span class="cpn">${c.he}</span><p>${c.blurb}</p>
       <div class="pulse ${kind}"><i></i><div>${sent}<small>13w: ${WORDS.holder} ${pct(c.hr13)} · ${WORDS.challenger} ${pct(c.cr13)}${c.n_chal_priced?' ('+c.n_chal_priced+' priced)':''}</small></div></div></div>`;
     // sub-suppliers
     const t1=c.subs.filter(s=>s.tier===1), t2=c.subs.filter(s=>s.tier===2);
-    h+=`<h3>Who supplies the company that ${WORDS.holder} · ${t1.length} direct, ${t2.length} beneath them</h3>`;
+    h+=`<h3>${WORDS.buys} · ${t1.length} direct, ${t2.length} beneath them</h3>`;
     const row=subRow;
     t1.forEach(s=>{ h+=row(s); t2.filter(x=>x.to===s.id).forEach(x=>h+=row(x)); });
     t2.filter(x=>!t1.some(s=>s.id===x.to)).forEach(x=>h+=row(x));
     // challengers
-    h+=`<h3>Who is ${WORDS.challenger} · ${c.sigs.length}</h3>`;
+    h+=`<h3>${WORDS.challenger} · ${c.sigs.length}</h3>`;
     const pxBy={}; c.chal.forEach(x=>{ if(x.px) pxBy[x.name]=x.px; });
     c.sigs.forEach(s=>{ const px=pxBy[s.name]; h+=`<div class="ch"><b>${s.name}${px&&px.r13w!=null?`<span class="badge r13">13w ${pct(px.r13w)}</span>`:''}</b>${stageBar(s.stage)}<div class="sig">${s.approach?s.approach+'<br>':''}<span style="color:var(--ink3)">signal:</span> ${srcCited(s.signal,s.src)} <small>${s.as_of||''}</small></div></div>`; });
     // cal rows carry cps (a list) and who/d/days. They deliberately do NOT carry
@@ -2262,15 +2269,20 @@ function close(){ selected=null; stage.classList.remove('open'); panel.innerHTML
 // ---- the stations rail ----
 // Every station as a button, grouped by its layer, with search and sort. The
 // canvas keeps the picture; this keeps the contents.
-const RAIL = {stations:'Stations', search:'Search stations', sortName:'By name',
-  sortLayer:'By layer', sortPulse:'By pulse', back:'Back to stations',
-  none:'No station matches that search.', cp:'chokepoint', pulseT:'lock tightening',
-  pulseE:'lock eroding', pulseA:'not measured', pulseNo:'no pulse',
-  lLayer:'Layer', lCp:'Chokepoint', lPulse:'Pulse', lSort:'Sort',
+// Labels only. The values behind them -- yes/no/tightening/eroding/
+// unmeasured -- are what the URL carries, and they are NOT renamed here: a
+// link someone copied before this wording changed still restores the same
+// view. Renaming "eroding" to "easing" on screen must not rename it in a
+// query string somebody has already sent to someone else.
+const RAIL = {stations:'Stations', search:'Search by company or ticker', sortName:'Name',
+  sortLayer:'Layer', sortPulse:'Pressure', back:'Back to stations',
+  none:'No stations match these filters.', cp:'chokepoint', pulseT:'Tightening',
+  pulseE:'Easing', pulseA:'No listed challenger', pulseNo:'Not a chokepoint',
+  lLayer:'Layer', lCp:'Chokepoint', lPulse:'Pressure', lSort:'Sort',
   anyLayer:'All layers', cpAll:'All stations',
-  cpYes:'Chokepoints only', cpNo:'Not chokepoints', anyPulse:'Any pulse',
-  count:'{n} of {N} stations', clear:'Clear filters', copy:'Copy link',
-  copied:'Link copied'};
+  cpYes:'Chokepoints only', cpNo:'Non-chokepoints', anyPulse:'All pressure states',
+  count:'{n} of {N} stations', clear:'Clear filters', copy:'Copy view link',
+  copied:'View link copied'};
 let railQ='', railSort='layer', railOpenId=null;
 
 // FILTERS, OVER FIELDS THE MAP ALREADY CARRIES.
@@ -2609,7 +2621,7 @@ function header(){
   document.getElementById('story').textContent = B.story||'';
   if(B.name&&B.title) document.title = B.name+' \u2014 '+B.title;
   const stale = D.last_price_date;
-  document.getElementById('asof').innerHTML=`map ${D.map_version} · prices through <b>${stale}</b> · refreshed weekly`;
+  document.getElementById('asof').innerHTML=`map ${D.map_version} · market data through <b>${stale}</b> · rebuilt after each trading session`;
   const nx=document.getElementById('next'); nx.querySelectorAll('.ev').forEach(e=>e.remove());
   D.cal.filter(e=>e.days>=-3).sort((a,b)=>a.days-b.days).slice(0,8).forEach(e=>{ const d=document.createElement('div'); d.className='ev'+(e.days<=30?' soon':''); d.innerHTML=`<b>${e.who}</b><i>${e.days<=0?'today':(e.days===1?'tomorrow':'in '+e.days+' days')} · ${e.d}</i>`; d.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===e.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h) open(h); }); nx.appendChild(d); });
   // Two labelled rows, because the map now says two different things with
@@ -2618,8 +2630,8 @@ function header(){
     `<div class="row"><b>${WORDS.legendLine}</b>`
     + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join('')
     + `</div><div class="row"><b>${WORDS.legendRing}</b>`
-    + `<span><i class="pl"></i>tightening</span><span><i class="pe"></i>eroding</span>`
-    + `<span><i class="pa"></i>cannot be measured</span></div>`;
+    + `<span><i class="pl"></i>Tightening</span><span><i class="pe"></i>Easing</span>`
+    + `<span><i class="pa"></i>No listed challenger</span></div>`;
   // The zone row is appended separately and deliberately: it holds no Hebrew
   // of its own -- the label comes from WORDS and the names come from the map
   // -- so the English template needs no translation pair for it, and adding
@@ -2630,7 +2642,7 @@ function header(){
     + `</div>`;
   const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
   const BR = (D.labels||{}).brand||{};
-  document.getElementById('foot').innerHTML=`<b>The pulse</b> is the market's vote over the last 13 weeks: the holder's return minus its listed challengers' return. Positive — the lock is tightening, red and fast. Negative — eroding, green and slow. Right now: ${nt} tightening, ${ne} eroding, ${na} with no listed challenger. Station size is market cap. Each company in its own currency; Japanese names via US depositary receipts. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone. Every number carries a source; "estimate" means none was found. Prices lag by up to a week.`+`<span class="brandline">${BR.footer||''}</span>`;
+  document.getElementById('foot').innerHTML=`<span class="eyebrow">PRESSURE METHOD</span><b>Pressure</b> compares the chokepoint holder's 13-week return with its listed challengers. Positive values indicate tightening; negative values indicate easing. No value is shown when there is no listed challenger. Right now: ${nt} tightening, ${ne} easing, ${na} with no listed challenger. A station with a recorded market value is drawn to it; the rest are drawn at one fixed size. Prices remain in each company's trading currency; Japanese names via US depositary receipts. Supplier shares are shown with their source and left blank where none is recorded; estimates are labelled. Market data may lag by up to one week. Data: ${D.nodes.length} stations, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} suppliers beneath them, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} challengers. This is a map of exposures, not a trading signal and not investment advice.`+`<span class="brandline">${BR.footer||''}</span>`;
 }
 function boot(){ if(window.GL) GL.use(D.glossary||{});
   build(); resize(); header(); buildRail(); requestAnimationFrame(draw); }
@@ -2659,7 +2671,7 @@ const BOARD={statuses:{},render(){}};
   const days = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
   const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};
   const list=document.getElementById('wlist');
-  const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'confirmed', exp:'expected', leaksIn:'Hints that arrive first:', leaksOut:'Leaks into:', noLeaks:'No earlier question leaks into this one.', later:'Beyond the board:', hintsH:'What the hints say so far', hintsNone:'No hint has been answered yet. The first to color the board:', of:'of', answered:'answered', leanY:'leans yes', leanN:'leans no', leanM:'mixed', leanO:'no lean yet', stillOpen:'still open:', pulse:'pulse', autoSuffix:' (auto)', locked:'🔒 The full question — in the weekly mail'};
+  const BT = {lanes:(D.labels||{}).lanes||{}, today:'today', past:'past', in:'in', days:'days', conf:'date confirmed', exp:'date expected', leaksIn:'Earlier answers that arrive first:', leaksOut:'Feeds into:', noLeaks:'No earlier question feeds into this one.', later:'Beyond the board:', hintsH:'What earlier answers imply', hintsNone:'No earlier answer has changed the board yet. First in line:', of:'of', answered:'answered', leanY:'Earlier answers lean YES', leanN:'Earlier answers lean NO', leanM:'Earlier answers are mixed', leanO:'No directional evidence yet', stillOpen:'still open:', pulse:'pressure', autoSuffix:' (auto)', locked:'Upcoming question · available with the weekly key'};
   const STC = {yes:'var(--erode)', no:'var(--tight)', mixed:'var(--amber)', none:'var(--ink3)'};
   const bwrap=document.getElementById('bwrap'), btip=document.getElementById('btip'), hints=document.getElementById('hints');
   // Delegated, because the hint rows are rebuilt whenever a mark lands.
@@ -2735,13 +2747,13 @@ const BOARD={statuses:{},render(){}};
 // therefore never blurred: a CSS filter is a picture, not a lock, and blurring
 // the real sentence would ship it in the DOM to anyone who opens the inspector.
 const LOCK = {
-  dummy: 'Locked question — the full text arrives in the weekly mail, with what to listen for on the call',
-  line: 'The full question', mail: 'in the weekly mail',
+  line: 'Upcoming question', mail: 'available with the weekly key',
   badge: 'this week\'s open question',
   marked: 'marked', };
 function lockedHTML(){
-  return `<span class="blur">${LOCK.dummy}</span>`
-       + `<span class="lockline">&#128274; ${LOCK.line} — <b>${LOCK.mail}</b></span>`;
+  return `<span class="redact" aria-hidden="true"><i style="width:86%"></i>`
+       + `<i style="width:62%"></i></span>`
+       + `<span class="lockline">${LOCK.line} — <b>${LOCK.mail}</b></span>`;
 }
 
 // ---- the forecast ledger ----
@@ -2753,17 +2765,17 @@ function lockedHTML(){
   // visible here. Its own copy, rather than hoisting theirs into a scope two
   // other sections would then share by accident.
   const STATUS = {open:'open', yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed'};
-  const LT = {h2:'The Forecast Ledger', none:'No answers recorded yet.',
+  const LT = {h2:'Measured outcomes', none:'No answers recorded yet.',
     nextAnswer:'next expected answer', answerRec:'answer recorded', answersRec:'answers recorded',
-    obsLabel:'MIXED \u00b7 OBSERVATION ONLY', obsNote:'This answer remains in the public record but does not enter the score.',
-    pendingLabel:'ANSWERED \u00b7 SCORING PENDING',
-    scored:'scored', pending:'pending', rate:'hit rate', mean:'mean excess', sess:'sessions',
+    obsLabel:'Partial \u00b7 observation only', obsNote:'This answer remains in the public record but does not enter the score.',
+    pendingLabel:'Answered \u00b7 scoring pending',
+    scored:'Scored', pending:'Pending', rate:'Hit rate', mean:'Mean excess', sess:'sessions',
     entry:'entry', close:'last', gate:'N=__MIN_N__ before any capital decision', of:'of',
     sym:'symbol', ent:'entry', last:'last', ret:'return', bench:'map', exc:'excess',
     pend:'pending', hit:'hit', miss:'miss', dirUp:'win basket \u2191', dirDn:'win basket \u2193',
     marked:'marked', src:'source', noentry:'no session has closed since the mark',
-    direct:'direct \u2014 the registered basket', indirect:'indirect \u2014 second ring, via the map',
-    noind:'no indirect forecast yet'};
+    direct:'Direct basket', indirect:'Second ring',
+    noind:'No second-ring forecast yet'};
   const p2 = v => v==null? '—' : ((v>0?'+':'')+(v*100).toFixed(2)+'%');
   const sgn = v => v==null? '' : (v>0?'pos':(v<0?'neg':''));
   // FOUR STATES, AND THE BUG THAT MADE THEM NECESSARY.
@@ -2808,7 +2820,7 @@ function lockedHTML(){
     // STATE 2 -- answered, and none of it scorable. The count is the honest
     // pair: what was answered, and what that earned in the score.
     tiles.innerHTML = `<p class="lede">${answered.length} ${
-      answered.length===1?LT.answerRec:LT.answersRec} · 0 ${LT.scored}</p>`;
+      answered.length===1?LT.answerRec:LT.answersRec} · 0 ${LT.scored.toLowerCase()}</p>`;
     if(S){ tiles.innerHTML += gate(S); poolGate(S); }
     cards.innerHTML = OBSERVED.map(q=>{
       const a = ANS[q]||{}, w = (D.watch||[]).find(r=>r.id===q) || {};
@@ -2861,8 +2873,8 @@ function lockedHTML(){
     const H = sum.hz || ['5','10','20'];
     return `<div class="ordlab">${label}</div><div class="tiles">
       <div class="tile"><b>${sum.n_scored}</b><span>${LT.scored}</span></div>
-      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile"><b>${d.hit_rate==null?'—':Math.round(d.hit_rate*100)+'%'}</b><span>${LT.rate} ${h} (N=${d.n})</span></div>`;}).join('')}
-      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile ${sgn(d.mean_excess)}"><b>${p2(d.mean_excess)}</b><span>${LT.mean} ${h}</span></div>`;}).join('')}
+      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile"><b>${d.hit_rate==null?'—':Math.round(d.hit_rate*100)+'%'}</b><span>${LT.rate} · ${h} ${LT.sess} (N=${d.n})</span></div>`;}).join('')}
+      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile ${sgn(d.mean_excess)}"><b>${p2(d.mean_excess)}</b><span>${LT.mean} · ${h} ${LT.sess}</span></div>`;}).join('')}
       <div class="tile"><b>${sum.n_pending}</b><span>${LT.pending}</span></div>
     </div>`;
   }
@@ -2927,24 +2939,20 @@ function lockedHTML(){
   const list = document.getElementById('qcards'); if(!list) return;
   const W = D.watch||LIVE.watch||[]; if(!W.length) return;
   const T = {
-    yes:'Yes looks like', no:'No looks like', why:'Why it matters.',
-    lockA:'\u{1F512} The question, what yes and no sound like, and who moves — ',
-    lockB:'in the weekly mail',
-    conf:'confirmed', exp:'expected',
+    yes:'Yes if', no:'No if', why:'Why it matters.',
+    lockEyebrow:'Upcoming question',
+    lockBody:'The full question, decision rule and affected companies are available with the weekly key.',
+    lockCta:'Get the free key',
+    conf:'date confirmed', exp:'date expected',
     day:'day', days:'days', today:'today', tomorrow:'tomorrow', past:'ago',
     up:'up if yes', down:'down if yes', ring2:'second ring · via the map',
     answered:'Answered', more:'more', auto:'auto', evidence:'Evidence:',
     terms:'Terms',
     upMore:'More dates', doneMore:'Earlier answers',
     moreDates:'Show {n} more dates', fewer:'Show fewer', noStatus:'—',
-    marks:{yes:'confirmed', no:'refuted', mixed:'unclear', none:'unclear',
+    marks:{yes:'confirmed', no:'refuted', mixed:'partial', none:'not disclosed',
            open:'unclear'},
   };
-  // Fixed, and never the real text.
-  const PH = {q:'Which number on the call settles the question that everyone in this room is already arguing about',
-    yes:'The company names a figure above the range it guided to last quarter, and says the constraint has moved.',
-    no:'The number lands inside the old range and the language about capacity is unchanged from last time.',
-    why:'It decides which of two companies is holding the scarce part twelve months from now.'};
 
   const esc = v => String(v==null?'':v).replace(/[&<>"]/g, c=>(
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -3204,12 +3212,17 @@ function lockedHTML(){
     if(window.GL) h+=GL.chips(w.terms, T.terms);
     return h;
   }
+  // A locked card carries no sentence -- not the real one and not an
+  // invented one. The bars are drawn by CSS and hold no text, so nothing here
+  // can be read as the question or recovered from the inspector.
   function midLocked(){
-    return `<div class="blur"><p class="q">${esc(PH.q)}</p>`
-      + `<div class="yn"><div class="y"><b>${T.yes}</b>${esc(PH.yes)}</div>`
-      + `<div class="no"><b>${T.no}</b>${esc(PH.no)}</div></div>`
-      + `<p class="why"><b>${T.why}</b> ${esc(PH.why)}</p></div>`
-      + `<div class="lock"><div>${T.lockA}<b>${T.lockB}</b></div></div>`;
+    const u = D.signup||null;
+    return `<div class="redact" aria-hidden="true"><i style="width:94%"></i>`
+      + `<i style="width:71%"></i><i style="width:88%"></i><i style="width:52%"></i></div>`
+      + `<div class="lockmsg"><span class="eyebrow">${T.lockEyebrow}</span>`
+      + `<p>${T.lockBody}</p>`
+      + (u? `<a class="lockcta" href="${esc(u)}">${T.lockCta}</a>` : '')
+      + `</div>`;
   }
   function card(w, opts){
     const dd=dayOf(w.d);
@@ -3383,10 +3396,10 @@ function lockedHTML(){
 (function(){
   const el = document.getElementById('cta2'); if(!el) return;
   const W = D.watch||LIVE.watch||[]; if(!W.length) return;
-  const T = {head:'Every question, before it is answered',
-    promise:'Every dated question, what to listen for, who leaks first, and the answer with its source — before and after each event.',
-    btn:'Get the weekly mail', soon:'coming soon',
-    disc:'Free, no recommendations. This is a map of exposures, not a trading signal, not investment advice and not a recommendation to anyone.',
+  const T = {head:'Get every question before the answer',
+    promise:'The free weekly briefing includes upcoming questions, decision rules, registered baskets and source-backed outcomes.',
+    btn:'Get the weekly key', soon:'coming soon',
+    disc:'Free. No recommendations. Unsubscribe at any time.',
     q:'questions', open:'open', next:'next answer', days:'days', today:'today', tomorrow:'tomorrow'};
   const today = new Date(D.as_of+'T00:00:00Z'); const now=new Date(); const ref = now>today?now:today;
   const dd = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);

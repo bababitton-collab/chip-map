@@ -195,8 +195,10 @@ def forecast_benchmark_symbol(dom: str | None = None) -> str:
 # neither sentence is true of the site -- "the physical supply chain",
 # singular, describes one of them -- so the words come from data/site.json,
 # beside the maps they are about rather than typed into the engine.
-ONE_MAP_TITLE = "The physical supply chain behind AI — mapped."
-ONE_MAP_LEAD = "See who supplies whom — and where it breaks."
+ONE_MAP_TITLE = "A critical supply chain — mapped and measured."
+ONE_MAP_LEAD = ("Trace who supplies whom, where dependencies concentrate, "
+                "and what happens next. Every dated question is measured "
+                "forward against published scoring rules.")
 
 
 def hero(many: bool) -> tuple[str, str]:
@@ -271,6 +273,13 @@ def map_cards(root: Path, names: list[str], dom: str,
         tight = sum(1 for c in cps if (c.get("pressure") or 0) > 0)
         erode = sum(1 for c in cps if (c.get("pressure") or 0) < 0)
         unmeasured = len(cps) - tight - erode
+        # Every chokepoint that has a reading, for the front door's single
+        # highest one. A chokepoint with no listed challenger has no reading
+        # and is not a candidate.
+        # Dated by the market data it is computed from, not by the build.
+        measured = [(c.get("name") or c.get("id") or "", c["pressure"],
+                     live.get("last_price_date") or "")
+                    for c in cps if c.get("pressure") is not None]
         # The next dated question, as PUBLIC metadata only: who and when. The
         # wording, the baskets and the diagram are the paid part and are not
         # in this card at any lock state.
@@ -288,6 +297,7 @@ def map_cards(root: Path, names: list[str], dom: str,
             "tightening": tight,
             "eroding": erode,
             "unmeasured": unmeasured,
+            "pressures": measured,
             "through": live.get("last_price_date") or "",
             "next_who": (nxt or {}).get("who") or "",
             "next_date": (nxt or {}).get("d") or "",
@@ -304,13 +314,45 @@ def map_cards(root: Path, names: list[str], dom: str,
     return cards
 
 
+def highest_pressure(cards: list[dict]) -> dict | None:
+    """The tightest chokepoint the site currently measures, or nothing.
+
+    One reading, from one formula. chains/live_snapshot.py computes pressure
+    the same way on every map -- the mean 13-week return of the holders less
+    the mean of their listed challengers -- so the largest of them is
+    comparable across maps and the component can be shown at all. If that ever
+    stops being true this has to go: a headline number that means a different
+    thing on each map is worse than no headline number.
+
+    Only chokepoints that HAVE a value are considered. One with no listed
+    challenger has no pressure -- not zero pressure -- and ranking it as if it
+    did would put "nothing to compare against" at the top of the front door.
+    """
+    best = None
+    for c in cards:
+        for name, value, as_of in c.get("pressures") or []:
+            if best is None or value > best[1]:
+                best = (name, value, as_of, c["title"])
+    if best is None:
+        return None
+    name, value, as_of, title = best
+    # Percentage points: the difference of two returns, which is what the
+    # number is. "+32.6%" would read as a return, and it is not one.
+    return {"name": name, "map": title, "as_of": as_of,
+            "value": f"{value * 100:+.1f} pts"}
+
+
 def _map_cards_html(cards: list[dict], dom: str) -> str:
     """The cards, one per map, the current one marked."""
     def esc(s):
         return html.escape(str(s), quote=True)
 
     out = []
-    for c in cards:
+    for i, c in enumerate(cards):
+        # The first card is the featured one: it carries the preview the page
+        # used to show twice -- once as a banner and again, the same image, in
+        # the card directly beneath it.
+        feat = " featured" if i == 0 and c.get("preview") else ""
         cur = ' aria-current="page"' if c["name"] == dom else ""
         blurb = f'<p class="blurb">{esc(c["blurb"])}</p>' if c["blurb"] else ""
         n = esc(c["name"])
@@ -327,23 +369,30 @@ def _map_cards_html(cards: list[dict], dom: str) -> str:
         # Counted from the published snapshot, never graded. A part that is
         # zero is left out rather than printed as a zero; the parts that are
         # printed always sum to the chokepoint count above them.
+        #
+        # "easing", not "eroding", and "no listed challenger" rather than
+        # "cannot be measured" -- the second says why the figure is absent
+        # instead of only that it is. Display wording: the JSON key is still
+        # `pressure` and nothing hashed moved.
         parts = []
         for n_, word, cls in ((c["tightening"], "tightening", "tight"),
-                              (c["eroding"], "eroding", "erode"),
-                              (c["unmeasured"], "cannot be measured", "unmeas")):
+                              (c["eroding"], "easing", "erode"),
+                              (c["unmeasured"], "with no listed challenger",
+                               "unmeas")):
             if n_:
                 parts.append(f'<span class="{cls}">{n_} {word}</span>')
-        status = (f'<p class="mapstatus">{" · ".join(parts)}</p>'
-                  if parts else "")
-        through = (f'<p class="mapthrough">prices through {esc(c["through"])}</p>'
-                   if c.get("through") else "")
+        status = (f'<p class="mapstatus"><span class="lbl">Pressure</span> '
+                  f'{" · ".join(parts)}</p>' if parts else "")
+        through = (f'<p class="mapthrough">Market data through '
+                   f'{esc(c["through"])}</p>' if c.get("through") else "")
         nxt = ""
         if c.get("next_who") and c.get("next_date"):
-            when = "confirmed" if c["next_confirmed"] else "expected"
-            nxt = (f'<p class="mapnext">next · {esc(c["next_who"])} · '
-                   f'{esc(c["next_date"])} <span>{when}</span></p>')
+            when = "date confirmed" if c["next_confirmed"] else "date expected"
+            nxt = (f'<p class="mapnext"><span class="lbl">Next event</span> '
+                   f'{esc(c["next_who"])} · {esc(c["next_date"])} '
+                   f'<span>{when}</span></p>')
         out.append(
-            f'<li class="mapcard">'
+            f'<li class="mapcard{feat}">'
             f'<a class="mapcard-hit" href="/{n}/"{cur} '
             f'aria-label="{esc(c["title"])}">'
             f'{shot}'
@@ -353,12 +402,13 @@ def _map_cards_html(cards: list[dict], dom: str) -> str:
             f'<li><b>{c["questions"]}</b> dated questions</li>'
             f'<li><b>{c["companies"]}</b> companies</li>'
             f'<li><b>{c["chokepoints"]}</b> chokepoints</li>'
-            f'<li>scored against <b>{esc(c["bench"])}</b></li>'
             f'</ul>'
+            f'<p class="mapbench"><span class="lbl">Benchmark</span> '
+            f'{esc(c["bench"])}</p>'
             f'{status}{nxt}{through}'
             f'</a>'
-            f'<p class="maplinks"><a href="/{n}/">Map</a> · '
-            f'<a href="/{n}/track/">Track Record</a></p>'
+            f'<p class="maplinks"><a href="/{n}/">Open map</a> · '
+            f'<a href="/{n}/track/">{sitenav.TRACK_RECORD}</a></p>'
             f'</li>')
     return "".join(out)
 
@@ -400,12 +450,22 @@ def render(dom_dir: Path, dom: str, site_url: str,
     t = _blocks(t, "onemap", not many)
     totals = {k: sum(c[k] for c in cards)
               for k in ("companies", "chokepoints", "questions")}
+    top = highest_pressure(cards)
+    t = _blocks(t, "pressure", bool(top))
     hero_title, hero_lead = hero(many)
     values = {
+        # Stated in full, once per page that explains the method, from
+        # the one place it is worded (chains/sitenav.py).
+        "prereg_rule": sitenav.PREREGISTRATION_RULE,
         "hero_title": hero_title,
         "hero_lead": hero_lead,
         "preview_href": f"/{preview_domain}/" if has_preview else "",
         "preview_title": preview["title"] if has_preview else "",
+        "footer_note": sitenav.FOOTER_NOTE,
+        "pressure_name": (top or {}).get("name", ""),
+        "pressure_map": (top or {}).get("map", ""),
+        "pressure_value": (top or {}).get("value", ""),
+        "pressure_as_of": (top or {}).get("as_of", ""),
         "map_cards": _map_cards_html(cards, dom),
         "n_maps": str(len(cards)),
         "cur_title": _brand(dom, "title") or dom,

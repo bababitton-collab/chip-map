@@ -45,8 +45,8 @@ def test_build_public_en_refuses_a_template_with_hebrew_in_it(tmp_path):
     template, and no file is written."""
     poisoned = tmp_path / "live-map-en.html"
     text = EN_TEMPLATE.read_text(encoding="utf-8")
-    poisoned.write_text(text.replace("<h2>The Forecast Board</h2>",
-                                     "<h2>לוח החיזוי</h2>"),
+    poisoned.write_text(text.replace("<h2>Forecast calendar</h2>",
+                                     "<h2>לוח התאריכים</h2>"),
                         encoding="utf-8", newline="\n")
     out = tmp_path / "public-map-en.html"
     with pytest.raises(ValueError) as e:
@@ -69,7 +69,7 @@ def test_the_english_page_carries_the_forecast_board(tmp_path):
     out = tmp_path / "public-map-en.html"
     bp.build_public_en(live=LIVE_EN, out=out)
     page = out.read_text(encoding="utf-8")
-    assert "The Forecast Board" in page
+    assert "Forecast calendar" in page
     assert "BOARD.render" in page
 
 
@@ -125,7 +125,7 @@ def test_the_translated_template_keeps_the_board(tmp_path):
     dst = tmp_path / "live-map-en.html"
     bp.build_en_template(dst=dst)
     page = dst.read_text(encoding="utf-8")
-    assert "The Forecast Board" in page
+    assert "Forecast calendar" in page
     assert "BOARD.render" in page
 
 
@@ -179,12 +179,12 @@ def test_the_public_page_leaves_no_reference_to_the_table_it_removed(tmp_path):
 def test_the_hebrew_template_has_the_ledger_section():
     t = HE_TEMPLATE.read_text(encoding="utf-8")
     assert 'id="ltiles"' in t and 'id="lcards"' in t
-    assert "יומן התחזיות" in t
+    assert "תוצאות שנמדדו" in t
 
 
 def test_the_english_template_has_the_ledger_in_english():
     t = EN_TEMPLATE.read_text(encoding="utf-8")
-    assert "The Forecast Ledger" in t
+    assert "Measured outcomes" in t
     assert "N=__MIN_N__ before any capital decision" in t
     assert bp.hebrew_runs(t) == []
 
@@ -223,7 +223,7 @@ def test_the_public_english_page_carries_the_ledger(tmp_path):
     out = tmp_path / "public-map-en.html"
     bp.build_public_en(live=LIVE_EN, out=out)
     page = out.read_text(encoding="utf-8")
-    assert "The Forecast Ledger" in page and 'id="lcards"' in page
+    assert "Measured outcomes" in page and 'id="lcards"' in page
     assert bp.hebrew_runs(page) == []
 
 
@@ -244,18 +244,26 @@ def test_the_english_template_uses_plain_words_not_field_names():
     """"Holder" and "challenger" are the names of fields in the data. Nobody
     reading a map should have to learn them."""
     t = EN_TEMPLATE.read_text(encoding="utf-8")
-    assert "controls the chokepoint" in t
-    assert "trying to replace them" in t
-    assert "Buys from" in t and "Sells to" in t
-    assert "Others in this layer" in t
+    i = t.index("const WORDS = {")
+    words = t[i:t.index("};", i)]
+    for plain in ("Controls this chokepoint", "Listed challengers",
+                  "Direct suppliers", "Customers", "Peers in this layer"):
+        assert plain in words, plain
+    # And the field names those labels stand for stay out of the wording.
+    for field in ("holder:'holder'", "chal", "sigs", "n_chal_priced"):
+        assert f"'{field}'" not in words, field
 
 
 def test_the_legend_asks_two_questions():
     for tpl, first, second in (
-        (HE_TEMPLATE, "איזה קו?", "האם השוק לוחץ על צוואר הבקבוק?"),
-        (EN_TEMPLATE, "Which line?",
-         "Is the market pressing on the chokepoint?")):
+        (HE_TEMPLATE, "legendLine:'קשר'",
+         "legendRing:'לחץ על צוואר הבקבוק'"),
+        (EN_TEMPLATE, "legendLine:'Relationship'",
+         "legendRing:'Chokepoint pressure'")):
         t = tpl.read_text(encoding="utf-8")
+        # Two rows, each named for what its colours mean. They used to be one
+        # strip, and a reader had no way to know that a line colour and a ring
+        # colour were answering two different questions.
         assert first in t and second in t
 
 

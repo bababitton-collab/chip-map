@@ -122,9 +122,9 @@ def test_an_empty_map_does_not_show_unearned_rates(tmp_path):
     root = _site(tmp_path, {"semi": []})
     page = track_site.render(root, ["semi"], "https://x/")
     block = page.split('class="domrec"')[1].split("</ul>", 1)[0]
-    assert "scored" in block
-    assert "hit rate" not in block
-    assert "mean excess" not in block
+    assert "Scored" in block
+    assert "Hit rate" not in block
+    assert "Mean excess" not in block
     assert "Second benchmark" in block
 
 

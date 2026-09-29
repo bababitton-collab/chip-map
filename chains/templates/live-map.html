@@ -138,7 +138,7 @@ html.rec canvas{height:100vh;height:100svh;min-height:0}
 .l9bar{position:absolute;inset:0;z-index:2;pointer-events:none}
 /* Focus mode: the checkpoints strip and the layer tags stay, dimmed with the map
    to the same 12%. */
-#next,.layerbar,.l9bar{transition:opacity .3s}
+#next,.layerbar,.l9bar{transition:opacity .3s cubic-bezier(0.16,1,0.3,1)}
 html.focusing #next,html.focusing .layerbar,html.focusing .l9bar{opacity:.12}
 .focusui{position:absolute;inset:0;pointer-events:none;z-index:5;display:none}
 html.focusing .focusui{display:block}
@@ -308,6 +308,8 @@ html.rec canvas{cursor:none}
 .more{background:none;border:none;color:var(--logic);font:inherit;font-size:.8rem;cursor:pointer;padding:4px 0}
 .foot{padding:16px 22px 30px;color:var(--ink3);font-size:.95rem;max-width:70ch;border-top:1px solid var(--rule)}
 .foot b{color:var(--ink2)}
+.foot .eyebrow{display:block;margin-bottom:8px;font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
 @media (max-width:900px){.stage.open{grid-template-columns:minmax(0,1fr)}.stage.open .panel{position:absolute;inset:0;height:100%;z-index:3}}
 
 .watch{padding:18px 22px 10px;border-top:1px solid var(--rule)}
@@ -341,7 +343,6 @@ html.rec canvas{cursor:none}
 .autotag{display:inline-block;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);border:1px dashed var(--rule);padding:0 4px;margin-inline-start:6px;vertical-align:middle;font-family:"IBM Plex Mono",monospace}
 .hb .bar i.autohint{outline:1px dashed var(--ink3);outline-offset:1px}
 @media (max-width:820px){.wrow{grid-template-columns:80px minmax(0,1fr)}.wrow .wq,.wrow .ws{grid-column:2}}
-.wq .blur{filter:blur(4px);user-select:none;pointer-events:none;color:var(--ink2);display:block}
 .wq .lockline{display:block;margin-top:6px;color:var(--ink3);font-size:.85rem}
 .wq .lockline b{color:var(--amber);font-weight:600}
 .wrow.locked{cursor:pointer}
@@ -350,7 +351,7 @@ html.rec canvas{cursor:none}
 .wmark{display:block;margin-top:6px;font-size:.86rem;color:var(--ink2)}
 .wmark b{color:var(--ink)}
 .whints{color:var(--ink3);font-size:.8rem;font-family:"IBM Plex Mono",monospace}
-.cta2{border-top:1px solid var(--rule);margin-top:18px;padding:16px 0 8px}
+.cta2{border-top:1px solid var(--rule);margin-top:18px;padding:16px 22px 8px}
 .cta2 .stats{font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--ink3);margin-bottom:8px;direction:ltr;text-align:start}
 .cta2 h3{font-family:"Suez One",serif;font-weight:400;font-size:1.3rem;margin:0 0 6px}
 .cta2 p{color:var(--ink2);max-width:70ch;margin:0 0 12px}
@@ -452,10 +453,15 @@ html.rec canvas{cursor:none}
 .cons.policy{display:flex;align-items:center;justify-content:center;min-height:208px}
 .cons .pband{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);border:1px solid var(--rule);border-radius:3px;padding:10px 14px;text-align:center}
 .mid{position:relative}
-.lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.lock div{background:rgba(20,25,34,.85);border:1px solid var(--rule);padding:12px 18px;border-radius:10px;font-size:.95rem;color:var(--ink2);backdrop-filter:blur(2px)}
-.lock div b{color:var(--amber);font-weight:600}
-.blur{filter:blur(6px);opacity:.55;user-select:none}
+.redact{display:grid;gap:7px;margin:0 0 12px}
+.redact i{display:block;height:9px;border-radius:2px;
+  background:repeating-linear-gradient(135deg,var(--rule) 0 6px,transparent 6px 12px)}
+.lockmsg{border:1px solid var(--rule);border-radius:6px;padding:12px 14px;background:var(--bg2)}
+.lockmsg .eyebrow{display:block;font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:0 0 6px}
+.lockmsg p{margin:0 0 10px;color:var(--ink2);font-size:.92rem;line-height:1.45}
+.lockmsg .lockcta{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--amber);border:1px solid #3a3320;border-radius:5px;padding:7px 13px;background:var(--panel)}
+.wq .redact{gap:5px;margin:0 0 6px}
+.wq .redact i{height:8px}
 /* A term the reader may not know, underlined where it stands. The
    definition is free: it explains a word already on the page and never adds
    a fact the map does not carry. */
@@ -591,12 +597,13 @@ abbr.gl{text-decoration:underline dotted var(--ink3);text-underline-offset:3px;c
 .top .maptitle{font-family:"Suez One",serif;font-weight:400;font-size:1.15rem;color:var(--ink2);margin:0 0 6px}
 .top .story{color:var(--ink2);max-width:74ch;margin:0 0 8px;font-size:1rem}
 @media (max-width:760px){
-  .top{padding:10px 14px 9px}
+  .top{padding:10px 20px 9px}
   .top h1{font-size:1.8rem}
   .top .story{margin-bottom:4px}
-  .next{padding:6px 14px}
+  .next{padding:6px 20px}
+  .qcards,.ledger,.board,.cta2,.foot{padding-inline:20px}
   .ev{min-width:190px;padding:5px 12px}
-  .card{padding:18px 16px}
+  .card{padding:18px 20px}
 }
 .foot .brandline{display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--rule);color:var(--ink3);font-size:.86rem}
 .focusui button,.maphint,.pin .close,.cpbox .cpid,.sub .sh,.more,.wf button,.wrow .wd em,.wrow .ww .cp,.wrow .ws .saved,.autotag,.wbadge,.whints,.qcards .eyebrow,.tag,.yn b,.cons .cap,.cons .pband,.terms b,.terms .gchip,.gltip b,.evid b,.fwd,.ordlab,.ord,.tile span,.gate span,.chip,.ring .n small{font-size:.82rem}
@@ -632,11 +639,11 @@ __CARDS_JS__
 </script>
 
 <div class="top">
-  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">מחומרי הגלם בימין אל מרכזי הנתונים בשמאל. תחנה שדופקת — צוואר בקבוק. לחץ עליה.</div></div>
+  <div><h1 id="brand"></h1><div class="maptitle" id="maptitle"></div><div class="story" id="story"></div><div class="sub">עקוב אחרי השרשרת מחומרי הגלם ועד המערכות בקצה. בחר תחנה לפרטים.</div></div>
   <div class="asof" id="asof"></div>
-  <a class="fwd" href="track/">מבחן קדימה →</a>
+  <a class="fwd" href="track/">לוח התוצאות →</a>
 </div>
-<div class="next" id="next"><span class="lbl">הבדיקות הקרובות</span></div>
+<div class="next" id="next"><span class="lbl">האירועים הקרובים</span></div>
 <div class="stage" id="stage">
   <div class="mapwrap">
     <div class="layerbar" id="layerbar"></div>
@@ -645,39 +652,39 @@ __CARDS_JS__
     <div class="tip" id="tip"></div>
   </div>
   <div class="panel" id="panel"></div>
-  <div class="maphint" id="maphint">רחף על תחנה לדופק שלה · רחף על קו למה שהוא נושא ולחלק שלו אצל הקונה.</div>
+  <div class="maphint" id="maphint">רחף לבדיקה · בחר תחנה לפרטים · "עיון בתחנות" לחיפוש וסינון</div>
   <aside class="srail" id="srail" aria-label="תחנות"></aside>
 </div>
 <div class="railbtnwrap"><button type="button" class="railbtn" id="railbtn" aria-expanded="false" aria-controls="srail">עיון בתחנות</button></div>
 <div class="legend" id="legend"></div>
 <div class="board" id="board">
-<h2>לוח החיזוי</h2>
-<p class="lede">שאלות קרובות לאורך השרשרת, עם תאריכי תשובה מאושרים או צפויים. <a class="howlink" href="#howscoring">איך הציון עובד</a></p>
-<div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>מדליף → שאלה</span></div>
+<h2>לוח התאריכים</h2>
+<p class="lede">שאלות מתוארכות לאורך השרשרת. סימון מלא — תאריך תשובה מאושר; סימון חלול — תאריך צפוי. <a class="howlink" href="#howscoring">שיטת המדידה</a></p>
+<div class="bleg"><span><i class="f"></i>תאריך מאושר</span><span><i></i>תאריך צפוי</span><span><i class="y"></i>אושר</span><span><i class="n"></i>הופרך</span><span><i class="m"></i>חלקי</span><span><s></s>תשובה מוקדמת → שאלה מאוחרת</span></div>
 <div class="bwrap" id="bwrap"><div class="btip" id="btip"></div></div>
 <div class="hints" id="hints"></div>
 </div>
 <div class="fwd-sect" id="fwdsect" hidden>
-  <h2>מבחן קדימה</h2>
+  <h2>לוח התוצאות</h2>
   <p class="lede" id="fwdlede"></p>
   <div id="fwdcards"></div>
 </div>
 <div class="ledger" id="ledger">
-<a class="fwd inline" href="track/">מבחן קדימה →</a>
-<h2>יומן התחזיות</h2>
-<p class="lede">תשובות שפורסמו ותוצאות שנמדדו מופיעות כאן; תשובות חלקיות נשארות גלויות ואינן נכנסות לציון.</p>
+<a class="fwd inline" href="track/">לוח התוצאות →</a>
+<h2>תוצאות שנמדדו</h2>
+<p class="lede">שאלות שנענו והתוצאות שנמדדו אחריהן בשוק. תשובות חלקיות נשארות ברישום הציבורי ואינן נכנסות לציון.</p>
 <div id="ltiles"></div>
 <div id="lcards"></div>
 <details class="howscoring" id="howscoring">
-<summary>איך הציון עובד</summary>
+<summary>שיטת המדידה</summary>
 <p>כל שאלה נושאת חוזה ניקוד שנכתב מראש: הסלים, כלל הכן/לא, האופקים ומדדי ההשוואה, מגובבים ומפורסמים עם היום שבו נקבעו. רק חוזים שנקבעו לפני התשובה נחשבים רישום מוקדם.</p>
 <p>הציון נמדד מהסגירה הראשונה שאחרי הסימון, מול המפה בשקלול שווה ומול מדד ההשוואה השני, ונקרא באופק הראשי. אין כאן בדיקה לאחור ואי אפשר שתהיה — התחזית נכתבה לפני שהמחיר זז. המדגם קטן, וכל מספר כאן מוצג עם N שלו.</p>
 </details>
 </div>
 <section class="qcards" id="qcards-section">
-<div class="eyebrow">04 · שאלות עם תאריך</div>
-<h2>מה מתברר בהמשך — ואיך תיראה התשובה</h2>
-<p class="lede">כל כרטיס הוא שאלה שמתבררת ביום ידוע. לא "מה לקנות": איך נשמעת תשובה חיובית ואיך נשמעת שלילית בשיחת התוצאות, ואילו תחנות על המפה זזות אם היא חיובית. השאלה הבאה פתוחה; השאר מגיעות במייל השבועי.</p>
+<div class="eyebrow">04 · שאלות מתוארכות</div>
+<h2>שאלות שנוסחו לפני האירוע</h2>
+<p class="lede">כל כרטיס אומר מה ייחשב כן, מה ייחשב לא, למה התשובה משנה, ואילו חברות צפויות לזוז.</p>
 <div id="qcards"></div>
 <div id="qpast"></div>
 </section>
@@ -709,11 +716,11 @@ readLabels();
 // Plain words. "Holder" and "challenger" are the field names in the data and
 // they stay there; nobody reading a map should have to learn them.
 const FWD = {tracked:'שאלות במעקב', through:'מחירים עד'};
-const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מנסה להחליף אותו',
-  buys:'קונה מ', sells:'מוכרת ל', peers:'אחרים בשכבה הזאת',
+const WORDS = {holder:'שולט בצוואר הבקבוק', challenger:'מתחרים נסחרים',
+  buys:'ספקים ישירים', sells:'לקוחות', peers:'אחרים בשכבה הזאת',
   via:'מתחרה דרך', against:'מול', sells1:'מוכרת', to:'ל־',
-  legendLine:'איזה קו?', legendRing:'האם השוק לוחץ על צוואר הבקבוק?',
-  legendZone:'איזה אזור?'};
+  legendLine:'קשר', legendRing:'לחץ על צוואר הבקבוק',
+  legendZone:'אזור'};
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Recording hook. The whole script is a closure, so a recorder driving the
@@ -2189,17 +2196,17 @@ function detailHTML(n){
   const subRow=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">ספק יחיד</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">פרטית</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">אומדן</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div>${noteOf(s.id)}</div>`;
   cps.forEach(c=>{
     const pu=c.pressure; const kind=pu==null?'a':(pu>0?'t':'e');
-    const sent = pu==null ? (c.n_chal_priced? 'למי ששולט אין קו מחיר.':'אין מי שמנסה להחליף אותו ונסחר. הטבעת כתומה: אי אפשר למדוד את הלחץ בשוק.') : (pu>0? 'הנעילה מתהדקת: מי ששולט עוקף את מי שמנסה להחליף אותו.' : 'הנעילה נשחקת: מי שמנסה להחליף עוקף את מי ששולט.');
+    const sent = pu==null ? (c.n_chal_priced? 'למי ששולט אין קו מחיר.':'אין מתחרה נסחר. הטבעת כתומה: אין מול מי למדוד את הלחץ.') : (pu>0? 'הנעילה מתהדקת: המחזיק מקדים את המתחרים הנסחרים.' : 'הנעילה מתרופפת: המתחרים הנסחרים מקדימים את המחזיק.');
     h+=`<div class="cpbox"><span class="cpid">${c.id}</span><span class="cpn">${c.he}</span><p>${c.blurb}</p>
       <div class="pulse ${kind}"><i></i><div>${sent}<small>13w: ${WORDS.holder} ${pct(c.hr13)} · ${WORDS.challenger} ${pct(c.cr13)}${c.n_chal_priced?' ('+c.n_chal_priced+' priced)':''}</small></div></div></div>`;
     // sub-suppliers
     const t1=c.subs.filter(s=>s.tier===1), t2=c.subs.filter(s=>s.tier===2);
-    h+=`<h3>מי מספק למי ש${WORDS.holder} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;
+    h+=`<h3>${WORDS.buys} · ${t1.length} ישירים, ${t2.length} מתחתיהם</h3>`;
     const row=subRow;
     t1.forEach(s=>{ h+=row(s); t2.filter(x=>x.to===s.id).forEach(x=>h+=row(x)); });
     t2.filter(x=>!t1.some(s=>s.id===x.to)).forEach(x=>h+=row(x));
     // challengers
-    h+=`<h3>מי ${WORDS.challenger} · ${c.sigs.length}</h3>`;
+    h+=`<h3>${WORDS.challenger} · ${c.sigs.length}</h3>`;
     const pxBy={}; c.chal.forEach(x=>{ if(x.px) pxBy[x.name]=x.px; });
     c.sigs.forEach(s=>{ const px=pxBy[s.name]; h+=`<div class="ch"><b>${s.name}${px&&px.r13w!=null?`<span class="badge r13">13w ${pct(px.r13w)}</span>`:''}</b>${stageBar(s.stage)}<div class="sig">${s.approach?s.approach+'<br>':''}<span style="color:var(--ink3)">signal:</span> ${srcCited(s.signal,s.src)} <small>${s.as_of||''}</small></div></div>`; });
     // cal rows carry cps (a list) and who/d/days. They deliberately do NOT carry
@@ -2262,14 +2269,19 @@ function close(){ selected=null; stage.classList.remove('open'); panel.innerHTML
 // ---- the stations rail ----
 // Every station as a button, grouped by its layer, with search and sort. The
 // canvas keeps the picture; this keeps the contents.
-const RAIL = {stations:'תחנות', search:'חיפוש תחנה', sortName:'לפי שם',
-  sortLayer:'לפי שכבה', sortPulse:'לפי דופק', back:'חזרה לתחנות',
-  none:'אין תחנה שמתאימה לחיפוש.', cp:'צוואר בקבוק', pulseT:'נעילה מתהדקת',
-  pulseE:'נעילה נשחקת', pulseA:'לא נמדד', pulseNo:'ללא דופק',
-  lLayer:'שכבה', lCp:'צוואר בקבוק', lPulse:'דופק', lSort:'מיון',
+// Labels only. The values behind them -- yes/no/tightening/eroding/
+// unmeasured -- are what the URL carries, and they are NOT renamed here: a
+// link someone copied before this wording changed still restores the same
+// view. Renaming "eroding" to "easing" on screen must not rename it in a
+// query string somebody has already sent to someone else.
+const RAIL = {stations:'תחנות', search:'חיפוש לפי חברה או סימול', sortName:'שם',
+  sortLayer:'שכבה', sortPulse:'לחץ', back:'חזרה לתחנות',
+  none:'אין תחנה שמתאימה לסינון הזה.', cp:'צוואר בקבוק', pulseT:'מתהדק',
+  pulseE:'מתרופף', pulseA:'אין מתחרה נסחר', pulseNo:'לא צוואר בקבוק',
+  lLayer:'שכבה', lCp:'צוואר בקבוק', lPulse:'לחץ', lSort:'מיון',
   anyLayer:'כל השכבות', cpAll:'כל התחנות',
-  cpYes:'רק צווארי בקבוק', cpNo:'לא צווארי בקבוק', anyPulse:'כל הדפקים',
-  count:'{n} מתוך {N} תחנות', clear:'נקה סינון', copy:'העתק קישור',
+  cpYes:'רק צווארי בקבוק', cpNo:'לא צווארי בקבוק', anyPulse:'כל מצבי הלחץ',
+  count:'{n} מתוך {N} תחנות', clear:'נקה סינון', copy:'העתק קישור לתצוגה',
   copied:'הקישור הועתק'};
 let railQ='', railSort='layer', railOpenId=null;
 
@@ -2609,7 +2621,7 @@ function header(){
   document.getElementById('story').textContent = B.story||'';
   if(B.name&&B.title) document.title = B.name+' \u2014 '+B.title;
   const stale = D.last_price_date;
-  document.getElementById('asof').innerHTML=`מפה ${D.map_version} · מחירים עד <b>${stale}</b> · מתעדכן בשבוע`;
+  document.getElementById('asof').innerHTML=`מפה ${D.map_version} · נתוני שוק עד <b>${stale}</b> · נבנה מחדש אחרי כל יום מסחר`;
   const nx=document.getElementById('next'); nx.querySelectorAll('.ev').forEach(e=>e.remove());
   D.cal.filter(e=>e.days>=-3).sort((a,b)=>a.days-b.days).slice(0,8).forEach(e=>{ const d=document.createElement('div'); d.className='ev'+(e.days<=30?' soon':''); d.innerHTML=`<b>${e.who}</b><i>${e.days<=0?'היום':(e.days===1?'מחר':'בעוד '+e.days+' ימים')} · ${e.d}</i>`; d.addEventListener('click',()=>{ const c=D.cps.find(c=>c.id===e.cp); const h=c&&c.holders[0]&&byId[c.holders[0].id]; if(h) open(h); }); nx.appendChild(d); });
   // Two labelled rows, because the map now says two different things with
@@ -2618,8 +2630,8 @@ function header(){
     `<div class="row"><b>${WORDS.legendLine}</b>`
     + Object.keys(LCOL).map(k=>`<span><i style="background:${LCOL[k]}"></i>${LHE[k]}</span>`).join('')
     + `</div><div class="row"><b>${WORDS.legendRing}</b>`
-    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>נשחק</span>`
-    + `<span><i class="pa"></i>אי אפשר למדוד</span></div>`;
+    + `<span><i class="pl"></i>מתהדק</span><span><i class="pe"></i>מתרופף</span>`
+    + `<span><i class="pa"></i>אין מתחרה נסחר</span></div>`;
   // The zone row is appended separately and deliberately: it holds no Hebrew
   // of its own -- the label comes from WORDS and the names come from the map
   // -- so the English template needs no translation pair for it, and adding
@@ -2630,7 +2642,7 @@ function header(){
     + `</div>`;
   const nt=D.cps.filter(c=>c.pressure!=null&&c.pressure>0).length, ne=D.cps.filter(c=>c.pressure!=null&&c.pressure<0).length, na=D.cps.filter(c=>c.pressure==null).length;
   const BR = (D.labels||{}).brand||{};
-  document.getElementById('foot').innerHTML=`<b>הדופק</b> הוא ההצבעה של השוק ב-13 השבועות האחרונים: תשואת המחזיק פחות תשואת המאתגרים הסחירים. חיובי — הנעילה מתהדקת, אדום ומהיר. שלילי — נשחקת, ירוק ואיטי. כרגע: ${nt} מתהדקים, ${ne} נשחקים, ${na} בלי מאתגר סחיר. גודל התחנה לפי שווי שוק. כל חברה במטבע שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מאתגרים. זו מפה להבנת חשיפות, לא אות מסחר.`+`<span class="brandline">${BR.footer||''}</span>`;
+  document.getElementById('foot').innerHTML=`<span class="eyebrow">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. כרגע: ${nt} מתהדקים, ${ne} מתרופפים, ${na} בלי מתחרה נסחר. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. הנתונים: ${D.nodes.length} תחנות, ${D.cps.reduce((a,c)=>a+c.subs.length,0)} ספקים מתחתיהן, ${D.cps.reduce((a,c)=>a+c.sigs.length,0)} מתחרים. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`+`<span class="brandline">${BR.footer||''}</span>`;
 }
 function boot(){ if(window.GL) GL.use(D.glossary||{});
   build(); resize(); header(); buildRail(); requestAnimationFrame(draw); }
@@ -2659,7 +2671,7 @@ const BOARD={statuses:{},render(){}};
   const days = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);
   const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};
   const list=document.getElementById('wlist');
-  const BT = {lanes:(D.labels||{}).lanes||{}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'מאושר', exp:'צפוי', leaksIn:'רמזים שמגיעים לפני:', leaksOut:'מדליף אל:', noLeaks:'אין שאלה מוקדמת שמדליפה אליה.', later:'מעבר לטווח הלוח:', hintsH:'מה הרמזים אומרים עד עכשיו', hintsNone:'עדיין לא נענה אף רמז. הראשון שיצבע את הלוח:', of:'מתוך', answered:'נענו', leanY:'נוטה לכן', leanN:'נוטה ללא', leanM:'מעורב', leanO:'עוד אין נטייה', stillOpen:'עוד פתוחים:', pulse:'דופק', autoSuffix:' (אוטומטי)', locked:'🔒 הטקסט המלא — במייל השבועי'};
+  const BT = {lanes:(D.labels||{}).lanes||{}, today:'היום', past:'עבר', in:'בעוד', days:'ימים', conf:'תאריך מאושר', exp:'תאריך צפוי', leaksIn:'תשובות מוקדמות שמגיעות לפני:', leaksOut:'משפיעה על:', noLeaks:'אין שאלה מוקדמת שמשפיעה עליה.', later:'מעבר לטווח הלוח:', hintsH:'מה תשובות קודמות מרמזות', hintsNone:'אף תשובה מוקדמת עוד לא שינתה את הלוח. הראשונה בתור:', of:'מתוך', answered:'נענו', leanY:'תשובות קודמות נוטות לכן', leanN:'תשובות קודמות נוטות ללא', leanM:'תשובות קודמות מעורבות', leanO:'עוד אין עדות כיוונית', stillOpen:'עוד פתוחים:', pulse:'לחץ', autoSuffix:' (אוטומטי)', locked:'שאלה קרובה · זמינה עם המפתח השבועי'};
   const STC = {yes:'var(--erode)', no:'var(--tight)', mixed:'var(--amber)', none:'var(--ink3)'};
   const bwrap=document.getElementById('bwrap'), btip=document.getElementById('btip'), hints=document.getElementById('hints');
   // Delegated, because the hint rows are rebuilt whenever a mark lands.
@@ -2735,13 +2747,13 @@ const BOARD={statuses:{},render(){}};
 // therefore never blurred: a CSS filter is a picture, not a lock, and blurring
 // the real sentence would ship it in the DOM to anyone who opens the inspector.
 const LOCK = {
-  dummy: 'שאלה נעולה — הטקסט המלא מגיע במייל השבועי יחד עם מה שצריך להקשיב לו בשיחת התוצאות',
-  line: 'הטקסט המלא', mail: 'במייל השבועי',
+  line: 'שאלה קרובה', mail: 'זמינה עם המפתח השבועי',
   badge: 'השאלה הפתוחה השבוע',
   marked: 'סומן', };
 function lockedHTML(){
-  return `<span class="blur">${LOCK.dummy}</span>`
-       + `<span class="lockline">&#128274; ${LOCK.line} — <b>${LOCK.mail}</b></span>`;
+  return `<span class="redact" aria-hidden="true"><i style="width:86%"></i>`
+       + `<i style="width:62%"></i></span>`
+       + `<span class="lockline">${LOCK.line} — <b>${LOCK.mail}</b></span>`;
 }
 
 // ---- the forecast ledger ----
@@ -2753,17 +2765,17 @@ function lockedHTML(){
   // visible here. Its own copy, rather than hoisting theirs into a scope two
   // other sections would then share by accident.
   const STATUS = {open:'פתוח', yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר'};
-  const LT = {h2:'יומן התחזיות', none:'עדיין לא נרשמו תשובות.',
+  const LT = {h2:'תוצאות שנמדדו', none:'עדיין לא נרשמו תשובות.',
     nextAnswer:'התשובה הבאה הצפויה', answerRec:'תשובה נרשמה', answersRec:'תשובות נרשמו',
     obsLabel:'חלקי · לתיעוד בלבד', obsNote:'התשובה נשארת ברישום הציבורי ואינה נכנסת לציון.',
     pendingLabel:'נענתה · הציון ממתין',
-    scored:'נרשמו', pending:'ממתינות', rate:'פגיעה', mean:'עודף ממוצע', sess:'מפגשים',
+    scored:'נרשמו', pending:'ממתינות', rate:'שיעור פגיעה', mean:'עודף ממוצע', sess:'מפגשים',
     entry:'כניסה', close:'אחרון', gate:'N=__MIN_N__ לפני כל החלטת הון', of:'מתוך',
     sym:'סימול', ent:'כניסה', last:'אחרון', ret:'תשואה', bench:'מפה', exc:'עודף',
     pend:'ממתין', hit:'פגע', miss:'החטיא', dirUp:'סל המרוויחים ↑', dirDn:'סל המרוויחים ↓',
     marked:'סומן', src:'מקור', noentry:'טרם נפתחה מסחר מאז הסימון',
-    direct:'ישיר — הסל הרשום', indirect:'עקיף — טבעת שנייה לפי המפה',
-    noind:'אין עדיין תחזית עקיפה'};
+    direct:'סל ישיר', indirect:'טבעת שנייה',
+    noind:'אין עדיין תחזית לטבעת השנייה'};
   const p2 = v => v==null? '—' : ((v>0?'+':'')+(v*100).toFixed(2)+'%');
   const sgn = v => v==null? '' : (v>0?'pos':(v<0?'neg':''));
   // FOUR STATES, AND THE BUG THAT MADE THEM NECESSARY.
@@ -2808,7 +2820,7 @@ function lockedHTML(){
     // STATE 2 -- answered, and none of it scorable. The count is the honest
     // pair: what was answered, and what that earned in the score.
     tiles.innerHTML = `<p class="lede">${answered.length} ${
-      answered.length===1?LT.answerRec:LT.answersRec} · 0 ${LT.scored}</p>`;
+      answered.length===1?LT.answerRec:LT.answersRec} · 0 ${LT.scored.toLowerCase()}</p>`;
     if(S){ tiles.innerHTML += gate(S); poolGate(S); }
     cards.innerHTML = OBSERVED.map(q=>{
       const a = ANS[q]||{}, w = (D.watch||[]).find(r=>r.id===q) || {};
@@ -2861,8 +2873,8 @@ function lockedHTML(){
     const H = sum.hz || ['5','10','20'];
     return `<div class="ordlab">${label}</div><div class="tiles">
       <div class="tile"><b>${sum.n_scored}</b><span>${LT.scored}</span></div>
-      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile"><b>${d.hit_rate==null?'—':Math.round(d.hit_rate*100)+'%'}</b><span>${LT.rate} ${h} (N=${d.n})</span></div>`;}).join('')}
-      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile ${sgn(d.mean_excess)}"><b>${p2(d.mean_excess)}</b><span>${LT.mean} ${h}</span></div>`;}).join('')}
+      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile"><b>${d.hit_rate==null?'—':Math.round(d.hit_rate*100)+'%'}</b><span>${LT.rate} · ${h} ${LT.sess} (N=${d.n})</span></div>`;}).join('')}
+      ${H.map(h=>{const d=sum.horizons[h]; return `<div class="tile ${sgn(d.mean_excess)}"><b>${p2(d.mean_excess)}</b><span>${LT.mean} · ${h} ${LT.sess}</span></div>`;}).join('')}
       <div class="tile"><b>${sum.n_pending}</b><span>${LT.pending}</span></div>
     </div>`;
   }
@@ -2927,24 +2939,20 @@ function lockedHTML(){
   const list = document.getElementById('qcards'); if(!list) return;
   const W = D.watch||LIVE.watch||[]; if(!W.length) return;
   const T = {
-    yes:'תשובה חיובית נשמעת כך', no:'תשובה שלילית נשמעת כך', why:'למה זה משנה.',
-    lockA:'\u{1F512} השאלה, איך נשמעת תשובה חיובית ושלילית, ומי זז — ',
-    lockB:'במייל השבועי',
-    conf:'מאושר', exp:'צפוי',
+    yes:'כן אם', no:'לא אם', why:'למה זה משנה.',
+    lockEyebrow:'שאלה קרובה',
+    lockBody:'השאלה המלאה, כלל ההכרעה והחברות המושפעות זמינים עם המפתח השבועי.',
+    lockCta:'קבל את המפתח החינמי',
+    conf:'תאריך מאושר', exp:'תאריך צפוי',
     day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',
     up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',
     answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',
     terms:'מונחים',
     upMore:'תאריכים נוספים', doneMore:'תשובות קודמות',
     moreDates:'הצג עוד {n} תאריכים', fewer:'הצג פחות', noStatus:'—',
-    marks:{yes:'אושר', no:'הופרך', mixed:'לא ברור', none:'לא ברור',
+    marks:{yes:'אושר', no:'הופרך', mixed:'חלקי', none:'לא נמסר',
            open:'לא ברור'},
   };
-  // Fixed, and never the real text.
-  const PH = {q:'איזה מספר בשיחת התוצאות מכריע את השאלה שכולם כאן כבר מתווכחים עליה',
-    yes:'החברה נוקבת במספר מעל הטווח שעליו הנחתה ברבעון שעבר, ואומרת שהמגבלה זזה.',
-    no:'המספר נוחת בתוך הטווח הישן והשפה על הקיבולת לא משתנה מהפעם הקודמת.',
-    why:'זה קובע איזו משתי החברות מחזיקה את החלק הנדיר בעוד שנה.'};
 
   const esc = v => String(v==null?'':v).replace(/[&<>"]/g, c=>(
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -3204,12 +3212,17 @@ function lockedHTML(){
     if(window.GL) h+=GL.chips(w.terms, T.terms);
     return h;
   }
+  // A locked card carries no sentence -- not the real one and not an
+  // invented one. The bars are drawn by CSS and hold no text, so nothing here
+  // can be read as the question or recovered from the inspector.
   function midLocked(){
-    return `<div class="blur"><p class="q">${esc(PH.q)}</p>`
-      + `<div class="yn"><div class="y"><b>${T.yes}</b>${esc(PH.yes)}</div>`
-      + `<div class="no"><b>${T.no}</b>${esc(PH.no)}</div></div>`
-      + `<p class="why"><b>${T.why}</b> ${esc(PH.why)}</p></div>`
-      + `<div class="lock"><div>${T.lockA}<b>${T.lockB}</b></div></div>`;
+    const u = D.signup||null;
+    return `<div class="redact" aria-hidden="true"><i style="width:94%"></i>`
+      + `<i style="width:71%"></i><i style="width:88%"></i><i style="width:52%"></i></div>`
+      + `<div class="lockmsg"><span class="eyebrow">${T.lockEyebrow}</span>`
+      + `<p>${T.lockBody}</p>`
+      + (u? `<a class="lockcta" href="${esc(u)}">${T.lockCta}</a>` : '')
+      + `</div>`;
   }
   function card(w, opts){
     const dd=dayOf(w.d);
@@ -3383,10 +3396,10 @@ function lockedHTML(){
 (function(){
   const el = document.getElementById('cta2'); if(!el) return;
   const W = D.watch||LIVE.watch||[]; if(!W.length) return;
-  const T = {head:'כל שאלה, לפני שהיא נענית',
-    promise:'כל שאלה עם תאריך, מה להקשיב לו, מי מדליף קודם, והתשובה עם המקור שלה — לפני כל אירוע ואחריו.',
-    btn:'קבל את המייל השבועי', soon:'בקרוב',
-    disc:'חינם ובתשלום, בלי המלצות. זו מפה להבנת חשיפות, לא אות מסחר, לא ייעוץ השקעות ולא המלצה לאף אדם.',
+  const T = {head:'קבל כל שאלה לפני התשובה',
+    promise:'התדריך השבועי החינמי כולל שאלות קרובות, כללי הכרעה, סלים רשומים ותוצאות עם מקור.',
+    btn:'קבל את המפתח השבועי', soon:'בקרוב',
+    disc:'חינם. בלי המלצות. אפשר להסיר את ההרשמה בכל רגע.',
     q:'שאלות', open:'פתוחות', next:'התשובה הבאה', days:'ימים', today:'היום', tomorrow:'מחר'};
   const today = new Date(D.as_of+'T00:00:00Z'); const now=new Date(); const ref = now>today?now:today;
   const dd = d => Math.round((Date.parse(d+'T00:00:00Z') - Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),ref.getUTCDate()))/86400000);

@@ -1101,6 +1101,10 @@ def cards_js() -> str:
 BENCH_PLACEHOLDER = "__BENCH_LABEL__"
 BENCH_JS_PLACEHOLDER = "__BENCH_JS__"
 AUDIT_PLACEHOLDER = "__PREREG_AUDIT__"
+# The preregistration rule in full, from the one place it is worded
+# (chains/sitenav.py), so the track page and the pooled record cannot
+# state it two different ways.
+RULE_PLACEHOLDER = "__PREREG_RULE__"
 
 
 def prereg_audit(dom: str | None = None) -> str:
@@ -1176,6 +1180,9 @@ def render(data: dict, template: str | None = None) -> str:
     if AUDIT_PLACEHOLDER in t:
         from chains.paths import domain
         t = t.replace(AUDIT_PLACEHOLDER, prereg_audit(domain()))
+    if RULE_PLACEHOLDER in t:
+        from chains import sitenav
+        t = t.replace(RULE_PLACEHOLDER, sitenav.PREREGISTRATION_RULE)
     if PLACEHOLDER not in t:
         raise SystemExit(
             f"chains/templates/track.html has no {PLACEHOLDER} to fill. The "

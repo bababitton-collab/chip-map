@@ -22,16 +22,19 @@
         "en": "The Living Defence Map"
       },
       "value": {
-        "en": "The physical supply chain behind rearmament — who pours the motor, who casts the turbine blade, and where it breaks."
+        "en": "From energetic materials and propulsion to primes, missiles and naval systems."
       },
       "desc": {
         "en": "A living map of the defence industrial base: {nodes} companies, {cps} chokepoints pulsing with the market, a forecast board and questions with a date."
       },
+   "line": {
+    "en": "Energetic materials and components through propulsion, primes, missiles and naval systems."
+   },
       "story": {
-        "en": "A linchpin is the small pin that holds the wheel on the axle. Pull it and everything stops. We find those pins in the supply chain, and measure what happens to them — every day."
+        "en": "Trace suppliers, customers and concentrated dependencies across the chain. Select any company to inspect its role, evidence and relationships."
       },
       "footer": {
-        "en": "Linchpin Signal · not investment advice · every number carries a source"
+        "en": "Linchpin Signal · not investment advice · sources shown where recorded; estimates labelled"
       }
     },
     "layers": {

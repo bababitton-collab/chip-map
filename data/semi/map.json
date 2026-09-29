@@ -2279,10 +2279,15 @@
    "from": "amkr",
    "to": "nvda",
    "type": "supplies",
-   "what": "US-based advanced packaging/test (Arizona)",
+   "what": "Advanced packaging for NVIDIA platforms -- data center processors, networking chipsets and accelerated computing systems -- with US capacity in Arizona expanding under a multi-year partnership NVIDIA is prepaying for",
    "group": "assembly",
+   "share": null,
    "criticality": "medium",
-   "source": "Amkor 2025 10-K"
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/0001047127/000104712726000036/ex-991amkorinvestorprese.htm",
+    "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-announces-strategic-partnership-nvidia-expand"
+   ],
+   "as_of": "2026-07-23"
   },
   {
    "from": "foxconn",
@@ -3186,6 +3191,222 @@
    "criticality": "high",
    "source": "https://siliconanalysts.com/tools/supply-chain",
    "as_of": "2026-08-06"
+  },
+  {
+   "from": "asml",
+   "to": "mu",
+   "type": "supplies",
+   "what": "EUV lithography for 1-gamma DRAM. Micron's 2023 release says it is introducing EUV for the 1-gamma node and ramping it in Taiwan and Japan from 2025; it does not name a scanner vendor, and ASML is the sole EUV source. ASML won Micron's Front End Capital award in 2024",
+   "group": "tools",
+   "share": null,
+   "criticality": "high",
+   "source": [
+    "https://investors.micron.com/news-releases/news-release-details/micron-bring-euv-technology-japan-advancing-next-generation",
+    "https://www.micron.com/about/company/suppliers/supplier-day"
+   ],
+   "as_of": "2026-09-29"
+  },
+  {
+   "from": "shinetsu",
+   "to": "mu",
+   "type": "supplies",
+   "what": "Front-end materials. Winner of Micron's Front End Materials award in 2023 and 2024; neither source names the specific materials",
+   "group": "wafers",
+   "share": null,
+   "criticality": "high",
+   "source": [
+    "https://www.shinetsu.co.jp/en/news/news-release/shin-etsu-honored-as-a-2023-outstanding-supplier-by-micron/",
+    "https://www.micron.com/about/company/suppliers/supplier-day"
+   ],
+   "as_of": "2026-09-29"
+  },
+  {
+   "from": "siltronic",
+   "to": "mu",
+   "type": "supplies",
+   "what": "Front-end materials. Winner of Micron's Front End Materials award in 2025; the award does not name the materials",
+   "group": "wafers",
+   "share": null,
+   "criticality": "medium",
+   "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+   "as_of": "2026-09-29"
+  },
+  {
+   "from": "globalwafers",
+   "to": "mu",
+   "type": "supplies",
+   "what": "300mm raw silicon wafers from Sherman, Texas: Micron is to provide $500M of strategic financing and enter a 10-year supply agreement. Micron states the transaction remains subject to definitive agreements and closing conditions",
+   "group": "wafers",
+   "share": null,
+   "criticality": "medium",
+   "source": [
+    "https://www.globenewswire.com/news-release/2026/07/09/3324795/14450/en/Micron-Announces-Up-to-3-Billion-Strategic-Investment-to-Strengthen-U-S-Semiconductor-Ecosystem.html"
+   ],
+   "as_of": "2026-07-09"
+  },
+  {
+   "from": "hanmi",
+   "to": "mu",
+   "type": "supplies",
+   "what": "Thermal-compression bonders for HBM: about 50 units reported shipped to Micron. Winner of Micron's Assembly & Test Capital Equipment award in 2025",
+   "group": "tools",
+   "share": null,
+   "criticality": "high",
+   "source": [
+    "https://www.thelec.net/news/articleView.html?idxno=5235",
+    "https://www.micron.com/about/company/suppliers/supplier-day"
+   ],
+   "as_of": "2026-09-29"
+  },
+  {
+   "from": "amat",
+   "to": "mu",
+   "type": "supplies",
+   "what": "Micron supplier: winner of Micron's Sustainability award in 2025. The award category establishes the relationship and not a product line",
+   "group": "tools",
+   "share": null,
+   "criticality": "medium",
+   "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+   "as_of": "2026-09-29"
+  },
+  {
+   "from": "tel",
+   "to": "mu",
+   "type": "supplies",
+   "what": "Micron supplier: winner of Micron's Safety award in 2025. The award category establishes the relationship and not a product line",
+   "group": "tools",
+   "share": null,
+   "criticality": "medium",
+   "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+   "as_of": "2026-09-29"
+  },
+  {
+   "from": "mpwr",
+   "to": "mu",
+   "type": "supplies",
+   "what": "Micron supplier: winner of Micron's Semiconductors award in 2024. The award category establishes the relationship and not a product line",
+   "group": "power",
+   "share": null,
+   "criticality": "medium",
+   "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+   "as_of": "2026-09-29"
+  },
+  {
+   "from": "amat",
+   "to": "intc",
+   "type": "supplies",
+   "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development. The category establishes the relationship and not a product line",
+   "group": "tools",
+   "share": null,
+   "criticality": "high",
+   "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "tel",
+   "to": "intc",
+   "type": "supplies",
+   "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development and Sustainability. The category establishes the relationship and not a product line",
+   "group": "tools",
+   "share": null,
+   "criticality": "high",
+   "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "klac",
+   "to": "intc",
+   "type": "supplies",
+   "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development. The category establishes the relationship and not a product line",
+   "group": "tools",
+   "share": null,
+   "criticality": "high",
+   "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "lrcx",
+   "to": "intc",
+   "type": "supplies",
+   "what": "Intel supplier: 2026 EPIC award for Excellence in Sustainability Support. The category establishes the relationship and not a product line",
+   "group": "tools",
+   "share": null,
+   "criticality": "high",
+   "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "agc",
+   "to": "intc",
+   "type": "supplies",
+   "what": "EUV mask blanks: 2026 EPIC award for Excellence in Technology Partnership on EUV Mask Blanks",
+   "group": "masks",
+   "share": null,
+   "criticality": "high",
+   "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "asmpt",
+   "to": "intc",
+   "type": "supplies",
+   "what": "Intel supplier: 2026 EPIC award for Excellence in Business Collaboration. The category establishes the relationship and not a product line",
+   "group": "tools",
+   "share": null,
+   "criticality": "medium",
+   "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "lasertec",
+   "to": "intc",
+   "type": "supplies",
+   "what": "EUV mask inspection: 2026 EPIC award for Excellence in EUV Mask Technology Development",
+   "group": "tools",
+   "share": null,
+   "criticality": "high",
+   "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "ase",
+   "to": "intc",
+   "type": "supplies",
+   "what": "Assembly and test, through Siliconware Precision Industries (SPIL), a wholly owned ASE Technology Holding subsidiary since 2018. SPIL took Intel's 2026 EPIC award for Excellence in Delivery and Cycle Time; ASE itself is not on the list",
+   "group": "assembly",
+   "share": null,
+   "criticality": "medium",
+   "source": [
+    "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+    "https://www.sec.gov/Archives/edgar/data/1122411/000119312524085380/d434934d20f.htm"
+   ],
+   "as_of": "2026-03-19"
+  },
+  {
+   "from": "intc",
+   "to": "amzn",
+   "type": "supplies",
+   "what": "An AI fabric chip on Intel 18A and a custom Xeon 6 on Intel 3, under a multi-year, multi-billion-dollar framework covering product and wafers",
+   "group": "compute",
+   "share": null,
+   "criticality": "medium",
+   "source": [
+    "https://www.intc.com/news-events/press-releases/detail/1709/intel-and-aws-expand-strategic-collaboration-helping"
+   ],
+   "as_of": "2024-09-16"
+  },
+  {
+   "from": "amkr",
+   "to": "tsmc",
+   "type": "supplies",
+   "what": "Turnkey advanced packaging and test in Peoria, Arizona: TSMC contracts the service from Amkor and uses it for InFO and CoWoS, serving customers of its Phoenix fabs",
+   "group": "assembly",
+   "share": null,
+   "criticality": "high",
+   "source": [
+    "https://www.sec.gov/Archives/edgar/data/1046179/000104617924000112/amkorandtsmctoexpandpartne.htm"
+   ],
+   "as_of": "2024-10-04"
   }
  ],
  "chokepoints": [

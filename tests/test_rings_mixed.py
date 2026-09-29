@@ -8,6 +8,10 @@ SK hynix and Samsung had four each, so the card drew ASML, Advantest, Applied
 Materials, Hanmi and Siltronic as unambiguously "down if Micron says yes".
 Every one of them sells into the memory layer. Micron is in the memory layer.
 
+Sourced supplier edges have since closed most of that particular gap, which
+is the better fix and does not replace the rule: coverage is uneven map-wide,
+and the next card to be read will be uneven somewhere else.
+
 The layer rule closes that: a candidate that supplies ANY node in the same
 layer as a first-ring node on the other side has no sign either. Nothing here
 invents a relationship -- the layer is the map's own field.
@@ -55,34 +59,46 @@ def test_mu_fq4_draws_none_of_the_five_that_serve_the_memory_layer(semi):
     still = sorted(set(MU_DROPPED) & drawn)
     assert still == [], f"{still} are drawn with a sign they do not have"
     # Lam Research was already cut by the exact-node rule: the map records it
-    # supplying Micron AND both of the others.
-    assert got["mixed"] == 6, got
+    # supplying Micron AND both of the others. Sourced supplier edges have since
+    # brought seven more of Micron's own suppliers onto the map, so the exact
+    # rule now reaches most of this card and the count is higher.
+    assert got["mixed"] == 10, got
     assert got["win2"] == [] and got["lose2"] == []
 
 
 def test_each_of_the_five_really_does_serve_micron_s_layer(semi):
     """The rule's premise, checked against the map rather than asserted.
 
-    None of them has a recorded edge to Micron -- that is the gap the rule
-    exists for -- but every one sells into the layer Micron is in.
+    Every one of them sells into the layer Micron is in. When this card was
+    first read, not one had a recorded edge to Micron; sourced edges have
+    since given four of them one, so the cheaper exact-node rule now covers
+    those four and the layer rule is what still catches the rest.
     """
     layers = rings.layer_of(semi)
     mu_layer = layers["mu"]
+    only_by_layer = []
     for c in MU_DROPPED:
         serves = rings.serves_layers(semi, c, layers)
         assert mu_layer in serves, (c, sorted(serves), mu_layer)
         direct = [e for e in semi["edges"]
                   if e.get("type") == "supplies" and e.get("from") == c
                   and e.get("to") == "mu"]
-        assert direct == [], (
-            f"{c} now has a recorded edge to Micron; the exact-node rule "
-            f"covers it and this test is about the case where it does not")
+        if not direct:
+            only_by_layer.append(c)
+    assert only_by_layer, (
+        "every one of the five now has a recorded edge to Micron, so the "
+        "exact-node rule alone would empty this card's ring and nothing here "
+        "exercises the layer rule any more. Find a card that still needs it.")
 
 
 def test_amkr_q3_is_the_worst_case_and_draws_nothing(semi):
-    """Amkor has no recorded supplier at all and ASE plus TSMC have fourteen,
+    """Amkor has no recorded supplier at all and ASE plus TSMC have fifteen,
     so every candidate came from one side. The old rule found no overlap and
-    drew all of them as losers."""
+    drew all of them as losers.
+
+    Fourteen candidates, not fifteen: the fifteenth is Amkor itself, which
+    supplies TSMC. The question's own subject is never a candidate in its own
+    second ring."""
     got = ring(semi, "amkr_q3")
     assert got["win2"] == [] and got["lose2"] == []
     assert got["mixed"] == 14, got
@@ -90,13 +106,17 @@ def test_amkr_q3_is_the_worst_case_and_draws_nothing(semi):
 
 def test_intc_q3_keeps_the_ring_the_map_really_does_support(semi):
     """The rule has to be able to say yes. Intel's win basket spans three
-    layers and the eight lose-side suppliers sell only into TSMC's, so they
-    keep their sign."""
+    layers and four lose-side suppliers sell only into TSMC's, so they keep
+    their sign.
+
+    Sourced edges moved four of the eight this once drew -- the map now
+    records them supplying Intel too, which is exactly the ambiguity the
+    exact-node rule exists to catch."""
     got = ring(semi, "intc_q3")
     assert got["win2"] == ["ajinomoto"]
-    assert len(got["lose2"]) == 8
+    assert len(got["lose2"]) == 4
     assert set(got["win2"]) & set(got["lose2"]) == set()
-    assert got["mixed"] == 4
+    assert got["mixed"] == 13
 
 
 # -- the rule itself, in isolation ----------------------------------------------
@@ -164,7 +184,7 @@ def test_a_one_sided_map_is_a_warning_and_never_a_failure(semi):
         r["id"] = r["id"]
     got = rings.warnings_for(rows, semi)
     assert len(got) == 1 and got[0].startswith("amkr_q3:"), got
-    assert "no recorded supplier" in got[0] and "14" in got[0]
+    assert "no recorded supplier" in got[0] and "15" in got[0]
 
 
 def test_the_warning_needs_a_real_imbalance_not_just_a_thin_map():

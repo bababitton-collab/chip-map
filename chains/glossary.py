@@ -32,6 +32,18 @@ is three rules doing one job:
     "HBM" and a dangling 4;
   * claimed once, so "High-NA" is one term and not also the "NA" inside it.
 
+A fourth rule turns matches OFF. Several match strings are ordinary English
+words that happen also to be jargon -- "track" is the litho coater, "test" is
+the SoC tester, "node" is the process node -- and whole-word matching cannot
+tell the two apart. A term may list ``stop`` phrases; a match covered by one
+of them is not a match. "Micron is on track for its 2027 HBM share target"
+underlined "track" and offered a definition of a coater, on a card about
+memory share, with no coater anywhere in it.
+
+Stop phrases are matched case-insensitively and always, whatever the case
+rule of the match string they guard: an idiom is an idiom at the start of a
+sentence too.
+
 Case matters for a match string that has any capital in it -- HBM, RPO, EUV,
 FY27, InP are the words themselves -- and does not for a plain lowercase one,
 because "Capex" at the start of a sentence is still capex.
@@ -145,11 +157,38 @@ def _boundary(text: str, start: int, end: int) -> bool:
     return not (before.isalnum() or after.isalnum())
 
 
+def _stopped(text: str, start: int, end: int, stops) -> bool:
+    """Is this match inside a phrase the term says is not it?
+
+    The span has to be COVERED, not merely nearby: "track record" stops the
+    "track" inside it and leaves a "track" later in the same sentence alone.
+    """
+    if not stops:
+        return False
+    low = text.lower()
+    for phrase in stops:
+        p = str(phrase or "").lower()
+        if not p:
+            continue
+        at = low.find(p)
+        while at != -1:
+            if at <= start and end <= at + len(p):
+                return True
+            at = low.find(p, at + 1)
+    return False
+
+
 def pairs(terms: list[dict]) -> list[tuple[str, str]]:
     """(match string, term id), longest first."""
     out = [(m, t["id"]) for t in terms for m in t.get("match") or []]
     out.sort(key=lambda p: (-len(p[0]), p[0]))
     return out
+
+
+def stops_for(terms: list[dict]) -> dict[str, list[str]]:
+    """``{term id: stop phrases}``. Absent is empty, not an error: ``stop`` is
+    an addition to a term, not a requirement of one."""
+    return {t["id"]: list(t.get("stop") or []) for t in terms}
 
 
 def find(text: str, terms: list[dict],
@@ -159,11 +198,16 @@ def find(text: str, terms: list[dict],
         return []
     claimed: list[tuple[int, int]] = []
     hits: list[tuple[int, str]] = []
+    stops = stops_for(terms)
     for match, tid in pairs(terms):
         flags = 0 if _cased(match) else re.I
         for m in re.finditer(re.escape(match), text, flags):
             s, e = m.span()
             if not _boundary(text, s, e):
+                continue
+            # Not claimed either: a stopped span must stay available to a
+            # shorter term that legitimately owns it.
+            if _stopped(text, s, e, stops.get(tid)):
                 continue
             # Longest first, so an overlap means a longer term already owns
             # this stretch -- "NA" inside a claimed "High-NA".
@@ -194,6 +238,7 @@ def mark(text: str, terms: list[dict], limit: int = MAX_PER_CARD) -> str:
     keep = set(find(text, terms, limit))
     spans: list[tuple[int, int, str]] = []
     claimed: list[tuple[int, int]] = []
+    stops = stops_for(terms)
     for match, tid in pairs(terms):
         if tid not in keep:
             continue
@@ -201,6 +246,8 @@ def mark(text: str, terms: list[dict], limit: int = MAX_PER_CARD) -> str:
         for m in re.finditer(re.escape(match), text, flags):
             s, e = m.span()
             if not _boundary(text, s, e):
+                continue
+            if _stopped(text, s, e, stops.get(tid)):
                 continue
             if any(s < ce and cs < e for cs, ce in claimed):
                 continue
@@ -305,7 +352,8 @@ def main() -> int:
     return 0
 
 
-__all__ = ["load", "validate", "find", "mark", "pairs", "for_page", "main",
+__all__ = ["load", "validate", "find", "mark", "pairs", "stops_for",
+           "for_page", "main",
            "numbers_in", "numbers_without_a_source", "path_for",
            "GlossaryError", "MAX_PER_CARD", "FILENAME"]
 

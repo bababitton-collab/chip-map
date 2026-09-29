@@ -223,6 +223,10 @@
     "Process node",
     "SF2"
    ],
+   "stop": [
+    "node in the",
+    "node in a"
+   ],
    "en": "A generation of chip manufacturing; smaller numbers are newer and denser. 2nm and A14 (TSMC) and 14A (Intel) are the next ones.",
    "he": "דור של ייצור שבבים; מספר קטן יותר = חדש וצפוף יותר. 2nm ו־A14 (TSMC) ו־14A (אינטל) הם הדורות הבאים."
   },
@@ -286,6 +290,12 @@
     "Coater",
     "coaters",
     "track"
+   ],
+   "stop": [
+    "on track",
+    "off track",
+    "back on track",
+    "track record"
    ],
    "en": "The machine that applies resist to a wafer before EUV printing. Tokyo Electron is the sole supplier for EUV.",
    "he": "המכונה שמורחת רזיסט על הפרוסה לפני ההדפסה. Tokyo Electron היא הספק היחיד ל־EUV."
@@ -383,6 +393,15 @@
     "SoC test",
     "SoC testing",
     "test"
+   ],
+   "stop": [
+    "test of whether",
+    "test of ",
+    "binary test",
+    "yes-or-no test",
+    "the test on",
+    "stress test",
+    "forward test"
    ],
    "en": "Testing finished chips on automated test equipment. Advantest tests about two of every three advanced chips.",
    "he": "בדיקת שבבים מוגמרים בציוד בדיקה אוטומטי. Advantest בודקת בערך שניים מכל שלושה שבבים מתקדמים."

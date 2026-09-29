@@ -229,18 +229,45 @@ IDS = {"mu_fq4", "nvda_q3"}
 B1 = {"mu_fq4": (["up"], ["down"]), "nvda_q3": (["up"], [])}
 
 
-def test_an_r2_basket_that_drifted_from_the_map_is_refused():
-    """The direct baskets are typed into watch.json by hand; these are a pure
-    function of watch.json and map.json. Either way a row whose hypothesis
-    moved after the event is not a forecast."""
+def test_a_marked_r2_basket_is_frozen_when_the_derivation_changes():
+    """THE HARD RULE. A twin is derived once, at mint time, and committed to
+    git with a date. From then on the drawing rule may improve -- the layer
+    rule in chains/rings.py is exactly such an improvement -- and the stored
+    claim must not move with it.
+
+    This used to re-derive the ring and demand an exact match, which reads as
+    the same guarantee and is not: it would have refused every already-marked
+    twin the day the rule changed, and a refused forecast leaves the ledger.
+    A forecast that disappears because the map got better is the opposite of
+    a forward test.
+    """
+    stored = fc("r", "mu_fq4", ["s1"], ["s2"], order=2)
+    # What the map would derive TODAY, and something else entirely.
+    for derived in (B2, {"mu_fq4": ([], [])}, {"mu_fq4": (["zz"], ["yy"])}):
+        good, log = answers.collect_forecasts([dict(stored)], IDS, B1, derived)
+        assert log == [], derived
+        assert (good[0]["win"], good[0]["lose"]) == (["s1"], ["s2"]), derived
+
+
+def test_a_twin_whose_legs_are_the_first_ring_again_is_still_refused():
+    """Frozen is not unchecked. The second ring is what the first ring
+    depends on; a leg that IS the first ring is a corrupted row."""
     bad = fc("r", "mu_fq4", ["s1", "up"], ["s2"], order=2)
     good, log = answers.collect_forecasts([bad], IDS, B1, B2)
     assert good == []
-    assert "do not match the ones registered" in log[0]
-    assert "supply edges" in log[0]
+    assert "already in the registered first-ring basket" in log[0]
 
 
-def test_the_scored_r2_baskets_are_the_derived_ones_not_the_received_copy():
+def test_a_twin_with_no_legs_or_a_leg_on_both_sides_is_refused():
+    empty = fc("r", "mu_fq4", [], [], order=2)
+    good, log = answers.collect_forecasts([empty], IDS, B1, B2)
+    assert good == [] and "no legs is not a claim" in log[0]
+    both = fc("r", "mu_fq4", ["s1"], ["s1"], order=2)
+    good, log = answers.collect_forecasts([both], IDS, B1, B2)
+    assert good == [] and "on both sides at once" in log[0]
+
+
+def test_the_scored_r2_baskets_are_the_ones_in_the_file():
     good, _ = answers.collect_forecasts(
         [fc("r", "mu_fq4", ["s1"], ["s2"], order=2)], IDS, B1, B2)
     assert (good[0]["win"], good[0]["lose"]) == (["s1"], ["s2"])

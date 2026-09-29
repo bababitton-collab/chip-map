@@ -278,18 +278,58 @@ def check_forecast(rec: object, ids: set[str],
                 f"(order {order})")
     if order == 1:
         reg_win, reg_lose = baskets.get(qid, ([], []))
-        where = "in the watch list"
-    else:
-        if baskets2 is None:
-            baskets2 = derived_baskets()
-        reg_win, reg_lose = baskets2.get(qid, ([], []))
-        where = "by the map's supply edges"
-    if (list(rec["win"]), list(rec["lose"])) != (list(reg_win),
-                                                 list(reg_lose)):
-        return (f"{fid}: baskets do not match the ones registered for {qid} "
-                f"{where}. Registered win={reg_win} lose={reg_lose}; "
-                f"received win={rec['win']} lose={rec['lose']}. A forecast "
-                f"whose hypothesis moved after the event is not a forecast.")
+        if (list(rec["win"]), list(rec["lose"])) != (list(reg_win),
+                                                     list(reg_lose)):
+            return (f"{fid}: baskets do not match the ones registered for "
+                    f"{qid} in the watch list. Registered win={reg_win} "
+                    f"lose={reg_lose}; received win={rec['win']} "
+                    f"lose={rec['lose']}. A forecast whose hypothesis moved "
+                    f"after the event is not a forecast.")
+        return None
+    # ORDER 2 IS FROZEN ONCE IT IS IN THE FILE.
+    #
+    # It used to be re-derived here and compared exactly, which reads as the
+    # same guarantee and is not: the direct basket is TYPED and can only
+    # change if somebody edits it, while the second ring is DERIVED and
+    # changes whenever the derivation improves. Under the old check, adding
+    # the layer rule -- which stops the drawing claiming a sign the map
+    # cannot support -- would have refused every twin already marked, and a
+    # refused forecast leaves the ledger. A forecast that disappears because
+    # the map got better is the opposite of a forward test.
+    #
+    # The legs are the claim, and they are in git with a commit date, exactly
+    # like a direct basket. What is checked is that they are legal.
+    return _second_ring_legs_are_legal(fid, qid, rec, baskets)
+
+
+def _second_ring_legs_are_legal(fid: str, qid: str, rec: dict,
+                                baskets: dict) -> str | None:
+    """A stored twin's legs, checked for shape rather than for derivation.
+
+    Three things a real second ring can never be, and a corrupted or
+    hand-edited row easily is: nothing at all, the first ring again, or both
+    directions at once.
+
+    Deliberately map-free. Every check that reads the map is a check that can
+    start failing because the map improved, which is the thing this function
+    exists to stop. A leg the ledger cannot price simply scores nothing --
+    chains/forecast.py already drops it -- so it needs no gate here.
+    """
+    legs = list(rec["win"]) + list(rec["lose"])
+    if not legs:
+        return (f"{fid}: an order-2 forecast with no legs is not a claim. "
+                f"A question with no second ring gets no twin.")
+    first = set(baskets.get(qid, ([], []))[0]) | set(
+        baskets.get(qid, ([], []))[1])
+    overlap = sorted(set(legs) & first)
+    if overlap:
+        return (f"{fid}: second-ring legs {overlap} are already in the "
+                f"registered first-ring basket for {qid}. The second ring is "
+                f"what the first ring depends on, not the first ring again.")
+    both = sorted(set(rec["win"]) & set(rec["lose"]))
+    if both:
+        return (f"{fid}: second-ring legs {both} are on both sides at once, "
+                f"which is no direction at all.")
     return None
 
 
@@ -308,9 +348,6 @@ def collect_forecasts(rows: object, ids: set[str] | None = None,
     problems: list[str] = []
     seen: set[str] = set()
     for rec in rows:
-        if (isinstance(rec, dict) and rec.get("order", DEFAULT_ORDER) == 2
-                and baskets2 is None):
-            baskets2 = derived_baskets()
         why = check_forecast(rec, ids, baskets, baskets2)
         if why:
             problems.append(why)
@@ -320,14 +357,19 @@ def collect_forecasts(rows: object, ids: set[str] | None = None,
             continue
         seen.add(rec["id"])
         order = rec.get("order", DEFAULT_ORDER)
-        reg = (baskets if order == 1 else baskets2)[rec["qid"]]
+        # Order 1: the REGISTERED basket, not the received one. They were
+        # just proved equal; using the registered copy means the thing scored
+        # is the thing in watch.json even if that check is ever loosened.
+        #
+        # Order 2: the RECEIVED basket, because for a twin the received copy
+        # IS the registered one -- derived once at mint time and committed to
+        # git with a date. See check_forecast.
+        reg = (baskets[rec["qid"]] if order == 1
+               else (rec["win"], rec["lose"]))
         good.append({
             "id": rec["id"], "qid": rec["qid"], "marked_at": rec["marked_at"],
             "status": rec["status"], "order": order,
             "direction": DIRECTIONS[rec["direction"]],
-            # The REGISTERED baskets, not the received ones. They were just
-            # proved equal; using the registered copy means the thing scored
-            # is the thing in git even if that check is ever loosened.
             "win": list(reg[0]),
             "lose": list(reg[1]),
             "benchmark": BENCHMARK, "horizons": list(ORDERS[order]),

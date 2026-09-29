@@ -34,6 +34,19 @@ WHAT IS EXCLUDED, AND WHY
   scored, so it is not a leg.
 * Anything reached from BOTH sides. A node that supplies a winner and a loser
   has no sign, and a node drawn with no sign is a guess.
+* Anything that supplies ANY node in the same layer as a first-ring node on
+  the other side. The rule above can only fire on an edge the map records,
+  and the map's coverage is uneven: Micron has one recorded supplier and SK
+  hynix and Samsung have four each, so mu_fq4 drew ASML, Advantest, Applied
+  Materials, Hanmi and Siltronic as unambiguously "down if yes" -- companies
+  that sell into the whole memory layer, Micron included. A supplier that
+  serves a layer serves both sides of a question asked inside that layer, and
+  the honest drawing of that is no arrow at all.
+
+  The layer is the map's own ``layer`` field, so this rule states nothing the
+  map does not already record. It is deliberately wider than the exact-node
+  rule and is applied after it, so a node the first rule already cut is not
+  counted twice.
 
 Nodes only, and only the top-level ``edges`` list. ``sub_edges`` connect
 subnodes, whose ``ticker`` field is prose ("private (delisted 2024)") and
@@ -191,12 +204,30 @@ def _side(doc: dict, parents: list[str], blocked: set[str],
             for c in order]
 
 
+def layer_of(doc: dict) -> dict[str, str]:
+    """``{node id: layer}``, the map's own field and nothing derived."""
+    return {n["id"]: n.get("layer") for n in doc.get("nodes", [])
+            if n.get("layer")}
+
+
+def serves_layers(doc: dict, node_id: str, layers: dict[str, str]) -> set[str]:
+    """Every layer this node sells into, by its recorded supply edges."""
+    return {layers[e["to"]] for e in doc.get("edges", [])
+            if e.get("type") == SUPPLIES and e.get("from") == node_id
+            and e.get("to") in layers}
+
+
 def second_ring(doc: dict | None, win: list[str], lose: list[str],
                 reporter: str | None = None) -> dict:
-    """``{win2, lose2, ring2_edges}`` for one watch row.
+    """``{win2, lose2, ring2_edges, mixed}`` for one watch row.
 
     Pure: the same map and the same baskets give the same answer forever, which
     is what lets a forecast registered against it be a forward test.
+
+    ``mixed`` is how many candidates were dropped for having no sign -- by the
+    exact-node rule or by the layer rule. The card prints the count and draws
+    none of them; a supplier that serves both sides is not a second-order
+    winner and is not a second-order loser either.
     """
     doc = mapfile.load() if doc is None else doc
     ok = priceable(doc)
@@ -207,6 +238,21 @@ def second_ring(doc: dict | None, win: list[str], lose: list[str],
 
     # A node both sides reached has no sign. It leaves both.
     both = {r["id"] for r in w} & {r["id"] for r in l}
+
+    # And a node that sells into the other side's LAYER has no sign either.
+    # The reporter's own layer counts as the win side's: it is the subject of
+    # the question, and a supplier serving its layer serves it.
+    layers = layer_of(doc)
+    win_layers = {layers[n] for n in list(win) + ([reporter] if reporter else [])
+                  if n in layers}
+    lose_layers = {layers[n] for n in lose if n in layers}
+    for side, other in ((w, lose_layers), (l, win_layers)):
+        for r in side:
+            if r["id"] in both:
+                continue
+            if serves_layers(doc, r["id"], layers) & other:
+                both.add(r["id"])
+
     w = [r for r in w if r["id"] not in both][:MAX_PER_SIDE]
     l = [r for r in l if r["id"] not in both][:MAX_PER_SIDE]
 
@@ -220,7 +266,47 @@ def second_ring(doc: dict | None, win: list[str], lose: list[str],
              for r in w + l
              for p, lab in zip(r["parents"], r["labels"])]
     return {"win2": [r["id"] for r in w], "lose2": [r["id"] for r in l],
-            "ring2_edges": edges}
+            "ring2_edges": edges, "mixed": len(both)}
+
+
+# One side with nothing recorded and the other with several is not a finding
+# about the world, it is a gap in the map: amkr has no inbound supply edge and
+# ase+tsmc have fourteen, so every second-ring node on that card falls on one
+# side by default. The layer rule above stops the drawing from claiming a sign
+# it cannot support; this says which maps to fill in.
+LOPSIDED_MIN = 3
+
+
+def lopsided(doc: dict, win: list[str], lose: list[str]) -> tuple[int, int]:
+    """(inbound supply edges for the win basket, for the lose basket)."""
+    def n(ids):
+        return sum(1 for e in doc.get("edges", [])
+                   if e.get("type") == SUPPLIES and e.get("to") in set(ids))
+    return n(win), n(lose)
+
+
+def warnings_for(rows: list[dict], doc: dict | None = None) -> list[str]:
+    """One line per question whose two sides are not comparably mapped.
+
+    A warning, never a failure: an unmapped side is a map to improve, not a
+    build to stop, and stopping the build would take the whole site down for
+    a drawing that is already refusing to guess.
+    """
+    doc = mapfile.load() if doc is None else doc
+    out = []
+    for r in rows:
+        win, lose = r.get("win") or [], r.get("lose") or []
+        if not (win and lose):
+            continue
+        nw, nl = lopsided(doc, win, lose)
+        if (nw == 0 and nl >= LOPSIDED_MIN) or (nl == 0 and nw >= LOPSIDED_MIN):
+            empty, full = ("win", "lose") if nw == 0 else ("lose", "win")
+            out.append(
+                f"{r.get('id') or r.get('qid')}: the {empty} basket has no "
+                f"recorded supplier on the map and the {full} basket has "
+                f"{max(nw, nl)}. The second ring can only be drawn from one "
+                f"side, so it is not a comparison.")
+    return out
 
 
 def for_rows(rows: list[dict], doc: dict | None = None,

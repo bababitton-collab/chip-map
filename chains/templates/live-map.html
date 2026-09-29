@@ -441,6 +441,7 @@ html.rec canvas{cursor:none}
 .why{font-size:.95rem;color:var(--ink3);line-height:1.45;max-width:60ch}.why b{color:var(--ink2);font-weight:600}
 .cons svg{width:380px;height:208px;display:block}
 .cons .cap{font-family:"IBM Plex Mono",monospace;font-size:.64rem;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;margin-top:6px;display:flex;flex-wrap:wrap;gap:4px 14px}
+.cons .cap .mixnote{flex:0 0 100%;text-transform:none;letter-spacing:.02em;color:var(--ink3);opacity:.85}
 .cons .cap span{white-space:nowrap}
 .cons .cap i{display:inline-block;width:18px;border-top:2px solid;vertical-align:middle;margin-right:6px}
 .cons .cap i.ln{border-top-width:1px;opacity:.7}
@@ -2942,6 +2943,7 @@ function lockedHTML(){
     conf:'תאריך מאושר', exp:'תאריך צפוי',
     day:'יום', days:'ימים', today:'היום', tomorrow:'מחר', past:'לפני',
     up:'עולה אם כן', down:'יורד אם כן', ring2:'טבעת שנייה · לפי המפה',
+    mixed:'{n} ספקים משרתים את שני הצדדים — לא מצוירים',
     answered:'נענו', more:'נוספים', auto:'אוטומטי', evidence:'העדות:',
     terms:'מונחים',
     upMore:'תאריכים נוספים', doneMore:'תשובות קודמות',
@@ -3183,13 +3185,19 @@ function lockedHTML(){
     const ctr=esc(w.tk||(centre?centre.short:'')||'');
     const leg2 = r2.show.length
       ? `<span><i class="ln" style="border-color:#7d8797"></i>${T.ring2}</span>` : '';
+    // Suppliers the map shows on both sides of the question have no
+    // direction, so none is drawn. Saying how many were dropped is the
+    // difference between "this map is thin" and "this map knows it cannot
+    // tell you".
+    const mixed = w.mixed
+      ? `<span class="mixnote">${T.mixed.replace('{n}', w.mixed)}</span>` : '';
     return `<div class="cons"><svg viewBox="0 0 ${VBW} ${VBH}">
       <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
       ${g2}${g}
       <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"/>
       <circle cx="${CX}" cy="${CY}" r="20" fill="url(#hilite)" pointer-events="none"/>
       <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr}</text>
-    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span>${leg2}</div></div>`;
+    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span>${leg2}${mixed}</div></div>`;
   }
 
   // --- one card ---------------------------------------------------------

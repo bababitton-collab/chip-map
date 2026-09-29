@@ -812,7 +812,8 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
             # Free tier, and it rides with the cards it explains so a
             # decrypted payload needs nothing else to render.
             "glossary": {t["id"]: {"label": t["label"], "def": t["en"],
-                                   "match": list(t["match"])}
+                                   "match": list(t["match"]),
+                                   "stop": list(t.get("stop") or [])}
                          for t in _gl.load()}}
     # The track record: for every question whose answer is in, what each leg
     # did from the day the contract was signed, against the same two

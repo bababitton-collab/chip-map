@@ -10,10 +10,127 @@
  {
   "qid": "mu_fq4",
   "answer_date": "2026-09-30",
-  "committed_at": "2026-09-13",
-  "sha256": "1caadaa2e0db4f1eee653bc7ee25db5b87a4c73c2e5e95e89131c8e51739690b",
+  "committed_at": "2026-09-29",
+  "sha256": "c4be08e4e586c4ec246aea8a04df21ca62b54e19e92d6be6598e769ed5624b9c",
   "primary_horizon": 20,
-  "valid_preregistration": true
+  "valid_preregistration": true,
+  "revised_at": "2026-09-29",
+  "revision_note": "Revised 2026-09-29, before the answer date: second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "1caadaa2e0db4f1eee653bc7ee25db5b87a4c73c2e5e95e89131c8e51739690b",
+    "committed_at": "2026-09-13"
+   }
+  ],
+  "liquidity": {
+   "checked_at": "2026-09-29",
+   "min_adv_usd": 250000,
+   "legs": {
+    "mu": {
+     "symbol": "MU.US",
+     "adv_usd": 32652739091,
+     "last_close": "2026-09-28"
+    },
+    "skhynix": {
+     "symbol": "000660.KO",
+     "adv_usd": 6445729906,
+     "last_close": "2026-09-29"
+    },
+    "samsung": {
+     "symbol": "005930.KO",
+     "adv_usd": 4765248098,
+     "last_close": "2026-09-29"
+    },
+    "tel": {
+     "symbol": "TOELY.US",
+     "adv_usd": 34195398,
+     "last_close": "2026-09-24"
+    },
+    "shinetsu": {
+     "symbol": "SHECY.US",
+     "adv_usd": 10667735,
+     "last_close": "2026-09-28"
+    },
+    "globalwafers": {
+     "symbol": "6488.TWO",
+     "adv_usd": 318391238,
+     "last_close": "2026-09-29"
+    },
+    "advantest": {
+     "symbol": "ATEYY.US",
+     "adv_usd": 25158264,
+     "last_close": "2026-09-28"
+    }
+   }
+  },
+  "ew_map": {
+   "sha256": "9896fc05c9a68d293be335501c6ebb2fb64e1f7bce36545d00aa111bbee6fe01",
+   "n": 62,
+   "symbols": [
+    "000660.KO",
+    "005930.KO",
+    "011790.KO",
+    "042700.KO",
+    "2317.TW",
+    "3037.TW",
+    "6488.TWO",
+    "688126.SHG",
+    "AJNMY.US",
+    "ALAB.US",
+    "AMAT.US",
+    "AMD.US",
+    "AMKR.US",
+    "AMZN.US",
+    "ANET.US",
+    "ARM.US",
+    "ASGLY.US",
+    "ASML.US",
+    "ASMVY.US",
+    "ASX.US",
+    "ATEYY.US",
+    "AVGO.US",
+    "AXTI.US",
+    "CDNS.US",
+    "CEG.US",
+    "CLF.US",
+    "COHR.US",
+    "CRDO.US",
+    "CRWV.US",
+    "ENR.XETRA",
+    "ENTG.US",
+    "ETN.US",
+    "FN.US",
+    "GEV.US",
+    "GOOGL.US",
+    "HOCPY.US",
+    "HWM.US",
+    "IBIDY.US",
+    "INTC.US",
+    "KLAC.US",
+    "LITE.US",
+    "LRCX.US",
+    "LSRCY.US",
+    "META.US",
+    "MPWR.US",
+    "MRVL.US",
+    "MSFT.US",
+    "MU.US",
+    "NVDA.US",
+    "ORCL.US",
+    "SHECY.US",
+    "SMCI.US",
+    "SNPS.US",
+    "SUOPY.US",
+    "TECK.US",
+    "TER.US",
+    "TOELY.US",
+    "TOKCF.US",
+    "TSM.US",
+    "VRT.US",
+    "WAF.XETRA",
+    "WCH.XETRA"
+   ]
+  }
  },
  {
   "qid": "smsg_pre",

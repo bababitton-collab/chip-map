@@ -173,7 +173,29 @@ def symbols_of(doc: dict) -> dict[str, str | None]:
 
 
 def legs_of(row: dict) -> list[str]:
-    return [] if row.get("observe_only") else list(row.get("win") or []) + list(row.get("lose") or [])
+    """Every leg this question could be scored on, first ring and second.
+
+    A contract v2 question is SCORED on its registered second ring, so those
+    legs have to clear the same gate as the first ring -- a scored basket
+    holding something that trades US$8,500 a day is the exact failure this
+    gate exists to stop, and it does not become acceptable by sitting one hop
+    further out. The first ring stays in the list either way: v2 still mints
+    it as a diagnostic, and a diagnostic read off an untradeable line is not a
+    diagnostic.
+
+    Order is first ring then second, de-duplicated, so a name in both is
+    measured once.
+    """
+    if row.get("observe_only"):
+        return []
+    out, seen = [], set()
+    for i in (list(row.get("win") or []) + list(row.get("lose") or [])
+              + list(row.get("ring2_win") or [])
+              + list(row.get("ring2_lose") or [])):
+        if i not in seen:
+            seen.add(i)
+            out.append(i)
+    return out
 
 
 def check_row(row: dict, doc: dict, measure: Callable[[str], dict], today: dt.date) -> dict:

@@ -210,7 +210,13 @@ def test_selecting_in_the_rail_replaces_the_rail_and_opens_no_second_panel():
 
 def test_escape_closes_the_detail_and_returns_focus_to_its_station():
     src = tpl(EN)
-    assert "ev.key === 'Escape' && railOpenId" in src
+    # Escape now backs out one level at a time -- the station detail first,
+    # then the drawer -- so the handler is a branch rather than one condition.
+    # What this test is about is the first branch.
+    key = src[src.index("rail.addEventListener('keydown'"):]
+    key = key[:key.index("\n  });") + 6]
+    assert "if(ev.key !== 'Escape') return;" in key
+    assert "if(railOpenId){" in key and "railClose(); return;" in key
     close = src[src.index("function railClose()"):]
     close = close[:close.index("\n}") + 2]
     assert "railOpenId = null" in close

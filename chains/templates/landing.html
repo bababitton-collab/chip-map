@@ -44,7 +44,31 @@ main section.steps{padding:28px 0 28px}
 .steps h3{margin:0 0 6px;font-family:"Source Serif 4",serif;font-size:1.3rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
 .steps p{margin:0;color:var(--ink2);font-size:.98rem;line-height:1.5}
 .mapcards{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
-.mapcard{border-top:1px solid var(--rule);padding:17px 4px 19px}
+/* The whole card is the link. A hairline that brightens on hover is the
+   whole of the hover state -- no lift, no shadow, no scale. */
+.mapcard{border:1px solid var(--rule);border-radius:4px;padding:0 0 14px;overflow:hidden;
+  transition:border-color .45s cubic-bezier(0.16,1,0.3,1)}
+.mapcard:hover,.mapcard:focus-within{border-color:var(--ink3)}
+.mapcard-hit{display:block;text-decoration:none;color:inherit;padding:0 16px}
+.mapcard-hit:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.mapshot{display:block;margin:0 -16px 14px}
+.mapshot img{display:block;width:100%;height:auto;border-bottom:1px solid var(--rule)}
+.mapstatus,.mapnext,.mapthrough{margin:0;font-family:"IBM Plex Mono",monospace;
+  font-size:.78rem;letter-spacing:.04em;color:var(--ink3)}
+/* The map legend's own semantics: red where the lock is tightening, green
+   where it is eroding, and the dim ink for a chokepoint the market cannot be
+   asked about. Text first -- the words say it, the colour agrees with the
+   map a reader is about to open. */
+.mapstatus{color:var(--ink2);margin-top:2px}
+.mapstatus .tight{color:#ff5a3c}
+.mapstatus .erode{color:#3fd18b}
+.mapstatus .unmeas{color:var(--ink3)}
+.mapnext{margin-top:6px}
+.mapnext span{color:var(--ink3)}
+.mapthrough{margin-top:4px}
+.mapcard .maplinks{padding:10px 16px 0}
+@media (prefers-reduced-motion: reduce){ .mapcard{transition:none} }
+.mapcard-legacy{border-top:1px solid var(--rule);padding:17px 4px 19px}
 .mapcard h3{margin:0 0 8px;font-family:"Source Serif 4",serif;font-size:1.35rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600}
 .mapcard h3 a{text-decoration:none;color:var(--ink)}
 .mapcard h3 a:hover{text-decoration:underline}

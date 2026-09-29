@@ -18,7 +18,7 @@ from chains import (access, build_pages, landing, live_snapshot, preregister,
 from chains.answers import PRIMARY_HORIZON
 from chains.mapfile import load as load_map
 from chains.paths import (commitments_path, marks_path, templates_dir,
-                          watch_path)
+                          watch_en_path, watch_path)
 
 MAP = load_map()
 WATCH = json.loads(watch_path().read_text(encoding="utf-8"))
@@ -649,7 +649,13 @@ def walked(tmp_path, monkeypatch):
     names = ["semi", ENERGY]
     order = []
     emap = load_map(dom=ENERGY)
-    ewatch = json.loads(watch_path(ENERGY).read_text(encoding="utf-8"))
+    # watch_en, not watch: this fixture writes a file called live_en.json, and
+    # the English snapshot is built from the English watch. Reading the Hebrew
+    # one gave the fixture a Hebrew `who` in a file the real build gates for
+    # exactly that -- so the fixture was publishing something production
+    # cannot, and the front door drew a Hebrew company name onto an English
+    # page the moment a card started naming the next checkpoint.
+    ewatch = json.loads(watch_en_path(ENERGY).read_text(encoding="utf-8"))
     rows = {"semi": (MAP["nodes"], MAP["chokepoints"], WATCH),
             ENERGY: (emap["nodes"], emap["chokepoints"], ewatch)}
 

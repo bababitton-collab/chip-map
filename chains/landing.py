@@ -255,14 +255,51 @@ def map_cards(root: Path, names: list[str], dom: str,
         found = [(dom, dom_dir, live if isinstance(live, dict) else {})]
     cards = []
     for name, _d, live in found:
+        cps = live.get("cps") or []
+        watch = live.get("watch") or []
+        as_of = live.get("as_of") or ""
+        # The status line is counted, not graded. "Tightening" is the sign of
+        # a chokepoint's own pressure -- the holder outrunning the challengers
+        # over thirteen weeks -- and nothing here turns that into a risk
+        # level, a score or a colour the data does not carry.
+        #
+        # All three states, not just the one. "0 of 5 tightening" was true of
+        # defence and told a reader nothing: all five of its chokepoints have
+        # no priced challenger, so the market cannot be asked. That is a
+        # different fact from five chokepoints that were asked and said no,
+        # and the card said the same thing for both.
+        tight = sum(1 for c in cps if (c.get("pressure") or 0) > 0)
+        erode = sum(1 for c in cps if (c.get("pressure") or 0) < 0)
+        unmeasured = len(cps) - tight - erode
+        # The next dated question, as PUBLIC metadata only: who and when. The
+        # wording, the baskets and the diagram are the paid part and are not
+        # in this card at any lock state.
+        ahead = sorted((r for r in watch if (r.get("d") or "") >= as_of),
+                       key=lambda r: r.get("d") or "")
+        nxt = ahead[0] if ahead else None
         cards.append({
             "name": name,
             "title": _brand(name, "title") or name,
             "blurb": _brand(name, "value"),
             "bench": forecast_benchmark_label(name),
             "companies": len(live.get("nodes") or []),
-            "chokepoints": len(live.get("cps") or []),
-            "questions": len(live.get("watch") or []),
+            "chokepoints": len(cps),
+            "questions": len(watch),
+            "tightening": tight,
+            "eroding": erode,
+            "unmeasured": unmeasured,
+            "through": live.get("last_price_date") or "",
+            "next_who": (nxt or {}).get("who") or "",
+            "next_date": (nxt or {}).get("d") or "",
+            "next_confirmed": bool((nxt or {}).get("confirmed")),
+            # Read off the published directory rather than assumed: a card
+            # gets a picture when one was copied beside it, and no <img> at
+            # all when none was.
+            "preview": (f"/assets/map-{name}.png"
+                        if (root / "assets" / f"map-{name}.png").is_file() else ""),
+            "preview_mobile": (f"/assets/map-{name}-mobile.png"
+                               if (root / "assets" / f"map-{name}-mobile.png").is_file()
+                               else ""),
         })
     return cards
 
@@ -276,9 +313,41 @@ def _map_cards_html(cards: list[dict], dom: str) -> str:
     for c in cards:
         cur = ' aria-current="page"' if c["name"] == dom else ""
         blurb = f'<p class="blurb">{esc(c["blurb"])}</p>' if c["blurb"] else ""
+        n = esc(c["name"])
+        # The preview is drawn only where one was published. A card with no
+        # image is the card as it was; a broken <img> would be worse than no
+        # picture at all.
+        shot = ""
+        if c.get("preview"):
+            shot = (f'<picture class="mapshot">'
+                    + (f'<source media="(max-width:760px)" srcset="{esc(c["preview_mobile"])}">'
+                       if c.get("preview_mobile") else "")
+                    + f'<img src="{esc(c["preview"])}" alt="" loading="lazy" '
+                      f'width="1200" height="520"></picture>')
+        # Counted from the published snapshot, never graded. A part that is
+        # zero is left out rather than printed as a zero; the parts that are
+        # printed always sum to the chokepoint count above them.
+        parts = []
+        for n_, word, cls in ((c["tightening"], "tightening", "tight"),
+                              (c["eroding"], "eroding", "erode"),
+                              (c["unmeasured"], "cannot be measured", "unmeas")):
+            if n_:
+                parts.append(f'<span class="{cls}">{n_} {word}</span>')
+        status = (f'<p class="mapstatus">{" · ".join(parts)}</p>'
+                  if parts else "")
+        through = (f'<p class="mapthrough">prices through {esc(c["through"])}</p>'
+                   if c.get("through") else "")
+        nxt = ""
+        if c.get("next_who") and c.get("next_date"):
+            when = "confirmed" if c["next_confirmed"] else "expected"
+            nxt = (f'<p class="mapnext">next · {esc(c["next_who"])} · '
+                   f'{esc(c["next_date"])} <span>{when}</span></p>')
         out.append(
             f'<li class="mapcard">'
-            f'<h3><a href="/{esc(c["name"])}/"{cur}>{esc(c["title"])}</a></h3>'
+            f'<a class="mapcard-hit" href="/{n}/"{cur} '
+            f'aria-label="{esc(c["title"])}">'
+            f'{shot}'
+            f'<h3>{esc(c["title"])}</h3>'
             f'{blurb}'
             f'<ul class="mapstat">'
             f'<li><b>{c["questions"]}</b> dated questions</li>'
@@ -286,8 +355,10 @@ def _map_cards_html(cards: list[dict], dom: str) -> str:
             f'<li><b>{c["chokepoints"]}</b> chokepoints</li>'
             f'<li>scored against <b>{esc(c["bench"])}</b></li>'
             f'</ul>'
-            f'<p class="maplinks"><a href="/{esc(c["name"])}/">Map</a> · '
-            f'<a href="/{esc(c["name"])}/track/">Track Record</a></p>'
+            f'{status}{nxt}{through}'
+            f'</a>'
+            f'<p class="maplinks"><a href="/{n}/">Map</a> · '
+            f'<a href="/{n}/track/">Track Record</a></p>'
             f'</li>')
     return "".join(out)
 

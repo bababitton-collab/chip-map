@@ -62,6 +62,21 @@ a{color:inherit}
 .srail select{margin-top:6px}
 .srail input:focus-visible,.srail select:focus-visible,.srail button:focus-visible,
 .railbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.srail .rfilters{display:grid;gap:8px;margin-top:10px}
+.srail .rfield{display:grid;gap:3px}
+.srail .reyebrow{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink3)}
+.srail .rsortrow{margin-top:10px;padding-top:10px;border-top:1px solid var(--rule)}
+.srail .rcount{margin:8px 0 0;font-family:"IBM Plex Mono",monospace;font-size:.72rem;
+  letter-spacing:.08em;color:var(--ink3)}
+.srail .ractions{display:flex;gap:6px;margin-top:8px}
+.srail .ractions button{flex:1;background:transparent;border:1px solid var(--rule);border-radius:4px;
+  color:var(--amber);font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:7px 8px;cursor:pointer;
+  transition:border-color .4s cubic-bezier(0.16,1,0.3,1)}
+.srail .ractions button:hover:not(:disabled){border-color:var(--amber)}
+.srail .ractions button:disabled{color:var(--ink3);cursor:default;opacity:.6}
+@media (prefers-reduced-motion: reduce){ .srail .ractions button{transition:none} }
 .srail .rgroup{padding:8px 0 2px}
 .srail .rglab{padding:6px 14px;font-family:"IBM Plex Mono",monospace;font-size:.68rem;
   letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
@@ -89,11 +104,17 @@ a{color:inherit}
 .railbtn:hover{border-color:var(--amber)}
 /* Docked. */
 @media (min-width:1440px){ .stage{--rail-w:300px} .srail{display:block} }
-/* Opened from a button, at the same width it docks at. */
+/* Opened from a button, and laid OVER the map rather than beside it.
+   As a grid column it took its 300px out of the canvas: at 1200 the map went
+   to 900, every column narrowed with it, and the layer names broke mid-word
+   -- "REACTOR/S", "EQUIPME/NT". A drawer a reader opens to look something up
+   must not redraw the thing they were looking at. */
 @media (min-width:1024px) and (max-width:1439px){
   .railbtnwrap{display:block}
-  .stage.rail-open{--rail-w:300px}
-  .stage.rail-open .srail{display:block}
+  .stage.rail-open .srail{display:block;position:absolute;inset-block:0;
+    inset-inline-end:0;width:300px;height:auto;z-index:5;
+    border-inline-start:1px solid var(--rule);background:var(--panel);
+    box-shadow:-1px 0 0 rgba(255,255,255,.04)}
 }
 /* Full width, immediately after the map. */
 @media (max-width:1023px){
@@ -1519,7 +1540,12 @@ function resize(){
 // used for matching or handed to assistive technology. A chip that needs one
 // carries the hyphenated text for the eye and the plain word for everything
 // else, and a chip that does not is rendered exactly as before.
-const HYPHENATE = {TRANSMISSION: 5};    // word -> where its first break goes
+// word -> the offset its break goes at. Each one was added because that word,
+// at that map's column width, did not fit on a line of its own: TRANSMISSION
+// at 1200 and 1440, EQUIPMENT and GENERATION at 1024. The hyphen is still
+// applied by measurement, so none of them shows one at a width where the word
+// fits whole.
+const HYPHENATE = {TRANSMISSION: 5, EQUIPMENT: 5, GENERATION: 6};
 function softened(name){
   return String(name==null?'':name).replace(/[A-Za-z]{8,}/g, w => {
     const at = HYPHENATE[w.toUpperCase()];
@@ -1910,7 +1936,18 @@ function draw(now){
   // recorder to read back, and a clip that filmed the wrong station is
   // worth knowing about before it is cut into a video.
   if(REC) window.__rec={hover:hover&&hover.id, selected:(focusN||selected)?(focusN||selected).id:null, focus:focusN&&focusN.id, lit:edges.filter(e=>focus&&(e.from===focus.id||e.to===focus.id)).length};
-  edges.forEach((e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); const on=(e===hoverEdge);
+  // DIMMING A SEARCH, WITHOUT TOUCHING THE PAINTING.
+  //
+  // Every draw below sets its own alpha and resets it to 1, so a base alpha
+  // set here would be wiped by the first thing that painted. Instead the map
+  // is drawn whole, a veil the colour of the background is laid over it, and
+  // the stations that match are drawn again on top at full strength. The
+  // painting code is untouched; the only new thing is that it runs twice for
+  // whatever matched. Nothing is hidden -- a dimmed station is still there,
+  // still in its place, still showing the shape of the chain around it.
+  const NARROW = narrowing();
+  const KEEP = NARROW ? matchSet() : null;
+  const paintEdge = (e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); const on=(e===hoverEdge);
     ctx.beginPath(); ctx.moveTo(p.a.x,p.a.y); ctx.bezierCurveTo(p.c1.x,p.c1.y,p.c2.x,p.c2.y,p.b.x,p.b.y);
     ctx.strokeStyle=(rel||on)?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=on?2.6:(rel?1.8:1); ctx.stroke(); e._p=p;
     // An arrowhead at the CUSTOMER end. The line already showed that two
@@ -1920,7 +1957,8 @@ function draw(now){
     const hx=p.b.x-Math.cos(ang)*(p.b.r||8), hy=p.b.y-Math.sin(ang)*(p.b.r||8);
     ctx.save(); ctx.translate(hx,hy); ctx.rotate(ang);
     ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-7,-3.2); ctx.lineTo(-7,3.2); ctx.closePath();
-    ctx.fillStyle=(rel||on)?LCOL[p.a.line]:'#ffffff33'; ctx.fill(); ctx.restore(); });
+    ctx.fillStyle=(rel||on)?LCOL[p.a.line]:'#ffffff33'; ctx.fill(); ctx.restore(); };
+  edges.forEach(paintEdge);
   // particles
   if(!REDUCED){ particles.forEach(q=>{ if(!FREEZE){ q.t+=q.v; if(q.t>1) q.t-=1; } const e=edges[q.e]; const rel=focus&&(e.from===focus.id||e.to===focus.id); const col=LCOL[e._p.a.line];
     // t runs 0 -> 1 from p.a to p.b, and p.a is the edge's FROM. So a dot
@@ -1941,7 +1979,7 @@ function draw(now){
       ctx.beginPath(); ctx.arc(pt.x,pt.y,rel?2.4:1.6,0,7); ctx.fillStyle=col; ctx.globalAlpha=rel?1:.55; ctx.fill(); ctx.globalAlpha=1;
     } }); }
   // nodes
-  nodes.forEach(n=>{
+  const paintNode = n=>{
     // ZONES, drawn as a tint and not as geometry. The layout is unchanged --
     // a station sits where its layer and its size put it -- and the zone is
     // said with a soft ring under the circle plus a faint fill behind it.
@@ -2012,7 +2050,20 @@ function draw(now){
     } else {
       ctx.fillText(lbl, n.x, n.y+n.r+(MODE==='portrait'?lfs+3:16)+(n.ldy||0));
     }
-  });
+  };
+  nodes.forEach(paintNode);
+  // The veil, and then the matches again on top. Both passes use the same
+  // painting the unfiltered map uses, so a station that matches is drawn
+  // exactly as it always was -- not a second, brighter version of itself.
+  if(NARROW){
+    ctx.save();
+    ctx.globalAlpha = 1 - FILTER_DIM;
+    ctx.fillStyle = tok('--bg') || '#0b0e14';
+    ctx.fillRect(camOn ? -fcam.x : 0, camOn ? -fcam.y : 0, W, H);
+    ctx.restore();
+    edges.forEach((e,i)=>{ if(KEEP.has(e.from) && KEEP.has(e.to)) paintEdge(e,i); });
+    nodes.forEach(n=>{ if(KEEP.has(n.id)) paintNode(n); });
+  }
   if(camOn) ctx.restore();
   drawFocus(now);
   window.__frameMs=performance.now()-_fs;
@@ -2214,8 +2265,57 @@ function close(){ selected=null; stage.classList.remove('open'); panel.innerHTML
 const RAIL = {stations:'Stations', search:'Search stations', sortName:'By name',
   sortLayer:'By layer', sortPulse:'By pulse', back:'Back to stations',
   none:'No station matches that search.', cp:'chokepoint', pulseT:'lock tightening',
-  pulseE:'lock eroding', pulseA:'not measured', pulseNo:'no pulse'};
+  pulseE:'lock eroding', pulseA:'not measured', pulseNo:'no pulse',
+  lLayer:'Layer', lCp:'Chokepoint', lPulse:'Pulse', lSort:'Sort',
+  anyLayer:'All layers', cpAll:'All stations',
+  cpYes:'Chokepoints only', cpNo:'Not chokepoints', anyPulse:'Any pulse',
+  count:'{n} of {N} stations', clear:'Clear filters', copy:'Copy link',
+  copied:'Link copied'};
 let railQ='', railSort='layer', railOpenId=null;
+
+// FILTERS, OVER FIELDS THE MAP ALREADY CARRIES.
+//
+// Three, and only three, because three is what the data supports: the layer
+// a station sits in, whether it sits on a chokepoint at all, and what the
+// market is saying about that chokepoint. Everything else a filter bar might
+// promise -- a region, a country, a risk level -- is not in the map and is
+// not invented here. The field called `country` holds an exchange (NASDAQ,
+// XETRA, TSE), so it cannot answer "where is this company" and is not
+// offered as if it could.
+const FILTERS = {layer:'', cp:'', pulse:''};
+const FILTER_DIM = 0.14;        // what a station that does not match is worth
+function filtersOn(){ return !!(FILTERS.layer || FILTERS.cp || FILTERS.pulse); }
+function searchOn(){ return !!railQ.trim(); }
+function narrowing(){ return filtersOn() || searchOn(); }
+
+function pulseKind(n){
+  const p = pulseOf(n);
+  if(!p) return 'none';
+  return p.kind === 'a' ? 'unmeasured' : (p.kind === 't' ? 'tightening' : 'eroding');
+}
+// One predicate for the rail and the canvas. Two would drift, and a list that
+// disagrees with the picture beside it is worse than either alone.
+function nodeMatches(n){
+  const q = railQ.trim().toLowerCase();
+  if(q){
+    const hay = [n.name, n.ticker, LAYER_HE[n.layer]||n.layer, n.short, n.sym]
+      .filter(Boolean).join(' ').toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  if(FILTERS.layer && String(n.layer) !== FILTERS.layer) return false;
+  if(FILTERS.cp){
+    const on = !!(n.cp && n.cp.length);
+    if(FILTERS.cp === 'yes' && !on) return false;
+    if(FILTERS.cp === 'no' && on) return false;
+  }
+  if(FILTERS.pulse && pulseKind(n) !== FILTERS.pulse) return false;
+  return true;
+}
+function matchSet(){
+  const s = new Set();
+  nodes.forEach(n=>{ if(nodeMatches(n)) s.add(n.id); });
+  return s;
+}
 
 function pulseText(n){
   const p = pulseOf(n);
@@ -2232,13 +2332,9 @@ function pulseRank(n){
   return p.kind==='t' ? 0 : 1;
 }
 function railRows(){
-  const q = railQ.trim().toLowerCase();
-  let rows = nodes.filter(n=>{
-    if(!q) return true;
-    return (n.name||'').toLowerCase().includes(q)
-        || (n.ticker||'').toLowerCase().includes(q)
-        || (LAYER_HE[n.layer]||'').toLowerCase().includes(q);
-  });
+  // The same predicate the canvas dims by, so the list and the picture can
+  // never disagree about what matched.
+  let rows = nodes.filter(nodeMatches);
   const byName = (a,b)=>(a.name||'').localeCompare(b.name||'');
   if(railSort==='name') rows = rows.slice().sort(byName);
   else if(railSort==='pulse') rows = rows.slice().sort((a,b)=>pulseRank(a)-pulseRank(b)||byName(a,b));
@@ -2270,6 +2366,51 @@ function railListHTML(){
       }).join('')
     + `</div>`).join('');
 }
+// The count and the Clear control after a keystroke, without rebuilding the
+// head -- the search field has focus and a caret in it, and a rebuild would
+// take both. The canvas re-reads the predicate on its own next frame.
+function refreshNarrowing(){
+  const rail = document.getElementById('srail');
+  if(!rail) return;
+  const c = rail.querySelector('.rcount');
+  if(c) c.textContent = countText();
+  const clr = rail.querySelector('.rclear');
+  if(clr) clr.disabled = !narrowing();
+  writeURL();
+}
+
+// The three selects, built from what the map actually declares: its own
+// layer keys, in its own order, with its own names.
+// Each control says what it does, above itself, in the eyebrow the rest of
+// the site uses for the same job. Three unlabelled selects reading "All
+// layers / Any / Any pulse" were three guesses.
+function filterBarHTML(){
+  const layers = Object.keys((D.labels||{}).layers||{}).sort();
+  const opt = (v, label, cur) =>
+    `<option value="${escHtml(v)}"${cur===v?' selected':''}>${escHtml(label)}</option>`;
+  const field = (id, label, options) =>
+    `<div class="rfield"><label class="reyebrow" for="${id}">${label}</label>`
+    + `<select class="rf" id="${id}" data-f="${id.replace('rf-','')}">${options}</select></div>`;
+  return `<div class="rfilters">`
+    + field('rf-layer', RAIL.lLayer,
+        opt('', RAIL.anyLayer, FILTERS.layer)
+        + layers.map(L=>opt(L, LAYER_HE[L]||L, FILTERS.layer)).join(''))
+    + field('rf-cp', RAIL.lCp,
+        opt('', RAIL.cpAll, FILTERS.cp)
+        + opt('yes', RAIL.cpYes, FILTERS.cp)
+        + opt('no', RAIL.cpNo, FILTERS.cp))
+    + field('rf-pulse', RAIL.lPulse,
+        opt('', RAIL.anyPulse, FILTERS.pulse)
+        + opt('tightening', RAIL.pulseT, FILTERS.pulse)
+        + opt('eroding', RAIL.pulseE, FILTERS.pulse)
+        + opt('unmeasured', RAIL.pulseA, FILTERS.pulse))
+    + `</div>`;
+}
+// "n of N stations". Both numbers are counted, never written down.
+function countText(){
+  const n = nodes.filter(nodeMatches).length;
+  return RAIL.count.replace('{n}', n).replace('{N}', nodes.length);
+}
 function railRender(){
   const rail = document.getElementById('srail');
   if(!rail) return;
@@ -2279,16 +2420,29 @@ function railRender(){
     rail.scrollTop = 0;
     const back = rail.querySelector('.rback');
     if(back) back.focus();
+    writeURL();
     return;
   }
   rail.innerHTML = `<div class="rhead"><h3>${RAIL.stations}</h3>`
     + `<input type="search" class="rq" placeholder="${RAIL.search}" aria-label="${RAIL.search}" value="${escHtml(railQ)}">`
-    + `<select class="rsort" aria-label="${RAIL.stations}">`
+    + filterBarHTML()
+    + `<p class="rcount" role="status" aria-live="polite">${countText()}</p>`
+    // Sort is not a filter: it changes the order of what is shown, never what
+    // is shown. It sits under the count, in its own labelled row, so the
+    // three things above it read as the three that narrow.
+    + `<div class="rfield rsortrow"><label class="reyebrow" for="rf-sort">${RAIL.lSort}</label>`
+    + `<select class="rsort" id="rf-sort">`
     + `<option value="layer"${railSort==='layer'?' selected':''}>${RAIL.sortLayer}</option>`
     + `<option value="name"${railSort==='name'?' selected':''}>${RAIL.sortName}</option>`
     + `<option value="pulse"${railSort==='pulse'?' selected':''}>${RAIL.sortPulse}</option>`
-    + `</select></div>` + railListHTML();
+    + `</select></div>`
+    + `<div class="ractions">`
+    + `<button type="button" class="rclear"${narrowing()?'':' disabled'}>${RAIL.clear}</button>`
+    + `<button type="button" class="rcopy">${RAIL.copy}</button>`
+    + `</div>`
+    + `</div>` + railListHTML();
   railMark(selected && selected.id);
+  writeURL();
 }
 // Which station the rail is showing as current. Called from open()/close() too,
 // so a canvas click and a rail click agree about what is selected.
@@ -2300,9 +2454,59 @@ function railMark(id){
     else b.removeAttribute('aria-current');
   });
 }
+// SHAREABLE STATE.
+//
+// What a reader can see is what goes in the URL: the search, the three
+// filters, which station is open, and whether the rail is. Nothing else --
+// a link must not be able to carry a reader somewhere the page would not
+// otherwise take them.
+//
+// The recording flags (rec, legacy, emph, freeze) are read separately at
+// boot and are never written here, so a copied link cannot turn a reader's
+// map into a film set.
+const URL_KEYS = ['q','layer','cp','pulse','station','rail'];
+let _urlBooting = false;
+function writeURL(){
+  if(REC || _urlBooting) return;
+  const u = new URL(location.href);
+  const set = (k, v) => { if(v) u.searchParams.set(k, v); else u.searchParams.delete(k); };
+  set('q', railQ.trim());
+  set('layer', FILTERS.layer);
+  set('cp', FILTERS.cp);
+  set('pulse', FILTERS.pulse);
+  set('station', railOpenId || (selected && selected.id) || '');
+  set('rail', stage && stage.classList.contains('rail-open') ? '1' : '');
+  // replaceState, not push: a filter is not a page, and thirty of them in the
+  // back button is thirty presses to leave.
+  history.replaceState(null, '', u.toString());
+}
+// Anything unknown is ignored, and anything known but wrong is dropped. A URL
+// is a stranger's input: it may not be able to break the page.
+function readURL(){
+  if(REC) return;
+  let p;
+  try{ p = new URL(location.href).searchParams; }catch(e){ return; }
+  const pick = (k, ok) => { const v = p.get(k); return (v && ok(v)) ? v : ''; };
+  const layers = Object.keys((D.labels||{}).layers||{});
+  _urlBooting = true;
+  railQ = (p.get('q') || '').slice(0, 80);
+  FILTERS.layer = pick('layer', v => layers.includes(v));
+  FILTERS.cp = pick('cp', v => v==='yes' || v==='no');
+  FILTERS.pulse = pick('pulse', v => ['tightening','eroding','unmeasured'].includes(v));
+  const st = p.get('station');
+  if(st && byId[st]){ railOpenId = st; selected = byId[st]; }
+  if(p.get('rail') === '1' && stage){
+    stage.classList.add('rail-open');
+    const b = document.getElementById('railbtn');
+    if(b) b.setAttribute('aria-expanded','true');
+  }
+  _urlBooting = false;
+}
+
 function buildRail(){
   const rail = document.getElementById('srail');
   if(!rail || REC) return;
+  readURL();
   railRender();
   // Delegated: the list is rebuilt on every search keystroke and sort change.
   rail.addEventListener('input', ev => {
@@ -2314,10 +2518,39 @@ function buildRail(){
       [...rail.children].forEach(c=>{ if(c!==head) c.remove(); });
       head.insertAdjacentHTML('afterend', list);
       railMark(selected && selected.id);
+      refreshNarrowing();
     }
   });
   rail.addEventListener('change', ev => {
-    if(ev.target.classList.contains('rsort')){ railSort = ev.target.value; railRender(); }
+    if(ev.target.classList.contains('rsort')){ railSort = ev.target.value; railRender(); return; }
+    if(ev.target.classList.contains('rf')){
+      const k = ev.target.dataset.f;
+      if(k in FILTERS){ FILTERS[k] = ev.target.value; railRender(); }
+    }
+  });
+  rail.addEventListener('click', ev => {
+    if(ev.target.closest('.rclear')){
+      railQ = ''; FILTERS.layer = FILTERS.cp = FILTERS.pulse = '';
+      railRender();
+      const f = rail.querySelector('.rq'); if(f) f.focus();
+      return;
+    }
+    const copy = ev.target.closest('.rcopy');
+    if(copy){
+      const said = copy.textContent;
+      const done = () => { copy.textContent = RAIL.copied;
+        setTimeout(()=>{ copy.textContent = said; }, 1800); };
+      // The clipboard API needs a secure context; where there is none the
+      // link is selected instead of silently doing nothing.
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(location.href).then(done, ()=>{});
+      } else {
+        const t = document.createElement('textarea');
+        t.value = location.href; document.body.appendChild(t); t.select();
+        try{ document.execCommand('copy'); done(); }catch(e){}
+        t.remove();
+      }
+    }
   });
   rail.addEventListener('click', ev => {
     const back = ev.target.closest && ev.target.closest('.rback');
@@ -2332,14 +2565,32 @@ function buildRail(){
   // Escape closes the detail and puts the focus back on the station that
   // opened it -- not at the top of the rail, and not nowhere.
   rail.addEventListener('keydown', ev => {
-    if(ev.key === 'Escape' && railOpenId){ ev.stopPropagation(); railClose(); }
+    if(ev.key !== 'Escape') return;
+    // The detail first: Escape backs out one level at a time, so a reader
+    // inside a station returns to the list rather than losing the drawer.
+    if(railOpenId){ ev.stopPropagation(); railClose(); return; }
+    if(stage && stage.classList.contains('rail-open')){
+      ev.stopPropagation();
+      closeDrawer();
+    }
   });
   const btn = document.getElementById('railbtn');
   if(btn) btn.addEventListener('click', () => {
     const on = stage.classList.toggle('rail-open');
     btn.setAttribute('aria-expanded', on ? 'true' : 'false');
     if(on){ const f = rail.querySelector('.rq'); if(f) f.focus(); }
+    writeURL();
   });
+}
+// The drawer, shut, with the focus back on the control that opened it -- not
+// at the top of the document, which is where a closed overlay otherwise
+// leaves a keyboard.
+function closeDrawer(){
+  if(!stage) return;
+  stage.classList.remove('rail-open');
+  const b = document.getElementById('railbtn');
+  if(b){ b.setAttribute('aria-expanded','false'); b.focus(); }
+  writeURL();
 }
 function railClose(){
   const rail = document.getElementById('srail');

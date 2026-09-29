@@ -461,6 +461,23 @@ def build(today: dt.date | None = None, lang: str = "he",
     # site down over a picture that is behaving correctly.
     for line in rings.warnings_for(watch, m):
         print(f"  rings: WARNING {line}")
+    # A contract-v2 question does not draw the derived ring. It registered a
+    # second ring by hand, that basket is what it is SCORED on, and drawing
+    # the edge derivation beside it would put two different second rings on
+    # one card with only one of them in the contract.
+    #
+    # ``mixed`` goes with the derivation that produced it: "n suppliers serve
+    # both sides" is a statement about which edges the map records, and the
+    # registered basket did not come from those edges.
+    from chains import preregister as _prereg
+    for r in watch:
+        if not _prereg.is_v2(r):
+            continue
+        w2, l2 = _prereg.ring2_of(r)
+        r["win2"], r["lose2"] = list(w2), list(l2)
+        r["ring2_edges"] = []
+        r.pop("mixed", None)
+        r["contract_version"] = 2
     for r in watch:
         if r.get("locked"):
             # ``mixed`` goes too: it is a count derived from baskets this row

@@ -336,8 +336,13 @@ def test_the_gradient_is_offset_and_stops_at_seventy_percent():
 
 
 @pytest.mark.parametrize("where", [
-    'r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="2" filter="url(#inset)"',
+    # Ring 1. Its stroke thins on a contract-v2 card, where the first ring is
+    # the diagnostic and the scored ring carries the weight.
+    'r="${r}" fill="#0b0e14" stroke="${col}" stroke-width="${v2?1.4:2}"',
     'r="${R2R}" fill="#0b0e14" stroke="${col}"',
+    # The registered ring of a contract-v2 card: bigger than a derived one,
+    # because it is the basket the question is scored on.
+    'r="${V2_R}" fill="#0b0e14" stroke="${col}" stroke-width="2"',
     'r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"',
 ])
 def test_the_constellation_nodes_are_inset(where):
@@ -345,7 +350,9 @@ def test_the_constellation_nodes_are_inset(where):
 
 
 def test_every_inset_circle_has_a_highlight_two_pixels_inside_it():
-    assert TPL.count('fill="url(#hilite)" pointer-events="none"') == 5
+    """Seven: the five the card always had, plus the two a contract-v2 card
+    draws -- its registered ring node and its own centre."""
+    assert TPL.count('fill="url(#hilite)" pointer-events="none"') == 7
 
 
 def test_the_countdown_ring_gets_an_inner_disc_to_be_inset():

@@ -516,19 +516,31 @@
   // equal-weight map at the pre-registered primary horizon. Every other
   // horizon, and SOX, is a diagnostic read beside it and never a second chance
   // to be right. N counts questions, not horizons.
+  // Contract v2 scores the SECOND ring -- the basket its author registered
+  // by hand before the answer date. The first ring is still measured and
+  // still shown, as a diagnostic, because the direct reaction is worth
+  // reading and is not what was claimed.
+  const V2 = r => r && r.contract_version === 2;
+  const SCORED_LABEL = 'Second ring (scored)';
+  const DIRECT_LABEL = 'Direct (diagnostic)';
+
   function officialScore(r){
     if(!r.entry_date) return '';
     const PH = String(r.primary_horizon||20);
-    const hz = r.horizons||{}, h = hz[PH];
+    const v2 = V2(r);
+    const hz = (v2 ? r.horizons2 : r.horizons) || {}, h = hz[PH];
     const diag = Object.keys(hz).filter(k=>k!==PH && hz[k])
       .sort((a,b)=>Number(a)-Number(b)).map(k=>`${k}d ${p2(hz[k].spread)}`);
     if(h && h.spread_sox!=null) diag.push(`vs ${(window.BENCH_LABEL||'SOX')} at ${PH}d ${p2(h.spread_sox)}`);
+    // The first ring of a v2 question, beside the score it is not part of.
+    const first = v2 ? ((r.horizons||{})[PH]) : null;
+    if(first) diag.push(`${DIRECT_LABEL} at ${PH}d ${p2(first.spread)}`);
     const big = 'display:block;font-family:IBM Plex Mono,monospace;font-weight:500;line-height:1.1';
     const val = h
       ? `<b data-official-value class="${h.hit?'pos':'neg'}" style="${big};font-size:1.6rem">${p2(h.spread)}</b><span>${h.hit?'hit':'miss'} · locked ${esc(h.date)}</span>`
       : `<b data-official-value class="flat" style="${big};font-size:1.1rem">pending</b><span>locks at session ${PH} · day ${esc(r.day_index)} of ${PH}</span>`;
-    return `<div class="official" data-official="${PH}" data-official-state="${h?'scored':'pending'}" style="margin-top:14px;padding:10px 12px;border:1px solid #31405a;border-radius:8px">
-      <div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#b3bccb;margin-bottom:6px">Official score · ${PH}-session excess vs EW_MAP</div>
+    return `<div class="official" data-official="${PH}" data-official-state="${h?'scored':'pending'}" data-official-ring="${v2?'2':'1'}" style="margin-top:14px;padding:10px 12px;border:1px solid #31405a;border-radius:8px">
+      <div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#b3bccb;margin-bottom:6px">Official score · ${PH}-session excess vs EW_MAP${v2?` · ${SCORED_LABEL}`:''}</div>
       <div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7d8797">${val}</div>
       ${diag.length?`<div data-diagnostic style="margin-top:8px;font-family:IBM Plex Mono,monospace;font-size:.6rem;color:#7d8797">Diagnostic, not the score · ${diag.map(esc).join(' · ')}</div>`:''}
     </div>`;
@@ -811,7 +823,33 @@
         other horizons and the second benchmark have nothing to report.</p>
       <div class="tiles">${upcoming}</div>`}
     </div>`;
-    return counts + head + diag;
+    return counts + head + byContract(R, lbl, tile, pct, p2) + diag;
+  }
+
+  // Two contract versions in one record, reported apart and never averaged.
+  // A v1 hit rate is measured on the first ring and a v2 one on the second;
+  // they answer different questions, so a rate over the mixture answers
+  // neither. The block appears only once there are two versions to report --
+  // a panel saying "100% of this record is v1" is noise.
+  function byContract(R, lbl, tile, pct, p2){
+    const B = R && R.by_contract;
+    if(!B || !B.versions) return '';
+    const keys = Object.keys(B.versions).sort();
+    if(keys.length < 2) return '';
+    const rows = keys.map(k => {
+      const v = B.versions[k];
+      const n = v.n || 0;
+      return tile(n, `${v.label} · N`, '', ` data-contract="${esc(k)}"`)
+        + tile(n ? `${v.hits}/${n}` : '—',
+               n ? `${v.label} · hit rate ${pct(v.hit_rate)}` : NOT_ENOUGH)
+        + tile(n && v.mean_excess!=null ? p2(v.mean_excess) : '—',
+               n ? `${v.label} · mean excess` : NOT_ENOUGH);
+    }).join('');
+    return `<div class="bycontract" data-by-contract="${keys.length}" style="margin-top:6px">
+      ${lbl('Scored apart · never averaged together')}
+      <div class="tiles">${rows}</div>
+      ${B.mixed ? `<p class="tcap" data-not-pooled>${esc(R.versions_not_pooled||'')}</p>` : ''}
+    </div>`;
   }
 
   window.renderTrack = function(root, data, opts){

@@ -402,8 +402,27 @@ def test_the_marks_come_from_the_repository_with_no_url_at_all(monkeypatch,
     assert a["mu_fq4"]["note"] == "from git"
     direct = [r for r in f if r["order"] == 1]
     assert [r["id"] for r in direct] == ["f-1"]
-    # The indirect twin rides along, derived from the same mark and the map.
-    assert [r["id"] for r in f if r["order"] == 2] == ["mu_fq4-2026-09-30-r2"]
+    # mu_fq4 gets NO twin: every supplier its second ring would have drawn --
+    # ASML, Advantest, Applied Materials, Hanmi, Siltronic -- sells into the
+    # memory layer, which is the layer the question is asked inside, so none
+    # of them has a direction. No ring, no claim, no twin.
+    assert [r["id"] for r in f if r["order"] == 2] == []
+    assert problems == []
+
+
+def test_a_question_whose_ring_survives_still_gets_its_twin(monkeypatch,
+                                                            tmp_path):
+    """The other half of the rule above: a second ring that IS one-sided on
+    the map is still drawn and still minted."""
+    marks_env(monkeypatch, tmp_path, {
+        "answers": {"intc_q3": {"status": "yes"}},
+        "forecasts": [a_forecast(id="f-2", qid="intc_q3",
+                                 win=["intc", "asml", "ibiden"],
+                                 lose=["tsmc", "samsung"])]})
+    _a, f, problems = answers.read()
+    twins = [r for r in f if r["order"] == 2]
+    assert [r["id"] for r in twins] == ["intc_q3-2026-09-30-r2"]
+    assert twins[0]["win"] and twins[0]["lose"]
     assert problems == []
 
 

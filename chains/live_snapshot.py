@@ -446,9 +446,17 @@ def build(today: dt.date | None = None, lang: str = "he",
     # holds, and a basket sitting in the JSON is the answer to "who moves"
     # whether or not any pixel draws it. The locked card draws a placeholder.
     rings.for_rows(watch, m)
+    # A side with nothing mapped and the other with several is a gap in the
+    # map, not a finding about the world. A warning, never a failure: the
+    # drawing already refuses to guess, and stopping the build would take the
+    # site down over a picture that is behaving correctly.
+    for line in rings.warnings_for(watch, m):
+        print(f"  rings: WARNING {line}")
     for r in watch:
         if r.get("locked"):
-            for k in ("win", "lose", "win2", "lose2", "ring2_edges"):
+            # ``mixed`` goes too: it is a count derived from baskets this row
+            # is not publishing, and a number about hidden data is data.
+            for k in ("win", "lose", "win2", "lose2", "ring2_edges", "mixed"):
                 r.pop(k, None)
 
     # Which terms a card shows is decided HERE, once, and shipped. The page
@@ -487,8 +495,12 @@ def build(today: dt.date | None = None, lang: str = "he",
         # label, definition in THIS page's language, and the match strings the
         # page needs to place them. Free tier: a definition explains a word
         # that is already on the page and never adds a fact of its own.
+        # ``stop`` rides with ``match`` or the page would underline a word
+        # Python already decided is not a term, and the chip row and the
+        # underline would disagree about the same sentence.
         "glossary": {t["id"]: {"label": t["label"], "def": t[lang],
-                               "match": list(t["match"])}
+                               "match": list(t["match"]),
+                               "stop": list(t.get("stop") or [])}
                      for t in glossary.load()},
         "signup": signup_url(),
         "n_open": sum(1 for r in watch if r["open"]),

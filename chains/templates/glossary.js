@@ -42,14 +42,42 @@
   const rx = m => new RegExp(m.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),
                              cased(m) ? 'g' : 'gi');
 
+  // A match string can be an ordinary English word that happens also to be
+  // jargon -- "track" is the coater, "test" is the tester, "node" is the
+  // process node -- and whole-word matching cannot tell them apart. A term
+  // may list `stop` phrases; a match COVERED by one is not a match. Covered,
+  // not merely nearby: "track record" stops the "track" inside it and leaves
+  // a later "track" in the same sentence alone. Always case-insensitive: an
+  // idiom is an idiom at the start of a sentence too.
+  //
+  // The same rule runs in chains/glossary.py, which decides WHICH terms a
+  // card shows. Without it here the chips and the underlines would disagree
+  // about the same sentence.
+  function stopped(low, s, e, id){
+    const G = terms(), st = (G[id] && G[id].stop) || [];
+    for(const phrase of st){
+      const p = String(phrase||'').toLowerCase();
+      if(!p) continue;
+      let at = low.indexOf(p);
+      while(at !== -1){
+        if(at <= s && e <= at + p.length) return true;
+        at = low.indexOf(p, at + 1);
+      }
+    }
+    return false;
+  }
+
   function spans(text, only){
-    const claimed = [], out = [];
+    const claimed = [], out = [], low = String(text||'').toLowerCase();
     for(const [m, id] of pairs()){
       if(only && only.indexOf(id) < 0) continue;
       const re = rx(m); let hit;
       while((hit = re.exec(text)) !== null){
         const s = hit.index, e = s + hit[0].length;
         if(alnum(text[s-1]) || alnum(text[e])) continue;
+        // Not claimed either: a stopped span stays available to a shorter
+        // term that legitimately owns it.
+        if(stopped(low, s, e, id)) continue;
         if(claimed.some(c => s < c[1] && c[0] < e)) continue;
         claimed.push([s,e]); out.push([s,e,id]);
       }

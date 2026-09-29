@@ -35,13 +35,23 @@ def edge(f, t, **over):
 
 # reporter -> the company the question is about; a/b -> the registered win
 # basket; c -> the registered lose basket.
+#
+# THE LAYERS ARE LOAD-BEARING. A candidate that supplies any node in the same
+# layer as a first-ring node on the OTHER side has no direction and leaves
+# both sides -- see chains/rings.py and tests/test_rings_mixed.py. Everything
+# here used to sit in one layer, which under that rule makes every supplier
+# serve both sides and empties the fixture. The two baskets are separated so
+# these tests go on testing what they were written for: the exact-node rule,
+# the ordering, and the cap.
 DOC = {
-    "nodes": [node(i) for i in
-              ("reporter", "a", "b", "c", "s1", "s2", "s3", "s4", "s5", "s6",
-               "s7", "s8", "s9", "both", "p1", "rival")]
-    + [node("cash", price_symbol=None),          # nothing to price it with
-       node("noticker", ticker=None),            # not a listed company
-       node("none_kind", price_symbol_kind="none")],
+    "nodes": [node(i, layer="L1") for i in ("reporter", "a", "b")]
+    + [node("c", layer="L2")]
+    + [node(i, layer="L3") for i in
+       ("s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "both", "p1",
+        "rival")]
+    + [node("cash", price_symbol=None, layer="L3"),   # nothing to price it
+       node("noticker", ticker=None, layer="L3"),     # not a listed company
+       node("none_kind", price_symbol_kind="none", layer="L3")],
     "subnodes": [],
     "edges": [
         edge("s1", "a"), edge("s2", "a", share="20% of a's cost"),
@@ -146,7 +156,8 @@ def test_a_node_with_no_incoming_edge_has_no_second_ring():
     so most equipment questions get no ring at all. Empty is the right answer
     and it is not an error."""
     got = rings.second_ring(DOC, ["s1"], [], None)
-    assert got == {"win2": [], "lose2": [], "ring2_edges": []}
+    assert got == {"win2": [], "lose2": [], "ring2_edges": [], "mixed": 0}
+    assert got["mixed"] == 0, "nothing was dropped; there was nothing to drop"
 
 
 def test_an_empty_basket_gives_an_empty_ring():

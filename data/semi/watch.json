@@ -36,7 +36,19 @@
   "leaks": [],
   "lane": "hbm",
   "lbl": "Micron",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "tel",
+   "shinetsu",
+   "globalwafers"
+  ],
+  "ring2_lose": [
+   "advantest"
+  ],
+  "ring2_rationale": {
+   "win": "YES includes capex to match: Micron-specific equipment and wafer suppliers not recorded as suppliers to SK hynix or Samsung.",
+   "lose": "Established SK hynix memory/HBM tester; share lost by SK hynix reduces its test orders."
+  }
  },
  {
   "id": "smsg_pre",

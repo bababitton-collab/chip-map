@@ -98,6 +98,29 @@ def benchmarks_for(dom: str | None = None) -> dict:
 CONTRACT_FIELDS = ("qid", "win", "lose", "kind", "yes_criteria",
                    "no_criteria", "horizons", "primary_horizon", "benchmarks",
                    "sign_convention", "observe_only")
+
+# ---- contract v2: the second ring is the scored basket ----------------------
+# The first ring reprices on the report day -- that is the reporter and the
+# companies a reader already knows to look at. The second ring is what stands
+# behind them, and it moves later, which is the only part of this that is a
+# forecast rather than a summary. So a v2 question registers its OWN
+# second-ring basket, by hand, and that basket is what the official score
+# reads. It is not derived from the map's edges: chains/rings.py draws what
+# the map happens to record, and what the map happens to record is not a
+# claim anybody made in advance.
+#
+# v1 IS NOT TOUCHED. A question with no second-ring basket hashes to exactly
+# the bytes it always did. The version rides on the question, not on this
+# module, so every hash already published stays verifiable forever.
+CONTRACT_VERSION_2 = 2
+OFFICIAL_RING2 = "ring2"
+OFFICIAL_FIRST = "first"
+RING2_WIN, RING2_LOSE = "ring2_win", "ring2_lose"
+RING2_RATIONALE = "ring2_rationale"
+# Appended in this order; sort_keys puts them where they belong in the bytes.
+CONTRACT_FIELDS_V2 = CONTRACT_FIELDS + (
+    "contract_version", "official_basket", RING2_WIN, RING2_LOSE,
+    RING2_RATIONALE)
 ENTRY_FIELDS = ("qid", "answer_date", "committed_at", "sha256",
                 "primary_horizon", "valid_preregistration")
 # Only on an entry that was re-committed, after the fields above.
@@ -135,12 +158,114 @@ def _wording(row: dict, text: dict | None, part: str) -> str:
 
 
 # ---------------------------------------------------------------- the contract
+def is_v2(row: dict) -> bool:
+    """Whether this question registers a second-ring basket of its own.
+
+    The declaration is the presence of the basket, not a version number in the
+    data. A question cannot be marked v2 and then carry nothing, and a question
+    that carries a ring-2 basket cannot be scored as though it had not.
+    """
+    return bool(row.get(RING2_WIN) or row.get(RING2_LOSE))
+
+
+def _ring2_rationale(row: dict) -> dict:
+    """The author's one line per non-empty side, trimmed, and nothing else.
+
+    A side with no basket carries no sentence: an explanation of an empty
+    basket is prose inside a hash, and it would have to be kept forever.
+    """
+    qid = _qid(row)
+    src = row.get(RING2_RATIONALE) or {}
+    if not isinstance(src, dict):
+        raise PreregisterError(
+            f"{qid}: {RING2_RATIONALE} is not a mapping of side to sentence.")
+    out = {}
+    for side, key in (("win", RING2_WIN), ("lose", RING2_LOSE)):
+        line = " ".join(str(src.get(side) or "").split())
+        if row.get(key) and not line:
+            raise PreregisterError(
+                f"{qid}: {key} is registered with no rationale. The scored "
+                f"basket says in one line why it is the basket, or it is not "
+                f"committed.")
+        if line and not row.get(key):
+            raise PreregisterError(
+                f"{qid}: a {side} rationale with no {key} basket.")
+        if line:
+            out[side] = line
+    return out
+
+
+def ring2_of(row: dict) -> tuple[list[str], list[str]]:
+    """The author's second-ring baskets, sorted, as the contract carries them.
+
+    Sorted for the same reason ``win`` and ``lose`` are: the hash must not
+    depend on the order somebody happened to type the names in.
+    """
+    return (sorted(row.get(RING2_WIN) or []), sorted(row.get(RING2_LOSE) or []))
+
+
+def _ring2_shape_problems(row: dict) -> list[str]:
+    """What is wrong with a v2 basket, without needing the map.
+
+    The priced-node test needs the map and lives in ``ring2_problems``; these
+    three can be answered from the row alone, so they are answered before the
+    bytes are built rather than after they are hashed.
+    """
+    qid = _qid(row)
+    w, l = ring2_of(row)
+    first = set(row.get("win") or []) | set(row.get("lose") or [])
+    out = []
+    if not w and not l:
+        out.append(f"{qid}: a v2 contract with both second-ring sides empty "
+                   f"registers no scored basket")
+    both = sorted(set(w) & set(l))
+    if both:
+        out.append(f"{qid}: {', '.join(both)} on both second-ring sides -- a "
+                   f"leg cannot be up and down on the same answer")
+    overlap = sorted((set(w) | set(l)) & first)
+    if overlap:
+        out.append(f"{qid}: {', '.join(overlap)} is in the first ring and in "
+                   f"the second. The second ring is what the first ring "
+                   f"depends on, not a copy of it")
+    return out
+
+
+def ring2_problems(row: dict, doc: dict) -> list[str]:
+    """Everything wrong with a v2 basket, the map included.
+
+    Separate from ``contract()`` because the priced-node test needs the map
+    and ``contract()`` is a pure function of a row and its wording. Both
+    --check and --write call this, so neither path can commit a basket the
+    ledger would silently drop.
+    """
+    if not is_v2(row):
+        return []
+    out = _ring2_shape_problems(row)
+    ok = {n["id"] for n in doc.get("nodes", [])
+          if n.get("ticker") and n.get("price_symbol")
+          and n.get("price_symbol_kind") != "none"}
+    w, l = ring2_of(row)
+    unpriced = sorted(i for i in w + l if i not in ok)
+    if unpriced:
+        out.append(f"{_qid(row)}: {', '.join(unpriced)} cannot be priced, so "
+                   f"the scored basket has a leg the ledger cannot read")
+    return out
+
+
 def contract(row: dict, text: dict | None = None) -> dict:
     """Exactly the fields that must not move once committed, and no others.
 
     Prose that is not a scoring rule -- who, the label, the date, the leaks --
     stays out, so correcting it does not look like moving the goalposts. The
     answer date is carried by the commitment entry, where it is checked.
+
+    VERSION 1 IS FROZEN
+    -------------------
+    A question with no second-ring basket gets exactly the eleven fields it
+    always got, in the same order, with the same values. Every hash already
+    published was taken over those bytes and none of them may move. The v2
+    fields are appended only for a question that registers a second ring, so
+    the version is a property of the question rather than of this file.
     """
     qid = _qid(row)
     yes = _wording(row, text, "yes")
@@ -148,7 +273,7 @@ def contract(row: dict, text: dict | None = None) -> dict:
         raise PreregisterError(
             f"{qid}: no yes wording. A contract with no rule for classifying "
             f"the answer fixes nothing, so it is not committed.")
-    return {
+    out = {
         "qid": qid,
         "win": sorted(row.get("win") or []),
         "lose": sorted(row.get("lose") or []),
@@ -161,6 +286,33 @@ def contract(row: dict, text: dict | None = None) -> dict:
         "sign_convention": SIGN_CONVENTION,
         "observe_only": bool(row.get("observe_only")),
     }
+    if not is_v2(row):
+        return out
+    bad = _ring2_shape_problems(row)
+    if bad:
+        raise PreregisterError("; ".join(bad))
+    w, l = ring2_of(row)
+    out.update({
+        "contract_version": CONTRACT_VERSION_2,
+        "official_basket": OFFICIAL_RING2,
+        RING2_WIN: w,
+        RING2_LOSE: l,
+        RING2_RATIONALE: _ring2_rationale(row),
+    })
+    return out
+
+
+def official_basket(contract_: dict) -> tuple[list[str], list[str]]:
+    """The two sides the contract says are SCORED, whichever version it is.
+
+    v1 scores the first ring. v2 scores the second. Everything that asks "what
+    was the claim" asks here, so the answer cannot drift apart from the bytes
+    that were hashed.
+    """
+    if contract_.get("official_basket") == OFFICIAL_RING2:
+        return (list(contract_.get(RING2_WIN) or []),
+                list(contract_.get(RING2_LOSE) or []))
+    return list(contract_.get("win") or []), list(contract_.get("lose") or [])
 
 
 def canonical(row: dict, text: dict | None = None) -> bytes:
@@ -259,8 +411,12 @@ def ew_map_problems(qid: str, entry: dict, contract_: dict,
     rec = entry.get("ew_map")
     if not rec:
         return []                       # committed before the guard existed
-    if contract_.get("lose"):
-        return []                       # both sides: the benchmark cancels
+    # Both sides: the benchmark cancels algebraically. The sides that matter
+    # are the SCORED ones -- a v2 question with a first ring on both sides and
+    # a scored second ring on one is exposed to EW_MAP exactly as a one-sided
+    # v1 question is, and asking the wrong basket would wave it through.
+    if official_basket(contract_)[1]:
+        return []
     if entry["answer_date"] < today:
         return []                       # already past its date
     now = ew_map_fingerprint(doc)
@@ -327,6 +483,10 @@ def entries(rows: list[dict], texts: dict | None, prior: list[dict] | None,
     is refused. None skips the gate -- the command line never passes None.
     """
     day = (today or dt.datetime.now(dt.timezone.utc).date()).isoformat()
+    if doc is not None:
+        bad = [p for r in rows for p in ring2_problems(r, doc)]
+        if bad:
+            raise PreregisterError("; ".join(bad))
     by = {e["qid"]: e for e in (prior or [])}
     out, seen = [], set()
     for r in rows:
@@ -420,6 +580,11 @@ def check(rows: list[dict], texts: dict | None,
     problems = []
     for r in rows:
         qid = _qid(r)
+        # Before anything about the entry: a basket the ledger cannot read is
+        # not a contract, whether or not it has been committed yet. Saying so
+        # here means every build refuses it, not only the day somebody tries
+        # to score it.
+        problems += ring2_problems(r, doc)
         e = by.get(qid)
         if e is None:
             problems.append(f"{qid}: no commitment")

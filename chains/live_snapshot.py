@@ -98,6 +98,15 @@ HARD_LIMIT = 256_000            # what the artifact database refuses
 
 SPARK_WEEKS = 52
 
+# Everything a locked row does NOT publish. Both rings, and the count derived
+# from them: a constellation is one of the things the paywall holds, and a
+# basket sitting in the JSON is the answer to "who moves" whether or not any
+# pixel draws it. The contract-v2 keys are here for a second reason -- they
+# are inside the hashed contract, whose bytes stay paid until the answer is
+# in, so shipping them would open half the contract while the hash stays shut.
+LOCKED_STRIP = ("win", "lose", "win2", "lose2", "ring2_edges", "mixed",
+                "ring2_win", "ring2_lose", "ring2_rationale")
+
 # What differs between the two snapshots is which language is read out of the
 # map, and which watch list. Every price, return and pressure number is
 # computed once and shared.
@@ -456,7 +465,12 @@ def build(today: dt.date | None = None, lang: str = "he",
         if r.get("locked"):
             # ``mixed`` goes too: it is a count derived from baskets this row
             # is not publishing, and a number about hidden data is data.
-            for k in ("win", "lose", "win2", "lose2", "ring2_edges", "mixed"):
+            #
+            # The v2 baskets go with them. They are inside the hashed contract,
+            # whose bytes stay paid until the answer is in -- publishing the
+            # scored basket on a locked card would reveal the half of the
+            # contract the paywall is holding while the hash stays unopened.
+            for k in LOCKED_STRIP:
                 r.pop(k, None)
 
     # Which terms a card shows is decided HERE, once, and shipped. The page

@@ -85,9 +85,10 @@ def test_a_fired_trigger_has_a_date_a_source_and_its_type():
 
 
 def test_every_source_is_one_of_the_closure_pages():
-    """No source outside the list in semi-closure.md, which is what was read."""
+    """No source outside what was read: the 24 pages in semi-closure.md, and
+    the two analyst pages amendment 2 supplied for commodity DRAM (2026-10-02)."""
     allowed = {s for b in BN for s in urls(b) if s}
-    assert len(allowed) <= 24
+    assert len(allowed) <= 24 + 2
     for e in DOC["edges"]:
         if e.get("source_type"):
             assert e["source"] in allowed | FAILED or e["source"].startswith("https://"), e
@@ -198,3 +199,26 @@ def test_the_2026_09_29_splits_leave_no_seam(sym):
     assert len(rows) >= 5
     moves = [b / a - 1 for (_, a), (_, b) in zip(rows, rows[1:])]
     assert max(abs(m) for m in moves) < 0.3, moves
+
+
+# -- amendment 2: buyers of memory, hurt by commodity DRAM -----------------------
+def test_hurt_links_are_on_the_bottleneck_and_never_edges():
+    b = next(b for b in BN if b["id"] == "dram_commodity")
+    links = {h["node"]: h for h in b["hurt_links"]}
+    assert set(links) == {"hpq", "lenovo"} and set(links) <= set(b["hurt"])
+    assert all(h["relation"] == "hurt" and h["source_type"] == "analyst" for h in links.values())
+    for e in DOC["edges"]:
+        assert "hpq" not in (e["from"], e["to"]) and "lenovo" not in (e["from"], e["to"])
+
+
+def test_a_hurt_buyer_never_reaches_a_derived_supplier_ring():
+    for first in (["samsung", "skhynix", "mu"], ["nanya", "winbond"]):
+        got = rings.second_ring(DOC, first, [])
+        assert not {"hpq", "lenovo"} & set(got["win2"] + got["lose2"])
+
+
+def test_commodity_dram_stage_rests_on_a_fetched_source():
+    b = next(b for b in BN if b["id"] == "dram_commodity")
+    assert b["stage"] == "peaking" and b["stage_source"]
+    assert b["top_signals"]["customer_affordability_or_spec_downgrade"]["value"] is True
+    assert b["top_risk"] == 1

@@ -274,7 +274,44 @@
       ]
      }
     ],
-    "lose": []
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
    },
    "dropped_as_mixed": [],
    "vs_draft": {
@@ -296,11 +333,14 @@
      "smci",
      "foxconn"
     ],
-    "lose_added": []
+    "lose_added": [
+     "nanya",
+     "winbond"
+    ]
    },
    "empty": {
     "win": false,
-    "lose": true
+    "lose": false
    }
   },
   {
@@ -601,7 +641,80 @@
       ]
      }
     ],
-    "lose": []
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
    },
    "dropped_as_mixed": [],
    "vs_draft": {
@@ -625,11 +738,15 @@
      "lrcx",
      "amat"
     ],
-    "lose_added": []
+    "lose_added": [
+     "nanya",
+     "winbond",
+     "mu"
+    ]
    },
    "empty": {
     "win": false,
-    "lose": true
+    "lose": false
    }
   },
   {
@@ -855,7 +972,116 @@
       ]
      }
     ],
-    "lose": []
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
    },
    "dropped_as_mixed": [],
    "vs_draft": {
@@ -876,11 +1102,16 @@
     "lose_dropped": [
      "skc"
     ],
-    "lose_added": []
+    "lose_added": [
+     "nanya",
+     "winbond",
+     "skhynix",
+     "mu"
+    ]
    },
    "empty": {
     "win": false,
-    "lose": true
+    "lose": false
    }
   },
   {
@@ -1496,6 +1727,114 @@
         "lagging": false
        }
       ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
      }
     ]
    },
@@ -1519,7 +1858,11 @@
     "lose_added": [
      "hoya",
      "sumco",
-     "tok"
+     "tok",
+     "nanya",
+     "winbond",
+     "skhynix",
+     "mu"
     ]
    },
    "empty": {
@@ -1747,7 +2090,44 @@
    },
    "candidates": {
     "win": [],
-    "lose": []
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
    },
    "dropped_as_mixed": [],
    "vs_draft": {
@@ -1762,11 +2142,14 @@
      "globalwafers",
      "shinetsu"
     ],
-    "lose_added": []
+    "lose_added": [
+     "nanya",
+     "winbond"
+    ]
    },
    "empty": {
     "win": true,
-    "lose": true
+    "lose": false
    }
   },
   {
@@ -3006,6 +3389,78 @@
         "lagging": false
        }
       ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
      }
     ]
    },
@@ -3026,7 +3481,10 @@
     "lose_added": [
      "hoya",
      "sumco",
-     "tok"
+     "tok",
+     "nanya",
+     "winbond",
+     "mu"
     ]
    },
    "empty": {
@@ -3386,7 +3844,152 @@
    },
    "candidates": {
     "win": [],
-    "lose": []
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "samsung",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
    },
    "dropped_as_mixed": [],
    "vs_draft": {
@@ -3402,11 +4005,17 @@
      "smci",
      "foxconn"
     ],
-    "lose_added": []
+    "lose_added": [
+     "nanya",
+     "samsung",
+     "winbond",
+     "skhynix",
+     "mu"
+    ]
    },
    "empty": {
     "win": true,
-    "lose": true
+    "lose": false
    }
   },
   {
@@ -3571,9 +4180,9 @@
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
         "exposure": null,
         "lagging": false
        },
@@ -3614,9 +4223,9 @@
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
         "exposure": null,
         "lagging": false
        },
@@ -4226,9 +4835,9 @@
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
         "exposure": null,
         "lagging": false
        },
@@ -4269,9 +4878,9 @@
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
         "exposure": null,
         "lagging": false
        },
@@ -6350,9 +6959,9 @@
        {
         "bottleneck": "dram_commodity",
         "role": "hurt",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
         "exposure": null,
         "lagging": false
        }
@@ -6775,7 +7384,44 @@
       ]
      }
     ],
-    "lose": []
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
    },
    "dropped_as_mixed": [],
    "vs_draft": {
@@ -6801,11 +7447,14 @@
      "amd",
      "avgo"
     ],
-    "lose_added": []
+    "lose_added": [
+     "nanya",
+     "winbond"
+    ]
    },
    "empty": {
     "win": false,
-    "lose": true
+    "lose": false
    }
   },
   {

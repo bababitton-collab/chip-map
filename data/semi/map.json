@@ -2117,6 +2117,1033 @@
    "price_note": "US line for Asm Pacific Technology Ltd ADR; home listing 0522.HK is not on EODHD -- VENDOR NAME DIFFERS, taken from your list as a rename",
    "line": "packaging",
    "short": "ASMPT"
+  },
+  {
+   "id": "sndk",
+   "name": "Sandisk",
+   "ticker": "SNDK",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "NAND flash and SSD",
+   "price_symbol": "SNDK.US",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Sandisk",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "kioxia",
+   "name": "Kioxia Holdings",
+   "ticker": "285A.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "NAND flash",
+   "price_symbol": "285A.T",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Kioxia",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "simo",
+   "name": "Silicon Motion",
+   "ticker": "SIMO",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "NAND / SSD controllers",
+   "price_symbol": "SIMO.US",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Silicon",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "phison",
+   "name": "Phison Electronics",
+   "ticker": "8299.TWO",
+   "exchange": "TPEx",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "NAND / SSD controllers and modules",
+   "price_symbol": "8299.TWO",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Phison",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "wdc",
+   "name": "Western Digital",
+   "ticker": "WDC",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "Nearline HDD",
+   "price_symbol": "WDC.US",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Western",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "stx",
+   "name": "Seagate Technology",
+   "ticker": "STX",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "Nearline HDD",
+   "price_symbol": "STX.US",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Seagate",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "resonac",
+   "name": "Resonac Holdings",
+   "ticker": "4004.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "HDD media; semiconductor materials",
+   "price_symbol": "4004.T",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Resonac",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "nanya",
+   "name": "Nanya Technology",
+   "ticker": "2408.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "Commodity DRAM",
+   "price_symbol": "2408.TW",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Nanya",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "winbond",
+   "name": "Winbond Electronics",
+   "ticker": "2344.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "Commodity DRAM and flash",
+   "price_symbol": "2344.TW",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Winbond",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "tomen_devices",
+   "name": "Tomen Devices",
+   "ticker": "2737.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "Memory distributor (Samsung products in Japan)",
+   "price_symbol": "2737.T",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Tomen",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "rambus",
+   "name": "Rambus",
+   "ticker": "RMBS",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "Memory interface chips; a DRAM buyer",
+   "price_symbol": "RMBS.US",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Rambus",
+   "added": "2026-10-01 semi closure, section D"
+  },
+  {
+   "id": "montage",
+   "name": "Montage Technology",
+   "ticker": "688008.SS",
+   "exchange": "SSE STAR",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "Memory interface chips; a DRAM buyer",
+   "price_symbol": "688008.SHG",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Montage",
+   "added": "2026-10-01 semi closure, section D"
+  },
+  {
+   "id": "kokusai",
+   "name": "Kokusai Electric",
+   "ticker": "6525.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L2",
+   "role": "Batch deposition tools, NAND/DRAM-heavy",
+   "price_symbol": "6525.T",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Kokusai",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "formfactor",
+   "name": "FormFactor",
+   "ticker": "FORM",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L2",
+   "role": "MEMS probe cards incl. HBM/DRAM",
+   "price_symbol": "FORM.US",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "FormFactor",
+   "added": "2026-10-01 semi closure, section B",
+   "notes": "MEMS probe cards for wafer test of HBM/DRAM (all three HBM makers) and foundry/logic; also HBM4 probe cards for the large GPU maker",
+   "segment_share": {
+    "value": "#1 probe-card supplier; Q2-2025 DRAM probe cards $57.1M of which HBM ~$37M (~65% of DRAM); supplies all three HBM makers but share uneven",
+    "source": "https://www.investing.com/news/transcripts/earnings-call-transcript-formfactor-q2-2025-sees-revenue-growth-and-strategic-investments-93CH-4287520",
+    "as_of": "2025-07-30"
+   }
+  },
+  {
+   "id": "mjc",
+   "name": "Micronics Japan (MJC)",
+   "ticker": "6871.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L2",
+   "role": "DRAM/HBM probe cards",
+   "price_symbol": "6871.T",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Micronics",
+   "added": "2026-10-01 semi closure, section A",
+   "notes": "DRAM/HBM probe cards (top-class DRAM share) and logic/advanced-packaging cards",
+   "segment_share": {
+    "value": "#3 globally, 13% share (2024)",
+    "source": "https://sharedresearch.jp/en/companies/6871",
+    "as_of": "2026-08-12"
+   }
+  },
+  {
+   "id": "isc",
+   "name": "ISC Co.",
+   "ticker": "095340.KQ",
+   "exchange": "KOSDAQ",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L2",
+   "role": "Test sockets",
+   "price_symbol": "095340.KQ",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "ISC Co.",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "technoprobe",
+   "name": "Technoprobe",
+   "ticker": "TPRO.MI",
+   "exchange": "Euronext Milan",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L2",
+   "role": "Probe cards",
+   "price_symbol": "TPRO.MI",
+   "price_symbol_kind": "primary",
+   "line": "memory",
+   "short": "Technoprobe",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "tdk",
+   "name": "TDK",
+   "ticker": "6762.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "HDD heads; power inductors and passives",
+   "price_symbol": "6762.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "TDK",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "jx_metals",
+   "name": "JX Advanced Metals",
+   "ticker": "5016.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "InP substrates; sputtering targets; copper foil",
+   "price_symbol": "5016.T",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "JX",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "sumitomo_electric",
+   "name": "Sumitomo Electric Industries",
+   "ticker": "5802.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "InP substrates; lasers; optical fiber",
+   "price_symbol": "5802.T",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Sumitomo",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "fujikura",
+   "name": "Fujikura",
+   "ticker": "5803.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Optical fiber and cable",
+   "price_symbol": "5803.T",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Fujikura",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "furukawa",
+   "name": "Furukawa Electric",
+   "ticker": "5801.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Optical fiber; lasers",
+   "price_symbol": "5801.T",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Furukawa",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "umicore",
+   "name": "Umicore",
+   "ticker": "UMI.BR",
+   "exchange": "Euronext Brussels",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Germanium (fiber dopant) and other materials",
+   "price_symbol": "UMI.BR",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Umicore",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "innolight",
+   "name": "Zhongji Innolight",
+   "ticker": "300308.SZ",
+   "exchange": "SZSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Optical transceivers",
+   "price_symbol": "300308.SHE",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Zhongji",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "eoptolink",
+   "name": "Eoptolink Technology",
+   "ticker": "300502.SZ",
+   "exchange": "SZSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Optical transceivers",
+   "price_symbol": "300502.SHE",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Eoptolink",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "tfc",
+   "name": "Suzhou TFC Optical",
+   "ticker": "300394.SZ",
+   "exchange": "SZSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Optical components for transceivers",
+   "price_symbol": "300394.SHE",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Suzhou",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "landmark",
+   "name": "LandMark Optoelectronics",
+   "ticker": "3081.TWO",
+   "exchange": "TPEx",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "InP epitaxial wafers for lasers",
+   "price_symbol": "3081.TWO",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "LandMark",
+   "added": "2026-10-01 semi closure, section B",
+   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet."
+  },
+  {
+   "id": "soitec",
+   "name": "Soitec",
+   "ticker": "SOI.PA",
+   "exchange": "Euronext Paris",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "SOI wafers incl. photonics-SOI",
+   "price_symbol": "SOI.PA",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Soitec",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "tower",
+   "name": "Tower Semiconductor",
+   "ticker": "TSEM",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L5",
+   "role": "Specialty foundry incl. silicon photonics",
+   "price_symbol": "TSEM.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Tower",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "iqe",
+   "name": "IQE",
+   "ticker": "IQE.L",
+   "exchange": "LSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Compound-semiconductor epitaxial wafers",
+   "price_symbol": "IQE.LSE",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "IQE",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "mxl",
+   "name": "MaxLinear",
+   "ticker": "MXL",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "Optical DSPs and drivers",
+   "price_symbol": "MXL.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "MaxLinear",
+   "added": "2026-10-01 semi closure, section B",
+   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet."
+  },
+  {
+   "id": "smtc",
+   "name": "Semtech",
+   "ticker": "SMTC",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "Optical drivers and CDRs",
+   "price_symbol": "SMTC.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Semtech",
+   "added": "2026-10-01 semi closure, section B",
+   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet."
+  },
+  {
+   "id": "aaoi",
+   "name": "Applied Optoelectronics",
+   "ticker": "AAOI",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L6",
+   "role": "Optical transceivers and lasers",
+   "price_symbol": "AAOI.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Applied",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "nittobo",
+   "name": "Nitto Boseki (Nittobo)",
+   "ticker": "3110.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "T-glass (low-CTE glass cloth)",
+   "price_symbol": "3110.T",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Nitto",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "grace_fabric",
+   "name": "Grace Fabric Technology",
+   "ticker": "1815.TWO",
+   "exchange": "TPEx",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Glass fabric (T-glass second source)",
+   "price_symbol": "1815.TWO",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Grace",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "union_tool",
+   "name": "Union Tool",
+   "ticker": "6278.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "PCB micro-drills",
+   "price_symbol": "6278.T",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Union Tool",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "topoint",
+   "name": "Topoint Technology",
+   "ticker": "8021.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "PCB micro-drills",
+   "price_symbol": "8021.TW",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Topoint",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "shengquan",
+   "name": "Jinan Shengquan Group",
+   "ticker": "605589.SS",
+   "exchange": "SSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Low-Dk resins",
+   "price_symbol": "605589.SHG",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Jinan",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "mitsui_kinzoku",
+   "name": "Mitsui Mining & Smelting (Mitsui Kinzoku)",
+   "ticker": "5706.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Ultra-thin and HVLP copper foil",
+   "price_symbol": "5706.T",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Mitsui",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "cotech",
+   "name": "Co-Tech Development",
+   "ticker": "8358.TWO",
+   "exchange": "TPEx",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "HVLP copper foil",
+   "price_symbol": "8358.TWO",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Co-Tech",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "emc",
+   "name": "Elite Material (EMC)",
+   "ticker": "2383.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "High-end copper-clad laminate",
+   "price_symbol": "2383.TW",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Elite",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "tuc",
+   "name": "Taiwan Union Technology (TUC)",
+   "ticker": "6274.TWO",
+   "exchange": "TPEx",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "High-end copper-clad laminate",
+   "price_symbol": "6274.TWO",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Taiwan",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "kinsus",
+   "name": "Kinsus Interconnect",
+   "ticker": "3189.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "ABF/BT substrates",
+   "price_symbol": "3189.TW",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Kinsus",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "nanya_pcb",
+   "name": "Nan Ya PCB",
+   "ticker": "8046.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "ABF/BT substrates",
+   "price_symbol": "8046.TW",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Nan Ya PCB",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "gce",
+   "name": "Gold Circuit Electronics",
+   "ticker": "2368.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "High-layer-count server PCBs",
+   "price_symbol": "2368.TW",
+   "price_symbol_kind": "primary",
+   "line": "packaging",
+   "short": "Gold",
+   "added": "2026-10-01 semi closure, section B",
+   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet."
+  },
+  {
+   "id": "sakai_chem",
+   "name": "Sakai Chemical Industry",
+   "ticker": "4078.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Barium titanate (MLCC dielectric)",
+   "price_symbol": "4078.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Sakai",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "kyocera",
+   "name": "Kyocera",
+   "ticker": "6971.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "MLCC and other components",
+   "price_symbol": "6971.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Kyocera",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "murata",
+   "name": "Murata Manufacturing",
+   "ticker": "6981.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "MLCC",
+   "price_symbol": "6981.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Murata",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "taiyo_yuden",
+   "name": "Taiyo Yuden",
+   "ticker": "6976.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "MLCC",
+   "price_symbol": "6976.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Taiyo Yuden",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "semco",
+   "name": "Samsung Electro-Mechanics",
+   "ticker": "009150.KS",
+   "exchange": "KRX",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "MLCC; package substrates",
+   "price_symbol": "009150.KO",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Samsung",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "yageo",
+   "name": "Yageo",
+   "ticker": "2327.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "MLCC; tantalum capacitors (KEMET)",
+   "price_symbol": "2327.TW",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Yageo",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "orient_tantalum",
+   "name": "Ningxia Orient Tantalum",
+   "ticker": "000962.SZ",
+   "exchange": "SZSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Tantalum powder and wire",
+   "price_symbol": "000962.SHE",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Ningxia",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "nichicon",
+   "name": "Nichicon",
+   "ticker": "6996.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Capacitors",
+   "price_symbol": "6996.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Nichicon",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "daishinku",
+   "name": "Daishinku",
+   "ticker": "6962.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Quartz crystals",
+   "price_symbol": "6962.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Daishinku",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "txc",
+   "name": "TXC",
+   "ticker": "3042.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Quartz crystals",
+   "price_symbol": "3042.TW",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "TXC",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "panasonic",
+   "name": "Panasonic Holdings",
+   "ticker": "6752.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Data-center BBU cells",
+   "price_symbol": "6752.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Panasonic",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "infineon",
+   "name": "Infineon Technologies",
+   "ticker": "IFX.DE",
+   "exchange": "XETRA",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L4",
+   "role": "Power discretes",
+   "price_symbol": "IFX.XETRA",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Infineon",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "onsemi",
+   "name": "onsemi",
+   "ticker": "ON",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "Power discretes",
+   "price_symbol": "ON.US",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "onsemi",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "vishay",
+   "name": "Vishay Intertechnology",
+   "ticker": "VSH",
+   "exchange": "NYSE",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L4",
+   "role": "Power discretes and passives",
+   "price_symbol": "VSH.US",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Vishay",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "vicor",
+   "name": "Vicor",
+   "ticker": "VICR",
+   "exchange": "NASDAQ",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L6",
+   "role": "Vertical power delivery modules",
+   "price_symbol": "VICR.US",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Vicor",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "avc",
+   "name": "Asia Vital Components (AVC)",
+   "ticker": "3017.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Cold plates and liquid cooling",
+   "price_symbol": "3017.TW",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Asia",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "jentech",
+   "name": "Jentech Precision",
+   "ticker": "3653.TW",
+   "exchange": "TWSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L6",
+   "role": "Cold plates / lids",
+   "price_symbol": "3653.TW",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Jentech",
+   "added": "2026-10-01 semi closure, section B"
+  },
+  {
+   "id": "lynas",
+   "name": "Lynas Rare Earths",
+   "ticker": "LYC.AX",
+   "exchange": "ASX",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Heavy rare earths ex-China",
+   "price_symbol": "LYC.AU",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Lynas",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "mp",
+   "name": "MP Materials",
+   "ticker": "MP",
+   "exchange": "NYSE",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L1",
+   "role": "Rare earths",
+   "price_symbol": "MP.US",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "MP Materials",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "fivenplus",
+   "name": "5N Plus",
+   "ticker": "VNP.TO",
+   "exchange": "TSX",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Gallium / germanium / specialty metals",
+   "price_symbol": "VNP.TO",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "5N Plus",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "dowa",
+   "name": "Dowa Holdings",
+   "ticker": "5714.T",
+   "exchange": "TSE",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "role": "Gallium and other metals",
+   "price_symbol": "5714.T",
+   "price_symbol_kind": "primary",
+   "line": "power",
+   "short": "Dowa",
+   "added": "2026-10-01 semi closure, section A"
+  },
+  {
+   "id": "corning_fiber",
+   "name": "Corning (optical fiber)",
+   "ticker": "GLW",
+   "exchange": "NYSE",
+   "us_listed": true,
+   "adr": false,
+   "layer": "L6",
+   "role": "Optical fiber and cable",
+   "price_symbol": "GLW.US",
+   "price_symbol_kind": "primary",
+   "line": "network",
+   "short": "Corning",
+   "added": "2026-10-01 semi closure, section A",
+   "notes": "Single-mode fiber, cable, connectivity; Meta deal up to $6bn multiyear (Jan-2026)",
+   "segment_share": {
+    "value": "Share unsourced estimate; Meta agreement up to $6bn; NC workforce +15-20%; fiber lead times 20 weeks (large buyers) to 1 year (small)",
+    "source": "https://investor.corning.com/news-and-events/news/news-details/2026/Corning-and-Meta-Announce-Multiyear-up-to-6-Billion-Agreement-to-Accelerate-US-Data-Center-Buildout/default.aspx",
+    "as_of": "2026-01-27"
+   }
   }
  ],
  "edges": [
@@ -3405,6 +4432,90 @@
     "https://www.sec.gov/Archives/edgar/data/1046179/000104617924000112/amkorandtsmctoexpandpartne.htm"
    ],
    "as_of": "2024-10-04"
+  },
+  {
+   "from": "iqe",
+   "to": "tower",
+   "type": "supplies",
+   "what": "InP epiwafers (multi-year agreement)",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
+   "source_type": "analyst",
+   "as_of": "2026-06-16",
+   "group": "wafers",
+   "share": null
+  },
+  {
+   "from": "corning_fiber",
+   "to": "nvda",
+   "type": "supplies",
+   "what": "Optical connectivity and fiber (US capacity partnership)",
+   "criticality": "medium",
+   "source": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx",
+   "source_type": "primary",
+   "as_of": "2026-07-28",
+   "group": "networking",
+   "share": null
+  },
+  {
+   "from": "corning_fiber",
+   "to": "amzn",
+   "type": "supplies",
+   "what": "Multiyear, multibillion-dollar agreement",
+   "criticality": "medium",
+   "source": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx",
+   "source_type": "primary",
+   "as_of": "2026-07-28",
+   "group": "networking",
+   "share": null
+  },
+  {
+   "from": "nittobo",
+   "to": "nvda",
+   "type": "supplies",
+   "what": "Premium glass cloth capacity booked",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+   "source_type": "analyst",
+   "as_of": "2026-08-06",
+   "group": "packmat",
+   "share": null
+  },
+  {
+   "from": "nittobo",
+   "to": "msft",
+   "type": "supplies",
+   "what": "Premium glass cloth capacity booked",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+   "source_type": "analyst",
+   "as_of": "2026-08-06",
+   "group": "packmat",
+   "share": null
+  },
+  {
+   "from": "nittobo",
+   "to": "googl",
+   "type": "supplies",
+   "what": "Premium glass cloth capacity booked",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+   "source_type": "analyst",
+   "as_of": "2026-08-06",
+   "group": "packmat",
+   "share": null
+  },
+  {
+   "from": "nittobo",
+   "to": "amzn",
+   "type": "supplies",
+   "what": "Premium glass cloth capacity booked",
+   "criticality": "medium",
+   "source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+   "source_type": "analyst",
+   "as_of": "2026-08-06",
+   "group": "packmat",
+   "share": null
   }
  ],
  "chokepoints": [
@@ -6990,7 +8101,7 @@
    "price_symbol_kind": "primary"
   },
   {
-   "id": "formfactor",
+   "id": "formfactor_cp13",
    "name": "FormFactor, Inc.",
    "ticker": "FORM",
    "exchange": "NASDAQ",
@@ -7049,7 +8160,7 @@
    "price_note": "no verified US line; Borsa Italiana (Milan) -- not in the EODHD exchange list on this plan"
   },
   {
-   "id": "mjc",
+   "id": "mjc_cp13",
    "name": "Micronics Japan Co. (MJC)",
    "ticker": "6871.T",
    "exchange": "TSE",
@@ -7073,9 +8184,8 @@
    "chokepoint_ids": [
     "CP13"
    ],
-   "price_symbol": "MJPNF.US",
-   "price_symbol_kind": "adr",
-   "price_note": "US line for Micronics Japan Co., Ltd.; home listing 6871.T is not on EODHD"
+   "price_symbol": "6871.T",
+   "price_symbol_kind": "primary"
   },
   {
    "id": "jem",
@@ -7817,7 +8927,7 @@
    "price_symbol_kind": "primary"
   },
   {
-   "id": "corning_fiber",
+   "id": "corning_fiber_cp10",
    "name": "Corning (optical fiber)",
    "note": "optical fiber & cable",
    "ticker": "GLW",
@@ -9114,7 +10224,7 @@
    "chokepoint_id": "CP12"
   },
   {
-   "from": "formfactor",
+   "from": "formfactor_cp13",
    "to": "advantest",
    "what": "HBM/DRAM probe cards on Advantest wafer testers",
    "group": "test",
@@ -9130,7 +10240,7 @@
    "chokepoint_id": "CP13"
   },
   {
-   "from": "mjc",
+   "from": "mjc_cp13",
    "to": "advantest",
    "what": "DRAM probe cards",
    "group": "test",
@@ -9354,7 +10464,7 @@
    "chokepoint_id": "CP10"
   },
   {
-   "from": "corning_fiber",
+   "from": "corning_fiber_cp10",
    "to": "cohr",
    "what": "fiber/cable",
    "group": "networking",
@@ -10760,5 +11870,2595 @@
     "en": "Linchpin Signal · not investment advice · sources shown where recorded; estimates labelled"
    }
   }
- }
+ },
+ "bottlenecks": [
+  {
+   "id": "nand_hbf",
+   "name": "NAND / HBF",
+   "layer": "L4",
+   "pressure": {
+    "text": "SanDisk plans first HBF (16-layer NAND stack) samples in 2H26, AI-integrated samples early 2027.",
+    "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/"
+   },
+   "rigidity": {
+    "text": "No rigidity source among the closure pages.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-06",
+    "what": "Kokusai Electric NAND revenue +84% QoQ (equipment pull for NAND).",
+    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168",
+    "source_type": "media"
+   },
+   "owners": [
+    "sndk",
+    "kioxia",
+    "samsung",
+    "skhynix",
+    "mu"
+   ],
+   "hurt": [],
+   "propagation": [
+    "simo",
+    "phison",
+    "kokusai",
+    "tomen_devices"
+   ],
+   "kill": [
+    {
+     "criterion": "YMTC Phase 3 (+100k wpm) and YMTC IPO",
+     "date": "2026-12-31"
+    }
+   ],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "stage_note": "The amendment proposes 'resolving'. The only NAND source (Kokusai, 2026-08-06) shows NAND equipment demand still rising. Not sourced as resolving.",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "hdd_nearline",
+   "name": "Nearline HDD",
+   "layer": "L4",
+   "pressure": {
+    "text": "TDK projects nearline HDD output +7% in FY to March 2027 while total HDD output falls ~2%.",
+    "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/"
+   },
+   "rigidity": {
+    "text": "HOYA's ~JPY 50B Vietnam glass-substrate plant contributes fully only around FY2028.",
+    "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2025-09-30",
+    "what": "Nearline HDD lead times stretched past 52 weeks (as of Sept 2025).",
+    "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/",
+    "source_type": "media"
+   },
+   "owners": [
+    "wdc",
+    "stx"
+   ],
+   "hurt": [],
+   "propagation": [
+    "hoya",
+    "tdk",
+    "resonac"
+   ],
+   "kill": [],
+   "exposure": {
+    "hoya": "high",
+    "tdk": "high"
+   },
+   "stage": "tightening",
+   "stage_source": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "dram_commodity",
+   "name": "Commodity DRAM",
+   "layer": "L4",
+   "pressure": {
+    "text": "No commodity-DRAM price source among the closure pages.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No rigidity source among the closure pages.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "No commodity DRAM price or allocation page among the closure sources.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "nanya",
+    "winbond",
+    "samsung",
+    "skhynix",
+    "mu"
+   ],
+   "hurt": [
+    "rambus",
+    "montage",
+    "alab"
+   ],
+   "propagation": [
+    "tomen_devices"
+   ],
+   "kill": [
+    {
+     "criterion": "CXMT Shanghai volume ramp",
+     "date": "2027"
+    }
+   ],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "stage_note": "The amendment proposes 'peaking'. No closure source for commodity DRAM pricing.",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "hbm_2027",
+   "name": "HBM 2027 pricing (HBM4)",
+   "layer": "L4",
+   "pressure": {
+    "text": "HBM share of global DRAM wafer capacity to rise from ~20% to ~30% next year.",
+    "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage"
+   },
+   "rigidity": {
+    "text": "Micron has contracted the bulk of its 2027 HBM bit supply.",
+    "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-10-01",
+    "what": "TrendForce projects 2027 average HBM selling price +121%; HBM4 ~$600 to ~$1,300.",
+    "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage",
+    "source_type": "media"
+   },
+   "owners": [
+    "skhynix",
+    "samsung",
+    "mu"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "tightening",
+   "stage_source": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": true,
+     "date": "2026-10-01",
+     "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage"
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 1,
+   "next_node": []
+  },
+  {
+   "id": "nand_dram_equipment",
+   "name": "NAND/DRAM equipment pull-forward",
+   "layer": "L2",
+   "pressure": {
+    "text": "Kokusai DRAM revenue +158% YoY; full-year guidance raised 21.4%.",
+    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168"
+   },
+   "rigidity": {
+    "text": "Kokusai operating rate 70-80% in H1, above 80% in H2.",
+    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-06",
+    "what": "Kokusai Electric NAND revenue +84% QoQ; order intake ~JPY 140B.",
+    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168",
+    "source_type": "media"
+   },
+   "owners": [
+    "kokusai",
+    "tel",
+    "lrcx"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "tel": "low"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "hbm_probe_cards",
+   "name": "HBM/DRAM probe cards",
+   "layer": "L2",
+   "pressure": {
+    "text": "Stronger-than-expected demand for DRAM-related probe cards.",
+    "source_url": "https://www.tipranks.com/news/company-announcements/micronics-japan-lifts-2q-forecast-and-unveils-3q-outlook-on-strong-memory-probe-card-demand"
+   },
+   "rigidity": {
+    "text": "No rigidity source among the closure pages.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-05-13",
+    "what": "Micronics Japan raised its 2Q forecast on DRAM probe-card demand.",
+    "source_url": "https://www.tipranks.com/news/company-announcements/micronics-japan-lifts-2q-forecast-and-unveils-3q-outlook-on-strong-memory-probe-card-demand",
+    "source_type": "media"
+   },
+   "owners": [
+    "formfactor",
+    "mjc",
+    "technoprobe"
+   ],
+   "hurt": [],
+   "propagation": [
+    "isc"
+   ],
+   "kill": [],
+   "exposure": {
+    "mjc": "low"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "tc_bonders_hbf",
+   "name": "TC bonders / HBF bonding",
+   "layer": "L2",
+   "pressure": {
+    "text": "Hanmi, Hanwha Semitech, ASMPT and Kulicke & Soffa are developing HBF TC bonders.",
+    "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/"
+   },
+   "rigidity": {
+    "text": "No rigidity source among the closure pages.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "not_yet",
+    "date": "2026-12-31",
+    "what": "First HBF TC-bonder deliveries (Hanmi) planned for 2H26.",
+    "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/",
+    "source_type": "analyst"
+   },
+   "owners": [
+    "hanmi",
+    "asmpt"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "asmpt": "medium"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "hybrid_bonding",
+   "name": "Hybrid bonding",
+   "layer": "L2",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "Section C: delayed by JEDEC's height relaxation; no source URL given.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "memory_burnin",
+   "name": "Memory burn-in",
+   "layer": "L2",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "Section C: Aehr in talks with flash and DRAM makers; no source URL given.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "inp_substrates",
+   "name": "InP substrates",
+   "layer": "L1",
+   "pressure": {
+    "text": "CPO demand; Coherent warned of InP shortages on its May earnings call.",
+    "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/"
+   },
+   "rigidity": {
+    "text": "AXT and Sumitomo hold nearly 80% of InP substrate output; China export curbs since Feb 2025.",
+    "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-06-16",
+    "what": "Average 6-inch InP wafer price +250% to ~US$5,000.",
+    "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
+    "source_type": "analyst"
+   },
+   "owners": [
+    "axti",
+    "jx_metals",
+    "sumitomo_electric"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "jx_metals": "medium",
+    "sumitomo_electric": "high"
+   },
+   "stage": "tightening",
+   "stage_source": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": true,
+     "date": "2026-06-16",
+     "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/"
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 1,
+   "next_node": []
+  },
+  {
+   "id": "cw_lasers_eml",
+   "name": "CW lasers / EML",
+   "layer": "L6",
+   "pressure": {
+    "text": "No laser source among the closure pages.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "No laser price or allocation page among the closure sources.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "lite",
+    "cohr",
+    "sumitomo_electric"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "sumitomo_electric": "high"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "stage_note": "The amendment proposes 'tightening'. No closure source covers lasers/EML.",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "photonics_soi",
+   "name": "Photonics-SOI and SiPh foundry",
+   "layer": "L1",
+   "pressure": {
+    "text": "Soitec photonics-SOI revenue to exceed $200M this fiscal year (from slightly above $100M).",
+    "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/"
+   },
+   "rigidity": {
+    "text": "Soitec ~95% of silicon-photonics substrates (UBS est.); new fab not before ~2029.",
+    "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-31",
+    "what": "Soitec capacity-reservation agreements with deposits and fixed pricing; Tower $290M SiPh prepayments (2026-05-13).",
+    "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/",
+    "source_type": "media"
+   },
+   "owners": [
+    "soitec",
+    "tower"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": true,
+     "date": "2026-08-31",
+     "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/"
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 1,
+   "next_node": []
+  },
+  {
+   "id": "optical_fiber",
+   "name": "Optical fiber and germanium",
+   "layer": "L6",
+   "pressure": {
+    "text": "Corning Optical Communications sales +32% YoY; NVIDIA fiber partnership (+50% US fiber capacity).",
+    "source_url": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx"
+   },
+   "rigidity": {
+    "text": "Glass preform is the critical bottleneck; many Chinese suppliers near capacity limits.",
+    "source_url": "https://www.crugroup.com/en/communities/thought-leadership/2026/optical-fibre-prices-rise-as-preform-availability-tightens/"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-02-26",
+    "what": "Chinese G.652.D bare fibre prices +80% between Nov 2025 and Jan 2026.",
+    "source_url": "https://www.crugroup.com/en/communities/thought-leadership/2026/optical-fibre-prices-rise-as-preform-availability-tightens/",
+    "source_type": "analyst"
+   },
+   "owners": [
+    "corning_fiber",
+    "fujikura",
+    "furukawa",
+    "sumitomo_electric"
+   ],
+   "hurt": [],
+   "propagation": [
+    "umicore"
+   ],
+   "kill": [],
+   "exposure": {
+    "corning_fiber": "medium",
+    "fujikura": "medium",
+    "umicore": "high"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": true,
+     "date": "2026-07-28",
+     "source_url": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx"
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 1,
+   "next_node": []
+  },
+  {
+   "id": "transceivers",
+   "name": "Optical transceivers",
+   "layer": "L6",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "'Sold out' per industry reports; no source URL given.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "innolight",
+    "eoptolink",
+    "tfc",
+    "aaoi",
+    "fn"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "t_glass",
+   "name": "T-glass",
+   "layer": "L1",
+   "pressure": {
+    "text": "NVIDIA, Microsoft, Google and Amazon have booked most of Nittobo's premium glass cloth.",
+    "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+   },
+   "rigidity": {
+    "text": "Nittobo targets 3x capacity by FY ending March 2029 (JPY 80B).",
+    "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-06",
+    "what": "Previously planned T-glass price hikes largely completed; no further hikes planned.",
+    "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+    "source_type": "analyst"
+   },
+   "owners": [
+    "nittobo"
+   ],
+   "hurt": [],
+   "propagation": [
+    "grace_fabric"
+   ],
+   "kill": [
+    {
+     "criterion": "Nittobo 3x capacity",
+     "date": "2029-03-31"
+    }
+   ],
+   "exposure": {},
+   "stage": "peaking",
+   "stage_source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": true,
+     "date": "2026-08-06",
+     "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": true,
+     "date": "2026-08-06",
+     "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 2,
+   "next_node": [
+    "grace_fabric"
+   ]
+  },
+  {
+   "id": "hvlp_copper_foil",
+   "name": "HVLP copper foil",
+   "layer": "L1",
+   "pressure": {
+    "text": "HVLP3-4 demand 24,000 t (2026) to ~50,000 t (2027).",
+    "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027"
+   },
+   "rigidity": {
+    "text": "Mitsui Kinzoku and Co-Tech control 80-90% of effective high-end supply.",
+    "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-09-30",
+    "what": "HVLP4 shortage ~1,500 t in 2026; laminate makers moved to quota-based allocation.",
+    "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027",
+    "source_type": "media"
+   },
+   "owners": [
+    "mitsui_kinzoku",
+    "cotech"
+   ],
+   "hurt": [
+    "emc",
+    "tuc"
+   ],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": true,
+     "date": "2026-08-17",
+     "source_url": "https://www.mitsui-kinzoku.com/LinkClick.aspx?fileticket=XzNABg5L0L4%3D&tabid=204&mid=824"
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 1,
+   "next_node": []
+  },
+  {
+   "id": "high_end_ccl",
+   "name": "High-end CCL",
+   "layer": "L1",
+   "pressure": {
+    "text": "No closure source for CCL demand.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-04-01",
+    "what": "Resonac and Mitsubishi Gas Chemical raised CCL materials 30% from 2026-04-01.",
+    "source_url": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+    "source_type": "media"
+   },
+   "owners": [
+    "emc",
+    "tuc",
+    "resonac"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "abf_film",
+   "name": "ABF film",
+   "layer": "L1",
+   "pressure": {
+    "text": "No closure source for ABF demand.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "Ajinomoto holds over 95% of global ABF; third plant production only 2032.",
+    "source_url": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-05-14",
+    "what": "Ajinomoto raising ABF prices 30%, effective Q3 2026.",
+    "source_url": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+    "source_type": "media"
+   },
+   "owners": [
+    "ajinomoto"
+   ],
+   "hurt": [
+    "ibiden",
+    "unimicron",
+    "kinsus",
+    "nanya_pcb",
+    "semco"
+   ],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "ajinomoto": "high"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "abf_bt_substrates",
+   "name": "ABF/BT substrates",
+   "layer": "L1",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "No substrate price or allocation page among the closure sources.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "ibiden",
+    "unimicron",
+    "kinsus",
+    "nanya_pcb"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "pcb_microdrills",
+   "name": "PCB micro-drills",
+   "layer": "L6",
+   "pressure": {
+    "text": "Topoint: high-end coated drill-bit supply tight on strong PCB demand.",
+    "source_url": "https://www.digitimes.com/news/a20260309PD233/pcb-topoint-2026-high-end-sales.html"
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": "2026-03-09",
+    "what": "Topoint utilization >90% (Digitimes; page paywalled, not verified).",
+    "source_url": "https://www.digitimes.com/news/a20260309PD233/pcb-topoint-2026-high-end-sales.html",
+    "source_type": "media"
+   },
+   "owners": [
+    "union_tool",
+    "topoint"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "low_dk_resin",
+   "name": "Low-Dk resin",
+   "layer": "L1",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "The SABIC outage story was withdrawn; no source.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "shengquan"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "shengquan": "medium"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "glass_core_substrate",
+   "name": "Glass-core substrate",
+   "layer": "L1",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "Not commercial (section C); no source URL given.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "mlcc",
+   "name": "MLCC",
+   "layer": "L6",
+   "pressure": {
+    "text": "An AI server cabinet needs up to 440,000 MLCCs.",
+    "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+   },
+   "rigidity": {
+    "text": "Channel inventory below the 30-day threshold.",
+    "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-01",
+    "what": "Samsung Electro-Mechanics +30% on all MLCC shipments; Taiyo Yuden, Yageo, Murata, Walsin also raising.",
+    "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
+    "source_type": "analyst"
+   },
+   "owners": [
+    "murata",
+    "taiyo_yuden",
+    "semco",
+    "yageo",
+    "kyocera"
+   ],
+   "hurt": [],
+   "propagation": [
+    "sakai_chem"
+   ],
+   "kill": [],
+   "exposure": {
+    "kyocera": "high"
+   },
+   "stage": "peaking",
+   "stage_source": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": true,
+     "date": "2026-08-04",
+     "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": true,
+     "date": "2026-08-04",
+     "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 2,
+   "next_node": []
+  },
+  {
+   "id": "mlcc_raw_materials",
+   "name": "MLCC raw materials (dielectric)",
+   "layer": "L1",
+   "pressure": {
+    "text": "High-end AI MLCC dielectric material volume 2x YoY.",
+    "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07"
+   },
+   "rigidity": {
+    "text": "Sakai's director: capacity 'quite full', considering capex.",
+    "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-12",
+    "what": "AI MLCC dielectric volume doubled; capacity quite full.",
+    "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07",
+    "source_type": "media"
+   },
+   "owners": [
+    "sakai_chem"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "sakai_chem": "medium"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "tantalum_caps",
+   "name": "Tantalum capacitors",
+   "layer": "L6",
+   "pressure": {
+    "text": "AI server tantalum demand at 62% CAGR.",
+    "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/"
+   },
+   "rigidity": {
+    "text": "DRC is 51% of mine output; Rubaya halted Jan 2026.",
+    "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-25",
+    "what": "Tantalum ingot ~2.56x since end-2025; EV capacitor lead times over one year.",
+    "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/",
+    "source_type": "analyst"
+   },
+   "owners": [
+    "orient_tantalum"
+   ],
+   "hurt": [],
+   "propagation": [
+    "nichicon"
+   ],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": [
+    "nichicon"
+   ]
+  },
+  {
+   "id": "power_inductors",
+   "name": "Power inductors",
+   "layer": "L6",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "Inductor price claim (+45-60%) not on any closure page.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "tdk"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "tdk": "high"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "crystals",
+   "name": "Crystals",
+   "layer": "L6",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "TXC hikes not on any closure page.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "txc",
+    "daishinku"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "bbu_cells",
+   "name": "BBU cells",
+   "layer": "L6",
+   "pressure": {
+    "text": "Hyperscalers pre-committed to more than 80% of Panasonic Energy's planned output through FY2029.",
+    "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html"
+   },
+   "rigidity": {
+    "text": "Panasonic ~80% share of rack BBU power supply; auto lines converted only from FY2027.",
+    "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-03-26",
+    "what": "Panasonic: data-center batteries selling out.",
+    "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html",
+    "source_type": "media"
+   },
+   "owners": [
+    "panasonic"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": true,
+     "date": "2026-03-26",
+     "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html"
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 1,
+   "next_node": []
+  },
+  {
+   "id": "power_discretes",
+   "name": "Power discretes",
+   "layer": "L4",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "Infineon hike and lead times not on any closure page.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "infineon",
+    "onsemi",
+    "vishay"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "infineon": "high",
+    "onsemi": "high",
+    "vishay": "high"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "vertical_power_modules",
+   "name": "Vertical power modules",
+   "layer": "L6",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "No closure source.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "vicor"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "cold_plates_qd",
+   "name": "Cold plates / quick disconnects",
+   "layer": "L6",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": null,
+    "what": "Quick-disconnect owners are private (section C); no source URL.",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [
+    "avc",
+    "jentech"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "hvdc_800v",
+   "name": "800V HVDC shelves",
+   "layer": "L6",
+   "pressure": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "not_yet",
+    "date": "2026-10-29",
+    "what": "Paced by data-hall build-out; Delta Q3 call (no source URL).",
+    "source_url": null,
+    "source_type": null
+   },
+   "owners": [],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "wafers_300mm",
+   "name": "300mm wafers",
+   "layer": "L1",
+   "pressure": {
+    "text": "Foundry utilization back above 95%.",
+    "source_url": "https://www.techtimes.com/articles/325322/20260824/silicon-wafer-prices-break-three-year-freeze-ai-fills-every-fab-foundries-are-next.htm"
+   },
+   "rigidity": {
+    "text": "GlobalWafers lines at full utilization; LTA lengths extending from 3 to 5-8 years.",
+    "source_url": "https://www.thelec.net/news/articleView.html?idxno=12856"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-08-24",
+    "what": "GlobalWafers, Formosa Sumco, Wafer Works: hikes of at least 10% on all wafer sizes.",
+    "source_url": "https://www.techtimes.com/articles/325322/20260824/silicon-wafer-prices-break-three-year-freeze-ai-fills-every-fab-foundries-are-next.htm",
+    "source_type": "media"
+   },
+   "owners": [
+    "sumco",
+    "siltronic",
+    "globalwafers",
+    "shinetsu"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "sumco": "low",
+    "siltronic": "low"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": true,
+     "date": "2026-08-06",
+     "source_url": "https://www.thelec.net/news/articleView.html?idxno=12856"
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 1,
+   "next_node": []
+  },
+  {
+   "id": "photoresist",
+   "name": "Photoresist",
+   "layer": "L1",
+   "pressure": {
+    "text": "No closure source for demand.",
+    "source_url": null
+   },
+   "rigidity": {
+    "text": "No closure source.",
+    "source_url": null
+   },
+   "trigger": {
+    "status": "unclear",
+    "date": "2026-10-01",
+    "what": "Reported base price +15% from 2026-10-01 (JSR, TOK, Shin-Etsu); unnamed sources, not confirmed by a primary source.",
+    "source_url": "https://finance.biggo.com/news/cad4ed4c-464b-4ee4-8233-9110fab547d6",
+    "source_type": "media"
+   },
+   "owners": [
+    "tok",
+    "shinetsu"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {},
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "heavy_rare_earths",
+   "name": "Heavy rare earths / yttria",
+   "layer": "L1",
+   "pressure": {
+    "text": "Ex-China heavy rare earth prices surging (Q3 2026 review).",
+    "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review"
+   },
+   "rigidity": {
+    "text": "Yttrium oxide CIF North America ~196x the China price.",
+    "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review"
+   },
+   "trigger": {
+    "status": "fired",
+    "date": "2026-09-25",
+    "what": "Dysprosium oxide CIF Europe +56% in September.",
+    "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review",
+    "source_type": "analyst"
+   },
+   "owners": [
+    "lynas",
+    "mp"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "lynas": "medium",
+    "mp": "medium"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  },
+  {
+   "id": "ga_ge_in",
+   "name": "Gallium / germanium / indium",
+   "layer": "L1",
+   "pressure": {
+    "text": "China ~99% of refined Ga, ~60% of refined Ge.",
+    "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/"
+   },
+   "rigidity": {
+    "text": "China's export ban to the US was suspended, not lifted.",
+    "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/"
+   },
+   "trigger": {
+    "status": "not_yet",
+    "date": "2026-11-27",
+    "what": "China's suspension of its Ga/Ge/Sb US export ban expires.",
+    "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/",
+    "source_type": "media"
+   },
+   "owners": [
+    "fivenplus",
+    "dowa",
+    "umicore"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [],
+   "exposure": {
+    "fivenplus": "medium",
+    "dowa": "medium",
+    "umicore": "high"
+   },
+   "stage": "unclear",
+   "stage_source": null,
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "top_risk": 0,
+   "next_node": []
+  }
+ ]
 }

@@ -108,6 +108,11 @@ class Measure:
         if cur == "GBX":
             gbp = self.fx("GBP")
             return None if gbp is None else gbp / 100
+        if cur == currencies.UNKNOWN:
+            # No venue, no rate. The leg is refused by the caller, which is
+            # what the docstring of currency_of has always promised; asking
+            # the vendor for "USDUNKNOWN" raised instead and took the run down.
+            return None
         if cur not in self._fx:
             # USD->currency first, inverted. The direct quote is rounded to four
             # decimals, which for a won is one significant digit: KRWUSD reads

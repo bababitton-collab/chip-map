@@ -209,6 +209,17 @@ html.rec .focusui{display:none!important}
 .legend{display:block;gap:6px 18px;font-size:.92rem;color:var(--ink2);padding:8px 22px;border-top:1px solid var(--rule);background:var(--bg2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend .lg{width:10px;height:10px;border-radius:50%;border:1.5px dashed var(--amber);background:none}
+.bnbox{border:1px solid #ffffff1f;border-radius:8px;padding:10px 12px;margin:12px 0}
+.bnhead{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;margin-bottom:6px}
+.bnstage{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);border:1px solid currentColor;border-radius:4px;padding:1px 6px}
+.bnstage.s-tightening{color:var(--amber)}
+.bnrow{font-size:.82rem;color:var(--ink2);line-height:1.45;margin:4px 0}
+.bnrow b{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-inline-end:6px;font-weight:500}
+.bnrow a{color:var(--ink3)}.nosrc{color:var(--ink3);font-style:italic;font-size:.74rem}
+.bnlag{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--ink3);margin:8px 0;padding:6px 8px;border:1px dashed #ffffff22;border-radius:6px;line-height:1.5}
+.bnlag.on{color:var(--amber);border-color:var(--amber)}
+.cyc{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#9aa3b2;border:1px solid #5b6474;border-radius:4px;padding:2px 7px;margin:6px 6px 0 0}
 .legend .pl{width:10px;height:10px;border-radius:50%;border:2px solid var(--tight)}
 .legend .pe{width:10px;height:10px;border-radius:50%;border:2px solid var(--erode)}
 .legend .pa{width:10px;height:10px;border-radius:50%;border:2px solid var(--amber)}
@@ -701,6 +712,9 @@ __CARDS_JS__
 <script>
 const LIVE = __LIVE__;
 const FOCUS = __FOCUS__;
+// The fundamentals table, inlined at build time like FOCUS (out/<domain>/fund.json).
+// A snapshot that still carries its own is read first.
+const FUND = __FUND__;
 </script>
 <script>
 (function(){
@@ -755,6 +769,33 @@ const cls=v=>v==null?'':(v<0?'neg':'pos');
 // Text from the data, made safe to put inside HTML. This script has no esc() of
 // its own -- the card scripts further down do, in their own scope.
 const escHtml=v=>String(v==null?'':v).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};
+// Bottlenecks (map.json "bottlenecks"). The lagging line and ring are a
+// DESCRIPTION -- a fired trigger whose ring has not followed -- and never a
+// forecast: nothing here is scored. See chains/lagging.py.
+function lagOf(n){ const l=(n.bn||[]).filter(e=>e.kind==='lag'&&e.lagging);
+  return l.length ? {half:l.every(e=>e.exposure==='high')} : null; }
+function bnLines(n){ return (n.bn||[]).map(e=> e.kind==='lag'
+  ? `<div class="bnlag${e.lagging?' on':''}" data-bn="${e.b}" data-lagging="${e.lagging}">${BN.fired} ${e.fired||''} · ${BN.node} ${pct(e.ret)} · ${BN.leader} ${escHtml(e.leader)} ${pct(e.leader_ret)} · ${BN.exp}: ${e.exposure?BN.expW[e.exposure]:'—'}</div>`
+  : `<span class="cyc" data-bn="${e.b}">${BN.cyc[e.stage]||e.stage} · ${BN.risk} ${e.top_risk}/7</span>`).join(''); }
+function bnCard(b, nid){
+  const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
+  const nm=i=>escHtml(byId[i]?byId[i].name:i);
+  const src=o=>o&&o.source_url?` <a href="${escHtml(o.source_url)}" target="_blank" rel="noopener">${BN.src}</a>`:` <span class="nosrc">${BN.nosrc}</span>`;
+  const list=(l,ids)=>(ids||[]).length?`<div class="bnrow"><b>${l}</b>${ids.map(nm).join(', ')}</div>`:'';
+  const nx=(F.catalysts||[]).filter(c=>c.bottleneck===b.id&&String(c.date)>=today.slice(0,String(c.date).length))
+    .sort((a,c)=>String(a.date).localeCompare(String(c.date)))[0];
+  return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`
+    + `<div class="bnrow"><b>${BN.trigger}</b><span class="trs t-${t.status}">${BN.trig[t.status]||t.status}</span>${t.date?' · '+t.date:''} — ${escHtml(t.what||'')}${src(t)}${t.source_type?` <small>(${t.source_type})</small>`:''}</div>`
+    + `<div class="bnrow"><b>${BN.pressure}</b>${escHtml((b.pressure||{}).text)}${src(b.pressure)}</div>`
+    + `<div class="bnrow"><b>${BN.rigidity}</b>${escHtml((b.rigidity||{}).text)}${src(b.rigidity)}</div>`
+    + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)
+    + ((b.kill||[]).length?`<div class="bnrow"><b>${BN.kill}</b>${b.kill.map(k=>escHtml(k.criterion)+(k.date?' ('+k.date+')':'')).join('; ')}</div>`:'')
+    + (nx?`<div class="nextcp" data-next-check>${BN.next}: <b>${escHtml(nx.date_text||nx.date)}</b> — ${escHtml(nx.what)}</div>`:'')
+    + `</div>`; }
+function bnCards(n){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
+  return (F.bottlenecks||[]).filter(b=>[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
+
 // A source is a list of references (a single string in an older snapshot), and
 // every URL in it is its own link: joined into one href they opened nothing.
 // The first URL carries the text it sources, as a lone source always has; each
@@ -1962,7 +2003,7 @@ function draw(now){
   const KEEP = NARROW ? matchSet() : null;
   const paintEdge = (e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); const on=(e===hoverEdge);
     ctx.beginPath(); ctx.moveTo(p.a.x,p.a.y); ctx.bezierCurveTo(p.c1.x,p.c1.y,p.c2.x,p.c2.y,p.b.x,p.b.y);
-    ctx.strokeStyle=(rel||on)?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=on?2.6:(rel?1.8:1); ctx.stroke(); e._p=p;
+    ctx.strokeStyle=(rel||on)?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=on?2.6:(rel?1.8:1); ctx.setLineDash(e.rep?[5,4]:[]); ctx.stroke(); ctx.setLineDash([]); e._p=p;
     // An arrowhead at the CUSTOMER end. The line already showed that two
     // stations are connected; it never showed which way the goods travel, and
     // on a supply chain that is the whole point of the picture.
@@ -2035,6 +2076,9 @@ function draw(now){
     const pu=pulseOf(n);
     if(pu&&!REDUCED){ const ph=(T%pu.period)/pu.period; const rr=n.r+4+ph*16; ctx.beginPath(); ctx.arc(n.x,n.y,rr,0,7); ctx.strokeStyle=pu.col; ctx.globalAlpha=(1-ph)*.7; ctx.lineWidth=2; ctx.stroke(); ctx.globalAlpha=1; }
     if(pu){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r+5,0,7); ctx.strokeStyle=pu.col; ctx.lineWidth=2.5; ctx.stroke(); }
+    // Lagging ring: thin, dashed, amber. Half strength where the bottleneck is a
+    // small part of the company (exposure high), which may be why it has not moved.
+    const lg=lagOf(n); if(lg){ ctx.save(); ctx.setLineDash([4,3]); ctx.globalAlpha=lg.half?.5:1; ctx.beginPath(); ctx.arc(n.x,n.y,n.r+9,0,7); ctx.strokeStyle=tok('--amber'); ctx.lineWidth=1.3; ctx.stroke(); ctx.restore(); }
     ctx.save(); ctx.shadowColor=LCOL[n.line]; ctx.shadowBlur=n.r*0.9;
     ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill();
     ctx.globalAlpha=.55; ctx.lineWidth=1; ctx.strokeStyle=LCOL[n.line]; ctx.stroke(); ctx.restore();
@@ -2184,7 +2228,7 @@ cv.addEventListener('click',ev=>{
 function priceBadge(n){ const d=n.px?n.px.stale_days:null; if(!n.thin && !(d>5)) return ''; return `<span class="badge thin" title="${n.thin?'קו מחיר דליל: מעט מסחר':'אין סגירה עדכנית'}">${n.thin?'קו מחיר דליל':'מחיר ישן'}${d>1?' · '+d+' ימים':''}</span>`; }
 function spark(px){ if(!px||!px.spark||px.spark.length<2) return '<p class="role">אין קו מחיר.</p>'; const s=px.spark, W=340,H=52; const lo=Math.min(...s),hi=Math.max(...s); const y=v=>4+(1-(v-lo)/((hi-lo)||1))*(H-8); const d=s.map((v,i)=>(i?'L':'M')+(i/(s.length-1)*W).toFixed(1)+' '+y(v).toFixed(1)).join(''); const col=s[s.length-1]>=100?tok('--erode'):tok('--tight'); return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr"><path d="${d}" fill="none" stroke="${col}" stroke-width="1.8"/><line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="#ffffff22" stroke-dasharray="3 3"/></svg><div class="r"><span>1w <b class="${cls(px.r1w)}">${pct(px.r1w)}</b></span><span>4w <b class="${cls(px.r4w)}">${pct(px.r4w)}</b></span><span>13w <b class="${cls(px.r13w)}">${pct(px.r13w)}</b></span><span>52w <b class="${cls(px.r52w)}">${pct(px.r52w)}</b></span><span style="color:var(--ink3)">${px.cur} · ${px.last}</span></div></div>`; }
 function stageBar(st){ const lv={research:1,pilot:2,qualified:3,volume:4}[st]||0; const he={research:'מחקר',pilot:'פיילוט',qualified:'הסמכה',volume:'ייצור'}[st]||''; return `<div class="st">${[0,1,2,3].map(i=>`<i class="${i<lv?'on':''}"></i>`).join('')}<em>${he}</em></div>`; }
-function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>מהדוחות (EDGAR)</h3><table class="ftab"><tr><th>FY</th><th>revenue $B</th><th>YoY</th><th>op margin</th></tr>${f.annual.map(r=>`<tr><td>${r.fy}</td><td>${r.rev}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td class="${r.om<0?'neg':''}">${r.om==null?'—':r.om+'%'}</td></tr>`).join('')}${f.q.length?`<tr><th>quarter</th><th>revenue $B</th><th>YoY</th><th></th></tr>${f.q.map(r=>`<tr><td>${r.pe}</td><td>${r.rev??'—'}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td></td></tr>`).join('')}`:''}</table>`; }
+function fundTable(nid){ const f=((D&&D.fund)||FUND||{})[nid]; if(!f) return ''; return `<h3>מהדוחות (EDGAR)</h3><table class="ftab"><tr><th>FY</th><th>revenue $B</th><th>YoY</th><th>op margin</th></tr>${f.annual.map(r=>`<tr><td>${r.fy}</td><td>${r.rev}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td class="${r.om<0?'neg':''}">${r.om==null?'—':r.om+'%'}</td></tr>`).join('')}${f.q.length?`<tr><th>quarter</th><th>revenue $B</th><th>YoY</th><th></th></tr>${f.q.map(r=>`<tr><td>${r.pe}</td><td>${r.rev??'—'}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td></td></tr>`).join('')}`:''}</table>`; }
 
 // The curator's note on a subnode -- the member list, the product, the cross-
 // reference -- under its row. Its name is kept to a name; this is where the rest is.
@@ -2198,6 +2242,7 @@ const noteOf=id=>{ const t=(((typeof FOCUS!=='undefined'&&FOCUS)||{}).notes||{})
 function detailHTML(n){
   const cps=n.cp||[];
   let h=`<div class="pin"><button class="close" id="pclose">סגור</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span>${priceBadge(n)}<p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):escHtml(n.role||'')}</p>${spark(n.px)}`;
+  h+=bnLines(n)+bnCards(n);
   // One supplier row, for a chokepoint the station holds or one it is exposed to.
   const subRow=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">ספק יחיד</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">פרטית</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">אומדן</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div>${noteOf(s.id)}</div>`;
   cps.forEach(c=>{
@@ -2646,6 +2691,8 @@ function header(){
     `<div class="row"><b>${WORDS.legendZone}</b>`
     + ZORDER.map(k=>`<span><i class="zn" style="border-color:${ZCOL[k]}"></i>${ZNAME[k]}</span>`).join('')
     + `</div>`;
+  if(nodes.some(lagOf)) document.getElementById('legend').innerHTML +=
+    `<div class="row" data-legend-lagging><span><i class="lg"></i>${BN.lagLegend}</span></div>`;
   const BR = (D.labels||{}).brand||{};
   document.getElementById('foot').innerHTML=`<span class="eyebrow">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`+`<span class="brandline">${BR.footer||''}</span>`;
 }

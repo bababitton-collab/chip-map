@@ -1,0 +1,49 @@
+[
+ {
+  "date": "2026-10-29",
+  "what": "Delta Q3 call",
+  "bottleneck": "hvdc_800v",
+  "source_url": null
+ },
+ {
+  "date": "2026-11-27",
+  "what": "China's suspension of its Ga/Ge/Sb US export ban expires",
+  "bottleneck": "ga_ge_in",
+  "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/"
+ },
+ {
+  "date": "2027-01",
+  "date_text": "Q4 2026 / Jan 2027",
+  "what": "SUMCO and Shin-Etsu 300mm contract talks",
+  "bottleneck": "wafers_300mm",
+  "source_url": null
+ },
+ {
+  "date": "2026-12-31",
+  "date_text": "2H26",
+  "what": "First HBF TC-bonder orders/deliveries",
+  "bottleneck": "tc_bonders_hbf",
+  "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/"
+ },
+ {
+  "date": "2027-04",
+  "date_text": "April 2027",
+  "what": "Nittobo FY price reset",
+  "bottleneck": "t_glass",
+  "source_url": null
+ },
+ {
+  "date": "2026-12-31",
+  "date_text": "End 2026",
+  "what": "YMTC Phase 3 (+100k wpm) and YMTC IPO: kill marker for NAND",
+  "bottleneck": "nand_hbf",
+  "source_url": null
+ },
+ {
+  "date": "2027",
+  "date_text": "2027",
+  "what": "CXMT Shanghai volume ramp: kill marker for commodity DRAM",
+  "bottleneck": "dram_commodity",
+  "source_url": null
+ }
+]

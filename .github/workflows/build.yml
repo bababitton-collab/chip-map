@@ -82,6 +82,20 @@ jobs:
       # source. It was already the one that won every conflict; leaving the
       # link attached would have let a stale export in the Drive file add rows
       # nobody committed.
+      # The lagging history (chains/lagging.py) grows by one day per build.
+      # This workflow never commits to main, so the file lives on the live
+      # branch and is restored from there before the build appends to it.
+      - name: restore the lagging history from the live branch
+        run: |
+          set -uo pipefail
+          git fetch -q --depth 1 origin live || { echo "no live branch yet"; exit 0; }
+          for dom in $(python -c "from chains import domains; print(' '.join(domains.discover()))"); do
+            if git cat-file -e "origin/live:$dom/lagging_history.json" 2>/dev/null; then
+              git show "origin/live:$dom/lagging_history.json" > "data/$dom/lagging_history.json"
+              echo "$dom: lagging history restored"
+            fi
+          done
+
       - name: build
         env:
           # No price-vendor key: the price source needs none. Removed with the
@@ -172,6 +186,9 @@ jobs:
             mkdir -p "$tmp/payload/$dom"
             cp "$d/live.json" "$d/live_en.json" "$tmp/payload/$dom/"
             cp "$d/track.enc.json" "$tmp/payload/$dom/"
+            if [ -f "data/$dom/lagging_history.json" ]; then
+              cp "data/$dom/lagging_history.json" "$tmp/payload/$dom/"
+            fi
             if [ "$dom" = "$first" ]; then
               cp "$d/live.json" "$d/live_en.json" "$d/track.enc.json" "$tmp/payload/"
             fi

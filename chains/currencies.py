@@ -56,6 +56,7 @@ BY_SUFFIX: dict[str, str] = {
     # Europe
     "XETRA": "EUR", "F": "EUR", "AS": "EUR", "PA": "EUR", "BR": "EUR",
     "VI": "EUR", "MC": "EUR", "LS": "EUR", "HE": "EUR", "IR": "EUR",
+    "MI": "EUR",           # Euronext Milan (Technoprobe)
     "SW": "CHF",
     "LSE": "GBX",          # pence, not pounds
     "CO": "DKK", "ST": "SEK", "OL": "NOK",

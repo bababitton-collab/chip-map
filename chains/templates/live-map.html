@@ -167,6 +167,14 @@ html.rec .focusui{display:none!important}
 .lchip .n{color:#9ba6b4;font-weight:400}
 .lchip .s{color:#7d8797;margin:0 6px}
 .lchip .t{color:#f3e2b4;font-weight:500;text-shadow:0 0 6px rgba(242,182,50,.55),0 0 14px rgba(242,182,50,.25)}
+/* A sub-column (L1b, L4b, L6b, L6c) is its parent's colour, lighter: the chain
+   still reads L1 -> L7, and the split reads as a split, not a new stage. */
+.lchip[data-l$="b"],.lchip[data-l$="c"]{border-color:#3a332080;background:#171c26}
+/* More than eight columns (the semi map since the 2026-10-01 split): a
+   12-letter word like ACCELERATORS has to fit a ~96px column whole, so the
+   type steps down and the tracking tightens. Fewer columns: untouched. */
+.layerbar.dense .lchip{font-size:.62rem;letter-spacing:.05em;padding:4px 6px}
+.lchip[data-l$="b"] .t,.lchip[data-l$="c"] .t{color:#f8eed3;text-shadow:0 0 6px rgba(242,182,50,.28)}
 .layerbar .rule{position:absolute;top:46px;inset-inline:0;height:1px;background:var(--rule)}
 /* At 390 the seven columns are 35px apart, and no chip fits in 35px. The map
    strip scrolls sideways instead, at a width where the columns are wide enough
@@ -1280,13 +1288,16 @@ const PORTRAIT_AT = 1.15;
 // laid out exactly as before and the canvas is cut to them.
 const MAP_H_MIN = 480, MAP_H_MAX = 720, MAP_PAD_BOTTOM = 48;
 // The cap grows with the tallest column, and only past 720px when a column
-// needs it: 30px a station, plus the header and the band row. The semi map's
+// needs it: 42px a station -- room for a name under its dot, so it never
+// runs sideways into the next column -- plus the header and the band row. The semi map's
 // L1, L4 and L6 columns passed 30 stations on 2026-10-01 and, held to 720,
 // ran into the energy row. A map whose columns fit is drawn exactly as before.
 function mapHMax(){
   const per={}; nodes.forEach(n=>{ if(n.layer!==bandId()) per[n.layer]=(per[n.layer]||0)+1; });
   const most=Math.max(0, ...Object.values(per));
-  return Math.max(MAP_H_MAX, Math.round(most*30 + 240)); }
+  // HEADER_H, not a constant: eleven columns wrap their names onto four or
+  // five lines, and that strip comes out of the same height.
+  return Math.max(MAP_H_MAX, Math.round(most*44 + HEADER_H + 140)); }
 // The band row is pinned to the bottom (y = H - 34), so its own label cannot
 // be measured against a height it defines. It gets a reservation instead.
 const MAP_BAND_RESERVE = 62;
@@ -1540,6 +1551,9 @@ function layoutLandscape(){
   // 10px over the top of ETN's ring. layerBar() measures the chip and lifts it
   // straight up if a station, a ring or a label would touch it there. Without
   // ETN it takes the middle station of the row.
+  // Every station's label box, for the layout tests: names that touch another
+  // name or another ring are the failure this page keeps having.
+  window.__labelBoxes = nodes.map(n=>Object.assign({id:n.id, layer:n.layer, cx:n.x, cy:n.y, rr:ringR(n)}, labelBox(n)));
   const tagOn = byId.etn || g9[Math.floor(g9.length/2)];
   if(tagOn){ l9x = tagOn.x; l9y = tagOn.y - ringR(tagOn) - 10; }
   else { l9x = W/2; l9y = H-34; }
@@ -1615,7 +1629,10 @@ function resize(){
 // at 1200 and 1440, EQUIPMENT and GENERATION at 1024. The hyphen is still
 // applied by measurement, so none of them shows one at a width where the word
 // fits whole.
-const HYPHENATE = {TRANSMISSION: 5, EQUIPMENT: 5, GENERATION: 6};
+// The semi column split (2026-10-01) brought eleven narrow columns and five
+// more long words; each breaks where a reader would.
+const HYPHENATE = {TRANSMISSION: 5, EQUIPMENT: 5, GENERATION: 6,
+                   ACCELERATORS: 5, SUBSTRATES: 3, PACKAGING: 4, NETWORKING: 3, MATERIALS: 4};
 function softened(name){
   return String(name==null?'':name).replace(/[A-Za-z]{8,}/g, w => {
     const at = HYPHENATE[w.toUpperCase()];
@@ -1836,6 +1853,7 @@ function layerBar(){
     l9.innerHTML='';
     return;
   }
+  bar.classList.toggle('dense', bands.length > 8);
   bar.innerHTML = bands.map(b=>
     `<span class="lchip" data-l="${b.L}" data-cx="${b.cx.toFixed(1)}" style="left:${b.cx.toFixed(1)}px;`
     + `top:6px;transform:translateX(-50%)">${chip(b.L, LAYER_HE[b.L]||'')}</span>`

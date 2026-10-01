@@ -97,7 +97,8 @@ def facts(dom_dir: Path, dom: str | None = None) -> dict:
                            f"landing page's numbers are read from it")
     labels = live.get("labels") or {}
     layers = labels.get("layers") or {}
-    order = sorted(layers, key=lambda k: int(re.sub(r"\D", "", k) or 0))
+    # By number, then by sub-column letter: L1, L1b, L2 ... L6, L6b, L6c.
+    order = sorted(layers, key=lambda k: (int(re.sub(r"\D", "", k) or 0), k))
     watch = live.get("watch") or []
     commits = _read(dom_dir / "commitments.json")
     public = _read(dom_dir / "track_public.json")

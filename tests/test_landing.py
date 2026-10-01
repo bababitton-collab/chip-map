@@ -140,13 +140,19 @@ def test_every_node_counted_as_a_company_is_a_listed_one():
 def test_the_layers_are_the_maps_own(tmp_path):
     text = _text(_page(tmp_path))
     layers = MAP["labels"]["layers"]
-    order = sorted(layers, key=lambda k: int(k[1:]))
+    order = sorted(layers, key=lambda k: (int("".join(c for c in k if c.isdigit())), k))
     assert "traces its chain in layers: " in text
     # Every one of them, in the map's own order. A page that named a subset,
     # or named them alphabetically, would be describing a different chain.
     seen = [layers[k]["en"] for k in order]
     assert all(n in text for n in seen), seen
-    at = [text.index(n) for n in seen]
+    # In sequence, each after the last: "power" (L9) is also inside "power,
+    # passives & cooling" (L6c), and a plain index() would find that one.
+    at, pos = [], 0
+    for n in seen:
+        pos = text.index(n, pos)
+        at.append(pos)
+        pos += len(n)
     assert at == sorted(at), "the layers are listed out of order"
 
 

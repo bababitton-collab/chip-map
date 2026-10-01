@@ -11,6 +11,12 @@
    "description": "Silicon wafers, photoresist, EUV mask blanks, ABF film, IC substrates, specialty gases/chemicals, critical minerals."
   },
   {
+   "id": "L1b",
+   "name": "Board & package materials",
+   "order": 1.5,
+   "description": "ABF film, T-glass cloth, copper foil, copper-clad laminate, low-Dk resin, InP substrates."
+  },
+  {
    "id": "L2",
    "name": "Semiconductor capital equipment",
    "order": 2,
@@ -29,6 +35,12 @@
    "description": "GPU/accelerator, CPU, networking silicon, memory (HBM/DRAM/NAND), analog/power, custom-ASIC design partners."
   },
   {
+   "id": "L4b",
+   "name": "Memory & storage",
+   "order": 4.5,
+   "description": "DRAM, HBM, NAND, HDD, controllers, memory interface chips and memory distribution."
+  },
+  {
    "id": "L5",
    "name": "Manufacturing: foundry, advanced packaging, OSAT",
    "order": 5,
@@ -39,6 +51,18 @@
    "name": "Systems & components",
    "order": 6,
    "description": "Server ODM/OEM, switches, optics, cables, power delivery, thermal, PCB."
+  },
+  {
+   "id": "L6b",
+   "name": "Optics",
+   "order": 6.3,
+   "description": "Lasers, epitaxy, transceivers, fiber and cable."
+  },
+  {
+   "id": "L6c",
+   "name": "Power, passives & cooling",
+   "order": 6.6,
+   "description": "Power delivery and discretes, MLCC and other passives, crystals, BBU, cold plates."
   },
   {
    "id": "L7",
@@ -244,7 +268,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": true,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "Ajinomoto Build-up Film (ABF) — the dielectric film in every FC-BGA advanced package",
    "market_cap_usd_b": null,
    "segment_share": {
@@ -271,7 +295,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": true,
-   "layer": "L1",
+   "layer": "L5",
    "role": "ABF/FC-BGA IC substrates for NVIDIA and Intel-class packages",
    "market_cap_usd_b": null,
    "segment_share": {
@@ -297,7 +321,8 @@
    "price_symbol_kind": "adr",
    "price_note": "US ADR line for Ibiden Co.Ltd; home listing 4062.T is not on EODHD",
    "line": "packaging",
-   "short": "Ibiden"
+   "short": "Ibiden",
+   "ring_layer": "L1"
   },
   {
    "id": "unimicron",
@@ -306,7 +331,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L5",
    "role": "Largest ABF substrate maker by capacity",
    "market_cap_usd_b": null,
    "segment_share": {
@@ -328,7 +353,8 @@
    "price_symbol": "3037.TW",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Unimicron"
+   "short": "Unimicron",
+   "ring_layer": "L1"
   },
   {
    "id": "entegris",
@@ -964,7 +990,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "DRAM, HBM3E/HBM4, NAND, LPDDR for data center",
    "market_cap_usd_b": 1082,
    "segment_share": {
@@ -1004,7 +1030,7 @@
    "exchange": "KRX",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "HBM leader; DRAM and NAND",
    "market_cap_usd_b": 835.57,
    "segment_share": {
@@ -1044,7 +1070,7 @@
    "exchange": "KRX",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "DRAM/HBM/NAND IDM plus Samsung Foundry (SF2 at Taylor, Texas)",
    "market_cap_usd_b": 1210,
    "segment_share": {
@@ -1456,7 +1482,7 @@
    "exchange": "NYSE",
    "us_listed": true,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "800G/1.6T optical transceivers, lasers, EML/VCSEL, indium phosphide",
    "market_cap_usd_b": 51.78,
    "segment_share": {
@@ -1540,7 +1566,7 @@
    "exchange": "NYSE",
    "us_listed": true,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Data center power (UPS, busway, 800VDC), thermal management, direct-to-chip liquid cooling, CDUs",
    "market_cap_usd_b": 104.76,
    "segment_share": {
@@ -1955,7 +1981,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "InP and GaAs substrates for high-speed optical links; China export-license gated",
    "market_cap_usd_b": null,
    "segment_share": {
@@ -1979,7 +2005,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "InP lasers and transceivers for AI data-center optics; building US InP capacity",
    "market_cap_usd_b": null,
    "segment_share": {
@@ -2125,7 +2151,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "NAND flash and SSD",
    "price_symbol": "SNDK.US",
    "price_symbol_kind": "primary",
@@ -2140,7 +2166,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "NAND flash",
    "price_symbol": "285A.T",
    "price_symbol_kind": "primary",
@@ -2155,7 +2181,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "NAND / SSD controllers",
    "price_symbol": "SIMO.US",
    "price_symbol_kind": "primary",
@@ -2170,7 +2196,7 @@
    "exchange": "TPEx",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "NAND / SSD controllers and modules",
    "price_symbol": "8299.TWO",
    "price_symbol_kind": "primary",
@@ -2185,7 +2211,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "Nearline HDD",
    "price_symbol": "WDC.US",
    "price_symbol_kind": "primary",
@@ -2200,7 +2226,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "Nearline HDD",
    "price_symbol": "STX.US",
    "price_symbol_kind": "primary",
@@ -2215,13 +2241,14 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L1b",
    "role": "HDD media; semiconductor materials",
    "price_symbol": "4004.T",
    "price_symbol_kind": "primary",
    "line": "memory",
    "short": "Resonac",
-   "added": "2026-10-01 semi closure, section B"
+   "added": "2026-10-01 semi closure, section B",
+   "ring_layer": "L4"
   },
   {
    "id": "nanya",
@@ -2230,7 +2257,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "Commodity DRAM",
    "price_symbol": "2408.TW",
    "price_symbol_kind": "primary",
@@ -2245,7 +2272,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "Commodity DRAM and flash",
    "price_symbol": "2344.TW",
    "price_symbol_kind": "primary",
@@ -2260,7 +2287,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "Memory distributor (Samsung products in Japan)",
    "price_symbol": "2737.T",
    "price_symbol_kind": "primary",
@@ -2275,7 +2302,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "Memory interface chips; a DRAM buyer",
    "price_symbol": "RMBS.US",
    "price_symbol_kind": "primary",
@@ -2290,7 +2317,7 @@
    "exchange": "SSE STAR",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L4b",
    "role": "Memory interface chips; a DRAM buyer",
    "price_symbol": "688008.SHG",
    "price_symbol_kind": "primary",
@@ -2392,7 +2419,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "HDD heads; power inductors and passives",
    "price_symbol": "6762.T",
    "price_symbol_kind": "primary",
@@ -2422,7 +2449,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "InP substrates; lasers; optical fiber",
    "price_symbol": "5802.T",
    "price_symbol_kind": "primary",
@@ -2437,7 +2464,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "Optical fiber and cable",
    "price_symbol": "5803.T",
    "price_symbol_kind": "primary",
@@ -2452,7 +2479,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "Optical fiber; lasers",
    "price_symbol": "5801.T",
    "price_symbol_kind": "primary",
@@ -2482,7 +2509,7 @@
    "exchange": "SZSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "Optical transceivers",
    "price_symbol": "300308.SHE",
    "price_symbol_kind": "primary",
@@ -2497,7 +2524,7 @@
    "exchange": "SZSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "Optical transceivers",
    "price_symbol": "300502.SHE",
    "price_symbol_kind": "primary",
@@ -2512,7 +2539,7 @@
    "exchange": "SZSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "Optical components for transceivers",
    "price_symbol": "300394.SHE",
    "price_symbol_kind": "primary",
@@ -2527,14 +2554,15 @@
    "exchange": "TPEx",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L6b",
    "role": "InP epitaxial wafers for lasers",
    "price_symbol": "3081.TWO",
    "price_symbol_kind": "primary",
    "line": "network",
    "short": "LandMark",
    "added": "2026-10-01 semi closure, section B",
-   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet."
+   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet.",
+   "ring_layer": "L1"
   },
   {
    "id": "soitec",
@@ -2573,13 +2601,14 @@
    "exchange": "LSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L6b",
    "role": "Compound-semiconductor epitaxial wafers",
    "price_symbol": "IQE.LSE",
    "price_symbol_kind": "primary",
    "line": "network",
    "short": "IQE",
-   "added": "2026-10-01 semi closure, section B"
+   "added": "2026-10-01 semi closure, section B",
+   "ring_layer": "L1"
   },
   {
    "id": "mxl",
@@ -2620,7 +2649,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "Optical transceivers and lasers",
    "price_symbol": "AAOI.US",
    "price_symbol_kind": "primary",
@@ -2635,7 +2664,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "T-glass (low-CTE glass cloth)",
    "price_symbol": "3110.T",
    "price_symbol_kind": "primary",
@@ -2650,7 +2679,7 @@
    "exchange": "TPEx",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "Glass fabric (T-glass second source)",
    "price_symbol": "1815.TWO",
    "price_symbol_kind": "primary",
@@ -2665,13 +2694,14 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L2",
    "role": "PCB micro-drills",
    "price_symbol": "6278.T",
    "price_symbol_kind": "primary",
    "line": "packaging",
    "short": "Union Tool",
-   "added": "2026-10-01 semi closure, section A"
+   "added": "2026-10-01 semi closure, section A",
+   "ring_layer": "L6"
   },
   {
    "id": "topoint",
@@ -2680,13 +2710,14 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L2",
    "role": "PCB micro-drills",
    "price_symbol": "8021.TW",
    "price_symbol_kind": "primary",
    "line": "packaging",
    "short": "Topoint",
-   "added": "2026-10-01 semi closure, section B"
+   "added": "2026-10-01 semi closure, section B",
+   "ring_layer": "L6"
   },
   {
    "id": "shengquan",
@@ -2695,7 +2726,7 @@
    "exchange": "SSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "Low-Dk resins",
    "price_symbol": "605589.SHG",
    "price_symbol_kind": "primary",
@@ -2710,7 +2741,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "Ultra-thin and HVLP copper foil",
    "price_symbol": "5706.T",
    "price_symbol_kind": "primary",
@@ -2725,7 +2756,7 @@
    "exchange": "TPEx",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "HVLP copper foil",
    "price_symbol": "8358.TWO",
    "price_symbol_kind": "primary",
@@ -2740,7 +2771,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "High-end copper-clad laminate",
    "price_symbol": "2383.TW",
    "price_symbol_kind": "primary",
@@ -2755,7 +2786,7 @@
    "exchange": "TPEx",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L1b",
    "role": "High-end copper-clad laminate",
    "price_symbol": "6274.TWO",
    "price_symbol_kind": "primary",
@@ -2770,13 +2801,14 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L5",
    "role": "ABF/BT substrates",
    "price_symbol": "3189.TW",
    "price_symbol_kind": "primary",
    "line": "packaging",
    "short": "Kinsus",
-   "added": "2026-10-01 semi closure, section B"
+   "added": "2026-10-01 semi closure, section B",
+   "ring_layer": "L1"
   },
   {
    "id": "nanya_pcb",
@@ -2785,13 +2817,14 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L5",
    "role": "ABF/BT substrates",
    "price_symbol": "8046.TW",
    "price_symbol_kind": "primary",
    "line": "packaging",
    "short": "Nan Ya PCB",
-   "added": "2026-10-01 semi closure, section B"
+   "added": "2026-10-01 semi closure, section B",
+   "ring_layer": "L1"
   },
   {
    "id": "gce",
@@ -2800,14 +2833,15 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L5",
    "role": "High-layer-count server PCBs",
    "price_symbol": "2368.TW",
    "price_symbol_kind": "primary",
    "line": "packaging",
    "short": "GCE",
    "added": "2026-10-01 semi closure, section B",
-   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet."
+   "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet.",
+   "ring_layer": "L6"
   },
   {
    "id": "sakai_chem",
@@ -2831,7 +2865,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "MLCC and other components",
    "price_symbol": "6971.T",
    "price_symbol_kind": "primary",
@@ -2846,7 +2880,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "MLCC",
    "price_symbol": "6981.T",
    "price_symbol_kind": "primary",
@@ -2861,7 +2895,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "MLCC",
    "price_symbol": "6976.T",
    "price_symbol_kind": "primary",
@@ -2876,7 +2910,7 @@
    "exchange": "KRX",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "MLCC; package substrates",
    "price_symbol": "009150.KO",
    "price_symbol_kind": "primary",
@@ -2891,7 +2925,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "MLCC; tantalum capacitors (KEMET)",
    "price_symbol": "2327.TW",
    "price_symbol_kind": "primary",
@@ -2906,13 +2940,14 @@
    "exchange": "SZSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L1",
+   "layer": "L6c",
    "role": "Tantalum powder and wire",
    "price_symbol": "000962.SHE",
    "price_symbol_kind": "primary",
    "line": "power",
    "short": "Orient Ta",
-   "added": "2026-10-01 semi closure, section A"
+   "added": "2026-10-01 semi closure, section A",
+   "ring_layer": "L1"
   },
   {
    "id": "nichicon",
@@ -2921,7 +2956,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Capacitors",
    "price_symbol": "6996.T",
    "price_symbol_kind": "primary",
@@ -2936,7 +2971,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Quartz crystals",
    "price_symbol": "6962.T",
    "price_symbol_kind": "primary",
@@ -2951,7 +2986,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Quartz crystals",
    "price_symbol": "3042.TW",
    "price_symbol_kind": "primary",
@@ -2966,7 +3001,7 @@
    "exchange": "TSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Data-center BBU cells",
    "price_symbol": "6752.T",
    "price_symbol_kind": "primary",
@@ -2981,13 +3016,14 @@
    "exchange": "XETRA",
    "us_listed": false,
    "adr": false,
-   "layer": "L4",
+   "layer": "L6c",
    "role": "Power discretes",
    "price_symbol": "IFX.XETRA",
    "price_symbol_kind": "primary",
    "line": "power",
    "short": "Infineon",
-   "added": "2026-10-01 semi closure, section A"
+   "added": "2026-10-01 semi closure, section A",
+   "ring_layer": "L4"
   },
   {
    "id": "onsemi",
@@ -2996,13 +3032,14 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L6c",
    "role": "Power discretes",
    "price_symbol": "ON.US",
    "price_symbol_kind": "primary",
    "line": "power",
    "short": "onsemi",
-   "added": "2026-10-01 semi closure, section A"
+   "added": "2026-10-01 semi closure, section A",
+   "ring_layer": "L4"
   },
   {
    "id": "vishay",
@@ -3011,13 +3048,14 @@
    "exchange": "NYSE",
    "us_listed": true,
    "adr": false,
-   "layer": "L4",
+   "layer": "L6c",
    "role": "Power discretes and passives",
    "price_symbol": "VSH.US",
    "price_symbol_kind": "primary",
    "line": "power",
    "short": "Vishay",
-   "added": "2026-10-01 semi closure, section A"
+   "added": "2026-10-01 semi closure, section A",
+   "ring_layer": "L4"
   },
   {
    "id": "vicor",
@@ -3026,7 +3064,7 @@
    "exchange": "NASDAQ",
    "us_listed": true,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Vertical power delivery modules",
    "price_symbol": "VICR.US",
    "price_symbol_kind": "primary",
@@ -3041,7 +3079,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Cold plates and liquid cooling",
    "price_symbol": "3017.TW",
    "price_symbol_kind": "primary",
@@ -3056,7 +3094,7 @@
    "exchange": "TWSE",
    "us_listed": false,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6c",
    "role": "Cold plates / lids",
    "price_symbol": "3653.TW",
    "price_symbol_kind": "primary",
@@ -3131,7 +3169,7 @@
    "exchange": "NYSE",
    "us_listed": true,
    "adr": false,
-   "layer": "L6",
+   "layer": "L6b",
    "role": "Optical fiber and cable",
    "price_symbol": "GLW.US",
    "price_symbol_kind": "primary",
@@ -11642,25 +11680,41 @@
     "he": "חומרי גלם",
     "en": "materials"
    },
+   "L1b": {
+    "he": "חומרי לוח ומארז",
+    "en": "board & package materials"
+   },
    "L2": {
-    "he": "ציוד",
-    "en": "equipment"
+    "he": "ציוד ובדיקה",
+    "en": "equipment & test"
    },
    "L3": {
     "he": "כלי תכנון",
     "en": "design tools & IP"
    },
    "L4": {
-    "he": "יצרני שבבים",
-    "en": "chipmakers"
+    "he": "לוגיקה ומאיצים",
+    "en": "logic & accelerators"
+   },
+   "L4b": {
+    "he": "זיכרון ואחסון",
+    "en": "memory & storage"
    },
    "L5": {
-    "he": "מפעל ואריזה",
-    "en": "fab & packaging"
+    "he": "ייצור, אריזה ומצעים",
+    "en": "fab, packaging & substrates"
    },
    "L6": {
-    "he": "מערכות",
-    "en": "systems"
+    "he": "מערכות ותקשורת",
+    "en": "systems & networking"
+   },
+   "L6b": {
+    "he": "אופטיקה",
+    "en": "optics"
+   },
+   "L6c": {
+    "he": "חשמל, פסיביים וקירור",
+    "en": "power, passives & cooling"
    },
    "L7": {
     "he": "ענן",

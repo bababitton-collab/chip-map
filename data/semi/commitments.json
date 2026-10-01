@@ -630,7 +630,7 @@
    }
   },
   "ew_map": {
-   "sha256": "9896fc05c9a68d293be335501c6ebb2fb64e1f7bce36545d00aa111bbee6fe01",
+   "sha256": "7470d96a7a94a6e67efd2130be39ecd0466390105b962843bf69c3c0e9e191e8",
    "n": 62,
    "symbols": [
     "000660.KO",
@@ -639,8 +639,11 @@
     "042700.KO",
     "2317.TW",
     "3037.TW",
+    "4186.T",
+    "5201.T",
     "6488.TWO",
     "688126.SHG",
+    "8035.T",
     "AJNMY.US",
     "ALAB.US",
     "AMAT.US",
@@ -649,7 +652,6 @@
     "AMZN.US",
     "ANET.US",
     "ARM.US",
-    "ASGLY.US",
     "ASML.US",
     "ASMVY.US",
     "ASX.US",
@@ -689,8 +691,6 @@
     "SUOPY.US",
     "TECK.US",
     "TER.US",
-    "TOELY.US",
-    "TOKCF.US",
     "TSM.US",
     "VRT.US",
     "WAF.XETRA",

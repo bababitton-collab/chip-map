@@ -299,7 +299,8 @@ def test_answers_default_to_empty_and_are_never_invented(tmp_path,
     monkeypatch.setenv("CHIP_MAP_OUT", str(tmp_path))
     monkeypatch.delenv("ANSWERS_URL", raising=False)
     from chains import answers
-    assert answers.load(ids={"mu_fq4"}) == {}
+    # nvda_q3: not yet answered. mu_fq4 has a real mark now and would be read.
+    assert answers.load(ids={"nvda_q3"}) == {}
 
 
 @needs_build

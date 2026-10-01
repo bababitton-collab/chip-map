@@ -248,6 +248,8 @@ def companies(rows: list[dict], book, window: list[dt.date]) -> list[dict]:
 def for_card(rec: dict, doc: dict, book, node_symbols: list[str],
              kinds: dict, cal: list[dt.date], today: dt.date) -> dict | None:
     """The record block for one resolved card, or None if it cannot be dated."""
+    from chains import ew_universe
+    node_symbols = ew_universe.symbols_for(rec["qid"], node_symbols)
     commitment = rec.get("commitment") or {}
     signed = _day(commitment.get("committed_at"))
     if signed is None:

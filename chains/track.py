@@ -331,10 +331,15 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
            commitment: dict | None = None) -> dict:
     """One dated question, in whatever state it is in.
 
+    EW_MAP for this question is its frozen universe (chains/ew_universe.py)
+    where it has one, so the chart and the ledger read the same benchmark.
+
     ``commitment`` is the question's entry in commitments.json -- a hash and
     its dates, and the revision when there is one. Public in git already, so
     every card carries it, answered or not.
     """
+    from chains import ew_universe
+    node_symbols = ew_universe.symbols_for(w["id"], node_symbols)
     status = (mark or {}).get("status")
     direction = f["direction"] if f else 1
     entry = forecast.entry_session(f["marked_at"], cal) if f else None
@@ -903,7 +908,9 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
                  for n in doc.get("nodes", []) if n.get("ticker")}
 
     if book is None or cal is None:
-        wanted = set(node_symbols) | {forecast.benchmark_in(doc)["symbol"]}
+        from chains import ew_universe
+        wanted = (set(node_symbols) | {forecast.benchmark_in(doc)["symbol"]}
+                  | set(ew_universe.all_frozen()))
         for w in watch:
             for i in list(w.get("win") or []) + list(w.get("lose") or []):
                 if i in symbol_of:

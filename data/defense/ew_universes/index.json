@@ -1,0 +1,80 @@
+{
+ "artillery_155": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "ati_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "gd_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "ge_aero_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "hii_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "hwm_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "lmt_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "mp_ndpr_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "noc_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "rheinmetall_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "rtx_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "safran_q3": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ },
+ "srm_bottleneck": {
+  "fingerprint": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+  "source": "git",
+  "commit": "0ba530b6e1f4cea640770c5561cb9e524aec4671",
+  "verified": false
+ }
+}

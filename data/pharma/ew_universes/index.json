@@ -1,0 +1,74 @@
+{
+ "bachem_cmd": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "bioprocess_q3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "biosecure_list": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "cagrisema_fda": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "corning_q3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "gerresheimer_q4": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "lly_q3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "novo_q3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "samsung_bio_q3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "stvn_q3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "viking_oral_p3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ },
+ "wst_q3": {
+  "fingerprint": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+  "source": "git",
+  "commit": "82d92825339ce95c1f4e13b4380f4b40fcb1d9b6",
+  "verified": false
+ }
+}

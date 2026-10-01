@@ -456,7 +456,16 @@ def build(forecasts: list[dict], doc: dict | None = None,
         return {"summary": _summaries([]), "rows": []}
 
     bench = benchmark_in(doc)["symbol"]
-    wanted = set(node_symbols) | {bench}
+    # Each question is scored against the EW_MAP universe frozen at its
+    # commitment (chains/ew_universe.py), not against whatever the map holds
+    # today. A question with no frozen universe reads the live map.
+    # ponytail: the session calendar still comes from the live map's US
+    # symbols; freeze it per question too if a new US node ever shifts it.
+    from chains import ew_universe
+    idx = ew_universe.load_index()
+    ew_of = {f["qid"]: ew_universe.symbols_for(f["qid"], node_symbols, index=idx)
+             for f in forecasts}
+    wanted = set(node_symbols) | {bench} | {s for v in ew_of.values() for s in v}
     for f in forecasts:
         for i in list(f["win"]) + list(f["lose"]):
             if i in symbol_of:
@@ -466,7 +475,7 @@ def build(forecasts: list[dict], doc: dict | None = None,
 
     rows = []
     for f in forecasts:
-        r = score_one(f, book, cal, node_symbols, symbol_of, log, bench)
+        r = score_one(f, book, cal, ew_of[f["qid"]], symbol_of, log, bench)
         if r:
             rows.append(r)
     rows.sort(key=lambda r: (r["marked_at"], r["id"]), reverse=True)

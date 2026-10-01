@@ -577,6 +577,12 @@ def check(rows: list[dict], texts: dict | None,
         doc = mapfile.load()
     today = today or dt.date.today().isoformat()
     by = {e["qid"]: e for e in committed}
+    # A question with a frozen EW_MAP universe is guarded against THAT, not
+    # against the live map: adding a node no longer moves its benchmark, so
+    # it no longer trips. A frozen list that is not the one the entry
+    # fingerprinted still does. See chains/ew_universe.py.
+    from chains import ew_universe
+    frozen = ew_universe.load_index()
     problems = []
     for r in rows:
         qid = _qid(r)
@@ -598,8 +604,10 @@ def check(rows: list[dict], texts: dict | None,
                 problems += [f"{qid}: {p}" for p in liquidity.record_problems(
                     e["liquidity"], e["committed_at"])]
         contract_ = contract(r, (texts or {}).get(qid))
+        ew_doc = (ew_universe.as_doc(ew_universe.frozen_for(qid, index=frozen))
+                  if qid in frozen else doc)
         problems += [f"{qid}: {p}" for p in
-                     ew_map_problems(qid, e, contract_, doc, today)]
+                     ew_map_problems(qid, e, contract_, ew_doc, today)]
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         if e["sha256"] != sha:
             problems.append(f"{qid}: contract changed since it was committed "
@@ -700,6 +708,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"preregister: {e}")
             return 1
         dump(got, path)
+        from chains import ew_universe
+        before = {e["qid"]: e.get("ew_map", {}).get("sha256") for e in prior}
+        for e in got:
+            ew = e.get("ew_map")
+            if ew and ew["sha256"] != before.get(e["qid"]):
+                ew_universe.write(e["qid"], ew["symbols"], "commit", None, True)
         known = {e["qid"] for e in prior}
         was = {e["qid"]: e["sha256"] for e in prior}
         new = [e["qid"] for e in got if e["qid"] not in known]
@@ -713,7 +727,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     from chains import mapfile as _mf
-    problems = check(rows, texts, prior, doc=_mf.load())
+    from chains import ew_universe
+    problems = (check(rows, texts, prior, doc=_mf.load())
+                + ew_universe.problems(None, prior))
     if problems:
         print(f"preregister: {len(problems)} problem(s) in {path}")
         for p in problems:

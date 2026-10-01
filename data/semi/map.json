@@ -384,10 +384,9 @@
     "DuPont"
    ],
    "notes": "JSR was taken private by Japan Investment Corp; no longer independently listed.",
-   "price_symbol": "TOKCF.US",
-   "price_symbol_kind": "adr",
-   "price_note": "US line for Tokyo Ohka Kogyo Co. Ltd; home listing 4186.T is not on EODHD. Thin: about US$8,500 a day over three months, and weeks without a close (EODHD, 2026-09-15) -- not usable as a basket leg",
-   "price_quality": "thin",
+   "price_symbol": "4186.T",
+   "price_symbol_kind": "primary",
+   "price_note": "Home listing 4186.T, priced on Yahoo. The US line TOKCF traded about US$619 a day (2026-10-01) and is not usable as a basket leg.",
    "line": "packaging",
    "short": "TOK"
   },
@@ -439,10 +438,9 @@
     "HOYA"
    ],
    "notes": "Country: JP. Its EUV blanks \"have been adopted by several logic and memory semiconductor manufacturers\" (AGC, 2023-04-27), none named, so no customer edge. Subnode agc_blanks carries the CP9 supplier detail.",
-   "price_symbol": "ASGLY.US",
-   "price_symbol_kind": "adr",
-   "price_note": "US line for AGC Inc ADR; home listing 5201.T is not on EODHD. Thin: about US$38,000 a day over three months (EODHD, 2026-09-15) -- not usable as a basket leg",
-   "price_quality": "thin",
+   "price_symbol": "5201.T",
+   "price_symbol_kind": "primary",
+   "price_note": "Home listing 5201.T, priced on Yahoo. The US line ASGLY traded about US$34,000 a day (2026-10-01) and is not usable as a basket leg.",
    "line": "logic",
    "short": "AGC"
   },
@@ -602,9 +600,9 @@
     "Screen"
    ],
    "notes": "The EUV track monopoly is a widely reported but not filing-disclosed fact — flagged as estimate.",
-   "price_symbol": "TOELY.US",
-   "price_symbol_kind": "adr",
-   "price_note": "US line for Tokyo Electron Ltd PK; home listing 8035.T is not on EODHD",
+   "price_symbol": "8035.T",
+   "price_symbol_kind": "primary",
+   "price_note": "Home listing 8035.T, priced on Yahoo. The US line TOELY (OTC Pink) has had no close since 2026-09-24.",
    "line": "logic",
    "short": "TEL"
   },
@@ -4921,9 +4919,9 @@
    "chokepoint_ids": [
     "CP9"
    ],
-   "price_symbol": "ASGLY.US",
-   "price_symbol_kind": "adr",
-   "price_note": "US line for AGC Inc ADR; home listing 5201.T is not on EODHD"
+   "price_symbol": "5201.T",
+   "price_symbol_kind": "primary",
+   "price_note": "Home listing 5201.T, priced on Yahoo; see the node's note."
   },
   {
    "id": "corning_ule_blanks",
@@ -5183,9 +5181,9 @@
    "chokepoint_ids": [
     "CP3"
    ],
-   "price_symbol": "TOELY.US",
-   "price_symbol_kind": "adr",
-   "price_note": "US line for Tokyo Electron Ltd PK; home listing 8035.T is not on EODHD"
+   "price_symbol": "8035.T",
+   "price_symbol_kind": "primary",
+   "price_note": "Home listing 8035.T, priced on Yahoo; see the node's note."
   },
   {
    "id": "kla",
@@ -6474,9 +6472,9 @@
    "chokepoint_ids": [
     "CP5"
    ],
-   "price_symbol": "TOELY.US",
-   "price_symbol_kind": "adr",
-   "price_note": "US line for Tokyo Electron Ltd PK; home listing 8035.T is not on EODHD"
+   "price_symbol": "8035.T",
+   "price_symbol_kind": "primary",
+   "price_note": "Home listing 8035.T, priced on Yahoo; see the node's note."
   },
   {
    "id": "amat_tsv_ecd",

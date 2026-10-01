@@ -1,0 +1,219 @@
+{
+ "version": "ring2-drafts-2026-10-01",
+ "note": "Draft second rings for contract v2. Approved subset is decided by Michael.",
+ "source": "ring2-drafts-2026-10-01.json: authored by Cowork, approved by Michael 2026-10-01",
+ "questions": [
+  {
+   "domain": "pharma",
+   "qid": "bioprocess_q3",
+   "answer_date": "2026-10-21",
+   "ring2_win": [
+    "lonza",
+    "samsung_bio"
+   ],
+   "ring2_lose": [
+    "wuxi_bio"
+   ],
+   "ring2_rationale": {
+    "win": "Bioprocess orders up on capacity build: CDMOs building (Lonza, Samsung Biologics).",
+    "lose": "Non-China capacity build shifts work from WuXi Biologics."
+   },
+   "confidence": "M"
+  },
+  {
+   "domain": "pharma",
+   "qid": "wst_q3",
+   "answer_date": "2026-10-22",
+   "ring2_win": [
+    "lly",
+    "stevanato"
+   ],
+   "ring2_lose": [
+    "gerresheimer"
+   ],
+   "ring2_rationale": {
+    "win": "West high-value components growing on GLP-1: Lilly volume and the syringe/cartridge partner Stevanato.",
+    "lose": "West components win on Stevanato/Lilly formats rather than Gerresheimer's — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "pharma",
+   "qid": "corning_q3",
+   "answer_date": "2026-10-27",
+   "ring2_win": [
+    "stevanato",
+    "gerresheimer"
+   ],
+   "ring2_lose": [],
+   "ring2_rationale": {
+    "win": "Valor glass demand pulls converters (Stevanato, Gerresheimer).",
+    "lose": ""
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "pharma",
+   "qid": "samsung_bio_q3",
+   "answer_date": "2026-10-28",
+   "ring2_win": [
+    "sartorius",
+    "danaher",
+    "repligen"
+   ],
+   "ring2_lose": [
+    "wuxi_bio"
+   ],
+   "ring2_rationale": {
+    "win": "New Samsung Biologics capacity/contracts pull single-use and filtration suppliers.",
+    "lose": "Reshoring/non-China sourcing shifts contracts from WuXi Biologics."
+   },
+   "confidence": "S"
+  },
+  {
+   "domain": "pharma",
+   "qid": "lly_q3",
+   "answer_date": "2026-10-29",
+   "ring2_win": [
+    "lonza",
+    "siegfried",
+    "thermo",
+    "fujifilm"
+   ],
+   "ring2_lose": [
+    "polypeptide",
+    "ypsomed",
+    "gerresheimer"
+   ],
+   "ring2_rationale": {
+    "win": "Lilly gaining share pulls its recorded supply chain: Lonza, Siegfried, Thermo/Patheon, Fujifilm.",
+    "lose": "Novo losing share hits its recorded suppliers: PolyPeptide, Ypsomed, Gerresheimer."
+   },
+   "confidence": "S"
+  },
+  {
+   "domain": "pharma",
+   "qid": "novo_q3",
+   "answer_date": "2026-11-04",
+   "ring2_win": [
+    "lonza",
+    "siegfried",
+    "thermo",
+    "fujifilm"
+   ],
+   "ring2_lose": [
+    "polypeptide",
+    "ypsomed",
+    "gerresheimer"
+   ],
+   "ring2_rationale": {
+    "win": "Novo ceding share to Lilly pulls Lilly's recorded suppliers.",
+    "lose": "Novo cutting guidance hits its recorded suppliers: PolyPeptide, Ypsomed, Gerresheimer."
+   },
+   "confidence": "S"
+  },
+  {
+   "domain": "pharma",
+   "qid": "stvn_q3",
+   "answer_date": "2026-11-04",
+   "ring2_win": [
+    "corning",
+    "lly"
+   ],
+   "ring2_lose": [
+    "gerresheimer"
+   ],
+   "ring2_rationale": {
+    "win": "Stevanato growth pulls Valor glass (Corning) and reflects Lilly volume.",
+    "lose": "Stevanato taking syringe/cartridge share from Gerresheimer."
+   },
+   "confidence": "M"
+  },
+  {
+   "domain": "pharma",
+   "qid": "bachem_cmd",
+   "answer_date": "2026-11-26",
+   "ring2_win": [
+    "lly",
+    "novo"
+   ],
+   "ring2_lose": [
+    "lonza"
+   ],
+   "ring2_rationale": {
+    "win": "New peptide capacity eases API supply for Lilly and Novo.",
+    "lose": "Bachem winning peptide contracts competes with Lonza's peptide business."
+   },
+   "confidence": "M"
+  },
+  {
+   "domain": "pharma",
+   "qid": "gerresheimer_q4",
+   "answer_date": "2026-11-30",
+   "ring2_win": [
+    "corning",
+    "novo"
+   ],
+   "ring2_lose": [
+    "west"
+   ],
+   "ring2_rationale": {
+    "win": "Gerresheimer high-value growth pulls glass (Corning) and reflects Novo pen/vial volume.",
+    "lose": "Gerresheimer containment wins vs West's component content — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "pharma",
+   "qid": "biosecure_list",
+   "answer_date": "2026-12-18",
+   "ring2_win": [
+    "fujifilm",
+    "sartorius"
+   ],
+   "ring2_lose": [],
+   "ring2_rationale": {
+    "win": "A published list naming China CDMOs moves work to non-China CDMOs (Fujifilm) and their suppliers (Sartorius).",
+    "lose": "Weak — no recorded supplier exposed to WuXi alone."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "pharma",
+   "qid": "cagrisema_fda",
+   "answer_date": "2026-12-31",
+   "ring2_win": [
+    "polypeptide",
+    "ypsomed",
+    "gerresheimer"
+   ],
+   "ring2_lose": [
+    "lonza",
+    "siegfried",
+    "fujifilm"
+   ],
+   "ring2_rationale": {
+    "win": "CagriSema approval pulls Novo's recorded suppliers.",
+    "lose": "A second Novo incretin approved takes share from Lilly's supply chain (Lonza, Siegfried, Fujifilm)."
+   },
+   "confidence": "M"
+  },
+  {
+   "domain": "pharma",
+   "qid": "viking_oral_p3",
+   "answer_date": "2026-12-31",
+   "ring2_win": [
+    "polypeptide",
+    "bachem"
+   ],
+   "ring2_lose": [
+    "novo"
+   ],
+   "ring2_rationale": {
+    "win": "An oral peptide entering phase 3 adds future peptide API demand (PolyPeptide, Bachem).",
+    "lose": "Another oral GLP-1 entrant threatens Novo's Wegovy pill franchise — weak."
+   },
+   "confidence": "W"
+  }
+ ]
+}

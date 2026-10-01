@@ -6,7 +6,8 @@ scored by the same arithmetic, and their numbers are never added together: a
 hit rate over a mixed population of first- and second-order claims describes
 neither of them.
 
-The stand-in question here is intc_q3, and it has to be a contract-v1 one.
+The stand-in question here is orcl_q1, and it has to be a contract-v1 one.
+It was answered on 2026-09-10, so it can never be re-committed as v2.
 A v2 question REGISTERS its second ring by hand, and answers.with_twins
 refuses to mint one from any other basket -- including a synthetic fixture
 basket -- which is the guard tests/test_contract_v2.py exercises on mu_fq4.
@@ -66,14 +67,14 @@ def test_an_indirect_forecast_is_scored_at_forty_sessions(book):
     quarter of wafer starts, not a press release. 20 sessions is short for
     that, so 40 is added; the first three stay so the orders can still be read
     against each other where they overlap."""
-    r = led(book, [fc("r2", "intc_q3", ["s1"], ["s2"], order=2)])["rows"][0]
+    r = led(book, [fc("r2", "orcl_q1", ["s1"], ["s2"], order=2)])["rows"][0]
     assert sorted(int(h) for h in r["horizons"]) == [5, 10, 20, 40]
     assert r["horizons"]["40"] is not None
     assert r["horizons"]["40"]["excess"] is not None
 
 
 def test_forty_is_scored_the_same_way_as_the_others(book):
-    r = led(book, [fc("r2", "intc_q3", ["s1"], ["s2"], order=2)])["rows"][0]
+    r = led(book, [fc("r2", "orcl_q1", ["s1"], ["s2"], order=2)])["rows"][0]
     for h in ("5", "10", "20", "40"):
         got = r["horizons"][h]
         assert set(got) == {"excess", "win", "lose", "bench", "date", "hit",
@@ -84,17 +85,17 @@ def test_forty_is_scored_the_same_way_as_the_others(book):
 
 
 def test_a_direct_forecast_has_no_forty(book):
-    r = led(book, [fc("f", "intc_q3", ["up"], ["down"])])["rows"][0]
+    r = led(book, [fc("f", "orcl_q1", ["up"], ["down"])])["rows"][0]
     assert sorted(int(h) for h in r["horizons"]) == [5, 10, 20]
 
 
 def test_a_horizon_that_has_not_locked_yet_is_pending_not_zero(book):
     """40 sessions after a mark near the end of the calendar has not happened.
     It is pending -- it is not an excess of nothing."""
-    r = led(book, [fc("r2", "intc_q3", ["s1"], ["s2"], order=2,
+    r = led(book, [fc("r2", "orcl_q1", ["s1"], ["s2"], order=2,
                       marked=CAL[-5].isoformat())])["rows"][0]
     assert r["horizons"]["40"] is None
-    s = led(book, [fc("r2", "intc_q3", ["s1"], ["s2"], order=2,
+    s = led(book, [fc("r2", "orcl_q1", ["s1"], ["s2"], order=2,
                       marked=CAL[-5].isoformat())])["summary"]["indirect"]
     assert s["horizons"]["40"]["n"] == 0
     assert s["horizons"]["40"]["n_pending"] == 1
@@ -105,22 +106,22 @@ def test_a_horizon_that_has_not_locked_yet_is_pending_not_zero(book):
 def test_the_order_defaults_to_one(book):
     """Every forecast written before the second ring existed is a direct one,
     and stays one without being rewritten."""
-    old = fc("f", "intc_q3", ["up"], ["down"])
+    old = fc("f", "orcl_q1", ["up"], ["down"])
     old.pop("order", None)
     assert led(book, [old])["rows"][0]["order"] == 1
 
 
 def test_the_row_carries_its_order_through_to_the_page(book):
-    rows = led(book, [fc("f", "intc_q3", ["up"], ["down"]),
-                      fc("r", "intc_q3", ["s1"], ["s2"], order=2)])["rows"]
+    rows = led(book, [fc("f", "orcl_q1", ["up"], ["down"]),
+                      fc("r", "orcl_q1", ["s1"], ["s2"], order=2)])["rows"]
     assert {r["id"]: r["order"] for r in rows} == {"f": 1, "r": 2}
 
 
 # -- two summaries, never one ------------------------------------------------
 
 def test_the_two_orders_are_summarised_separately(book):
-    s = led(book, [fc("f", "intc_q3", ["up"], ["down"]),
-                   fc("r", "intc_q3", ["s1"], ["s2"], order=2)])["summary"]
+    s = led(book, [fc("f", "orcl_q1", ["up"], ["down"]),
+                   fc("r", "orcl_q1", ["s1"], ["s2"], order=2)])["summary"]
     assert s["order"] == 1 and s["indirect"]["order"] == 2
     assert s["n_forecasts"] == 1, "the direct summary counts direct rows only"
     assert s["indirect"]["n_forecasts"] == 1
@@ -128,9 +129,9 @@ def test_the_two_orders_are_summarised_separately(book):
 
 def test_nothing_pools_them(book):
     """Two direct rows and one indirect one. The direct N is 2, not 3."""
-    s = led(book, [fc("f1", "intc_q3", ["up"], ["down"]),
-                   fc("f2", "nvda_q3", ["up"], ["down"]),
-                   fc("r", "intc_q3", ["s1"], ["s2"], order=2)])["summary"]
+    s = led(book, [fc("f1", "orcl_q1", ["up"], ["down"]),
+                   fc("f2", "v1_fixture", ["up"], ["down"]),
+                   fc("r", "orcl_q1", ["s1"], ["s2"], order=2)])["summary"]
     assert s["horizons"]["5"]["n"] == 2
     assert s["indirect"]["horizons"]["5"]["n"] == 1
 
@@ -139,9 +140,9 @@ def test_pending_is_counted_per_order(book):
     """A row marked after the last session has entered nothing. It is pending
     in its OWN order's count and invisible in the other's."""
     late = CAL[-1] + dt.timedelta(days=1)
-    s = led(book, [fc("f", "intc_q3", ["up"], ["down"],
+    s = led(book, [fc("f", "orcl_q1", ["up"], ["down"],
                       marked=late.isoformat()),
-                   fc("r", "intc_q3", ["s1"], ["s2"], order=2)])["summary"]
+                   fc("r", "orcl_q1", ["s1"], ["s2"], order=2)])["summary"]
     assert s["n_pending"] == 1 and s["n_scored"] == 0
     assert s["indirect"]["n_pending"] == 0 and s["indirect"]["n_scored"] == 1
 
@@ -149,15 +150,15 @@ def test_pending_is_counted_per_order(book):
 def test_the_capital_gate_reads_the_direct_row_only(book):
     """N=30 was set for the claim somebody registered. The derived ring does
     not lend it a count."""
-    s = led(book, [fc("f", "intc_q3", ["up"], ["down"])]
-            + [fc(f"r{i}", "intc_q3", ["s1"], ["s2"], order=2,
+    s = led(book, [fc("f", "orcl_q1", ["up"], ["down"])]
+            + [fc(f"r{i}", "orcl_q1", ["s1"], ["s2"], order=2,
                   marked=CAL[i].isoformat()) for i in range(5)])["summary"]
     assert s["horizons"]["5"]["n"] == 1
     assert s["capital_rule"] == forecast.SAMPLE_RULE
 
 
 def test_both_summaries_carry_the_capital_rule(book):
-    s = led(book, [fc("r", "intc_q3", ["s1"], ["s2"], order=2)])["summary"]
+    s = led(book, [fc("r", "orcl_q1", ["s1"], ["s2"], order=2)])["summary"]
     assert s["indirect"]["capital_rule"] == s["capital_rule"]
     assert s["indirect"]["min_n"] == 30
 
@@ -172,13 +173,13 @@ def test_an_empty_ledger_still_has_both_halves(monkeypatch, tmp_path):
 
 # -- the twin ----------------------------------------------------------------
 
-B2 = {"intc_q3": (["s1"], ["s2"]), "nvda_q3": ([], [])}
+B2 = {"orcl_q1": (["s1"], ["s2"]), "v1_fixture": ([], [])}
 
 
 def test_a_twin_is_registered_for_every_direct_mark():
-    out = answers.with_twins([fc("f", "intc_q3", ["up"], ["down"])], B2)
+    out = answers.with_twins([fc("f", "orcl_q1", ["up"], ["down"])], B2)
     twin = [r for r in out if r.get("order") == 2][0]
-    assert twin["id"] == "intc_q3-2026-03-02-r2"
+    assert twin["id"] == "orcl_q1-2026-03-02-r2"
     assert (twin["win"], twin["lose"]) == (["s1"], ["s2"])
     assert twin["horizons"] == [5, 10, 20, 40]
 
@@ -186,7 +187,7 @@ def test_a_twin_is_registered_for_every_direct_mark():
 def test_the_twin_is_created_once(book):
     """Run the build twice, or three times, and there is still one r2 row. The
     id is derived from the mark, so a second copy has nowhere to go."""
-    once = answers.with_twins([fc("f", "intc_q3", ["up"], ["down"])], B2)
+    once = answers.with_twins([fc("f", "orcl_q1", ["up"], ["down"])], B2)
     twice = answers.with_twins(once, B2)
     thrice = answers.with_twins(twice, B2)
     assert [r["id"] for r in twice] == [r["id"] for r in once]
@@ -198,7 +199,7 @@ def test_the_twin_is_dated_to_the_mark_not_to_today():
     """Dating it to the day the code shipped would turn a forward test into a
     row that was registered after the fact."""
     out = answers.with_twins(
-        [fc("f", "intc_q3", ["up"], ["down"], marked="2026-03-02T21:05:00Z")],
+        [fc("f", "orcl_q1", ["up"], ["down"], marked="2026-03-02T21:05:00Z")],
         B2)
     twin = [r for r in out if r.get("order") == 2][0]
     assert twin["marked_at"] == "2026-03-02T21:05:00Z"
@@ -208,30 +209,30 @@ def test_the_twin_is_dated_to_the_mark_not_to_today():
 def test_no_twin_where_there_is_no_second_ring():
     """Most upstream questions have none. An empty basket is not a claim, and
     a forecast with nothing in it would score as a row of dashes."""
-    out = answers.with_twins([fc("f", "nvda_q3", ["up"], ["down"])], B2)
+    out = answers.with_twins([fc("f", "v1_fixture", ["up"], ["down"])], B2)
     assert [r["id"] for r in out] == ["f"]
 
 
 def test_a_hand_written_twin_is_left_alone():
     """If the marking task ever registers its own r2 row, that row is the
     registration. This does not overwrite it."""
-    mine = fc("intc_q3-2026-03-02-r2", "intc_q3", ["s1"], ["s2"], order=2)
+    mine = fc("orcl_q1-2026-03-02-r2", "orcl_q1", ["s1"], ["s2"], order=2)
     mine["direction"] = -1
-    out = answers.with_twins([fc("f", "intc_q3", ["up"], ["down"]), mine], B2)
+    out = answers.with_twins([fc("f", "orcl_q1", ["up"], ["down"]), mine], B2)
     twins = [r for r in out if r.get("order") == 2]
     assert len(twins) == 1 and twins[0]["direction"] == -1
 
 
 def test_the_twin_inherits_the_direction_of_the_mark():
     out = answers.with_twins(
-        [fc("f", "intc_q3", ["up"], ["down"], direction=-1)], B2)
+        [fc("f", "orcl_q1", ["up"], ["down"], direction=-1)], B2)
     assert [r for r in out if r.get("order") == 2][0]["direction"] == -1
 
 
 # -- an r2 record is pre-registered too --------------------------------------
 
-IDS = {"intc_q3", "nvda_q3"}
-B1 = {"intc_q3": (["up"], ["down"]), "nvda_q3": (["up"], [])}
+IDS = {"orcl_q1", "v1_fixture"}
+B1 = {"orcl_q1": (["up"], ["down"]), "v1_fixture": (["up"], [])}
 
 
 def test_a_marked_r2_basket_is_frozen_when_the_derivation_changes():
@@ -246,9 +247,9 @@ def test_a_marked_r2_basket_is_frozen_when_the_derivation_changes():
     A forecast that disappears because the map got better is the opposite of
     a forward test.
     """
-    stored = fc("r", "intc_q3", ["s1"], ["s2"], order=2)
+    stored = fc("r", "orcl_q1", ["s1"], ["s2"], order=2)
     # What the map would derive TODAY, and something else entirely.
-    for derived in (B2, {"intc_q3": ([], [])}, {"intc_q3": (["zz"], ["yy"])}):
+    for derived in (B2, {"orcl_q1": ([], [])}, {"orcl_q1": (["zz"], ["yy"])}):
         good, log = answers.collect_forecasts([dict(stored)], IDS, B1, derived)
         assert log == [], derived
         assert (good[0]["win"], good[0]["lose"]) == (["s1"], ["s2"]), derived
@@ -257,36 +258,36 @@ def test_a_marked_r2_basket_is_frozen_when_the_derivation_changes():
 def test_a_twin_whose_legs_are_the_first_ring_again_is_still_refused():
     """Frozen is not unchecked. The second ring is what the first ring
     depends on; a leg that IS the first ring is a corrupted row."""
-    bad = fc("r", "intc_q3", ["s1", "up"], ["s2"], order=2)
+    bad = fc("r", "orcl_q1", ["s1", "up"], ["s2"], order=2)
     good, log = answers.collect_forecasts([bad], IDS, B1, B2)
     assert good == []
     assert "already in the registered first-ring basket" in log[0]
 
 
 def test_a_twin_with_no_legs_or_a_leg_on_both_sides_is_refused():
-    empty = fc("r", "intc_q3", [], [], order=2)
+    empty = fc("r", "orcl_q1", [], [], order=2)
     good, log = answers.collect_forecasts([empty], IDS, B1, B2)
     assert good == [] and "no legs is not a claim" in log[0]
-    both = fc("r", "intc_q3", ["s1"], ["s1"], order=2)
+    both = fc("r", "orcl_q1", ["s1"], ["s1"], order=2)
     good, log = answers.collect_forecasts([both], IDS, B1, B2)
     assert good == [] and "on both sides at once" in log[0]
 
 
 def test_the_scored_r2_baskets_are_the_ones_in_the_file():
     good, _ = answers.collect_forecasts(
-        [fc("r", "intc_q3", ["s1"], ["s2"], order=2)], IDS, B1, B2)
+        [fc("r", "orcl_q1", ["s1"], ["s2"], order=2)], IDS, B1, B2)
     assert (good[0]["win"], good[0]["lose"]) == (["s1"], ["s2"])
 
 
 def test_an_r2_record_must_carry_the_four_horizons():
-    bad = fc("r", "intc_q3", ["s1"], ["s2"], order=2)
+    bad = fc("r", "orcl_q1", ["s1"], ["s2"], order=2)
     bad["horizons"] = [5, 10, 20]
     good, log = answers.collect_forecasts([bad], IDS, B1, B2)
     assert good == [] and "[5, 10, 20, 40]" in log[0]
 
 
 def test_a_direct_record_may_not_claim_the_fourth_horizon():
-    bad = fc("f", "intc_q3", ["up"], ["down"])
+    bad = fc("f", "orcl_q1", ["up"], ["down"])
     bad["horizons"] = [5, 10, 20, 40]
     good, log = answers.collect_forecasts([bad], IDS, B1, B2)
     assert good == [] and "[5, 10, 20]" in log[0]
@@ -294,7 +295,7 @@ def test_a_direct_record_may_not_claim_the_fourth_horizon():
 
 @pytest.mark.parametrize("order", [0, 3, "1", None])
 def test_an_order_that_is_not_one_or_two_is_refused(order):
-    bad = fc("r", "intc_q3", ["up"], ["down"])
+    bad = fc("r", "orcl_q1", ["up"], ["down"])
     bad["order"] = order
     good, log = answers.collect_forecasts([bad], IDS, B1, B2)
     assert good == [] and "order" in log[0]

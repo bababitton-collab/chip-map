@@ -1,16 +1,444 @@
 [
- {"id": "gev_q3", "d": "2026-10-22", "confirmed": false, "who": "GE Vernova Q3", "tk": "GEV", "cps": ["CPE1"], "win": ["gev", "siemens_energy"], "lose": [], "leaks": [], "lane": "turbines", "lbl": "GE Vernova", "kind": "tide"},
- {"id": "vrt_q3", "d": "2026-10-22", "confirmed": false, "who": "Vertiv Q3", "tk": "VRT", "cps": [], "win": ["vertiv"], "lose": [], "leaks": [], "lane": "datacenter", "lbl": "Vertiv", "kind": "tide"},
- {"id": "abb_q3", "d": "2026-10-15", "confirmed": false, "who": "ABB Q3", "tk": "ABB", "cps": ["CPE2"], "win": ["abb", "eaton"], "lose": [], "leaks": [], "lane": "grid", "lbl": "ABB", "kind": "tide"},
- {"id": "pwr_q3", "d": "2026-10-30", "confirmed": false, "who": "Quanta Services Q3", "tk": "PWR", "cps": ["CPE3"], "win": ["quanta"], "lose": [], "leaks": [], "lane": "grid", "lbl": "Quanta", "kind": "tide"},
- {"id": "etn_q3", "d": "2026-11-04", "confirmed": false, "who": "Eaton Q3", "tk": "ETN", "cps": ["CPE2"], "win": ["eaton", "vertiv", "quanta"], "lose": [], "leaks": [], "lane": "grid", "lbl": "Eaton", "kind": "tide"},
- {"id": "ccj_q3", "d": "2026-11-05", "confirmed": false, "who": "Cameco Q3", "tk": "CCJ", "cps": ["CPE4"], "win": ["cameco", "centrus"], "lose": [], "leaks": [], "lane": "nuclear", "lbl": "Cameco", "kind": "tide"},
- {"id": "ceg_q3", "d": "2026-11-06", "confirmed": false, "who": "Constellation Q3", "tk": "CEG", "cps": ["CPE4"], "win": ["constellation", "vistra", "talen"], "lose": [], "leaks": [], "lane": "nuclear", "lbl": "Constellation", "kind": "tide"},
- {"id": "vst_q3", "d": "2026-11-06", "confirmed": false, "who": "Vistra Q3", "tk": "VST", "cps": [], "win": ["vistra"], "lose": [], "leaks": [], "lane": "nuclear", "lbl": "Vistra", "kind": "tide"},
- {"id": "siemens_grid", "d": "2026-11-30", "confirmed": false, "who": "Siemens Energy Q4 FY", "tk": "ENR", "cps": ["CPE2"], "win": ["siemens_energy", "gev"], "lose": [], "leaks": [], "lane": "grid", "lbl": "Siemens Energy", "kind": "tide"},
- {"id": "leu_haleu", "d": "2026-11-30", "confirmed": false, "who": "Centrus enrichment catalyst", "tk": "LEU", "cps": ["CPE4"], "win": ["centrus", "cameco"], "lose": [], "leaks": [], "lane": "nuclear", "lbl": "Centrus", "kind": "tide"},
- {"id": "hvdc_cable", "d": "2026-11-30", "confirmed": false, "who": "Subsea cable catalyst", "tk": "PRY", "cps": ["CPE3"], "win": ["prysmian", "nexans"], "lose": [], "leaks": [], "lane": "cable", "lbl": "Cable makers", "kind": "tide"},
- {"id": "goes_share", "d": "2026-11-30", "confirmed": false, "who": "GOES capacity announcement", "tk": "CLF", "cps": ["CPE2"], "win": ["clf"], "lose": ["posco"], "leaks": [], "lane": "steel", "lbl": "GOES steel", "kind": "share"},
- {"id": "reactor_smr", "d": "2026-11-30", "confirmed": false, "who": "SMR milestone catalyst", "tk": "OKLO", "cps": ["CPE5"], "win": ["oklo", "nuscale", "nano_nuclear"], "lose": [], "leaks": [], "lane": "nuclear", "lbl": "SMR developers", "kind": "tide"},
- {"id": "powl_q4", "d": "2026-12-15", "confirmed": false, "who": "Powell Industries FY Q4", "tk": "POWL", "cps": ["CPE2"], "win": ["powell"], "lose": [], "leaks": [], "lane": "grid", "lbl": "Powell", "kind": "tide"}
+ {
+  "id": "gev_q3",
+  "d": "2026-10-22",
+  "confirmed": false,
+  "who": "GE Vernova Q3",
+  "tk": "GEV",
+  "cps": [
+   "CPE1"
+  ],
+  "win": [
+   "gev",
+   "siemens_energy"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "turbines",
+  "lbl": "GE Vernova",
+  "kind": "tide",
+  "ring2_win": [
+   "baker_hughes",
+   "vistra",
+   "talen"
+  ],
+  "ring2_lose": [
+   "nextera"
+  ],
+  "ring2_rationale": {
+   "win": "Heavy-duty turbines sold out: overflow to aero/industrial turbines (Baker Hughes); existing dispatchable fleets (Vistra, Talen) gain scarcity value.",
+   "lose": "Turbine scarcity raises the cost and delay of new gas build for large utility developers (NextEra) — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "vrt_q3",
+  "d": "2026-10-22",
+  "confirmed": false,
+  "who": "Vertiv Q3",
+  "tk": "VRT",
+  "cps": [],
+  "win": [
+   "vertiv"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "datacenter",
+  "lbl": "Vertiv",
+  "kind": "tide",
+  "ring2_win": [
+   "eaton",
+   "nvent"
+  ],
+  "ring2_lose": [
+   "schneider"
+  ],
+  "ring2_rationale": {
+   "win": "Vertiv backlog and guide up confirm data-center power/cooling demand for peers (Eaton, nVent).",
+   "lose": "Vertiv winning share in data-center power/cooling competes with Schneider — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "abb_q3",
+  "d": "2026-10-15",
+  "confirmed": false,
+  "who": "ABB Q3",
+  "tk": "ABB",
+  "cps": [
+   "CPE2"
+  ],
+  "win": [
+   "abb",
+   "eaton"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "grid",
+  "lbl": "ABB",
+  "kind": "tide",
+  "ring2_win": [
+   "clf",
+   "posco",
+   "powell"
+  ],
+  "ring2_lose": [
+   "vertiv"
+  ],
+  "ring2_rationale": {
+   "win": "Electrification orders up on data centers: GOES for transformers (Cleveland-Cliffs, POSCO) and switchgear peer Powell.",
+   "lose": "ABB taking data-center electrical share competes with Vertiv's power line — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "pwr_q3",
+  "d": "2026-10-30",
+  "confirmed": false,
+  "who": "Quanta Services Q3",
+  "tk": "PWR",
+  "cps": [
+   "CPE3"
+  ],
+  "win": [
+   "quanta"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "grid",
+  "lbl": "Quanta",
+  "kind": "tide",
+  "ring2_win": [
+   "prysmian",
+   "nexans",
+   "nkt",
+   "hubbell"
+  ],
+  "ring2_lose": [
+   "nextera"
+  ],
+  "ring2_rationale": {
+   "win": "Record transmission backlog pulls cable (Prysmian, Nexans, NKT) and grid hardware (Hubbell).",
+   "lose": "Contractor capacity booked to record levels raises build cost and time for utility developers (NextEra) — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "etn_q3",
+  "d": "2026-11-04",
+  "confirmed": false,
+  "who": "Eaton Q3",
+  "tk": "ETN",
+  "cps": [
+   "CPE2"
+  ],
+  "win": [
+   "eaton",
+   "vertiv",
+   "quanta"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "grid",
+  "lbl": "Eaton",
+  "kind": "tide",
+  "ring2_win": [
+   "abb",
+   "schneider",
+   "clf"
+  ],
+  "ring2_lose": [
+   "nvent"
+  ],
+  "ring2_rationale": {
+   "win": "Eaton electrical orders up double digits: peer read-through (ABB, Schneider) and transformer steel (Cleveland-Cliffs).",
+   "lose": "Eaton taking data-center electrical content competes with nVent — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "ccj_q3",
+  "d": "2026-11-05",
+  "confirmed": false,
+  "who": "Cameco Q3",
+  "tk": "CCJ",
+  "cps": [
+   "CPE4"
+  ],
+  "win": [
+   "cameco",
+   "centrus"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "nuclear",
+  "lbl": "Cameco",
+  "kind": "tide",
+  "ring2_win": [
+   "bwxt",
+   "doosan"
+  ],
+  "ring2_lose": [
+   "constellation",
+   "talen"
+  ],
+  "ring2_rationale": {
+   "win": "Tight fuel with firm contracting signals new reactor demand: components (BWXT), forgings (Doosan).",
+   "lose": "Higher realized uranium prices raise fuel cost for nuclear operators (Constellation, Talen) — small share of cost, weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "ceg_q3",
+  "d": "2026-11-06",
+  "confirmed": false,
+  "who": "Constellation Q3",
+  "tk": "CEG",
+  "cps": [
+   "CPE4"
+  ],
+  "win": [
+   "constellation",
+   "vistra",
+   "talen"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "nuclear",
+  "lbl": "Constellation",
+  "kind": "tide",
+  "ring2_win": [
+   "centrus",
+   "cameco",
+   "gev"
+  ],
+  "ring2_lose": [
+   "nextera"
+  ],
+  "ring2_rationale": {
+   "win": "New hyperscaler nuclear PPAs pull fuel (Centrus, Cameco) and grid/turbine work (GE Vernova).",
+   "lose": "Hyperscalers contracting firm nuclear instead of renewables PPAs shifts demand away from NextEra."
+  },
+  "ring2_confidence": "M"
+ },
+ {
+  "id": "vst_q3",
+  "d": "2026-11-06",
+  "confirmed": false,
+  "who": "Vistra Q3",
+  "tk": "VST",
+  "cps": [],
+  "win": [
+   "vistra"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "nuclear",
+  "lbl": "Vistra",
+  "kind": "tide",
+  "ring2_win": [
+   "centrus",
+   "gev"
+  ],
+  "ring2_lose": [
+   "nextera"
+  ],
+  "ring2_rationale": {
+   "win": "Vistra PPA progress pulls enrichment (Centrus) and gas turbines (GE Vernova).",
+   "lose": "Firm-power PPAs rather than renewable PPAs shift demand away from NextEra."
+  },
+  "ring2_confidence": "M"
+ },
+ {
+  "id": "siemens_grid",
+  "d": "2026-11-30",
+  "confirmed": false,
+  "who": "Siemens Energy Q4 FY",
+  "tk": "ENR",
+  "cps": [
+   "CPE2"
+  ],
+  "win": [
+   "siemens_energy",
+   "gev"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "grid",
+  "lbl": "Siemens Energy",
+  "kind": "tide",
+  "ring2_win": [
+   "clf",
+   "posco",
+   "prysmian"
+  ],
+  "ring2_lose": [
+   "nextera"
+  ],
+  "ring2_rationale": {
+   "win": "Record grid backlog pulls transformer steel (Cleveland-Cliffs, POSCO) and HVDC cable (Prysmian).",
+   "lose": "Grid-equipment backlog at a record lengthens interconnection for new generation (NextEra) — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "leu_haleu",
+  "d": "2026-11-30",
+  "confirmed": false,
+  "who": "Centrus enrichment catalyst",
+  "tk": "LEU",
+  "cps": [
+   "CPE4"
+  ],
+  "win": [
+   "centrus",
+   "cameco"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "nuclear",
+  "lbl": "Centrus",
+  "kind": "tide",
+  "ring2_win": [
+   "oklo",
+   "nano_nuclear",
+   "bwxt"
+  ],
+  "ring2_lose": [
+   "constellation"
+  ],
+  "ring2_rationale": {
+   "win": "HALEU contract or DOE milestone unlocks fuel for advanced reactors (Oklo, Nano Nuclear) and fuel fabrication (BWXT).",
+   "lose": "Higher enrichment pricing raises fuel cost for nuclear operators (Constellation) — small share of cost, weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "hvdc_cable",
+  "d": "2026-11-30",
+  "confirmed": false,
+  "who": "Subsea cable catalyst",
+  "tk": "PRY",
+  "cps": [
+   "CPE3"
+  ],
+  "win": [
+   "prysmian",
+   "nexans"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "cable",
+  "lbl": "Cable makers",
+  "kind": "tide",
+  "ring2_win": [
+   "nkt",
+   "quanta"
+  ],
+  "ring2_lose": [
+   "nextera"
+  ],
+  "ring2_rationale": {
+   "win": "Cable book-to-bill above 1 confirms HVDC demand: peer NKT and transmission builder Quanta.",
+   "lose": "Sold-out HVDC cable delays offshore and interconnection projects for developers (NextEra) — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "goes_share",
+  "d": "2026-11-30",
+  "confirmed": false,
+  "who": "GOES capacity announcement",
+  "tk": "CLF",
+  "cps": [
+   "CPE2"
+  ],
+  "win": [
+   "clf"
+  ],
+  "lose": [
+   "posco"
+  ],
+  "leaks": [],
+  "lane": "steel",
+  "lbl": "GOES steel",
+  "kind": "share",
+  "ring2_win": [
+   "eaton",
+   "abb"
+  ],
+  "ring2_lose": [
+   "hubbell"
+  ],
+  "ring2_rationale": {
+   "win": "A North American GOES expansion eases transformer-steel supply for Eaton and ABB transformer lines.",
+   "lose": "Domestic steel capacity eases distribution-transformer scarcity premium for utility hardware (Hubbell) — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "reactor_smr",
+  "d": "2026-11-30",
+  "confirmed": false,
+  "who": "SMR milestone catalyst",
+  "tk": "OKLO",
+  "cps": [
+   "CPE5"
+  ],
+  "win": [
+   "oklo",
+   "nuscale",
+   "nano_nuclear"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "nuclear",
+  "lbl": "SMR developers",
+  "kind": "tide",
+  "ring2_win": [
+   "centrus",
+   "bwxt",
+   "doosan",
+   "fluor"
+  ],
+  "ring2_lose": [
+   "gev"
+  ],
+  "ring2_rationale": {
+   "win": "A firm SMR order/approval/award pulls HALEU (Centrus), components (BWXT), forgings (Doosan), and EPC (Fluor).",
+   "lose": "SMRs advancing compete with gas turbines for firm data-center power — weak."
+  },
+  "ring2_confidence": "W"
+ },
+ {
+  "id": "powl_q4",
+  "d": "2026-12-15",
+  "confirmed": false,
+  "who": "Powell Industries FY Q4",
+  "tk": "POWL",
+  "cps": [
+   "CPE2"
+  ],
+  "win": [
+   "powell"
+  ],
+  "lose": [],
+  "leaks": [],
+  "lane": "grid",
+  "lbl": "Powell",
+  "kind": "tide",
+  "ring2_win": [
+   "eaton",
+   "abb",
+   "hubbell"
+  ],
+  "ring2_lose": [
+   "schneider"
+  ],
+  "ring2_rationale": {
+   "win": "Powell record switchgear orders: read-through to electrical peers (Eaton, ABB, Hubbell).",
+   "lose": "Powell winning large data-center E-house orders competes with Schneider — weak."
+  },
+  "ring2_confidence": "W"
+ }
 ]

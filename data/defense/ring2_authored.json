@@ -1,0 +1,223 @@
+{
+ "version": "ring2-drafts-2026-10-01",
+ "note": "Draft second rings for contract v2. Approved subset is decided by Michael.",
+ "source": "ring2-drafts-2026-10-01.json: authored by Cowork, approved by Michael 2026-10-01",
+ "questions": [
+  {
+   "domain": "defense",
+   "qid": "ge_aero_q3",
+   "answer_date": "2026-10-20",
+   "ring2_win": [
+    "ati",
+    "carpenter",
+    "safran"
+   ],
+   "ring2_lose": [
+    "rtx"
+   ],
+   "ring2_rationale": {
+    "win": "Engine output up and the castings constraint addressed: superalloy/titanium (ATI, Carpenter) and CFM partner Safran.",
+    "lose": "GE taking engine deliveries and aftermarket share from Pratt & Whitney (RTX)."
+   },
+   "confidence": "M"
+  },
+  {
+   "domain": "defense",
+   "qid": "noc_q3",
+   "answer_date": "2026-10-20",
+   "ring2_win": [
+    "lmt",
+    "rtx"
+   ],
+   "ring2_lose": [
+    "boeing"
+   ],
+   "ring2_rationale": {
+    "win": "More solid-rocket-motor capacity unblocks missile primes (Lockheed, RTX).",
+    "lose": "Budget and missile mix shifting to munitions primes over Boeing's defence programmes — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "srm_bottleneck",
+   "answer_date": "2026-10-22",
+   "ring2_win": [
+    "lmt",
+    "rtx"
+   ],
+   "ring2_lose": [
+    "boeing"
+   ],
+   "ring2_rationale": {
+    "win": "Aerojet motor growth unblocks Lockheed and RTX missile deliveries.",
+    "lose": "Munitions primes gain budget share relative to Boeing defence — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "safran_q3",
+   "answer_date": "2026-10-23",
+   "ring2_win": [
+    "ati",
+    "carpenter",
+    "howmet"
+   ],
+   "ring2_lose": [
+    "rolls"
+   ],
+   "ring2_rationale": {
+    "win": "CFM deliveries and aftermarket strength pull engine materials (ATI, Carpenter) and castings (Howmet).",
+    "lose": "Narrowbody CFM strength contrasts with Rolls-Royce's widebody-only exposure — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "lmt_q3",
+   "answer_date": "2026-10-27",
+   "ring2_win": [
+    "l3harris",
+    "noc",
+    "mp"
+   ],
+   "ring2_lose": [
+    "boeing"
+   ],
+   "ring2_rationale": {
+    "win": "Missiles segment up with backlog: motors (L3Harris, Northrop) and magnets (MP).",
+    "lose": "Lockheed winning missile/fighter budget share relative to Boeing defence."
+   },
+   "confidence": "M"
+  },
+  {
+   "domain": "defense",
+   "qid": "rtx_q3",
+   "answer_date": "2026-10-27",
+   "ring2_win": [
+    "noc",
+    "mp",
+    "howmet"
+   ],
+   "ring2_lose": [
+    "boeing"
+   ],
+   "ring2_rationale": {
+    "win": "Raytheon air-defence backlog up: motors (Northrop), magnets (MP), and castings for Pratt (Howmet).",
+    "lose": "Missile/air-defence budget share over Boeing defence — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "ati_q3",
+   "answer_date": "2026-10-28",
+   "ring2_win": [
+    "ge_aero",
+    "howmet"
+   ],
+   "ring2_lose": [
+    "boeing"
+   ],
+   "ring2_rationale": {
+    "win": "ATI citing aero/defence demand confirms engine build rates at GE Aerospace and Howmet.",
+    "lose": "Titanium/nickel tightness raises input cost for airframers (Boeing) — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "gd_q3",
+   "answer_date": "2026-10-28",
+   "ring2_win": [
+    "rheinmetall",
+    "noc"
+   ],
+   "ring2_lose": [
+    "boeing"
+   ],
+   "ring2_rationale": {
+    "win": "155mm ramp and combat-systems growth: read-through to munitions peers (Rheinmetall) and energetics/motors (Northrop).",
+    "lose": "Budget shifting to munitions over Boeing defence platforms — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "hwm_q3",
+   "answer_date": "2026-10-29",
+   "ring2_win": [
+    "ati",
+    "carpenter",
+    "safran"
+   ],
+   "ring2_lose": [],
+   "ring2_rationale": {
+    "win": "Howmet engine-products growth pulls superalloy/titanium (ATI, Carpenter) and reflects CFM build (Safran).",
+    "lose": ""
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "hii_q3",
+   "answer_date": "2026-11-03",
+   "ring2_win": [],
+   "ring2_lose": [
+    "bae"
+   ],
+   "ring2_rationale": {
+    "win": "",
+    "lose": "US submarine programme on track keeps AUKUS work in US yards rather than BAE's — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "mp_ndpr_q3",
+   "answer_date": "2026-11-05",
+   "ring2_win": [
+    "lmt",
+    "rtx"
+   ],
+   "ring2_lose": [],
+   "ring2_rationale": {
+    "win": "NdPr above 1,000t secures magnet supply for missile primes (Lockheed, RTX).",
+    "lose": ""
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "rheinmetall_q3",
+   "answer_date": "2026-11-05",
+   "ring2_win": [],
+   "ring2_lose": [
+    "lmt"
+   ],
+   "ring2_rationale": {
+    "win": "",
+    "lose": "European procurement preferring European primes over US imports (Lockheed) — weak."
+   },
+   "confidence": "W"
+  },
+  {
+   "domain": "defense",
+   "qid": "artillery_155",
+   "answer_date": "2026-12-31",
+   "ring2_win": [
+    "rheinmetall",
+    "bae"
+   ],
+   "ring2_lose": [
+    "boeing"
+   ],
+   "ring2_rationale": {
+    "win": "100k rounds/month confirms the munitions cycle; read-through to European ammunition makers (Rheinmetall, BAE).",
+    "lose": "Budget shifting to munitions over Boeing defence platforms — weak."
+   },
+   "confidence": "W"
+  }
+ ]
+}

@@ -3150,6 +3150,13 @@ function lockedHTML(){
   // because the author did not claim any; the legs came out of the contract.
   const V2_R = 12;         // the scored ring's circle: bigger than a derived one
   function isV2(w){ return w.contract_version === 2; }
+  // The author's confidence in the scored basket, registered in the hash.
+  // A small mono tag, never a colour: it qualifies the claim, it is not one.
+  const CONF = {lbl:'Confidence', lv:{S:'strong', M:'medium', W:'weak'}};
+  function confTag(w){
+    const c = w.ring2_confidence;
+    return CONF.lv[c] ? `<span class="conftag" data-confidence="${c}">${CONF.lbl} · ${CONF.lv[c]}</span>` : '';
+  }
 
   function ring2Registered(w){
     const side = [...(w.win2||[]).map(i=>({id:i, win:true})),
@@ -3234,7 +3241,7 @@ function lockedHTML(){
       <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"/>
       <circle cx="${CX}" cy="${CY}" r="20" fill="url(#hilite)" pointer-events="none"/>
       <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr2}</text>
-    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span><span><i style="border-color:#7d8797"></i>${T.diag}</span><span class="mixnote">${T.scored}</span></div></div>`;
+    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span><span><i style="border-color:#7d8797"></i>${T.diag}</span>${confTag(w)}<span class="mixnote">${T.scored}</span></div></div>`;
     }
 
     // --- ring 2, derived from the map's edges (contract v1) ---------------
@@ -3374,7 +3381,8 @@ function lockedHTML(){
       const first = (w.win||[]).concat(w.lose||[]).map(plain);
       const note = [why.win, why.lose].filter(Boolean)
         .map(s=>`<p class="rlwhy">${esc(s)}</p>`).join('');
-      return `<p class="rlhead">${REL.scored}</p>`
+      const tag = confTag(w);
+      return `<p class="rlhead">${REL.scored}${tag ? ' · ' + tag : ''}</p>`
         + (scored.length ? `<ul class="rlist">${scored.join('')}</ul>`
                          : `<p class="rlnone">${REL.none}</p>`)
         + note

@@ -110,8 +110,8 @@ def test_the_guard_fires_on_the_derived_ring_too():
 
 
 def test_a_v1_question_is_not_touched_by_the_guard():
-    ok = {"intc_q3": (["hoya"], ["sumco"])}
-    out = answers.with_twins([fc("intc_q3", ["intc"], ["tsmc"])], ok)
+    ok = {"orcl_q1": (["hoya"], ["sumco"])}
+    out = answers.with_twins([fc("orcl_q1", ["intc"], ["tsmc"])], ok)
     twin = next(r for r in out if r.get("order") == 2)
     assert (twin["win"], twin["lose"]) == (["hoya"], ["sumco"])
 
@@ -120,7 +120,7 @@ def test_a_stored_v2_twin_whose_legs_drifted_is_refused():
     """A v1 twin is FROZEN -- it is derived, and the derivation may improve.
     A v2 twin is REGISTERED, so it is held to the first ring's rule instead
     and drift is refused."""
-    ids = {"mu_fq4", "intc_q3"}
+    ids = {"mu_fq4", "orcl_q1"}
     b1 = {"mu_fq4": (["mu"], ["skhynix", "samsung"])}
     reg = {"mu_fq4": P.ring2_of(row())}
     good = fc("mu_fq4", *P.ring2_of(row()), order=2)
@@ -133,9 +133,9 @@ def test_a_stored_v2_twin_whose_legs_drifted_is_refused():
 def test_a_v1_twin_is_still_frozen_when_the_derivation_moves():
     """The other half: no registered ring, so the old rule still applies and
     a stored twin survives an improvement to chains/rings.py."""
-    ids = {"intc_q3"}
-    b1 = {"intc_q3": (["intc"], ["tsmc"])}
-    stored = fc("intc_q3", ["hoya"], ["sumco"], order=2)
+    ids = {"orcl_q1"}
+    b1 = {"orcl_q1": (["intc"], ["tsmc"])}
+    stored = fc("orcl_q1", ["hoya"], ["sumco"], order=2)
     assert answers.check_forecast(stored, ids, b1, None, {}) is None
 
 
@@ -237,6 +237,21 @@ def test_an_all_v1_record_is_byte_for_byte_what_it_always_was():
     assert "by_contract" not in track.unpooled(dict(plain), rows)
 
 
+def test_v2_is_split_by_confidence_and_an_empty_tier_is_absent():
+    rows = [card(1, h1=HIT, h2=None, qid="a"),
+            card(2, h1=None, h2=HIT, qid="s", ring2_confidence="S"),
+            card(2, h1=None, h2=MISS, qid="w1", ring2_confidence="W"),
+            card(2, h1=None, h2=HIT, qid="w2", ring2_confidence="W"),
+            card(2, h1=None, h2=HIT, qid="mu")]           # no confidence
+    v2 = track.record_by_contract(rows)["versions"]["2"]
+    assert v2["n"] == 4 and v2["hits"] == 3               # all v2
+    tiers = v2["by_confidence"]
+    assert set(tiers) == {"S", "W"}                      # M: nothing, no panel
+    assert (tiers["S"]["n"], tiers["S"]["hits"]) == (1, 1)
+    assert (tiers["W"]["n"], tiers["W"]["hits"]) == (2, 1)
+    assert "by_confidence" not in track.record_by_contract(rows)["versions"]["1"]
+
+
 def test_one_version_scored_and_one_not_still_reports_a_headline():
     """Two versions present, only one with a locked result. There is nothing
     to pool yet, so the headline stands and the split is shown."""
@@ -319,10 +334,10 @@ def test_the_snapshot_ships_the_registered_ring_for_a_v2_row():
 
 
 def test_mu_fq4_is_the_question_all_of_this_is_about():
-    """One live v2 question today. When there is a second, this test is the
-    place that notices."""
+    """The first v2 question, and still the only one with no confidence."""
     rows = json.loads(watch_path("semi").read_text(encoding="utf-8"))
-    assert [r["id"] for r in rows if P.is_v2(r)] == ["mu_fq4"]
+    assert "mu_fq4" in [r["id"] for r in rows if P.is_v2(r)]
+    assert P.RING2_CONFIDENCE not in row()
     w = row()
     assert w["d"] == "2026-09-30"
     assert P.ring2_of(w) == (["globalwafers", "shinetsu", "tel"],

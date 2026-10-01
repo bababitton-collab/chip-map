@@ -523,6 +523,9 @@
   const V2 = r => r && r.contract_version === 2;
   const SCORED_LABEL = 'Second ring (scored)';
   const DIRECT_LABEL = 'Direct (diagnostic)';
+  const CONF_WORD = {S:'strong', M:'medium', W:'weak'};
+  const confOf = r => CONF_WORD[r && r.ring2_confidence]
+    ? ` · <span data-confidence="${r.ring2_confidence}">Confidence · ${CONF_WORD[r.ring2_confidence]}</span>` : '';
 
   function officialScore(r){
     if(!r.entry_date) return '';
@@ -540,7 +543,7 @@
       ? `<b data-official-value class="${h.hit?'pos':'neg'}" style="${big};font-size:1.6rem">${p2(h.spread)}</b><span>${h.hit?'hit':'miss'} · locked ${esc(h.date)}</span>`
       : `<b data-official-value class="flat" style="${big};font-size:1.1rem">pending</b><span>locks at session ${PH} · day ${esc(r.day_index)} of ${PH}</span>`;
     return `<div class="official" data-official="${PH}" data-official-state="${h?'scored':'pending'}" data-official-ring="${v2?'2':'1'}" style="margin-top:14px;padding:10px 12px;border:1px solid #31405a;border-radius:8px">
-      <div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#b3bccb;margin-bottom:6px">Official score · ${PH}-session excess vs EW_MAP${v2?` · ${SCORED_LABEL}`:''}</div>
+      <div style="font-family:IBM Plex Mono,monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#b3bccb;margin-bottom:6px">Official score · ${PH}-session excess vs EW_MAP${v2?` · ${SCORED_LABEL}${confOf(r)}`:''}</div>
       <div style="font-family:IBM Plex Mono,monospace;font-size:.62rem;color:#7d8797">${val}</div>
       ${diag.length?`<div data-diagnostic style="margin-top:8px;font-family:IBM Plex Mono,monospace;font-size:.6rem;color:#7d8797">Diagnostic, not the score · ${diag.map(esc).join(' · ')}</div>`:''}
     </div>`;
@@ -836,14 +839,23 @@
     if(!B || !B.versions) return '';
     const keys = Object.keys(B.versions).sort();
     if(keys.length < 2) return '';
-    const rows = keys.map(k => {
-      const v = B.versions[k];
+    const three = (v, attr) => {
       const n = v.n || 0;
-      return tile(n, `${v.label} · N`, '', ` data-contract="${esc(k)}"`)
+      return tile(n, `${v.label} · N`, '', attr)
         + tile(n ? `${v.hits}/${n}` : '—',
                n ? `${v.label} · hit rate ${pct(v.hit_rate)}` : NOT_ENOUGH)
         + tile(n && v.mean_excess!=null ? p2(v.mean_excess) : '—',
                n ? `${v.label} · mean excess` : NOT_ENOUGH);
+    };
+    // v2 also by the author's confidence, S, M, W, each on its own. The
+    // record only carries a tier that has scored something, so an empty
+    // tier draws nothing rather than a 0/0 that reads as a result.
+    const rows = keys.map(k => {
+      const v = B.versions[k];
+      const C = v.by_confidence || {};
+      return three(v, ` data-contract="${esc(k)}"`)
+        + ['S','M','W'].filter(c => C[c] && C[c].n)
+            .map(c => three(C[c], ` data-contract="${esc(k)}" data-confidence="${c}"`)).join('');
     }).join('');
     return `<div class="bycontract" data-by-contract="${keys.length}" style="margin-top:6px">
       ${lbl('Scored apart · never averaged together')}

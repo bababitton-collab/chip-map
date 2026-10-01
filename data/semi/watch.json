@@ -71,7 +71,21 @@
   ],
   "lane": "hbm",
   "lbl": "Samsung (מקדים)",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "lrcx",
+   "hanmi",
+   "advantest"
+  ],
+  "ring2_lose": [
+   "smci",
+   "foxconn"
+  ],
+  "ring2_rationale": {
+   "win": "A memory profit jump funds memory capex: etch (Lam), HBM bonders (Hanmi), memory test (Advantest).",
+   "lose": "Higher memory prices squeeze server/rack integrators that pass DRAM/HBM through at thin margins."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "asml_q3",
@@ -96,7 +110,19 @@
   "leaks": [],
   "lane": "litho",
   "lbl": "ASML",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "klac"
+  ],
+  "ring2_lose": [
+   "lrcx",
+   "amat"
+  ],
+  "ring2_rationale": {
+   "win": "More EUV layers pull EUV resist (TOK), the EUV track (TEL) and EUV-layer process control (KLA).",
+   "lose": "EUV replaces multi-patterning, cutting deposition/etch steps per layer relative to litho spend."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "tsm_q3",
@@ -124,7 +150,21 @@
   ],
   "lane": "fab",
   "lbl": "TSMC",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "ibiden",
+   "unimicron",
+   "advantest",
+   "lasertec"
+  ],
+  "ring2_lose": [
+   "skc"
+  ],
+  "ring2_rationale": {
+   "win": "A CoWoS number means more large FC-BGA substrates (Ibiden, Unimicron) and AI test (Advantest); High-NA for A14 needs actinic mask inspection (Lasertec).",
+   "lose": "A committed CoWoS/ABF roadmap delays the case for glass-core substrates (SKC/Absolics)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "clf_q3",
@@ -145,7 +185,16 @@
   "leaks": [],
   "lane": "power",
   "lbl": "Cleveland-Cliffs",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "msft",
+   "amzn"
+  ],
+  "ring2_lose": [],
+  "ring2_rationale": {
+   "win": "Butler upgrade on time adds domestic transformer-core steel, easing the grid-connection bottleneck for hyperscalers."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "intc_q3",
@@ -168,7 +217,20 @@
   "leaks": [],
   "lane": "fab",
   "lbl": "Intel",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "lasertec",
+   "asmpt"
+  ],
+  "ring2_lose": [
+   "entegris",
+   "klac"
+  ],
+  "ring2_rationale": {
+   "win": "A named 14A customer lifts Intel Foundry suppliers named on Intel's 2026 EPIC list: High-NA mask inspection (Lasertec), packaging bonders (ASMPT), mask blanks/materials (AGC).",
+   "lose": "Suppliers whose only >10% customer is TSMC (Entegris, KLA) lose relative share if leading-edge volume splits to Intel."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "shecy_h1",
@@ -193,7 +255,19 @@
   ],
   "lane": "litho",
   "lbl": "Shin-Etsu",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "siltronic",
+   "entegris"
+  ],
+  "ring2_lose": [
+   "nsig"
+  ],
+  "ring2_rationale": {
+   "win": "A 300mm recovery at the leader lifts the other Western wafer maker (Siltronic) and wafer-handling/CMP consumables (Entegris).",
+   "lose": "If Japanese makers recover volume and price, China's challenger NSIG is not taking share."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "skh_q3",
@@ -218,7 +292,20 @@
   ],
   "lane": "hbm",
   "lbl": "SK hynix",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "advantest",
+   "asmpt"
+  ],
+  "ring2_lose": [
+   "globalwafers",
+   "shinetsu"
+  ],
+  "ring2_rationale": {
+   "win": "SK hynix holding >50% HBM keeps its HBM tester (Advantest) and its HBM4 TC-bonder supplier (ASMPT) loaded.",
+   "lose": "Share held by SK hynix is share Micron does not gain; Micron's recorded wafer suppliers (GlobalWafers 10-yr deal, Shin-Etsu) lose incremental volume."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "amkr_q3",
@@ -242,7 +329,19 @@
   ],
   "lane": "fab",
   "lbl": "Amkor",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "ter",
+   "advantest"
+  ],
+  "ring2_lose": [
+   "asmpt"
+  ],
+  "ring2_rationale": {
+   "win": "A named Peoria anchor brings US back-end test capacity (Teradyne, Advantest).",
+   "lose": "Volume that lands in Arizona at Amkor is volume not routed to ASE in Taiwan, whose bonder supplier is ASMPT."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "cdns_q3",
@@ -261,7 +360,18 @@
   "leaks": [],
   "lane": "cloud",
   "lbl": "Cadence",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "arm"
+  ],
+  "ring2_lose": [
+   "intc"
+  ],
+  "ring2_rationale": {
+   "win": "A Chinese design rebound also lifts IP licensing (Arm).",
+   "lose": "A Chinese design rebound adds non-Intel design starts; weak relative link to Intel's x86/foundry franchise."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "ter_q3",
@@ -284,7 +394,18 @@
   ],
   "lane": "fab",
   "lbl": "Teradyne",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "nvda"
+  ],
+  "ring2_lose": [
+   "skhynix"
+  ],
+  "ring2_rationale": {
+   "win": "A second qualified GPU test source lowers NVIDIA's test cost and supply risk.",
+   "lose": "Teradyne winning HBM test signals SK hynix diversifying away from its incumbent tester amid HBM4 qualification issues — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "gev_q3",
@@ -307,7 +428,20 @@
   ],
   "lane": "power",
   "lbl": "GE Vernova",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "clf",
+   "ceg"
+  ],
+  "ring2_lose": [
+   "msft",
+   "amzn"
+  ],
+  "ring2_rationale": {
+   "win": "Turbines sold out to 2030: transformer steel (Cleveland-Cliffs) and existing nuclear capacity (Constellation) gain scarcity value.",
+   "lose": "Sold-out turbines and long lead times delay new hyperscaler power; buyers pay more and wait."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "lrcx_q1",
@@ -354,7 +488,18 @@
   "leaks": [],
   "lane": "mat",
   "lbl": "Teck",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "fn"
+  ],
+  "ring2_lose": [
+   "axti"
+  ],
+  "ring2_rationale": {
+   "win": "Western germanium on schedule de-risks optics supply for the contract optics builder (Fabrinet).",
+   "lose": "Western germanium on schedule reduces dependence on China-licensed compound-semiconductor supply (AXT, China fabs)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "googl_q3",
@@ -374,7 +519,20 @@
   ],
   "lane": "cloud",
   "lbl": "Alphabet",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "anet",
+   "cohr",
+   "lite"
+  ],
+  "ring2_lose": [
+   "mrvl"
+  ],
+  "ring2_rationale": {
+   "win": "Alphabet capex up = more TPU clusters: Ethernet fabrics (Arista), 800G/1.6T optics (Coherent, Lumentum).",
+   "lose": "Alphabet's custom silicon goes to Broadcom, not Marvell — relative share of custom-silicon spend shifts away from Marvell."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "adv_h1",
@@ -397,7 +555,18 @@
   ],
   "lane": "fab",
   "lbl": "Advantest",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "tsmc"
+  ],
+  "ring2_lose": [
+   "skhynix"
+  ],
+  "ring2_rationale": {
+   "win": "Advantest holding SoC share keeps TSMC's CoWoS final-test flow on the incumbent tester — weak.",
+   "lose": "Korean testers winning at SK hynix (the NO case) is SK hynix diversifying; YES means it did not — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "smsg_q3",
@@ -423,7 +592,20 @@
   ],
   "lane": "hbm",
   "lbl": "Samsung (מלא)",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "amat",
+   "siltronic"
+  ],
+  "ring2_lose": [
+   "hanmi",
+   "entegris"
+  ],
+  "ring2_rationale": {
+   "win": "Samsung HBM4/SF2 progress lifts its recorded suppliers: Applied (>10% customer), Siltronic (wafers).",
+   "lose": "Samsung HBM4 share comes from SK hynix (its bonder supplier Hanmi); SF2 yield gains come from TSMC (Entegris's only >10% customer)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "hanmi_q3",
@@ -448,7 +630,18 @@
   ],
   "lane": "hbm",
   "lbl": "Hanmi",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "skhynix"
+  ],
+  "ring2_lose": [
+   "ase"
+  ],
+  "ring2_rationale": {
+   "win": "Hanmi orders up with SK hynix share stable = SK hynix HBM4 ramp is on track — weak.",
+   "lose": "Hanmi winning back bonders from ASMPT weakens ASMPT's OSAT momentum at ASE — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "asx_q3",
@@ -471,7 +664,20 @@
   ],
   "lane": "fab",
   "lbl": "ASE",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "asmpt",
+   "ibiden",
+   "unimicron"
+  ],
+  "ring2_lose": [
+   "amkr"
+  ],
+  "ring2_rationale": {
+   "win": "A stated ASE advanced-packaging capacity lifts its TCB supplier (ASMPT) and FC-BGA substrates (Ibiden, Unimicron).",
+   "lose": "ASE adding CoWoS-equivalent capacity in Taiwan competes directly with Amkor for overflow volume."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "axti_q3",
@@ -491,7 +697,18 @@
   "leaks": [],
   "lane": "mat",
   "lbl": "AXT",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "fn"
+  ],
+  "ring2_lose": [
+   "teck"
+  ],
+  "ring2_rationale": {
+   "win": "InP substrate licenses flowing keep the optics build (Fabrinet) supplied.",
+   "lose": "If Chinese-licensed supply flows, the urgency premium on Western alternatives (Teck germanium) fades."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "entg_q3",
@@ -513,7 +730,19 @@
   ],
   "lane": "fab",
   "lbl": "Entegris",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "klac"
+  ],
+  "ring2_lose": [
+   "intc",
+   "samsung"
+  ],
+  "ring2_rationale": {
+   "win": "TSMC 2nm acceleration lifts other TSMC-heavy materials and control suppliers (TOK resist, KLA).",
+   "lose": "TSMC accelerating 2nm takes leading-edge foundry share from Intel Foundry and Samsung Foundry."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "amzn_q3",
@@ -537,7 +766,21 @@
   "lane": "cloud",
   "lbl": "Amazon",
   "kind": "share",
-  "internal_note": "mixed wording: capex + Trainium; split next time"
+  "internal_note": "mixed wording: capex + Trainium; split next time",
+  "ring2_win": [
+   "cohr",
+   "lite",
+   "tsmc"
+  ],
+  "ring2_lose": [
+   "smci",
+   "foxconn"
+  ],
+  "ring2_rationale": {
+   "win": "Amazon capex up with Trainium volume: optics (Coherent, Lumentum) and the foundry that makes Trainium (TSMC).",
+   "lose": "Compute moving to Trainium is compute not shipped as NVIDIA racks by integrators (Supermicro, Foxconn)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "hwm_q3",
@@ -558,7 +801,19 @@
   ],
   "lane": "power",
   "lbl": "Howmet",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "siemensenergy",
+   "ceg"
+  ],
+  "ring2_lose": [
+   "clf"
+  ],
+  "ring2_rationale": {
+   "win": "Blade-casting capacity added eases the turbine bottleneck for Siemens Energy and supports new generation.",
+   "lose": "Faster turbine supply shifts the bottleneck elsewhere; transformer-steel scarcity premium (Cleveland-Cliffs) eases — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "mpwr_q3",
@@ -579,7 +834,20 @@
   ],
   "lane": "fab",
   "lbl": "Monolithic Power",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "smci",
+   "foxconn",
+   "vrt"
+  ],
+  "ring2_lose": [
+   "amd"
+  ],
+  "ring2_rationale": {
+   "win": "Rubin content confirmed means Rubin racks on schedule: integrators (Supermicro, Foxconn) and 800VDC power (Vertiv).",
+   "lose": "NVIDIA Rubin on schedule keeps AMD's MI-series share gains capped — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "hoya_h1",
@@ -625,7 +893,19 @@
   ],
   "lane": "mat",
   "lbl": "Coherent",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "axti",
+   "anet"
+  ],
+  "ring2_lose": [
+   "crdo"
+  ],
+  "ring2_rationale": {
+   "win": "1.6T ramp pulls InP substrates (AXT) and 1.6T switch fabrics (Arista).",
+   "lose": "Faster optical 1.6T adoption takes links from copper AECs (Credo)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "ajin_h1",
@@ -648,7 +928,19 @@
   ],
   "lane": "fab",
   "lbl": "Ajinomoto",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "ase",
+   "amkr"
+  ],
+  "ring2_lose": [
+   "skc"
+  ],
+  "ring2_rationale": {
+   "win": "ABF volume held after a 30% price rise: FC-BGA packaging volume intact for OSATs (ASE, Amkor).",
+   "lose": "No customer moving to glass = no traction yet for the glass-substrate challenger (SKC/Absolics)."
+  },
+  "ring2_confidence": "S"
  },
  {
   "id": "sumco_q3",
@@ -672,7 +964,19 @@
   ],
   "lane": "mat",
   "lbl": "SUMCO",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "siltronic",
+   "entegris"
+  ],
+  "ring2_lose": [
+   "nsig"
+  ],
+  "ring2_rationale": {
+   "win": "Japanese wafer recovery lifts the other Western wafer maker and wafer consumables.",
+   "lose": "Prices holding means Chinese wafers (NSIG) are not taking volume."
+  },
+  "ring2_confidence": "S"
  },
  {
   "id": "mofcom_re",
@@ -764,7 +1068,20 @@
   ],
   "lane": "power",
   "lbl": "Siemens Energy",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "vrt",
+   "etn"
+  ],
+  "ring2_lose": [
+   "clf",
+   "gev"
+  ],
+  "ring2_rationale": {
+   "win": "Transformer lead times under three years speed data-center energization: Vertiv and Eaton gear deploys sooner.",
+   "lose": "Shorter transformer lead times erode the scarcity premium of transformer steel (Cleveland-Cliffs) and grid equipment pricing (GE Vernova)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "nvda_q3",
@@ -800,7 +1117,22 @@
   ],
   "lane": "hbm",
   "lbl": "NVIDIA",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "foxconn",
+   "cohr",
+   "vrt",
+   "anet"
+  ],
+  "ring2_lose": [
+   "amd",
+   "avgo"
+  ],
+  "ring2_rationale": {
+   "win": "Rubin on time and Q4 above consensus: rack integration (Foxconn), optics (Coherent), power (Vertiv), networking (Arista).",
+   "lose": "NVIDIA beating and holding Rubin timing takes accelerator share from AMD and custom silicon (Broadcom)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "mofcom_ga",
@@ -844,7 +1176,18 @@
   ],
   "lane": "mat",
   "lbl": "SEMI",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "entegris"
+  ],
+  "ring2_lose": [
+   "nsig"
+  ],
+  "ring2_rationale": {
+   "win": "Wafer shipments up with China's share flat: Western volume growth pulls wafer consumables (Entegris).",
+   "lose": "China's share flat means NSIG is not gaining."
+  },
+  "ring2_confidence": "S"
  },
  {
   "id": "absolics",
@@ -869,7 +1212,19 @@
   ],
   "lane": "fab",
   "lbl": "Absolics",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "amd",
+   "intc"
+  ],
+  "ring2_lose": [
+   "unimicron"
+  ],
+  "ring2_rationale": {
+   "win": "A named glass-substrate customer validates glass-core packages pursued by Intel and AMD-class designs.",
+   "lose": "Glass substrates displace ABF-based FC-BGA substrates (Unimicron)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "lsrc_q2",

@@ -2,207 +2,697 @@
  {
   "qid": "bioprocess_q3",
   "answer_date": "2026-10-21",
-  "committed_at": "2026-09-23",
-  "sha256": "329160e8ed0a232b8c584609a013f418f396bc82cff6ea31afff06c2bda6e558",
+  "committed_at": "2026-10-01",
+  "sha256": "43a913bb0cf7018cd7c93a74c745ff48a124d9e33186f3891e394c256f2c2a3f",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "329160e8ed0a232b8c584609a013f418f396bc82cff6ea31afff06c2bda6e558",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "danaher": {
      "symbol": "DHR.US",
-     "adv_usd": 939670545,
-     "last_close": "2026-09-22"
+     "adv_usd": 948498152,
+     "last_close": "2026-09-30"
     },
     "sartorius": {
      "symbol": "SRT3.XETRA",
-     "adv_usd": 24939980,
-     "last_close": "2026-09-22"
+     "adv_usd": 25316918,
+     "last_close": "2026-09-29"
     },
     "thermo": {
      "symbol": "TMO.US",
-     "adv_usd": 1221632290,
-     "last_close": "2026-09-22"
+     "adv_usd": 1225067956,
+     "last_close": "2026-09-30"
+    },
+    "lonza": {
+     "symbol": "LONN.SW",
+     "adv_usd": 90829331,
+     "last_close": "2026-09-30"
+    },
+    "samsung_bio": {
+     "symbol": "207940.KO",
+     "adv_usd": 56796668,
+     "last_close": "2026-10-01"
+    },
+    "wuxi_bio": {
+     "symbol": "WXXWY.US",
+     "adv_usd": 791695,
+     "last_close": "2026-09-30"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "wst_q3",
   "answer_date": "2026-10-22",
-  "committed_at": "2026-09-23",
-  "sha256": "2f094d31d63eec786e514ecd376975ccb022b442ce6a86061227daa47057ed3d",
+  "committed_at": "2026-10-01",
+  "sha256": "8affb8b95cf6a7901083f23fdeedc05d1ca8ca45c1464324fc3246b4c9ce1518",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "2f094d31d63eec786e514ecd376975ccb022b442ce6a86061227daa47057ed3d",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "west": {
      "symbol": "WST.US",
-     "adv_usd": 239215924,
-     "last_close": "2026-09-22"
+     "adv_usd": 225869034,
+     "last_close": "2026-09-30"
+    },
+    "lly": {
+     "symbol": "LLY.US",
+     "adv_usd": 2975263748,
+     "last_close": "2026-09-30"
+    },
+    "stevanato": {
+     "symbol": "STVN.US",
+     "adv_usd": 7766309,
+     "last_close": "2026-09-30"
+    },
+    "gerresheimer": {
+     "symbol": "GXI.XETRA",
+     "adv_usd": 5237924,
+     "last_close": "2026-09-29"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "corning_q3",
   "answer_date": "2026-10-27",
-  "committed_at": "2026-09-23",
-  "sha256": "472ac0bf18cbafacc5c8e83d7b197e12a4740419d2c98f5abdeeecc699b00d42",
+  "committed_at": "2026-10-01",
+  "sha256": "99a7aab547db23e42fb43b289afda60fefcca44b39e75a2f604138efd551f479",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: one-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "472ac0bf18cbafacc5c8e83d7b197e12a4740419d2c98f5abdeeecc699b00d42",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "corning": {
      "symbol": "GLW.US",
-     "adv_usd": 2162442483,
-     "last_close": "2026-09-22"
+     "adv_usd": 1671487997,
+     "last_close": "2026-09-30"
+    },
+    "stevanato": {
+     "symbol": "STVN.US",
+     "adv_usd": 7766309,
+     "last_close": "2026-09-30"
+    },
+    "gerresheimer": {
+     "symbol": "GXI.XETRA",
+     "adv_usd": 5237924,
+     "last_close": "2026-09-29"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "samsung_bio_q3",
   "answer_date": "2026-10-28",
-  "committed_at": "2026-09-23",
-  "sha256": "1015b03099d69594c6db5a954ce99a04920f1a9f624d908bc65cda4c8cb6a045",
+  "committed_at": "2026-10-01",
+  "sha256": "a2abef2376cd32f4f9f11bf8f4ac0fa43cc4811fdf64f36354adf4207d3f6a4c",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "1015b03099d69594c6db5a954ce99a04920f1a9f624d908bc65cda4c8cb6a045",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "samsung_bio": {
      "symbol": "207940.KO",
-     "adv_usd": 58078469,
-     "last_close": "2026-09-23"
+     "adv_usd": 56796668,
+     "last_close": "2026-10-01"
     },
     "lonza": {
      "symbol": "LONN.SW",
-     "adv_usd": 95637183,
-     "last_close": "2026-09-22"
+     "adv_usd": 90829331,
+     "last_close": "2026-09-30"
+    },
+    "sartorius": {
+     "symbol": "SRT3.XETRA",
+     "adv_usd": 25316918,
+     "last_close": "2026-09-29"
+    },
+    "danaher": {
+     "symbol": "DHR.US",
+     "adv_usd": 948498152,
+     "last_close": "2026-09-30"
+    },
+    "repligen": {
+     "symbol": "RGEN.US",
+     "adv_usd": 176032585,
+     "last_close": "2026-09-30"
+    },
+    "wuxi_bio": {
+     "symbol": "WXXWY.US",
+     "adv_usd": 791695,
+     "last_close": "2026-09-30"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "lly_q3",
   "answer_date": "2026-10-29",
-  "committed_at": "2026-09-23",
-  "sha256": "bba5c3b9f4455941016116d6d0973b73cc0381b41ae56ecf772f305ea67a296f",
+  "committed_at": "2026-10-01",
+  "sha256": "225a78af53fba20b9def013fe98002fac12ab26e50e9338a39b767cc43747f9c",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "bba5c3b9f4455941016116d6d0973b73cc0381b41ae56ecf772f305ea67a296f",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "lly": {
      "symbol": "LLY.US",
-     "adv_usd": 3166940154,
-     "last_close": "2026-09-22"
+     "adv_usd": 2975263748,
+     "last_close": "2026-09-30"
     },
     "novo": {
      "symbol": "NVO.US",
-     "adv_usd": 561750411,
-     "last_close": "2026-09-22"
+     "adv_usd": 558498597,
+     "last_close": "2026-09-30"
+    },
+    "lonza": {
+     "symbol": "LONN.SW",
+     "adv_usd": 90829331,
+     "last_close": "2026-09-30"
+    },
+    "siegfried": {
+     "symbol": "SFZN.SW",
+     "adv_usd": 9160861,
+     "last_close": "2026-09-30"
+    },
+    "thermo": {
+     "symbol": "TMO.US",
+     "adv_usd": 1225067956,
+     "last_close": "2026-09-30"
+    },
+    "fujifilm": {
+     "symbol": "FUJIY.US",
+     "adv_usd": 1897855,
+     "last_close": "2026-09-30"
+    },
+    "polypeptide": {
+     "symbol": "PPGN.SW",
+     "adv_usd": 7314424,
+     "last_close": "2026-09-29"
+    },
+    "ypsomed": {
+     "symbol": "YPSN.SW",
+     "adv_usd": 6769932,
+     "last_close": "2026-09-30"
+    },
+    "gerresheimer": {
+     "symbol": "GXI.XETRA",
+     "adv_usd": 5237924,
+     "last_close": "2026-09-29"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "novo_q3",
   "answer_date": "2026-11-04",
-  "committed_at": "2026-09-23",
-  "sha256": "48106f326d4e216a78e94f82476f40fdc7e0a8860291a84c65b96257ec052ccc",
+  "committed_at": "2026-10-01",
+  "sha256": "600405080429de6f935e6f5bc114a7d45d5016d59c64ffecadf6dad8342dc806",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "48106f326d4e216a78e94f82476f40fdc7e0a8860291a84c65b96257ec052ccc",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "lly": {
      "symbol": "LLY.US",
-     "adv_usd": 3166940154,
-     "last_close": "2026-09-22"
+     "adv_usd": 2975263748,
+     "last_close": "2026-09-30"
     },
     "novo": {
      "symbol": "NVO.US",
-     "adv_usd": 561750411,
-     "last_close": "2026-09-22"
+     "adv_usd": 558498597,
+     "last_close": "2026-09-30"
+    },
+    "lonza": {
+     "symbol": "LONN.SW",
+     "adv_usd": 90829331,
+     "last_close": "2026-09-30"
+    },
+    "siegfried": {
+     "symbol": "SFZN.SW",
+     "adv_usd": 9160861,
+     "last_close": "2026-09-30"
+    },
+    "thermo": {
+     "symbol": "TMO.US",
+     "adv_usd": 1225067956,
+     "last_close": "2026-09-30"
+    },
+    "fujifilm": {
+     "symbol": "FUJIY.US",
+     "adv_usd": 1897855,
+     "last_close": "2026-09-30"
+    },
+    "polypeptide": {
+     "symbol": "PPGN.SW",
+     "adv_usd": 7314424,
+     "last_close": "2026-09-29"
+    },
+    "ypsomed": {
+     "symbol": "YPSN.SW",
+     "adv_usd": 6769932,
+     "last_close": "2026-09-30"
+    },
+    "gerresheimer": {
+     "symbol": "GXI.XETRA",
+     "adv_usd": 5237924,
+     "last_close": "2026-09-29"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "stvn_q3",
   "answer_date": "2026-11-04",
-  "committed_at": "2026-09-23",
-  "sha256": "1e43818762a195d79d70b4a6ddccc65436b41b0d97f43f726b4f09e12e11a3a9",
+  "committed_at": "2026-10-01",
+  "sha256": "e660ac3c198c3066915ec4fec332b0f663bf5641c584d5657ca769c360ce31ba",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "1e43818762a195d79d70b4a6ddccc65436b41b0d97f43f726b4f09e12e11a3a9",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "stevanato": {
      "symbol": "STVN.US",
-     "adv_usd": 7820620,
-     "last_close": "2026-09-22"
+     "adv_usd": 7766309,
+     "last_close": "2026-09-30"
+    },
+    "corning": {
+     "symbol": "GLW.US",
+     "adv_usd": 1671487997,
+     "last_close": "2026-09-30"
+    },
+    "lly": {
+     "symbol": "LLY.US",
+     "adv_usd": 2975263748,
+     "last_close": "2026-09-30"
+    },
+    "gerresheimer": {
+     "symbol": "GXI.XETRA",
+     "adv_usd": 5237924,
+     "last_close": "2026-09-29"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "bachem_cmd",
   "answer_date": "2026-11-26",
-  "committed_at": "2026-09-23",
-  "sha256": "cfb42e06ae90e5e38120d52200a0bcb36948b6be504e7e065a43ad9be390ad31",
+  "committed_at": "2026-10-01",
+  "sha256": "666404275f32ec2ec229a877d218158a30732ab3b33653797be4ea52a66330b4",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "cfb42e06ae90e5e38120d52200a0bcb36948b6be504e7e065a43ad9be390ad31",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "bachem": {
      "symbol": "BANB.SW",
-     "adv_usd": 10302960,
-     "last_close": "2026-09-22"
+     "adv_usd": 10074297,
+     "last_close": "2026-09-29"
     },
     "polypeptide": {
      "symbol": "PPGN.SW",
-     "adv_usd": 7496288,
-     "last_close": "2026-09-22"
+     "adv_usd": 7314424,
+     "last_close": "2026-09-29"
+    },
+    "lly": {
+     "symbol": "LLY.US",
+     "adv_usd": 2975263748,
+     "last_close": "2026-09-30"
+    },
+    "novo": {
+     "symbol": "NVO.US",
+     "adv_usd": 558498597,
+     "last_close": "2026-09-30"
+    },
+    "lonza": {
+     "symbol": "LONN.SW",
+     "adv_usd": 90829331,
+     "last_close": "2026-09-30"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "gerresheimer_q4",
   "answer_date": "2026-11-30",
-  "committed_at": "2026-09-23",
-  "sha256": "aa1dd3a6fe69aa4b039f49d6467aad7edaa6da7df3a3b2b09bb7d9c9a5803f67",
+  "committed_at": "2026-10-01",
+  "sha256": "bc28d03283f6d88a41ca9e2def736e91f92e59af60cacca420d8025379fb97f3",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "aa1dd3a6fe69aa4b039f49d6467aad7edaa6da7df3a3b2b09bb7d9c9a5803f67",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "gerresheimer": {
      "symbol": "GXI.XETRA",
-     "adv_usd": 6118897,
-     "last_close": "2026-09-22"
+     "adv_usd": 5237924,
+     "last_close": "2026-09-29"
     },
     "stevanato": {
      "symbol": "STVN.US",
-     "adv_usd": 7820620,
-     "last_close": "2026-09-22"
+     "adv_usd": 7766309,
+     "last_close": "2026-09-30"
+    },
+    "corning": {
+     "symbol": "GLW.US",
+     "adv_usd": 1671487997,
+     "last_close": "2026-09-30"
+    },
+    "novo": {
+     "symbol": "NVO.US",
+     "adv_usd": 558498597,
+     "last_close": "2026-09-30"
+    },
+    "west": {
+     "symbol": "WST.US",
+     "adv_usd": 225869034,
+     "last_close": "2026-09-30"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
@@ -232,44 +722,159 @@
  {
   "qid": "cagrisema_fda",
   "answer_date": "2026-12-31",
-  "committed_at": "2026-09-23",
-  "sha256": "d096db4a1245f5b68c616dfc3e530159bdea94af91fbc6fb4d08f3fb66cd7751",
+  "committed_at": "2026-10-01",
+  "sha256": "55547b89fe90079107a8d51be2c9f65772c2722f43b52cc38b7f0a9038a5895a",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "d096db4a1245f5b68c616dfc3e530159bdea94af91fbc6fb4d08f3fb66cd7751",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "novo": {
      "symbol": "NVO.US",
-     "adv_usd": 561750411,
-     "last_close": "2026-09-22"
+     "adv_usd": 558498597,
+     "last_close": "2026-09-30"
     },
     "lly": {
      "symbol": "LLY.US",
-     "adv_usd": 3166940154,
-     "last_close": "2026-09-22"
+     "adv_usd": 2975263748,
+     "last_close": "2026-09-30"
+    },
+    "polypeptide": {
+     "symbol": "PPGN.SW",
+     "adv_usd": 7314424,
+     "last_close": "2026-09-29"
+    },
+    "ypsomed": {
+     "symbol": "YPSN.SW",
+     "adv_usd": 6769932,
+     "last_close": "2026-09-30"
+    },
+    "gerresheimer": {
+     "symbol": "GXI.XETRA",
+     "adv_usd": 5237924,
+     "last_close": "2026-09-29"
+    },
+    "lonza": {
+     "symbol": "LONN.SW",
+     "adv_usd": 90829331,
+     "last_close": "2026-09-30"
+    },
+    "siegfried": {
+     "symbol": "SFZN.SW",
+     "adv_usd": 9160861,
+     "last_close": "2026-09-30"
+    },
+    "fujifilm": {
+     "symbol": "FUJIY.US",
+     "adv_usd": 1897855,
+     "last_close": "2026-09-30"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {
   "qid": "viking_oral_p3",
   "answer_date": "2026-12-31",
-  "committed_at": "2026-09-23",
-  "sha256": "3024ed58c4ca270d953803a937396f8c89a7735c8c35e2f71d775e1103e37f4d",
+  "committed_at": "2026-10-01",
+  "sha256": "02ab4ef96dcd425d008b6c82e72e22d7dad20acc5c7f7a1807f550c1eb932508",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: two-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "3024ed58c4ca270d953803a937396f8c89a7735c8c35e2f71d775e1103e37f4d",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "viking": {
      "symbol": "VKTX.US",
-     "adv_usd": 103284071,
-     "last_close": "2026-09-22"
+     "adv_usd": 136486452,
+     "last_close": "2026-09-30"
+    },
+    "polypeptide": {
+     "symbol": "PPGN.SW",
+     "adv_usd": 7314424,
+     "last_close": "2026-09-29"
+    },
+    "bachem": {
+     "symbol": "BANB.SW",
+     "adv_usd": 10074297,
+     "last_close": "2026-09-29"
+    },
+    "novo": {
+     "symbol": "NVO.US",
+     "adv_usd": 558498597,
+     "last_close": "2026-09-30"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  }
 ]

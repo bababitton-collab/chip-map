@@ -122,7 +122,52 @@ def test_the_published_v1_hashes_have_not_moved():
         if old and old != P.commitment(r, (store or {}).get(qid))["sha256"]:
             moved.append(qid)
     assert moved == [], f"v1 contracts moved: {moved}"
-    assert v2 == ["mu_fq4"], v2
+    assert "mu_fq4" in v2, v2
+
+
+MU_FQ4_V2 = "c4be08e4e586c4ec246aea8a04df21ca62b54e19e92d6be6598e769ed5624b9c"
+
+
+def test_mu_fq4_v2_bytes_did_not_move_when_confidence_was_added():
+    """mu_fq4 was committed as v2 before ring2_confidence existed. The key is
+    optional and hashed only when present, so its answered contract still
+    hashes to the value published on 2026-09-29."""
+    assert P.digest(row_of("semi", "mu_fq4"), texts().get("mu_fq4")) == MU_FQ4_V2
+    assert P.RING2_CONFIDENCE not in P.contract(row_of("semi", "mu_fq4"),
+                                                texts().get("mu_fq4"))
+
+
+def row_of(dom, qid):
+    rows = json.loads(watch_path(dom).read_text(encoding="utf-8"))
+    return next(r for r in rows if r["id"] == qid)
+
+
+def test_confidence_is_hashed_only_when_present():
+    plain = P.contract(v2_row(), TEXT)
+    assert P.RING2_CONFIDENCE not in plain
+    weak = P.contract(v2_row(ring2_confidence="W"), TEXT)
+    assert weak[P.RING2_CONFIDENCE] == "W"
+    assert {k: v for k, v in weak.items() if k != P.RING2_CONFIDENCE} == plain
+    assert P.digest(v2_row(ring2_confidence="W"), TEXT) != P.digest(
+        v2_row(ring2_confidence="S"), TEXT)
+
+
+def test_a_confidence_that_is_not_s_m_w_or_has_no_basket_is_refused():
+    with pytest.raises(P.PreregisterError):
+        P.contract(v2_row(ring2_confidence="high"), TEXT)
+    with pytest.raises(P.PreregisterError):
+        P.contract(v1_row(ring2_confidence="W"), TEXT)
+
+
+def test_every_recommitted_v2_question_carries_a_confidence():
+    """Every v2 question but mu_fq4 was committed with the author's S/M/W,
+    and every v1 one carries none."""
+    for dom in ("semi", "energy", "medicine", "defense", "pharma"):
+        for r in json.loads(watch_path(dom).read_text(encoding="utf-8")):
+            if P.is_v2(r) and r["id"] != "mu_fq4":
+                assert r.get(P.RING2_CONFIDENCE) in P.CONFIDENCE_LEVELS, r["id"]
+            elif not P.is_v2(r):
+                assert P.RING2_CONFIDENCE not in r, r["id"]
 
 
 def test_the_v1_bytes_of_mu_fq4_are_still_reachable_and_still_hash_the_same():
@@ -285,7 +330,8 @@ def test_a_locked_row_publishes_neither_ring():
     the paywall is holding while the hash sits unopened."""
     from chains import live_snapshot
     strip = set(live_snapshot.LOCKED_STRIP)
-    assert {"ring2_win", "ring2_lose", "ring2_rationale"} <= strip
+    assert {"ring2_win", "ring2_lose", "ring2_rationale",
+            "ring2_confidence"} <= strip
     assert {"win", "lose", "win2", "lose2", "mixed"} <= strip
 
     row = {"id": "q", "locked": True, "win": ["mu"], "lose": ["samsung"],

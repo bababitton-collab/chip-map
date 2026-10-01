@@ -15,7 +15,20 @@
   "leaks": [],
   "lane": "tools",
   "lbl": "Avantor",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "sartorius",
+   "repligen",
+   "danaher"
+  ],
+  "ring2_lose": [
+   "wuxi_bio"
+  ],
+  "ring2_rationale": {
+   "win": "Bioproduction back to growth: consumables peers (Sartorius, Repligen, Danaher).",
+   "lose": "A Western bioprocess recovery tied to reshoring leaves China CDMO WuXi Biologics behind — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "novartis_q3",
@@ -33,7 +46,20 @@
   "leaks": [],
   "lane": "radio",
   "lbl": "Novartis",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "bwxt",
+   "cardinal"
+  ],
+  "ring2_lose": [
+   "lantheus",
+   "telix"
+  ],
+  "ring2_rationale": {
+   "win": "Pluvicto supply no longer limiting: isotope supply (BWXT) and nuclear pharmacy distribution (Cardinal).",
+   "lose": "Novartis's radioligand franchise unconstrained takes share from radiopharma challengers (Lantheus, Telix)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "baxter_q3",
@@ -52,7 +78,20 @@
   "leaks": [],
   "lane": "sterile",
   "lbl": "Baxter",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "hepalink",
+   "west"
+  ],
+  "ring2_lose": [
+   "hikma",
+   "amneal"
+  ],
+  "ring2_rationale": {
+   "win": "Baxter growing without supply interruption: heparin and component suppliers (Hepalink, West).",
+   "lose": "No IV/sterile shortage removes the shortage pricing that sterile-injectable competitors (Hikma, Amneal) benefit from."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "cardinal_q1",
@@ -70,7 +109,19 @@
   "leaks": [],
   "lane": "distribution",
   "lbl": "Cardinal",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "novartis",
+   "lantheus"
+  ],
+  "ring2_lose": [
+   "cencora"
+  ],
+  "ring2_rationale": {
+   "win": "Nuclear pharmacy growth means radioligand volume (Novartis Pluvicto, Lantheus) is flowing.",
+   "lose": "Cardinal raising guidance takes distribution share from Cencora — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "bwxt_q3",
@@ -88,7 +139,17 @@
   "leaks": [],
   "lane": "radio",
   "lbl": "BWXT",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "novartis",
+   "lantheus",
+   "telix"
+  ],
+  "ring2_lose": [],
+  "ring2_rationale": {
+   "win": "Isotope capacity progress eases the input constraint for radiopharma (Novartis, Lantheus, Telix)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "teva_q3",
@@ -107,7 +168,19 @@
   "leaks": [],
   "lane": "generics",
   "lbl": "Teva",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "zhejiang_huahai",
+   "north_china_pharma"
+  ],
+  "ring2_lose": [
+   "hikma"
+  ],
+  "ring2_rationale": {
+   "win": "Generics growth with no API disruption: API/KSM suppliers (Zhejiang Huahai, North China Pharma).",
+   "lose": "Stable generic supply removes shortage pricing for competitors (Hikma) — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "cencora_q4",
@@ -124,7 +197,19 @@
   "leaks": [],
   "lane": "distribution",
   "lbl": "Cencora",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "novo",
+   "lly"
+  ],
+  "ring2_lose": [
+   "cardinal"
+  ],
+  "ring2_rationale": {
+   "win": "Wholesale growth above consensus reflects GLP-1 volume (Novo, Lilly).",
+   "lose": "Cencora beating takes distribution share from Cardinal — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "crl_q3",
@@ -161,7 +246,19 @@
   "leaks": [],
   "lane": "sterile",
   "lbl": "Fresenius",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "hepalink",
+   "gerresheimer"
+  ],
+  "ring2_lose": [
+   "baxter"
+  ],
+  "ring2_rationale": {
+   "win": "Kabi injectables growth pulls heparin (Hepalink) and vials (Gerresheimer).",
+   "lose": "Kabi taking injectables share from Baxter."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "bd_q4",
@@ -180,7 +277,20 @@
   "leaks": [],
   "lane": "packaging",
   "lbl": "BD",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "lly",
+   "novo"
+  ],
+  "ring2_lose": [
+   "ypsomed",
+   "stevanato"
+  ],
+  "ring2_rationale": {
+   "win": "BD prefillable-syringe strength reflects GLP-1 injectable demand.",
+   "lose": "BD winning prefillable/drug-delivery share from Ypsomed and Stevanato."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "mckesson_q2",
@@ -196,7 +306,19 @@
   "leaks": [],
   "lane": "distribution",
   "lbl": "McKesson",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "lly",
+   "novo"
+  ],
+  "ring2_lose": [
+   "cardinal"
+  ],
+  "ring2_rationale": {
+   "win": "US Pharmaceutical profit up reflects GLP-1 volume.",
+   "lose": "McKesson taking distribution share from Cardinal — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "divis_q2",
@@ -216,7 +338,19 @@
   "leaks": [],
   "lane": "api",
   "lbl": "Divi's",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "lly",
+   "novo"
+  ],
+  "ring2_lose": [
+   "zhejiang_huahai"
+  ],
+  "ring2_rationale": {
+   "win": "Divi's custom synthesis growth reflects peptide/GLP-1 intermediate demand.",
+   "lose": "Indian API growth taking share from Chinese API (Zhejiang Huahai)."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "fujifilm_h1",
@@ -235,7 +369,19 @@
   "leaks": [],
   "lane": "cdmo",
   "lbl": "Fujifilm",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "lly",
+   "novartis"
+  ],
+  "ring2_lose": [
+   "wuxi_bio"
+  ],
+  "ring2_rationale": {
+   "win": "Fujifilm Bio CDMO growth reflects customer biologics demand (Lilly, Novartis).",
+   "lose": "Western CDMO capacity winning work away from China-based WuXi Biologics."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "merck_kgaa_q3",
@@ -254,6 +400,18 @@
   "leaks": [],
   "lane": "tools",
   "lbl": "Merck KGaA",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "samsung_bio",
+   "lonza"
+  ],
+  "ring2_lose": [
+   "wuxi_bio"
+  ],
+  "ring2_rationale": {
+   "win": "Process solutions growth reflects CDMO build-outs (Samsung Biologics, Lonza).",
+   "lose": "Reshored capacity build shifts away from WuXi Biologics — weak."
+  },
+  "ring2_confidence": "W"
  }
 ]

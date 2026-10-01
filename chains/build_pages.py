@@ -192,6 +192,9 @@ TRANSLATIONS = [
  # left, so the column order and the panel's opening direction both reverse.
  ("const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);", "const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);"),
  ("const padR=70, padL=110,", "const padR=110, padL=70,"),
+ # The confidence tag on a contract-v2 card.
+ ("  const CONF = {lbl:'ודאות', lv:{S:'גבוהה', M:'בינונית', W:'נמוכה'}};",
+  "  const CONF = {lbl:'Confidence', lv:{S:'strong', M:'medium', W:'weak'}};"),
  # The relationship diagram's phone view.
  ("  const REL = {view:'הצג קשרים', close:'סגור', title:'קשרים',\n    up:'עולה אם כן', down:'יורד אם כן', none:'אין סל רשום לשאלה הזו.',\n    scored:'טבעת שנייה · הסל הנמדד', diag:'תגובה ישירה · אבחון'};",
   "  const REL = {view:'View relationships', close:'Close', title:'Relationships',\n    up:'up if yes', down:'down if yes', none:'No basket is registered for this question.',\n    scored:'second ring · the scored basket', diag:'direct reaction · diagnostic'};"),

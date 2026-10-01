@@ -299,7 +299,16 @@
   "leaks": [],
   "lane": "policy",
   "lbl": "BIOSECURE",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "fujifilm",
+   "sartorius"
+  ],
+  "ring2_lose": [],
+  "ring2_rationale": {
+   "win": "A published list naming China CDMOs moves work to non-China CDMOs (Fujifilm) and their suppliers (Sartorius)."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "cagrisema_fda",

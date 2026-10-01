@@ -698,25 +698,70 @@
  {
   "qid": "biosecure_list",
   "answer_date": "2026-12-18",
-  "committed_at": "2026-09-23",
-  "sha256": "469b55140e24f8e863d21df6bad0d85f8c47607e23c0030abff243e65f2d156d",
+  "committed_at": "2026-10-01",
+  "sha256": "9460dbb661d299dd64c56a0aa94c238b5fec24dd37ee9fb45efa963dc651c240",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: one-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "469b55140e24f8e863d21df6bad0d85f8c47607e23c0030abff243e65f2d156d",
+    "committed_at": "2026-09-23"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-23",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "samsung_bio": {
      "symbol": "207940.KO",
-     "adv_usd": 58078469,
-     "last_close": "2026-09-23"
+     "adv_usd": 56805491,
+     "last_close": "2026-10-01"
     },
     "lonza": {
      "symbol": "LONN.SW",
-     "adv_usd": 95637183,
-     "last_close": "2026-09-22"
+     "adv_usd": 90852774,
+     "last_close": "2026-09-30"
+    },
+    "fujifilm": {
+     "symbol": "FUJIY.US",
+     "adv_usd": 1897855,
+     "last_close": "2026-09-30"
+    },
+    "sartorius": {
+     "symbol": "SRT3.XETRA",
+     "adv_usd": 25577961,
+     "last_close": "2026-09-30"
     }
    }
+  },
+  "ew_map": {
+   "sha256": "04f807aed6f05e13d0c0461695a197e4ecc80c4a03f678660245f04b335ea724",
+   "n": 21,
+   "symbols": [
+    "207940.KO",
+    "AMGN.US",
+    "BANB.SW",
+    "DHR.US",
+    "FUJIY.US",
+    "GLW.US",
+    "GXI.XETRA",
+    "LLY.US",
+    "LONN.SW",
+    "NVO.US",
+    "PFE.US",
+    "PPGN.SW",
+    "RGEN.US",
+    "SFZN.SW",
+    "SRT3.XETRA",
+    "STVN.US",
+    "TMO.US",
+    "VKTX.US",
+    "WST.US",
+    "WXXWY.US",
+    "YPSN.SW"
+   ]
   }
  },
  {

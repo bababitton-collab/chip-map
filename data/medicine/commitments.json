@@ -697,18 +697,31 @@
  {
   "qid": "crl_q3",
   "answer_date": "2026-11-04",
-  "committed_at": "2026-09-25",
-  "sha256": "a324ab1edfc588600b8b5ba24763a0e16dd84e7aae24a2b5bb18aa78eeaf6e7a",
+  "committed_at": "2026-10-01",
+  "sha256": "20ea4b140037879bef1fe45a266f0e45818963c4156ecc4c6b5d2e9ad589e33a",
   "primary_horizon": 20,
   "valid_preregistration": true,
+  "revised_at": "2026-10-01",
+  "revision_note": "Revised 2026-10-01, before the answer date: one-sided second-ring basket added and made the scored basket (contract v2).",
+  "history": [
+   {
+    "sha256": "a324ab1edfc588600b8b5ba24763a0e16dd84e7aae24a2b5bb18aa78eeaf6e7a",
+    "committed_at": "2026-09-25"
+   }
+  ],
   "liquidity": {
-   "checked_at": "2026-09-25",
+   "checked_at": "2026-10-01",
    "min_adv_usd": 250000,
    "legs": {
     "charles_river": {
      "symbol": "CRL.US",
-     "adv_usd": 244719606,
-     "last_close": "2026-09-24"
+     "adv_usd": 244281830,
+     "last_close": "2026-09-30"
+    },
+    "thermo": {
+     "symbol": "TMO.US",
+     "adv_usd": 1225067956,
+     "last_close": "2026-09-30"
     }
    }
   },

@@ -227,7 +227,15 @@
   "leaks": [],
   "lane": "cdmo",
   "lbl": "Charles River",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "thermo"
+  ],
+  "ring2_lose": [],
+  "ring2_rationale": {
+   "win": "Discovery/safety recovery signals biotech R&D spending recovering (Thermo Fisher services)."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "fresenius_q3",

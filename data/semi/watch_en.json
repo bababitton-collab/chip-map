@@ -112,6 +112,8 @@
   "lbl": "ASML",
   "kind": "tide",
   "ring2_win": [
+   "tok",
+   "tel",
    "klac"
   ],
   "ring2_lose": [
@@ -220,7 +222,8 @@
   "kind": "share",
   "ring2_win": [
    "lasertec",
-   "asmpt"
+   "asmpt",
+   "agc"
   ],
   "ring2_lose": [
    "entegris",
@@ -468,7 +471,19 @@
   ],
   "lane": "hbm",
   "lbl": "Lam Research",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "skhynix",
+   "entegris"
+  ],
+  "ring2_lose": [
+   "samsung"
+  ],
+  "ring2_rationale": {
+   "win": "TSMC/hynix overtaking Samsung in Lam's mix means hynix is building faster; WFE up lifts consumables (Entegris).",
+   "lose": "Samsung dropping in Lam's customer order means Samsung is building slower."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "teck_q3",
@@ -732,6 +747,7 @@
   "lbl": "Entegris",
   "kind": "tide",
   "ring2_win": [
+   "tok",
    "klac"
   ],
   "ring2_lose": [
@@ -869,7 +885,19 @@
   ],
   "lane": "litho",
   "lbl": "HOYA",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "asml",
+   "tok"
+  ],
+  "ring2_lose": [
+   "agc"
+  ],
+  "ring2_rationale": {
+   "win": "Mask-blank capacity on time removes a constraint on EUV layer growth (ASML, EUV resist TOK).",
+   "lose": "HOYA holding >70% share with new capacity means AGC loses mask-blank share."
+  },
+  "ring2_confidence": "S"
  },
  {
   "id": "cohr_q1",
@@ -1016,7 +1044,19 @@
   ],
   "lane": "litho",
   "lbl": "Tokyo Electron",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "asml",
+   "lrcx"
+  ],
+  "ring2_lose": [
+   "nsig"
+  ],
+  "ring2_rationale": {
+   "win": "Rest-of-world WFE growing while China falls lifts non-China leading-edge toolmakers (ASML, Lam).",
+   "lose": "China tool spend falling slows China's domestic wafer build-out (NSIG) — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "amat_q4",
@@ -1043,7 +1083,20 @@
   ],
   "lane": "fab",
   "lbl": "Applied Materials",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "entegris",
+   "tok",
+   "advantest"
+  ],
+  "ring2_lose": [
+   "nsig"
+  ],
+  "ring2_rationale": {
+   "win": "2027 WFE growth with HBM and packaging: consumables (Entegris), resist (TOK), HBM test (Advantest).",
+   "lose": "WFE growth led by non-China leading edge widens the gap to China's challenger wafer supply — weak."
+  },
+  "ring2_confidence": "W"
  },
  {
   "id": "sie_fy",
@@ -1247,7 +1300,19 @@
   ],
   "lane": "litho",
   "lbl": "Lasertec",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "agc",
+   "tok"
+  ],
+  "ring2_lose": [
+   "klac"
+  ],
+  "ring2_rationale": {
+   "win": "High-NA inspection orders signal High-NA layers in production: mask blanks (AGC) and EUV resist (TOK).",
+   "lose": "Actinic inspection (Lasertec) taking High-NA mask inspection from KLA's non-actinic tools."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "spie",
@@ -1272,6 +1337,18 @@
   ],
   "lane": "litho",
   "lbl": "SPIE",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "asml"
+  ],
+  "ring2_lose": [
+   "tok",
+   "tel"
+  ],
+  "ring2_rationale": {
+   "win": "Dry resist in production removes a High-NA resolution limit for ASML.",
+   "lose": "Dry (deposited) resist displaces spin-on chemically amplified resist (TOK) and the coater/developer track (TEL)."
+  },
+  "ring2_confidence": "S"
  }
 ]

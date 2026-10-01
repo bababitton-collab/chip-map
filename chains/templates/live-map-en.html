@@ -1279,6 +1279,14 @@ const PORTRAIT_AT = 1.15;
 // does not grow. Between them nothing is stretched to fill: the columns are
 // laid out exactly as before and the canvas is cut to them.
 const MAP_H_MIN = 480, MAP_H_MAX = 720, MAP_PAD_BOTTOM = 48;
+// The cap grows with the tallest column, and only past 720px when a column
+// needs it: 30px a station, plus the header and the band row. The semi map's
+// L1, L4 and L6 columns passed 30 stations on 2026-10-01 and, held to 720,
+// ran into the energy row. A map whose columns fit is drawn exactly as before.
+function mapHMax(){
+  const per={}; nodes.forEach(n=>{ if(n.layer!==bandId()) per[n.layer]=(per[n.layer]||0)+1; });
+  const most=Math.max(0, ...Object.values(per));
+  return Math.max(MAP_H_MAX, Math.round(most*30 + 240)); }
 // The band row is pinned to the bottom (y = H - 34), so its own label cannot
 // be measured against a height it defines. It gets a reservation instead.
 const MAP_BAND_RESERVE = 62;
@@ -1304,17 +1312,22 @@ function contentBottom(){
 // clipping a station is worse than an empty strip.
 function fitHeight(){
   if(REC || !nodes.length) return null;
-  const probeH = cv.clientHeight || MAP_H_MAX;
+  // Orientation is judged against the landscape baseline whenever the height
+  // on the canvas is one this function set: a map taller than 720px (a long
+  // column, see mapHMax) would otherwise read as portrait on the next resize,
+  // clear its own height and snap back to 720.
+  const probeH = (cv.style.height ? MAP_H_MAX : cv.clientHeight) || MAP_H_MAX;
   if((W / Math.max(probeH, 1)) < PORTRAIT_AT) return null;   // portrait owns its height
   const hasBand = nodes.some(n=>n.layer === bandId());
   const saveH = H;
-  let h = MAP_H_MAX, want = h;
+  const cap = mapHMax();
+  let h = cap, want = h;
   for(let pass = 0; pass < 4; pass++){
     H = h;
     layoutLandscape();
     want = Math.round(contentBottom() + MAP_PAD_BOTTOM
                       + (hasBand ? MAP_BAND_RESERVE : 0));
-    want = Math.max(MAP_H_MIN, Math.min(MAP_H_MAX, want));
+    want = Math.max(MAP_H_MIN, Math.min(cap, want));
     if(want === h) break;
     h = want;
   }
@@ -1333,7 +1346,10 @@ let MODE='landscape', pitch=0, rowY={};
 const bandId = () => ((((D.labels||{}).band)||['L9'])[0]);
 
 function layout(){
-  MODE = (W / Math.max(H,1)) < PORTRAIT_AT ? 'portrait' : 'landscape';
+  // A height fitHeight() set (cv.style.height) is a landscape map grown for a
+  // long column, not a portrait screen: judge it against the 720px baseline.
+  const oh = cv.style.height ? Math.min(H, MAP_H_MAX) : H;
+  MODE = (W / Math.max(oh,1)) < PORTRAIT_AT ? 'portrait' : 'landscape';
   if(stage) stage.classList.toggle('portrait', MODE==='portrait');
   if(MODE==='portrait') layoutPortrait(); else layoutLandscape();
   // The finale shot leans on one station. Recording only, one named id, and

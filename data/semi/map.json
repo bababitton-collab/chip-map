@@ -2160,7 +2160,7 @@
    "price_symbol": "SIMO.US",
    "price_symbol_kind": "primary",
    "line": "memory",
-   "short": "Silicon",
+   "short": "SIMO",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2190,7 +2190,7 @@
    "price_symbol": "WDC.US",
    "price_symbol_kind": "primary",
    "line": "memory",
-   "short": "Western",
+   "short": "WDC",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2265,7 +2265,7 @@
    "price_symbol": "2737.T",
    "price_symbol_kind": "primary",
    "line": "memory",
-   "short": "Tomen",
+   "short": "Tomen Dev.",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2346,7 +2346,7 @@
    "price_symbol": "6871.T",
    "price_symbol_kind": "primary",
    "line": "memory",
-   "short": "Micronics",
+   "short": "MJC",
    "added": "2026-10-01 semi closure, section A",
    "notes": "DRAM/HBM probe cards (top-class DRAM share) and logic/advanced-packaging cards",
    "segment_share": {
@@ -2367,7 +2367,7 @@
    "price_symbol": "095340.KQ",
    "price_symbol_kind": "primary",
    "line": "memory",
-   "short": "ISC Co.",
+   "short": "ISC",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2412,7 +2412,7 @@
    "price_symbol": "5016.T",
    "price_symbol_kind": "primary",
    "line": "network",
-   "short": "JX",
+   "short": "JX Metals",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2427,7 +2427,7 @@
    "price_symbol": "5802.T",
    "price_symbol_kind": "primary",
    "line": "network",
-   "short": "Sumitomo",
+   "short": "Sumitomo El.",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2487,7 +2487,7 @@
    "price_symbol": "300308.SHE",
    "price_symbol_kind": "primary",
    "line": "network",
-   "short": "Zhongji",
+   "short": "Innolight",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2517,7 +2517,7 @@
    "price_symbol": "300394.SHE",
    "price_symbol_kind": "primary",
    "line": "network",
-   "short": "Suzhou",
+   "short": "TFC",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2625,7 +2625,7 @@
    "price_symbol": "AAOI.US",
    "price_symbol_kind": "primary",
    "line": "network",
-   "short": "Applied",
+   "short": "AAOI",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2640,7 +2640,7 @@
    "price_symbol": "3110.T",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Nitto",
+   "short": "Nittobo",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2655,7 +2655,7 @@
    "price_symbol": "1815.TWO",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Grace",
+   "short": "Grace Fabric",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2700,7 +2700,7 @@
    "price_symbol": "605589.SHG",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Jinan",
+   "short": "Shengquan",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2715,7 +2715,7 @@
    "price_symbol": "5706.T",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Mitsui",
+   "short": "Mitsui Kinz.",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2745,7 +2745,7 @@
    "price_symbol": "2383.TW",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Elite",
+   "short": "EMC",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2760,7 +2760,7 @@
    "price_symbol": "6274.TWO",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Taiwan",
+   "short": "TUC",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2805,7 +2805,7 @@
    "price_symbol": "2368.TW",
    "price_symbol_kind": "primary",
    "line": "packaging",
-   "short": "Gold",
+   "short": "GCE",
    "added": "2026-10-01 semi closure, section B",
    "coverage_only": "Added for coverage (semi closure, section B). No sourced supplier edge and no bottleneck record yet."
   },
@@ -2821,7 +2821,7 @@
    "price_symbol": "4078.T",
    "price_symbol_kind": "primary",
    "line": "power",
-   "short": "Sakai",
+   "short": "Sakai Chem.",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -2881,7 +2881,7 @@
    "price_symbol": "009150.KO",
    "price_symbol_kind": "primary",
    "line": "power",
-   "short": "Samsung",
+   "short": "SEMCO",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -2911,7 +2911,7 @@
    "price_symbol": "000962.SHE",
    "price_symbol_kind": "primary",
    "line": "power",
-   "short": "Ningxia",
+   "short": "Orient Ta",
    "added": "2026-10-01 semi closure, section A"
   },
   {
@@ -3046,7 +3046,7 @@
    "price_symbol": "3017.TW",
    "price_symbol_kind": "primary",
    "line": "power",
-   "short": "Asia",
+   "short": "AVC",
    "added": "2026-10-01 semi closure, section B"
   },
   {
@@ -3091,7 +3091,7 @@
    "price_symbol": "MP.US",
    "price_symbol_kind": "primary",
    "line": "power",
-   "short": "MP Materials",
+   "short": "MP",
    "added": "2026-10-01 semi closure, section A"
   },
   {

@@ -796,9 +796,13 @@
         ${lbl(`Official score · ${PH}-session excess vs EW_MAP · N = ${N} scored question${N===1?'':'s'}`)}
         <div class="tiles">
           ${tile(N, `N · questions scored at ${PH} sessions`, '', ' data-stat="n"')}
-          ${tile(`${R.hits}/${N}`, `hit rate ${pct(R.hit_rate)} · ${few ? tooFew : band(R.hit_rate_interval, pct)}`, '', ' data-stat="hit"')}
+          ${R.hits == null
+            // Both contract versions have scored, so track.unpooled() took the
+            // pooled rate away. Say so rather than print "undefined/N".
+            ? tile('—', 'hit rate and excess are not pooled across contract versions · see below', '', ' data-stat="hit"')
+            : `${tile(`${R.hits}/${N}`, `hit rate ${pct(R.hit_rate)} · ${few ? tooFew : band(R.hit_rate_interval, pct)}`, '', ' data-stat="hit"')}
           ${tile(p2(R.mean_excess), `mean excess, signed to the call · ${few ? tooFew : band(R.mean_excess_interval, p2)}`, sgn(R.mean_excess), ' data-stat="mean"')}
-          ${tile(p2(R.median_excess), `median excess, signed to the call (N=${N})`, sgn(R.median_excess), ' data-stat="median"')}
+          ${tile(p2(R.median_excess), `median excess, signed to the call (N=${N})`, sgn(R.median_excess), ' data-stat="median"')}`}
         </div>
       </div>`;
     }

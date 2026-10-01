@@ -190,7 +190,10 @@ def test_the_snapshot_marks_only_the_thin_stations():
     if not p.exists() or p.stat().st_mtime < map_path().stat().st_mtime:
         pytest.skip("live_en.json not built since the last map change")
     nodes = json.loads(p.read_text(encoding="utf-8"))["nodes"]
-    assert sorted(n["id"] for n in nodes if "thin" in n) == ["agc", "tok"]
+    # Whatever the map marks thin, and nothing else. Since tok and agc moved to
+    # their Tokyo listings on 2026-10-01 that is no station at all.
+    want = sorted(i for i, n in NODES.items() if n.get("price_quality") == "thin")
+    assert sorted(n["id"] for n in nodes if "thin" in n) == want
     assert all(n["thin"] is True for n in nodes if "thin" in n)
 
 

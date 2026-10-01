@@ -320,6 +320,9 @@ def test_the_track_record_shows_the_split_and_never_averages_it():
     assert "function byContract(" in js
     assert "if(keys.length < 2) return ''" in js
     assert "data-not-pooled" in js
+    # Once both versions score, the pooled hits are gone. The headline tile
+    # has to say so instead of printing "undefined/N".
+    assert "R.hits == null" in js
 
 
 # -- the live payload ---------------------------------------------------------

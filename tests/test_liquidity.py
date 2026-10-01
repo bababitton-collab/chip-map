@@ -101,7 +101,7 @@ def test_a_blocking_message_names_the_leg_the_line_and_the_reason():
                       lambda s: fake(8_522 if s == NODES["tok"]["price_symbol"] else 900_000)(s), TODAY)
     msg = L.blocking_message("q", res)
     assert "1 basket leg(s) fail the liquidity gate" in msg
-    assert "tok (TOKCF.US): three-month average daily traded value US$8,522" in msg
+    assert f"tok ({NODES['tok']['price_symbol']}): three-month average daily traded value US$8,522" in msg
 
 
 # -- the nightly line ------------------------------------------------------------
@@ -115,7 +115,7 @@ def test_the_nightly_line_flags_only_legs_quiet_for_more_than_three_sessions():
     assert [(v["leg"], v["sessions"], v["questions"]) for v in flagged] == [("tok", 14, ["a", "b"])]
     lines = L.stale_lines(flagged)
     assert lines[0].startswith("legs: 1 basket leg(s)") and "report only" in lines[0]
-    assert lines[1] == "  tok TOKCF.US: 14 sessions without a close -- a, b"
+    assert lines[1] == f"  tok {NODES['tok']['price_symbol']}: 14 sessions without a close -- a, b"
     assert L.stale_lines([])[0].startswith("legs: no basket leg")
 
 
@@ -139,11 +139,16 @@ def test_the_daily_build_runs_the_nightly_line_after_the_price_refresh():
 
 # -- the map and the baskets -----------------------------------------------------
 
-def test_tok_and_agc_stay_on_the_map_marked_thin():
-    thin = {i for i, n in NODES.items() if n.get("price_quality") == "thin"}
-    assert thin == {"tok", "agc"}
-    for i in thin:
-        assert "Thin:" in NODES[i]["price_note"], i
+def test_tok_agc_and_tel_are_priced_on_their_tokyo_listings():
+    """Their US lines failed the gate on 2026-10-01: TOKCF and ASGLY were
+    too thin, and TOELY (OTC Pink) had no close after 2026-09-24. The home
+    listings trade tens of millions of dollars a day and Yahoo carries them.
+    Subnodes follow, so no challenger badge reads from a dead line."""
+    for i in ("tok", "agc", "tel"):
+        assert NODES[i]["price_symbol"] == NODES[i]["ticker"], i
+        assert NODES[i]["price_symbol"].endswith(".T"), i
+    assert not {i for i, n in NODES.items() if n.get("price_quality") == "thin"}
+    assert not any(s in json.dumps(MAP) for s in ('"TOKCF.US"', '"ASGLY.US"', '"TOELY.US"'))
 
 
 @pytest.mark.parametrize("rows", [WATCH, WATCH_EN], ids=["watch", "watch_en"])
@@ -185,7 +190,10 @@ def test_the_snapshot_marks_only_the_thin_stations():
     if not p.exists() or p.stat().st_mtime < map_path().stat().st_mtime:
         pytest.skip("live_en.json not built since the last map change")
     nodes = json.loads(p.read_text(encoding="utf-8"))["nodes"]
-    assert sorted(n["id"] for n in nodes if "thin" in n) == ["agc", "tok"]
+    # Whatever the map marks thin, and nothing else. Since tok and agc moved to
+    # their Tokyo listings on 2026-10-01 that is no station at all.
+    want = sorted(i for i, n in NODES.items() if n.get("price_quality") == "thin")
+    assert sorted(n["id"] for n in nodes if "thin" in n) == want
     assert all(n["thin"] is True for n in nodes if "thin" in n)
 
 

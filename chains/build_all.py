@@ -156,18 +156,86 @@ def _one(today: date, skip_prices: bool, started: float) -> int:
     for name, argv in steps(today, skip_prices):
         t = time.monotonic()
         print(f"\n=== {name} " + "=" * (60 - len(name)))
-        # Streamed, not captured. In CI the log IS the debugging material, and
-        # a captured tail throws away the line that explains the failure.
-        r = subprocess.run([PY, *argv], cwd=str(REPO))
+        rc, lines = _run(argv)
         secs = round(time.monotonic() - t, 1)
-        timings.append((name, secs, r.returncode))
-        if r.returncode != 0:
-            print(f"\nSTOPPED at {name} (exit {r.returncode}) after {secs}s. "
+        timings.append((name, secs, rc))
+        if rc != 0:
+            print(f"\nSTOPPED at {name} (exit {rc}) after {secs}s. "
                   f"Nothing downstream runs on stale upstream.")
+            _explain(name, rc, lines)
             _summary(timings, today, started)
             return 1
     _summary(timings, today, started)
     return 0
+
+
+TAIL = 60
+
+
+def _run(argv: list[str]) -> tuple[int, list[str]]:
+    """Run one step, streaming its output exactly as before, and keep it.
+
+    Streamed, not captured: in CI the log IS the debugging material. Kept as
+    well, so a failure can say what it was without anyone opening the log --
+    the Actions log needs a sign-in, the step summary and annotations do not.
+    The child writes UTF-8 whatever the console is, so a name with a
+    non-ASCII character cannot be the thing that kills a step.
+    """
+    env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUNBUFFERED="1")
+    p = subprocess.Popen([PY, *argv], cwd=str(REPO), env=env,
+                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    lines: list[str] = []
+    for raw in p.stdout:
+        line = raw.decode("utf-8", errors="replace").rstrip("\r\n")
+        lines.append(line)
+        print(line, flush=True)
+    return p.wait(), lines
+
+
+def _first_error(lines: list[str]) -> str:
+    """The line that names the failure: an exception's own line, else the
+    last thing the step said."""
+    said = [x.strip() for x in lines if x.strip()]
+    for x in reversed(said):
+        head = x.split(":", 1)[0]
+        if head.endswith(("Error", "Exception", "Exit", "Interrupt")) and " " not in head:
+            return x
+    return said[-1] if said else "the step exited with no output"
+
+
+def _traceback(lines: list[str]) -> list[str]:
+    starts = [i for i, x in enumerate(lines) if x.startswith("Traceback (most recent call last)")]
+    return lines[starts[-1]:][:200] if starts else []
+
+
+def _escape(text: str, prop: bool = False) -> str:
+    """GitHub workflow-command escaping: %, CR and LF always; : and , in a property."""
+    out = text.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+    return out.replace(":", "%3A").replace(",", "%2C") if prop else out
+
+
+def explanation(name: str, rc: int, lines: list[str]) -> tuple[str, str]:
+    """(step summary markdown, ::error annotation) for a failed step."""
+    from chains.paths import domain
+    first = _first_error(lines)
+    tail = lines[-TAIL:]
+    tb = _traceback(lines)
+    md = [f"### build stopped at `{name}` ({domain()}), exit {rc}", "",
+          f"**{first}**", "", f"Last {len(tail)} lines:", "", "```", *tail, "```"]
+    if tb and tb != tail[-len(tb):]:
+        md += ["", "Traceback:", "", "```", *tb, "```"]
+    ann = f"::error title={_escape(f'{domain()}: {name}', prop=True)}::{_escape(first)}"
+    return "\n".join(md) + "\n", ann
+
+
+def _explain(name: str, rc: int, lines: list[str]) -> None:
+    """Say why, where it can be read without opening the log."""
+    md, ann = explanation(name, rc, lines)
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with open(summary, "a", encoding="utf-8") as fh:
+            fh.write(md)
+    print(ann, flush=True)
 
 
 def _summary(timings, today, started) -> None:

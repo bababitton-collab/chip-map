@@ -114,8 +114,8 @@ def test_the_repository_carries_at_least_the_default_domain():
 # EW_MAP is frozen per commitment (chains/ew_universe.py), so this did not
 # move any benchmark.
 GOLD = {
-    "he": "1bbe06b1896f5e441010ff8e56d89de7354bfe587461ea3484f7d1936c4bd1d7",
-    "en": "8e26e041ac31fa1a1d7fce7392580e808054e734757610b1e17b0d24972af97b",
+    "he": "c9013e1a391880c8422e0d5f88365e69c8103657cd60db5617b6e68e6c43c38a",
+    "en": "8f974c791622ac21eca4b9924825b1dda2f7f2fba7b6e6aaf6c78271e997da8a",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "

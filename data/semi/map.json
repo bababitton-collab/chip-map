@@ -3197,21 +3197,6 @@
    "line": "logic",
    "short": "HP",
    "added": "2026-10-02 amendment 2: hurt by commodity DRAM"
-  },
-  {
-   "id": "lenovo",
-   "name": "Lenovo Group",
-   "ticker": "0992.HK",
-   "exchange": "HKEX",
-   "us_listed": false,
-   "adr": false,
-   "layer": "L6",
-   "role": "PC/device OEM; a buyer of memory",
-   "price_symbol": "0992.HK",
-   "price_symbol_kind": "primary",
-   "line": "logic",
-   "short": "Lenovo",
-   "added": "2026-10-02 amendment 2: hurt by commodity DRAM"
   }
  ],
  "edges": [
@@ -12145,8 +12130,7 @@
     "rambus",
     "montage",
     "alab",
-    "hpq",
-    "lenovo"
+    "hpq"
    ],
    "propagation": [
     "tomen_devices"
@@ -12208,15 +12192,6 @@
      "source_url": "https://finance.yahoo.com/news/morgan-stanley-slashes-ratings-dell-071417428.html",
      "source_type": "analyst",
      "date": "2025-11-18"
-    },
-    {
-     "node": "lenovo",
-     "relation": "hurt",
-     "what": "Buyer of memory (notebook brand)",
-     "source_url": "https://www.trendforce.com/presscenter/news/20251211-12831.html",
-     "source_type": "analyst",
-     "date": "2025-12-11",
-     "note": "Generic: TrendForce names notebook brands, not Lenovo; Morgan Stanley does not mention Lenovo."
     }
    ]
   },

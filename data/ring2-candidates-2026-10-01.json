@@ -643,42 +643,6 @@
     ],
     "lose": [
      {
-      "id": "nanya",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
       "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
@@ -713,6 +677,42 @@
         "lagging": false
        }
       ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
      }
     ]
    },
@@ -739,9 +739,9 @@
      "amat"
     ],
     "lose_added": [
+     "mu",
      "nanya",
-     "winbond",
-     "mu"
+     "winbond"
     ]
    },
    "empty": {
@@ -974,12 +974,21 @@
     ],
     "lose": [
      {
-      "id": "nanya",
+      "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
@@ -988,20 +997,11 @@
         "trigger": "fired",
         "exposure": null,
         "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
+       },
        {
-        "bottleneck": "dram_commodity",
+        "bottleneck": "hbm_2027",
         "role": "owners",
-        "stage": "peaking",
+        "stage": "tightening",
         "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
@@ -1046,21 +1046,12 @@
       ]
      },
      {
-      "id": "mu",
+      "id": "nanya",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
@@ -1069,11 +1060,20 @@
         "trigger": "fired",
         "exposure": null,
         "lagging": false
-       },
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
        {
-        "bottleneck": "hbm_2027",
+        "bottleneck": "dram_commodity",
         "role": "owners",
-        "stage": "tightening",
+        "stage": "peaking",
         "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
@@ -1103,10 +1103,10 @@
      "skc"
     ],
     "lose_added": [
-     "nanya",
-     "winbond",
+     "mu",
      "skhynix",
-     "mu"
+     "nanya",
+     "winbond"
     ]
    },
    "empty": {
@@ -1729,12 +1729,21 @@
       ]
      },
      {
-      "id": "nanya",
+      "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
@@ -1743,20 +1752,11 @@
         "trigger": "fired",
         "exposure": null,
         "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
+       },
        {
-        "bottleneck": "dram_commodity",
+        "bottleneck": "hbm_2027",
         "role": "owners",
-        "stage": "peaking",
+        "stage": "tightening",
         "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
@@ -1801,21 +1801,12 @@
       ]
      },
      {
-      "id": "mu",
+      "id": "nanya",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
@@ -1824,11 +1815,20 @@
         "trigger": "fired",
         "exposure": null,
         "lagging": false
-       },
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
        {
-        "bottleneck": "hbm_2027",
+        "bottleneck": "dram_commodity",
         "role": "owners",
-        "stage": "tightening",
+        "stage": "peaking",
         "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
@@ -1859,10 +1859,10 @@
      "hoya",
      "sumco",
      "tok",
-     "nanya",
-     "winbond",
+     "mu",
      "skhynix",
-     "mu"
+     "nanya",
+     "winbond"
     ]
    },
    "empty": {
@@ -3391,42 +3391,6 @@
       ]
      },
      {
-      "id": "nanya",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
       "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
@@ -3461,6 +3425,42 @@
         "lagging": false
        }
       ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
      }
     ]
    },
@@ -3482,9 +3482,9 @@
      "hoya",
      "sumco",
      "tok",
+     "mu",
      "nanya",
-     "winbond",
-     "mu"
+     "winbond"
     ]
    },
    "empty": {
@@ -3846,16 +3846,34 @@
     "win": [],
     "lose": [
      {
-      "id": "nanya",
+      "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
        {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
         "bottleneck": "dram_commodity",
         "role": "owners",
         "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
         "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
@@ -3900,24 +3918,6 @@
       ]
      },
      {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
       "id": "skhynix",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
@@ -3954,21 +3954,12 @@
       ]
      },
      {
-      "id": "mu",
+      "id": "nanya",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
        {
         "bottleneck": "dram_commodity",
         "role": "owners",
@@ -3977,11 +3968,20 @@
         "trigger": "fired",
         "exposure": null,
         "lagging": false
-       },
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
        {
-        "bottleneck": "hbm_2027",
+        "bottleneck": "dram_commodity",
         "role": "owners",
-        "stage": "tightening",
+        "stage": "peaking",
         "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
@@ -4006,11 +4006,11 @@
      "foxconn"
     ],
     "lose_added": [
-     "nanya",
+     "mu",
      "samsung",
-     "winbond",
      "skhynix",
-     "mu"
+     "nanya",
+     "winbond"
     ]
    },
    "empty": {

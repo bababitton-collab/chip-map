@@ -205,16 +205,23 @@ def test_the_2026_09_29_splits_leave_no_seam(sym):
 def test_hurt_links_are_on_the_bottleneck_and_never_edges():
     b = next(b for b in BN if b["id"] == "dram_commodity")
     links = {h["node"]: h for h in b["hurt_links"]}
-    assert set(links) == {"hpq", "lenovo"} and set(links) <= set(b["hurt"])
+    assert set(links) == {"hpq"} and set(links) <= set(b["hurt"])
     assert all(h["relation"] == "hurt" and h["source_type"] == "analyst" for h in links.values())
     for e in DOC["edges"]:
-        assert "hpq" not in (e["from"], e["to"]) and "lenovo" not in (e["from"], e["to"])
+        assert "hpq" not in (e["from"], e["to"])
+
+
+def test_lenovo_is_gone_from_the_map():
+    """Removed 2026-10-02 (Michael): The Register, 2026-05-22, reports Lenovo's
+    operating profit +20.7% y/y on a premium mix shift, which contradicts a
+    hurt link that rested only on "notebook brands"."""
+    assert "lenovo" not in json.dumps(DOC)
 
 
 def test_a_hurt_buyer_never_reaches_a_derived_supplier_ring():
     for first in (["samsung", "skhynix", "mu"], ["nanya", "winbond"]):
         got = rings.second_ring(DOC, first, [])
-        assert not {"hpq", "lenovo"} & set(got["win2"] + got["lose2"])
+        assert "hpq" not in set(got["win2"] + got["lose2"])
 
 
 def test_commodity_dram_stage_rests_on_a_fetched_source():

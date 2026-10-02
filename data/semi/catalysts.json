@@ -59,5 +59,12 @@
   "bottleneck": "exchina_magnets",
   "status": "confirmed",
   "source_url": "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
+ },
+ {
+  "date": "2026-10-22",
+  "what": "Besi Q3 2026 results",
+  "bottleneck": "hybrid_bonding",
+  "status": "confirmed",
+  "source_url": "https://www.besi.com/investor-relations/financial-calendar/"
  }
 ]

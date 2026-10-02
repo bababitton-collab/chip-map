@@ -18,6 +18,9 @@ MAPS_ANCHOR = "#maps"
 # The way back out of a map, to the site that holds them all.
 ALL_MAPS = "All maps"
 TRACK_RECORD = "Track record"
+# The domain tree (chains/domains_page.py), site-wide, beside the maps.
+DOMAINS_LABEL = "Domains"
+DOMAINS_HREF = "/domains/"
 # The bar carries the short claim; the rule itself carries conditions and
 # belongs where they can be read -- the measurement method. It used to say
 # "Only contracts committed before the answer count as preregistered", which
@@ -107,7 +110,7 @@ def links(dom: str, *, several: bool = False,
         return [("map", MAP_LABEL, f"/{dom}/"),
                 ("track", TRACK_RECORD, f"/{dom}/track/")]
     if site_wide:
-        return [("map", MAPS_LABEL, MAPS_ANCHOR),
+        return [("map", MAPS_LABEL, MAPS_ANCHOR), ("domains", DOMAINS_LABEL, DOMAINS_HREF),
                 ("track", TRACK_RECORD, "/track/")]
     # Two items on a map's own page as well, and the same two. A third that
     # appeared only inside a map -- "All maps · Map" -- made the bar a
@@ -115,7 +118,7 @@ def links(dom: str, *, several: bool = False,
     # that pushed the brand into the viewport edge. "Maps" leads back out to
     # the choice between them; "Track record" stays this map's, because a
     # reader inside a chain wants that chain's record.
-    return [("map", MAPS_LABEL, "/"),
+    return [("map", MAPS_LABEL, "/"), ("domains", DOMAINS_LABEL, DOMAINS_HREF),
             ("track", TRACK_RECORD, f"/{dom}/track/")]
 
 

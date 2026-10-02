@@ -778,7 +778,7 @@ const cls=v=>v==null?'':(v<0?'neg':'pos');
 // Text from the data, made safe to put inside HTML. This script has no esc() of
 // its own -- the card scripts further down do, in their own scope.
 const escHtml=v=>String(v==null?'':v).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const BN = {lagLegend:'Trigger fired, price has not followed. Descriptive, not a forecast.', nyLegend:'Trigger not yet fired. Next dated check shown. Descriptive, not a forecast.', tsrc:'Trigger source', via:'via', fired:'Trigger fired', node:'this node', leader:'leader', exp:'exposure', expW:{low:'low',medium:'medium',high:'high'}, cyc:{peaking:'cycle peaking',resolving:'cycle easing'}, risk:'top risk', next:'Next check', title:'Bottleneck', stage:{tightening:'tightening',peaking:'peaking',resolving:'resolving',unclear:'stage unclear'}, trig:{fired:'fired',not_yet:'not yet',unclear:'unclear'}, pressure:'Pressure', rigidity:'Rigidity', trigger:'Trigger', owners:'Owners', hurt:'Hurt (down if YES)', prop:'Propagation', kill:'Kill', src:'source', nosrc:'no source'};
+const BN = {lagLegend:'Trigger fired, price has not followed. Descriptive, not a forecast.', nyLegend:'Trigger not yet fired. Next dated check shown. Descriptive, not a forecast.', tsrc:'Trigger source', via:'via', domain:'Domain', fired:'Trigger fired', node:'this node', leader:'leader', exp:'exposure', expW:{low:'low',medium:'medium',high:'high'}, cyc:{peaking:'cycle peaking',resolving:'cycle easing'}, risk:'top risk', next:'Next check', title:'Bottleneck', stage:{tightening:'tightening',peaking:'peaking',resolving:'resolving',unclear:'stage unclear'}, trig:{fired:'fired',not_yet:'not yet',unclear:'unclear'}, pressure:'Pressure', rigidity:'Rigidity', trigger:'Trigger', owners:'Owners', hurt:'Hurt (down if YES)', prop:'Propagation', kill:'Kill', src:'source', nosrc:'no source'};
 // Bottlenecks (map.json "bottlenecks"). The lagging line and ring are a
 // DESCRIPTION -- a fired trigger whose ring has not followed -- and never a
 // forecast: nothing here is scored. See chains/lagging.py.
@@ -825,6 +825,10 @@ function notYetOf(n){ if(!NOTYET){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||
       if(d>=0&&d<=120) (b.owners||[]).forEach(i=>{ const px=byId[i]&&byId[i].px;
         if(!(px&&px.r52w!=null&&px.r52w>=1.0)) NOTYET.add(i); }); }); }
   return NOTYET.has(n.id); }
+// The card's place in the domain tree (/domains/), one mono line.
+function bnDomain(b){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, ds=(F.domain_of||{})[b.id]||[];
+  const lv=v=>String(v||'').charAt(0).toUpperCase()+String(v||'').slice(1);
+  return ds.length?`<div class="bnrow" data-domain><b>${BN.domain}</b>${ds.map(d=>`<a href="/domains/#${escHtml(d.id)}">${escHtml(d.name)} · ${escHtml(lv(d.level))}</a>`).join('; ')}</div>`:''; }
 function bnCard(b, nid){
   const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
   const nm=i=>escHtml(byId[i]?byId[i].name:i);
@@ -834,6 +838,7 @@ function bnCard(b, nid){
   const list=(l,ids)=>(ids||[]).length?`<div class="bnrow"><b>${l}</b>${ids.map(nm).join(', ')}</div>`:'';
   return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`
     + bnSummary(b)
+    + bnDomain(b)
     + (t.source_url?`<div class="bnrow" data-trigger-source><b>${BN.tsrc}</b>${t.date?escHtml(t.date)+' — ':''}${escHtml(t.what||'')}${src(t)}</div>`:'')
     + row(BN.pressure, bnField(b,'pressure')) + row(BN.rigidity, bnField(b,'rigidity'))
     + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)

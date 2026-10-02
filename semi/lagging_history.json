@@ -1,0 +1,122 @@
+[
+ {
+  "date": "2026-10-01",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.0846,
+  "leader": "stx",
+  "leader_ret": 3.0617
+ },
+ {
+  "date": "2026-10-01",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2084,
+  "leader": "axti",
+  "leader_ret": 14.8303
+ },
+ {
+  "date": "2026-10-01",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2887,
+  "leader": "axti",
+  "leader_ret": 14.8303
+ },
+ {
+  "date": "2026-10-01",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.5419,
+  "leader": "stx",
+  "leader_ret": 3.0617
+ },
+ {
+  "date": "2026-10-02",
+  "node": "corning_fiber",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.9727,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ },
+ {
+  "date": "2026-10-02",
+  "node": "fujikura",
+  "bottleneck": "optical_fiber",
+  "ret_252": 1.3411,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ },
+ {
+  "date": "2026-10-02",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.1101,
+  "leader": "stx",
+  "leader_ret": 3.0292
+ },
+ {
+  "date": "2026-10-02",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2755,
+  "leader": "axti",
+  "leader_ret": 17.2205
+ },
+ {
+  "date": "2026-10-02",
+  "node": "kyocera",
+  "bottleneck": "mlcc",
+  "ret_252": 0.8467,
+  "leader": "semco",
+  "leader_ret": 7.3349
+ },
+ {
+  "date": "2026-10-02",
+  "node": "sakai_chem",
+  "bottleneck": "mlcc",
+  "ret_252": 0.3614,
+  "leader": "semco",
+  "leader_ret": 7.3349
+ },
+ {
+  "date": "2026-10-02",
+  "node": "shinetsu",
+  "bottleneck": "wafers_300mm",
+  "ret_252": 0.1571,
+  "leader": "globalwafers",
+  "leader_ret": 1.4349
+ },
+ {
+  "date": "2026-10-02",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2897,
+  "leader": "axti",
+  "leader_ret": 17.2205
+ },
+ {
+  "date": "2026-10-02",
+  "node": "sumitomo_electric",
+  "bottleneck": "optical_fiber",
+  "ret_252": 1.2897,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ },
+ {
+  "date": "2026-10-02",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.6212,
+  "leader": "stx",
+  "leader_ret": 3.0292
+ },
+ {
+  "date": "2026-10-02",
+  "node": "umicore",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.4091,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ }
+]

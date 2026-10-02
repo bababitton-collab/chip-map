@@ -811,8 +811,10 @@ function bnSummary(b){ const t=b.trigger||{}, nx=nextCheck(b);
   const st=t.status==='fired'?BN.trig.fired+(t.date?' '+t.date:''):(BN.trig[t.status]||t.status||'');
   const own=(b.owners||[]).map(i=>{ const n=byId[i], px=n&&n.px;
     return `${escHtml(n?(n.ticker||n.short||n.name):i)} <span dir="ltr">${px?pct(px.r52w):'—'}</span>`; }).join(', ');
-  return `<div class="bnrow" data-bn-summary><b>${BN.trigger}</b>${st} · ${BN.owners} ${own} <small>(52w)</small> · ${BN.next}: `
-    + (nx?`<b dir="ltr">${escHtml(nx.date||nx.date_text||'')}</b> — ${escHtml(nx.what)}`:'—') + `</div>`; }
+  // a next check is shown only with a confirmed date; no date, no line
+  return `<div class="bnrow" data-bn-summary><b>${BN.trigger}</b>${st} · ${BN.owners} ${own} <small>(52w)</small>`
+    + (nx&&nx.date?` · ${BN.next}: <b dir="ltr">${escHtml(nx.date)}</b> — ${escHtml(nx.what)}`:'')
+    + `</div>`; }
 // Hollow amber dot: an owner of a bottleneck whose trigger has not fired, with a
 // dated next check inside 120 days.
 let NOTYET=null;

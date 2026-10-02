@@ -116,11 +116,13 @@ def test_the_repository_carries_at_least_the_default_domain():
 # Moved again on purpose 2026-10-02 (watchlist tier A): node neo and the
 # exchina_magnets bottleneck with its two catalysts, then its sourced trigger and
 # its pressure/rigidity linked to heavy_rare_earths, and shorter catalyst labels.
+# Then the semi-sources block: node besi (promoted), sourced pressure/rigidity
+# for 14 bottlenecks and the magnets rigidity (IEA).
 # New nodes are in no
 # committed question's frozen EW universe.
 GOLD = {
-    "he": "13f1f9898ef76b765c68ca58d40bcc384947fce02d2facf2f9ebcf71c44fb8fe",
-    "en": "0f2d6ef4a311ac79eebe5a29ef9bc7cbb5a997bee3b6da78d34e74eb1e1d2704",
+    "he": "7ad8fb3c5936ba5ab260925fd8aa99f7559371301f3ef438f961e414cfc60422",
+    "en": "0a2fabe792288b8a1ac982eef14180ec9406d307932c37596c7a909a185193e8",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "

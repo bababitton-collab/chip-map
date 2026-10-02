@@ -95,6 +95,35 @@ def test_a_fired_trigger_has_a_date_a_source_and_its_type():
             assert t["source_type"] in ("primary", "analyst", "media"), b["id"]
 
 
+# Pages fetched and quoted for the semi-sources block (2026-10-02): the 14
+# previously unsourced bottlenecks, hybrid_bonding and the magnets rigidity.
+SEMI_SOURCES_2026_10_02 = {
+    "https://news.chemnet.com/news-7185.html",
+    "https://newsletter.semianalysis.com/p/inside-the-800vdc-revolution-part",
+    "https://passive-components.eu/inductors-and-ferrite-beads-price-hikes/",
+    "https://passive-components.eu/mlccs-in-the-age-of-ai-q2-2026-market-tightness/",
+    "https://www.besi.com/fileadmin/user_upload/PR_Q2-2026.pdf",
+    "https://www.bnext.com.tw/article/91410/quartz-component-price-hike",
+    "https://www.digitimes.com/news/a20250814PD240/avc-capacity-revenue-demand-chassis.html",
+    "https://www.fool.com/earnings/call-transcripts/2026/07/21/vicor-vicr-q2-2026-earnings-call-transcript/",
+    "https://www.fool.com/earnings/call-transcripts/2026/08/18/lumentum-lite-q4-2026-earnings-call-transcript/",
+    "https://www.hdinresearch.com/news/1888",
+    "https://www.ibiden.com/company/2026/02/notice-regarding-capital-investment-plan-for-high-performance-ic-package-substrates.html",
+    "https://www.iea.org/reports/rare-earth-elements/executive-summary",
+    "https://www.kds.info/wp-content/uploads/2026/05/2026.3-financial-result-en-260514.pdf",
+    "https://www.tomshardware.com/tech-industry/semiconductors/hybrid-bonding-roadmap-examined",
+    "https://www.tomshardware.com/tech-industry/semiconductors/sk-hynix-says-hybrid-bonding-wont-be-ready-for-hbm4e-as-ai-memory-runs-into-a-775-micron-ceiling",
+    "https://www.tomshardware.com/tech-industry/semiconductors/the-state-of-abf-substrates-in-data-center-silicon-in-2026-solving-the-supply-crunch-and-material-wall-beneath-every-ai-accelerator",
+    "https://www.trendforce.com/news/2026/03/17/news-china-pushes-advanced-photoresist-as-xuzhou-b-mass-production-in-5-years/",
+    "https://www.trendforce.com/news/2026/05/06/news-ai-demand-tightens-ccl-supply-drives-advance-orders-price-hikes-and-expansion/",
+    "https://www.trendforce.com/news/2026/05/27/news-infineon-announces-second-2026-price-hike-effective-july-1-amid-rising-supply-chain-costs-strong-demand/",
+    "https://www.trendforce.com/news/2026/09/30/news-nvidia-reportedly-explores-glass-substrates-2028-adoption-possible-as-taiwan-suppliers-step-up/",
+    "https://www.trendforce.com/presscenter/news/20260420-13017.html",
+    "https://www.trendforce.com/presscenter/news/20260617-13107.html",
+    "https://www.trendforce.com/presscenter/news/20260630-13127.html",
+}
+
+
 def test_every_source_is_one_of_the_closure_pages():
     """No source outside what was read: the 24 pages in semi-closure.md, and
     the two analyst pages amendment 2 supplied for commodity DRAM (2026-10-02)."""
@@ -102,7 +131,7 @@ def test_every_source_is_one_of_the_closure_pages():
     # + 2 more (TrendForce 2026-07-03, Tom's Hardware 2026-07-04), stage rules.
     # + 2 more (2026-10-02, exchina_magnets trigger): the MOFCOM pause as reported
     # by Global Times, and the DFARS 252.225-7052 text.
-    assert len(allowed) <= 24 + 2 + 2 + 2
+    assert len(allowed - SEMI_SOURCES_2026_10_02) <= 24 + 2 + 2 + 2
     for e in DOC["edges"]:
         if e.get("source_type"):
             assert e["source"] in allowed | FAILED or e["source"].startswith("https://"), e

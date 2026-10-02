@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from urllib.parse import parse_qs
 
 import pytest
 
@@ -40,17 +41,24 @@ STATE = r"""
 """
 
 # Drive the controls, let the URL be written, and report where it ended up.
+# The station is picked at run time: the first one the rail lists under the
+# "tightening" filter. Which stations are tightening is market data and moves
+# every session, so naming one here ("GE") broke the test whenever it stopped.
 DRIVE = r"""
 (() => {
   const rail = document.getElementById('srail');
-  const q = rail.querySelector('.rq');
-  q.value = 'GE';
-  q.dispatchEvent(new Event('input', {bubbles: true}));
   const pulse = [...rail.querySelectorAll('.rf')].find(s => s.dataset.f === 'pulse');
   pulse.value = 'tightening';
   pulse.dispatchEvent(new Event('change', {bubbles: true}));
+  const first = document.getElementById('srail').querySelector('.rstn b');
+  if (!first) return JSON.stringify({none: true});
+  const pick = first.textContent;
+  const q = document.getElementById('srail').querySelector('.rq');
+  q.value = pick;
+  q.dispatchEvent(new Event('input', {bubbles: true}));
   const r2 = document.getElementById('srail');
   return JSON.stringify({
+    pick: pick,
     url: location.search,
     count: r2.querySelector('.rcount').textContent,
     rows: r2.querySelectorAll('.rstn').length,
@@ -73,12 +81,19 @@ def web():
         served.close()
 
 
+def drive(served, browser) -> dict:
+    got = json.loads(browser.measure(served.url(f"{DOM}/"), 1500, 950, DRIVE, settle=3.0))
+    if got.get("none"):
+        pytest.skip("no station is tightening in this build; nothing to search for under that filter")
+    return got
+
+
 def test_setting_a_search_and_a_filter_writes_them_to_the_url(web):
     served, browser = web
-    got = json.loads(browser.measure(served.url(f"{DOM}/"), 1500, 950, DRIVE,
-                                     settle=3.0))
-    assert "q=GE" in got["url"]
-    assert "pulse=tightening" in got["url"]
+    got = drive(served, browser)
+    params = parse_qs(got["url"].lstrip("?"))
+    assert params.get("q") == [got["pick"]]
+    assert params.get("pulse") == ["tightening"]
     assert got["rows"] >= 1
     assert got["count"].endswith("stations")
 
@@ -86,11 +101,10 @@ def test_setting_a_search_and_a_filter_writes_them_to_the_url(web):
 def test_that_url_reopens_the_same_map(web):
     """The round trip. The second load is a cold one: it knows only the URL."""
     served, browser = web
-    first = json.loads(browser.measure(served.url(f"{DOM}/"), 1500, 950, DRIVE,
-                                       settle=3.0))
+    first = drive(served, browser)
     back = json.loads(browser.measure(served.url(f"{DOM}/") + first["url"],
                                       1500, 950, STATE, settle=3.0))
-    assert back["search"] == "GE"
+    assert back["search"] == first["pick"]
     assert back["filters"]["pulse"] == "tightening"
     assert back["count"] == first["count"]
     assert back["rows"] == first["rows"]
@@ -130,7 +144,6 @@ def test_a_bad_parameter_is_ignored_and_never_breaks_the_page(query, why, web):
 
 def test_the_recording_flags_are_not_added_to_a_normal_link(web):
     served, browser = web
-    got = json.loads(browser.measure(served.url(f"{DOM}/"), 1500, 950, DRIVE,
-                                     settle=3.0))
+    got = drive(served, browser)
     for flag in ("rec=", "legacy=", "emph=", "freeze="):
         assert flag not in got["url"], flag

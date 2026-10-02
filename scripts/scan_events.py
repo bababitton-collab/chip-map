@@ -1,6 +1,7 @@
 """The event log's hands: rules, capture, the daily alarm, and the tally.
 
     python scripts/scan_events.py rules [--write]     rule count and hashes; write new ones
+    python scripts/scan_events.py rules --add A,B --write   append rules for A, B; committed ones untouched
     python scripts/scan_events.py add --bottleneck B --type T --date YYYY-MM-DD \
         --what TEXT --url URL --source-type primary|analyst|media [--dry-run]
     python scripts/scan_events.py amend ID --reason TEXT [--ineligible] [--classify C]
@@ -42,6 +43,7 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("rules")
     p.add_argument("--write", action="store_true")
+    p.add_argument("--add", default="", help="comma-separated bottleneck ids: append rules, touch none")
     p = sub.add_parser("add")
     for k in ("bottleneck", "type", "date", "what", "url", "source-type"):
         p.add_argument(f"--{k}", required=k != "url")
@@ -58,6 +60,16 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     doc = mapfile.load()
     log_path = E.events_path()
+
+    if a.cmd == "rules" and a.add:
+        doc_rules, added = E.add_rules(E.load_rules(), doc, a.add.split(","), NOW.date().isoformat())
+        for r in added:
+            print(f"{r['sha256']}  {r['bottleneck_id']}" + (f"  (supersedes {r['supersedes'][:12]})" if r.get("supersedes") else ""))
+        if a.write:
+            E.rules_path().write_text(json.dumps(doc_rules, indent=1, ensure_ascii=False) + "\n",
+                                      encoding="utf-8", newline="\n")
+            print(f"wrote {E.rules_path()}")
+        return 0
 
     if a.cmd == "rules":
         old = E.load_rules()

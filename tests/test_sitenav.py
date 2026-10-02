@@ -43,10 +43,10 @@ def test_a_maps_own_page_keeps_its_own_record_and_a_way_out():
     h = _hrefs(links)
     assert h["map"] == "/", "the way out is Maps"
     assert h["track"] == "/energy/track/"
-    assert [k for k, _l, _u in links] == ["map", "track"]
+    assert [k for k, _l, _u in links] == ["map", "domains", "track"]
 
 
-def test_every_kind_of_page_carries_the_same_two_items():
+def test_every_kind_of_page_carries_the_same_three_items():
     """Brand, Maps, Track record, and the trust line under it. A bar that
     grows an extra item inside a map is a different bar on every page, and
     at 390 it was the item that pushed the brand off the edge."""
@@ -57,7 +57,9 @@ def test_every_kind_of_page_carries_the_same_two_items():
         "pooled": [l for _k, l, _u in sitenav.links("semi", several=True,
                                                     site_wide=True)],
     }
-    assert all(v == [sitenav.MAPS_LABEL, sitenav.TRACK_RECORD]
+    # Domains joined Maps and Track record on 2026-10-02 (the /domains/ page);
+    # still one bar, the same on every kind of page.
+    assert all(v == [sitenav.MAPS_LABEL, sitenav.DOMAINS_LABEL, sitenav.TRACK_RECORD]
                for v in labels.values()), labels
 
 

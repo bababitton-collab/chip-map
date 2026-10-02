@@ -1,0 +1,412 @@
+{
+ "contract": "v3",
+ "written": "2026-10-02",
+ "ew_universe": {
+  "sha256": "14f007f535bee10b39e85a720b882b51e40ce6d5908ea6a07b02f5fb9fe42357",
+  "n": 33,
+  "symbols": [
+   "034020.KO",
+   "083650.KQ",
+   "5631.T",
+   "ABBNY.US",
+   "BKR.US",
+   "BWXT.US",
+   "CCJ.US",
+   "CEG.US",
+   "CLF.US",
+   "ENR.XETRA",
+   "ETN.US",
+   "FLR.US",
+   "GEV.US",
+   "HUBB.US",
+   "LEU.US",
+   "NEE.US",
+   "NEX.PA",
+   "NKT.CO",
+   "NNE.US",
+   "NVT.US",
+   "OKLO.US",
+   "PFSE.XETRA",
+   "PKX.US",
+   "POWL.US",
+   "PRYMY.US",
+   "PWR.US",
+   "RYCEY.US",
+   "SMR.US",
+   "SU.PA",
+   "TLN.US",
+   "VRT.US",
+   "VST.US",
+   "WRT1V.HE"
+  ]
+ },
+ "rules": [
+  {
+   "contract": "v3",
+   "bottleneck_id": "rotor_vessel_forgings",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "jsw": "5631.T",
+      "doosan": "034020.KO"
+     },
+     "down": {
+      "gev": "GEV.US",
+      "siemens_energy": "ENR.XETRA"
+     },
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {
+      "gev": "GEV.US",
+      "siemens_energy": "ENR.XETRA"
+     },
+     "down": {
+      "jsw": "5631.T",
+      "doosan": "034020.KO"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "14f007f535bee10b39e85a720b882b51e40ce6d5908ea6a07b02f5fb9fe42357",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "confirming": {
+    "status": "fired",
+    "date": "2026-07-13",
+    "what": "JSW: demand for rotor shafts for high-efficiency thermal power, including gas-turbine combined cycle, surged on data-center power demand and continues well above the mid-term plan's assumption (translated from Japanese).",
+    "source_url": "https://www.jsw.co.jp/pdf/ir/library/presentation/2027/JGP2028_202607.pdf"
+   },
+   "kill": [
+    "JSW materials orders flat",
+    "DOE AP1000 loan with no financial close"
+   ],
+   "written": "2026-10-02",
+   "sha256": "15d29c260c8580cfa6d4ab6baf76be5eb98f35003716bd4add9611562e9c76ec"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hrsg",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "bhi": "083650.KQ"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "bhi": "083650.KQ"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "14f007f535bee10b39e85a720b882b51e40ce6d5908ea6a07b02f5fb9fe42357",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "confirming": {
+    "status": "fired",
+    "date": "2026-08-14",
+    "what": "Q2 2026 HRSG revenue up 80.7% y/y to KRW 186.7bn (Shinhan Securities, via BigGo); BHI's half-year report shows H1 2026 HRSG sales of KRW 377.4bn and an order backlog of KRW 2.46tn.",
+    "source_url": [
+     "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260814000764",
+     "https://finance.biggo.com/news/47be26b1-c785-41bc-8265-69f3f23dfd54"
+    ]
+   },
+   "kill": [
+    "book-to-bill < 1 for two quarters"
+   ],
+   "written": "2026-10-02",
+   "sha256": "7bf4904113cb121c30944e31985905f15032a043b6e15eacd3dd0ee7d11c4c65"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "medium_speed_gas_engines",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "wartsila": "WRT1V.HE"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "wartsila": "WRT1V.HE"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "14f007f535bee10b39e85a720b882b51e40ce6d5908ea6a07b02f5fb9fe42357",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "confirming": {
+    "status": "fired",
+    "date": "2026-07-21",
+    "what": "Energy order intake beat the previous all-time high by more than 70%, largely on 1.2 GW of firm data-centre orders; Wärtsilä expanded capacity again in Q2.",
+    "source_url": "https://www.wartsila.com/media/news/21-07-2026-wartsila-s-half-year-financial-report-january-june-2026-3773763"
+   },
+   "kill": [
+    "energy book-to-bill < 1"
+   ],
+   "written": "2026-10-02",
+   "sha256": "84263b3db054e73c28532b17458aa6f4c4eeb58b59d55fc38eb1df6cdb9893f9"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hv_cable_accessories",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "pfisterer": "PFSE.XETRA"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "pfisterer": "PFSE.XETRA"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "14f007f535bee10b39e85a720b882b51e40ce6d5908ea6a07b02f5fb9fe42357",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "confirming": {
+    "status": "fired",
+    "date": "2026-08-19",
+    "what": "H1 2026: revenue +20.2% to EUR 256.7M; order book EUR 340.3M (+EUR 27.8M y/y); order intake EUR 263.0M exceeded revenue (book-to-bill above 1).",
+    "source_url": [
+     "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
+     "https://www.pfisterer.com/en/news/pfisterer-holding-se-continues-successful-growth-trajectory-significant-increase-revenue-and"
+    ]
+   },
+   "kill": [
+    "book-to-bill < 1"
+   ],
+   "written": "2026-10-02",
+   "sha256": "318fc2874280aee137f676d25b0bd8129fd8cba83794771c748dd0eb236c16f7"
+  }
+ ]
+}

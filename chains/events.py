@@ -153,6 +153,44 @@ def merge_rules(old: dict, new: dict) -> tuple[dict, list[str]]:
     return {**old, "rules": old["rules"] + added}, changed
 
 
+def add_rules(old: dict, doc: dict, ids: list[str], today: str) -> tuple[dict, list[dict]]:
+    """Append rules for ``ids``, never touching a committed entry.
+
+    Each new rule also names what confirms it (the bottleneck's trigger as
+    recorded) and what kills it (its kill criteria), and both are hashed. A
+    bottleneck that already has a committed rule gets a second, later entry
+    that names the one it supersedes; lookups by bottleneck take the latest.
+    The frozen universe of the file is reused; a file with none freezes the
+    map's priced nodes now.
+    """
+    from chains import ew_universe
+    from chains.preregister import priced_symbols
+    uni = old.get("ew_universe") or ew_universe.fingerprint(priced_symbols(doc))
+    symbol_of = {n["id"]: n["price_symbol"] for n in doc.get("nodes", [])
+                 if n.get("price_symbol") and n.get("price_symbol_kind") != "none"}
+    by = {b["id"]: b for b in doc.get("bottlenecks") or []}
+    last = {r["bottleneck_id"]: r for r in old.get("rules", [])}
+    added = []
+    for bid in ids:
+        b = by[bid]
+        t = b.get("trigger") or {}
+        r = rule(b, symbol_of, uni["sha256"])
+        r["confirming"] = {"status": t.get("status"), "date": t.get("date"), "what": t.get("what"),
+                           "source_url": t.get("source_url")}
+        r["kill"] = [k.get("criterion") for k in b.get("kill") or []]
+        r["written"] = today
+        if bid in last:
+            r["supersedes"] = last[bid]["sha256"]
+        added.append({**r, "sha256": digest(r)})
+    return {"contract": CONTRACT, "written": old.get("written", today), "ew_universe": uni,
+            "rules": list(old.get("rules", [])) + added}, added
+
+
+def latest_rules(doc_rules: dict) -> dict:
+    """{bottleneck id: its latest rule} (a superseding entry comes later in the file)."""
+    return {r["bottleneck_id"]: r for r in doc_rules.get("rules", [])}
+
+
 # ------------------------------------------------------------------ the log
 def events_path(dom: str | None = None) -> Path:
     from chains.paths import data_dir

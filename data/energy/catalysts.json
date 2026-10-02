@@ -1,0 +1,47 @@
+[
+ {
+  "date": "2026-11-10",
+  "what": "JSW first-half FY2026 results",
+  "bottleneck": "rotor_vessel_forgings",
+  "status": "confirmed",
+  "source_url": "https://www.jsw.co.jp/ja/ir/event.html"
+ },
+ {
+  "date": null,
+  "date_text": "unconfirmed",
+  "what": "First AP1000 long-lead forging order",
+  "bottleneck": "rotor_vessel_forgings",
+  "status": "unconfirmed",
+  "source_url": null
+ },
+ {
+  "date": null,
+  "date_text": "unconfirmed",
+  "what": "BHI Q3 2026 results",
+  "bottleneck": "hrsg",
+  "status": "unconfirmed",
+  "source_url": null
+ },
+ {
+  "date": "2026-10-27",
+  "what": "Wärtsilä interim report January-September 2026",
+  "bottleneck": "medium_speed_gas_engines",
+  "status": "confirmed",
+  "source_url": "https://www.wartsila.com/media/news/14-10-2025-wartsila-s-financial-information-and-annual-general-meeting-in-2026-3669375"
+ },
+ {
+  "date": "2026-11-18",
+  "what": "PFISTERER Q3 key figures",
+  "bottleneck": "hv_cable_accessories",
+  "status": "confirmed",
+  "source_url": "https://www.pfisterer.com/en/investors"
+ },
+ {
+  "date": null,
+  "date_text": "unconfirmed (officially: first half of 2027)",
+  "what": "PFISTERER HVDC qualification centre commissioning",
+  "bottleneck": "hv_cable_accessories",
+  "status": "unconfirmed",
+  "source_url": "https://www.pfisterer.com/en/news/pfisterer-bolsters-hvdc-technology-future-topping-out-ceremony-marks-key-step-toward-modern"
+ }
+]

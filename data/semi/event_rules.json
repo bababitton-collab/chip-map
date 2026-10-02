@@ -3063,6 +3063,196 @@
    "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
    "cluster_sessions": 10,
    "sha256": "579f31fd27e7ed14917bcdde74c950f9dbc07c9c4265299bb233b16dbd633943"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "exchina_magnets",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "mp": "MP.US",
+      "lynas": "LYC.AU",
+      "neo": "NEO.TO"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "mp": "MP.US",
+      "lynas": "LYC.AU",
+      "neo": "NEO.TO"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "confirming": {
+    "status": "not_yet",
+    "date": null,
+    "what": "China's rare-earth export-control pause runs to 2026-11-10; the DFARS ban on covered magnets mined, refined or produced in China applies from 2027-01-01.",
+    "source_url": [
+     "https://www.globaltimes.cn/page/202511/1347646.shtml",
+     "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
+    ]
+   },
+   "kill": [
+    "China renews the export-control pause",
+    "DFARS waivers granted"
+   ],
+   "written": "2026-10-02",
+   "sha256": "8c4db102bd73b1e3e4781596ed4ab10ccac2fde68b44a307853f44a3b99a3da3"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hybrid_bonding",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "besi": "BESI.AS"
+     },
+     "down": {
+      "hanmi": "042700.KO"
+     },
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {
+      "hanmi": "042700.KO"
+     },
+     "down": {
+      "besi": "BESI.AS"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "confirming": {
+    "status": "fired",
+    "date": "2026-07-23",
+    "what": "Besi Q2-26: hybrid bonding customer adoption rose from 15 at year-end 2025 to 21; additional orders from two repeat customers and one new hyperscaler. Fired for logic/SoIC; HBM adoption expected ~HBM5 (SK hynix, Hot Chips 2026).",
+    "source_url": [
+     "https://www.besi.com/fileadmin/user_upload/PR_Q2-2026.pdf",
+     "https://www.tomshardware.com/tech-industry/semiconductors/sk-hynix-says-hybrid-bonding-wont-be-ready-for-hbm4e-as-ai-memory-runs-into-a-775-micron-ceiling"
+    ]
+   },
+   "kill": [],
+   "written": "2026-10-02",
+   "supersedes": "540a052aa768ca5e7f0ec5d7f84a5c05114cc82bcbe42e9568fab53ae81e772e",
+   "sha256": "09dade83055ff77d8647cbf1c2c8a60562ca22b9cfa9291200bff9e845f740fb"
   }
  ]
 }

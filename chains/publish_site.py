@@ -392,6 +392,23 @@ def write_landing_now() -> Path:
             raise SystemExit(
                 f"a locked question's text reached the front door: "
                 f"{leaked[:3]}. Not published.")
+    write_domains_page(found)
+    return p
+
+
+def write_domains_page(found: list[str]) -> Path | None:
+    """/domains/, site-wide, written with the landing page because it reads
+    every published map's live_en.json for owner returns. Through the same
+    Hebrew gate as the front door."""
+    from chains import domains_page
+    from chains.paths import data_root
+    p = domains_page.write(site_dir(root_domain()).parent, data_root(), found)
+    if p is None:
+        return None
+    runs = hebrew_runs(p.read_text(encoding="utf-8"))
+    if runs:
+        raise SystemExit(f"site/domains/index.html: {len(runs)} Hebrew string(s) in a file served "
+                         f"to English readers. Not published.\n  " + "\n  ".join(runs[:10]))
     return p
 
 

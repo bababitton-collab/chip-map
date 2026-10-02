@@ -7,9 +7,10 @@
  },
  {
   "date": "2026-11-27",
-  "what": "China's suspension of its Ga/Ge/Sb US export ban expires",
+  "what": "China's suspension of its Ga/Ge/Sb US export ban expires (MOFCOM Announcement No. 72 of 2025)",
   "bottleneck": "ga_ge_in",
-  "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/"
+  "source_url": "https://www.mofcom.gov.cn/zwgk/zcfb/art/2025/art_5c68985a6b1a46778e2e8dbff1bb1601.html",
+  "status": "confirmed"
  },
  {
   "date": "2027-01",
@@ -45,5 +46,26 @@
   "what": "CXMT Shanghai volume ramp: kill marker for commodity DRAM",
   "bottleneck": "dram_commodity",
   "source_url": null
+ },
+ {
+  "date": "2026-11-10",
+  "what": "China's rare-earth export-control pause expires",
+  "bottleneck": "exchina_magnets",
+  "status": "confirmed",
+  "source_url": "https://www.globaltimes.cn/page/202511/1347646.shtml"
+ },
+ {
+  "date": "2027-01-01",
+  "what": "DFARS ban on China-origin magnets takes effect",
+  "bottleneck": "exchina_magnets",
+  "status": "confirmed",
+  "source_url": "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
+ },
+ {
+  "date": "2026-10-22",
+  "what": "Besi Q3 2026 results",
+  "bottleneck": "hybrid_bonding",
+  "status": "confirmed",
+  "source_url": "https://www.besi.com/investor-relations/financial-calendar/"
  }
 ]

@@ -807,7 +807,11 @@ def focus_for(m: dict, lang: str) -> dict:
             # The map's bottleneck records and their dated catalysts, for the
             # bottleneck card. Only a map that declares them ships the keys.
             # The card picks "next check" against the snapshot's own date.
-            **({"bottlenecks": _stages.annotate(m["bottlenecks"]), "catalysts": _catalysts()}
+            **({"bottlenecks": _stages.annotate(m["bottlenecks"]), "catalysts": _catalysts(),
+                # each bottleneck's domain(s) on the /domains/ page, for the card's Domain line
+                "domain_of": _domain_of(m["bottlenecks"]),
+                # the standing event rule per bottleneck (contract v3), its latest entry
+                "event_rules": _event_rules()}
                if m.get("bottlenecks") else {}),
             # Contract v3: logged events, minted forecasts, open alarms. Read
             # from the log and the price store, so shipped only when there is
@@ -817,6 +821,34 @@ def focus_for(m: dict, lang: str) -> dict:
 
 from chains import stages as _stages  # noqa: E402  -- stage is computed, never stored
 from chains import events as _events  # noqa: E402
+
+
+def _event_rules() -> dict:
+    """{bottleneck id: the latest committed v3 rule, slimmed for the card}."""
+    doc = _events.load_rules()
+    out = {}
+    for bid, r in _events.latest_rules(doc).items():
+        dm = r["direction_map"]
+        out[bid] = {"sha256": r["sha256"], "supersedes": r.get("supersedes"),
+                    "t": {"up": list(dm["tightening"]["up"]), "down": list(dm["tightening"]["down"])},
+                    "r": {"up": list(dm["resolving"]["up"]), "down": list(dm["resolving"]["down"])},
+                    "confirming": (r.get("confirming") or {}).get("what"), "kill": r.get("kill")}
+    return out
+
+
+def _domain_of(bottlenecks: list) -> dict:
+    """{bottleneck id: [{id, name, level}]} from the public domain export."""
+    from chains.paths import data_root
+    p = data_root() / "domains" / "public.json"
+    if not p.exists():
+        return {}
+    ids = {b["id"] for b in bottlenecks}
+    out: dict = {}
+    for d in json.loads(p.read_text(encoding="utf-8")).get("domains", []):
+        for b in d.get("bottleneck_ids") or []:
+            if b in ids:
+                out.setdefault(b, []).append({"id": d["id"], "name": d["name"], "level": d["level"]})
+    return out
 
 
 def _catalysts() -> list:

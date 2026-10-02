@@ -3197,6 +3197,41 @@
    "line": "logic",
    "short": "HP",
    "added": "2026-10-02 amendment 2: hurt by commodity DRAM"
+  },
+  {
+   "id": "neo",
+   "name": "Neo Performance Materials",
+   "short": "NEO",
+   "ticker": "NEO.TO",
+   "exchange": "TSX",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "line": "power",
+   "role": "Rare-earth magnets and magnetic powders outside China",
+   "price_symbol": "NEO.TO",
+   "price_symbol_kind": "primary",
+   "competitors": [],
+   "key_suppliers": [],
+   "customer_concentration": "",
+   "notes": "",
+   "segment_share": "",
+   "added": "2026-10-02 watchlist tier A"
+  },
+  {
+   "id": "besi",
+   "name": "BE Semiconductor Industries (Besi)",
+   "short": "Besi",
+   "ticker": "BESI.AS",
+   "exchange": "Euronext Amsterdam",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L2",
+   "line": "packaging",
+   "role": "Die-to-wafer hybrid bonders and TC bonders",
+   "price_symbol": "BESI.AS",
+   "price_symbol_kind": "primary",
+   "added": "2026-10-02 semi sources (promoted from subnode besi_cp4)"
   }
  ],
  "edges": [
@@ -6742,7 +6777,7 @@
    "price_note": "US line for Disco Corp ADR; home listing 6146.T is not on EODHD"
   },
   {
-   "id": "besi",
+   "id": "besi_cp4",
    "name": "BE Semiconductor Industries (Besi)",
    "ticker": "BESI",
    "exchange": "Euronext Amsterdam",
@@ -9853,7 +9888,7 @@
    "chokepoint_id": "CP4"
   },
   {
-   "from": "besi",
+   "from": "besi_cp4",
    "to": "tsmc",
    "what": "hybrid bonders (SoIC)",
    "group": "tools",
@@ -12466,25 +12501,36 @@
    "name": "Hybrid bonding",
    "layer": "L2",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Hybrid bonding is in high-volume production on logic chips: Intel began shipping Foveros Direct in H1 2026 and AMD has used it in volume; TSMC SoIC leads in volume (Tom's Hardware, 2026-09-02).",
+    "source_url": "https://www.tomshardware.com/tech-industry/semiconductors/hybrid-bonding-roadmap-examined",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Dies are placed one at a time, so bonder speed sets the limit on how many chips can be produced; Besi's Chameo bonders are rated near 2,000 chips per hour (Tom's Hardware, 2026-09-02).",
+    "source_url": "https://www.tomshardware.com/tech-industry/semiconductors/hybrid-bonding-roadmap-examined",
+    "source_type": "media"
    },
    "trigger": {
-    "status": "unclear",
-    "date": null,
-    "what": "Section C: delayed by JEDEC's height relaxation; no source URL given.",
-    "source_url": null,
-    "source_type": null
+    "status": "fired",
+    "date": "2026-07-23",
+    "what": "Besi Q2-26: hybrid bonding customer adoption rose from 15 at year-end 2025 to 21; additional orders from two repeat customers and one new hyperscaler. Fired for logic/SoIC; HBM adoption expected ~HBM5 (SK hynix, Hot Chips 2026).",
+    "source_url": [
+     "https://www.besi.com/fileadmin/user_upload/PR_Q2-2026.pdf",
+     "https://www.tomshardware.com/tech-industry/semiconductors/sk-hynix-says-hybrid-bonding-wont-be-ready-for-hbm4e-as-ai-memory-runs-into-a-775-micron-ceiling"
+    ],
+    "source_type": "primary"
    },
-   "owners": [],
-   "hurt": [],
+   "owners": [
+    "besi"
+   ],
+   "hurt": [
+    "hanmi"
+   ],
    "propagation": [],
    "kill": [],
-   "exposure": {},
+   "exposure": {
+    "besi": "high"
+   },
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12529,11 +12575,11 @@
    "name": "Memory burn-in",
    "layer": "L2",
    "pressure": {
-    "text": "No closure source.",
+    "text": "",
     "source_url": null
    },
    "rigidity": {
-    "text": "No closure source.",
+    "text": "",
     "source_url": null
    },
    "trigger": {
@@ -12662,12 +12708,14 @@
    "name": "CW lasers / EML",
    "layer": "L6",
    "pressure": {
-    "text": "No laser source among the closure pages.",
-    "source_url": null
+    "text": "Lumentum (Q4 FY26 call, 2026-08-11): 'still a significant supply/demand imbalance on CW or EMLs', and expects to be 'significantly behind demand' even at year-end.",
+    "source_url": "https://www.fool.com/earnings/call-transcripts/2026/08/18/lumentum-lite-q4-2026-earnings-call-transcript/",
+    "source_type": "primary"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Lumentum: first revenue from its Greensboro fab conversion to InP in early 2028, ramping through 2028 into 2029 (Q4 FY26 call).",
+    "source_url": "https://www.fool.com/earnings/call-transcripts/2026/08/18/lumentum-lite-q4-2026-earnings-call-transcript/",
+    "source_type": "primary"
    },
    "trigger": {
     "status": "unclear",
@@ -12871,12 +12919,14 @@
    "name": "Optical transceivers",
    "layer": "L6",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "TrendForce (2026-04-20): demand is rising sharply for 800G-and-above optical transceivers for AI server clusters, while supply-side pressures are becoming increasingly evident.",
+    "source_url": "https://www.trendforce.com/presscenter/news/20260420-13017.html",
+    "source_type": "analyst"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "TrendForce (2026-04-20): supply of critical optoelectronic chips such as EMLs and CW lasers remains tight due to capacity allocation constraints.",
+    "source_url": "https://www.trendforce.com/presscenter/news/20260420-13017.html",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "unclear",
@@ -13083,12 +13133,14 @@
    "name": "High-end CCL",
    "layer": "L1",
    "pressure": {
-    "text": "No closure source for CCL demand.",
-    "source_url": null
+    "text": "CCL prices are surging amid a supply-demand imbalance: Korean CCL import prices reached $20,728 per ton in March 2026, up 74.5% y/y (TrendForce news citing Hankyung, 2026-05-06).",
+    "source_url": "https://www.trendforce.com/news/2026/05/06/news-ai-demand-tightens-ccl-supply-drives-advance-orders-price-hikes-and-expansion/",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Demand for CCL-making equipment has exceeded supply as EMC and TUC ramp output, with equipment order visibility extending to 2028 (TrendForce news citing Liberty Times, 2026-05-06).",
+    "source_url": "https://www.trendforce.com/news/2026/05/06/news-ai-demand-tightens-ccl-supply-drives-advance-orders-price-hikes-and-expansion/",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
@@ -13223,12 +13275,14 @@
    "name": "ABF/BT substrates",
    "layer": "L1",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Several supply-chain analyses converge on an ABF supply shortfall of about 10% in 2H26, widening to about 21% in 2027 and potentially over 40% by 2028 (Tom's Hardware, 2026-09-10).",
+    "source_url": "https://www.tomshardware.com/tech-industry/semiconductors/the-state-of-abf-substrates-in-data-center-silicon-in-2026-solving-the-supply-crunch-and-material-wall-beneath-every-ai-accelerator",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Ibiden: new high-performance IC substrate capacity enters mass production from fiscal year 2027 (capital investment plan, 2026-02-03).",
+    "source_url": "https://www.ibiden.com/company/2026/02/notice-regarding-capital-investment-plan-for-high-performance-ic-package-substrates.html",
+    "source_type": "primary"
    },
    "trigger": {
     "status": "unclear",
@@ -13357,12 +13411,14 @@
    "name": "Low-Dk resin",
    "layer": "L1",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Global supply of high-end electronic-grade PPO remains tight, with capacity constraints overseas and AI server high-speed CCL demand (ChemNet, 2026-07-07).",
+    "source_url": "https://news.chemnet.com/news-7185.html",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Only five industrial producers worldwide have continuous 10,000-tonne-per-year synthesis capability (HDIN Research, 2026-09-09).",
+    "source_url": "https://www.hdinresearch.com/news/1888",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "unclear",
@@ -13424,12 +13480,14 @@
    "name": "Glass-core substrate",
    "layer": "L1",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "NVIDIA reportedly asked substrate makers in Korea, Japan and Taiwan to complete glass-substrate development within two years, possibly enabling adoption before 2028 (TrendForce news, 2026-09-30).",
+    "source_url": "https://www.trendforce.com/news/2026/09/30/news-nvidia-reportedly-explores-glass-substrates-2028-adoption-possible-as-taiwan-suppliers-step-up/",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "TrendForce (2026-06-17): commercial-scale glass-core substrate production at TSMC is likely only after 2030.",
+    "source_url": "https://www.trendforce.com/presscenter/news/20260617-13107.html",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "unclear",
@@ -13696,12 +13754,14 @@
    "name": "Power inductors",
    "layer": "L6",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "AI servers, data centers and EVs are increasing demand for advanced magnetics that cannot easily be substituted by lower-grade parts (Passive Components Blog, 2026-03-05).",
+    "source_url": "https://passive-components.eu/inductors-and-ferrite-beads-price-hikes/",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "A small group of Japanese and European companies accounts for the bulk of high-frequency power and TLVR inductors (Passive Components Blog, 2026-06-30).",
+    "source_url": "https://passive-components.eu/mlccs-in-the-age-of-ai-q2-2026-market-tightness/",
+    "source_type": "media"
    },
    "trigger": {
     "status": "unclear",
@@ -13763,12 +13823,14 @@
    "name": "Crystals",
    "layer": "L6",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "TXC raised prices 10-30% from 2026-07-01, citing raw-material costs; peers TAI-SAW, Siward and Harmony cite tight supply from AI, HPC, automotive and satellite demand (BusinessNext, 2026-07-03; translated from Chinese).",
+    "source_url": "https://www.bnext.com.tw/article/91410/quartz-component-price-hike",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Daishinku: the crystal device industry is limited in production efficiency by conventional '1-by-1 manufacturing' (FY3/2026 results, 2026-05-14).",
+    "source_url": "https://www.kds.info/wp-content/uploads/2026/05/2026.3-financial-result-en-260514.pdf",
+    "source_type": "primary"
    },
    "trigger": {
     "status": "unclear",
@@ -13894,12 +13956,14 @@
    "name": "Power discretes",
    "layer": "L4",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Infineon's second 2026 price increase, effective 2026-07-01: demand across its portfolio is rising rapidly, exceeding expectations from a few months earlier (TrendForce news, 2026-05-27).",
+    "source_url": "https://www.trendforce.com/news/2026/05/27/news-infineon-announces-second-2026-price-hike-effective-july-1-amid-rising-supply-chain-costs-strong-demand/",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Power discretes remain highly dependent on 8-inch platforms while major foundries reduce or repurpose 8-inch capacity (TrendForce, 2026-06-30; applies to foundry-made parts, the owners also run their own fabs).",
+    "source_url": "https://www.trendforce.com/presscenter/news/20260630-13127.html",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "unclear",
@@ -13965,12 +14029,14 @@
    "name": "Vertical power modules",
    "layer": "L6",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Vicor (Q2 2026 call, 2026-07-21): lead times have stretched, reflecting demand exceeding capacity in key areas; 'We're not sold out, but we're approaching capacity utilization.'",
+    "source_url": "https://www.fool.com/earnings/call-transcripts/2026/07/21/vicor-vicr-q2-2026-earnings-call-transcript/",
+    "source_type": "primary"
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Vicor: expanded capacity arrives with its second fab in late 2027-2028 (Q2 2026 call).",
+    "source_url": "https://www.fool.com/earnings/call-transcripts/2026/07/21/vicor-vicr-q2-2026-earnings-call-transcript/",
+    "source_type": "primary"
    },
    "trigger": {
     "status": "unclear",
@@ -14030,11 +14096,12 @@
    "name": "Cold plates / quick disconnects",
    "layer": "L6",
    "pressure": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "AVC faces overwhelming demand for liquid-cooling systems, with plants at full capacity and orders well above supply (DigiTimes, 2025-08-16).",
+    "source_url": "https://www.digitimes.com/news/a20250814PD240/avc-capacity-revenue-demand-chassis.html",
+    "source_type": "media"
    },
    "rigidity": {
-    "text": "No closure source.",
+    "text": "",
     "source_url": null
    },
    "trigger": {
@@ -14096,12 +14163,13 @@
    "name": "800V HVDC shelves",
    "layer": "L6",
    "pressure": {
-    "text": "No closure source.",
+    "text": "",
     "source_url": null
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "SemiAnalysis (2026-05-26): no vendor had completed UL certification for data-center solid-state transformer deployment as of May 2026.",
+    "source_url": "https://newsletter.semianalysis.com/p/inside-the-800vdc-revolution-part",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "not_yet",
@@ -14230,17 +14298,18 @@
    "name": "Photoresist",
    "layer": "L1",
    "pressure": {
-    "text": "No closure source for demand.",
+    "text": "",
     "source_url": null
    },
    "rigidity": {
-    "text": "No closure source.",
-    "source_url": null
+    "text": "Only JSR, TOK and Shin-Etsu Chemical currently have EUV photoresist mass-production capability (TrendForce news, 2026-03-17).",
+    "source_url": "https://www.trendforce.com/news/2026/03/17/news-china-pushes-advanced-photoresist-as-xuzhou-b-mass-production-in-5-years/",
+    "source_type": "media"
    },
    "trigger": {
     "status": "unclear",
     "date": "2026-10-01",
-    "what": "Reported base price +15% from 2026-10-01 (JSR, TOK, Shin-Etsu); unnamed sources, not confirmed by a primary source.",
+    "what": "Reported by unnamed sources: base price +15% from 2026-10-01 at JSR, TOK and Shin-Etsu; not confirmed by a company or analyst source.",
     "source_url": "https://finance.biggo.com/news/cad4ed4c-464b-4ee4-8233-9110fab547d6",
     "source_type": "media"
    },
@@ -14300,7 +14369,7 @@
     "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review"
    },
    "rigidity": {
-    "text": "Yttrium oxide CIF North America ~196x the China price.",
+    "text": "Yttrium oxide CIF North America ~196x the DDP China price.",
     "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review"
    },
    "trigger": {
@@ -14391,6 +14460,89 @@
     "fivenplus": "medium",
     "dowa": "medium",
     "umicore": "high"
+   },
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "next_node": []
+  },
+  {
+   "id": "exchina_magnets",
+   "name": "Ex-China magnets",
+   "layer": "L1",
+   "pressure": {
+    "see": "heavy_rare_earths"
+   },
+   "rigidity": {
+    "text": "IEA: China's share of sintered permanent magnet production rose from around 50% in 2005 to 94% in 2024.",
+    "source_url": "https://www.iea.org/reports/rare-earth-elements/executive-summary",
+    "source_type": "analyst"
+   },
+   "trigger": {
+    "status": "not_yet",
+    "date": null,
+    "what": "China's rare-earth export-control pause runs to 2026-11-10; the DFARS ban on covered magnets mined, refined or produced in China applies from 2027-01-01.",
+    "source_url": [
+     "https://www.globaltimes.cn/page/202511/1347646.shtml",
+     "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
+    ],
+    "source_type": "media quoting MOFCOM; primary (regulation text)"
+   },
+   "owners": [
+    "mp",
+    "lynas",
+    "neo"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [
+    {
+     "criterion": "China renews the export-control pause",
+     "date": null
+    },
+    {
+     "criterion": "DFARS waivers granted",
+     "date": null
+    }
+   ],
+   "exposure": {
+    "mp": "high",
+    "lynas": "high",
+    "neo": "medium"
    },
    "top_signals": {
     "hike_decel_or_no_more_hikes": {

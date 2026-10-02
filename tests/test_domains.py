@@ -113,9 +113,19 @@ def test_the_repository_carries_at_least_the_default_domain():
 # focus mode now carries for the bottleneck card. The committed questions'
 # EW_MAP is frozen per commitment (chains/ew_universe.py), so this did not
 # move any benchmark.
+# Moved again on purpose 2026-10-02 (watchlist tier A): node neo and the
+# exchina_magnets bottleneck with its two catalysts, then its sourced trigger and
+# its pressure/rigidity linked to heavy_rare_earths, and shorter catalyst labels.
+# Then the semi-sources block: node besi (promoted), sourced pressure/rigidity
+# for 14 bottlenecks and the magnets rigidity (IEA); Besi Q3 2026 results (2026-10-22) as
+# hybrid_bonding's next check. Then domain_of (the /domains/ export) for the card's
+# Domain line; the Ga/Ge catalyst confirmed on MOFCOM's page. Then event_rules (contract v3,
+# merged from event-catalysts) for the card's Event rule row.
+# New nodes are in no
+# committed question's frozen EW universe.
 GOLD = {
-    "he": "544b075ce0a02eb45c469c58cca6930d24ed4070a6782f2b6d47c64f0694a26d",
-    "en": "22477e69836a9c29e299d831c908b9a895eab198ccaba7b3910ae32be6ca407d",
+    "he": "e5805272a039e3475f9072e08dd46f9d5032b592f27b93ba5a69042e8619f6d3",
+    "en": "18a6b0602f9a98dbb1941fdf990f156a72081add2bb9ac70b0f4c6cfe435daa4",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "

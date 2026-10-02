@@ -778,15 +778,27 @@ const cls=v=>v==null?'':(v<0?'neg':'pos');
 // Text from the data, made safe to put inside HTML. This script has no esc() of
 // its own -- the card scripts further down do, in their own scope.
 const escHtml=v=>String(v==null?'':v).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', nyLegend:'הטריגר עוד לא הופעל. מוצג מועד הבדיקה הבא. תיאור, לא תחזית.', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};
+const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', nyLegend:'הטריגר עוד לא הופעל. מוצג מועד הבדיקה הבא. תיאור, לא תחזית.', tsrc:'מקור הטריגר', via:'דרך', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};
 // Bottlenecks (map.json "bottlenecks"). The lagging line and ring are a
 // DESCRIPTION -- a fired trigger whose ring has not followed -- and never a
 // forecast: nothing here is scored. See chains/lagging.py.
-function lagOf(n){ const l=(n.bn||[]).filter(e=>e.kind==='lag'&&e.lagging);
+function lagOf(n){ const l=(n.bn||[]).filter(e=>e.kind==='lag'&&e.lagging&&bnPublicId(e.b));
   return l.length ? {half:l.every(e=>e.exposure==='high')} : null; }
-function bnLines(n){ return (n.bn||[]).map(e=> e.kind==='lag'
+function bnLines(n){ return (n.bn||[]).filter(e=>bnPublicId(e.b)).map(e=> e.kind==='lag'
   ? `<div class="bnlag${e.lagging?' on':''}" data-bn="${e.b}" data-lagging="${e.lagging}">${BN.fired} ${e.fired||''} · ${BN.node} ${pct(e.ret)} · ${BN.leader} ${escHtml((byId[e.leader_id]||{}).name||e.leader_id)} ${pct(e.leader_ret)} · ${BN.exp}: ${e.exposure?BN.expW[e.exposure]:'—'}</div>`
   : `<span class="cyc" data-bn="${e.b}">${BN.cyc[e.stage]||e.stage} · ${BN.risk} ${e.top_risk}/7</span>`).join(''); }
+// A card shows only sourced rows. A field may point at another bottleneck's
+// field ({see: id}) instead of repeating its text; it then shows that one's
+// sourced text, marked "via". A bottleneck with neither a sourced pressure nor
+// a sourced rigidity is not rendered at all -- no card, no ring, no dot.
+function bnById(id){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}; return (F.bottlenecks||[]).find(b=>b.id===id); }
+function bnField(b, k){ const f=(b&&b[k])||{};
+  if(f.see){ const o=bnById(f.see), g=o&&o[k]; return g&&g.source_url?{...g, via:o.name}:null; }
+  return f.source_url?f:null; }
+const bnPublic=b=>!!(bnField(b,'pressure')||bnField(b,'rigidity'));
+let BNPUB=null;
+function bnPublicId(id){ if(!BNPUB){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
+    BNPUB=new Set((F.bottlenecks||[]).filter(bnPublic).map(b=>b.id)); } return BNPUB.has(id); }
 // The next check for a bottleneck: the earliest dated catalyst on or after the
 // snapshot's date, else the first one whose date is not confirmed (shown as such).
 function nextCheck(b){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, today=String(D.as_of||'');
@@ -805,27 +817,30 @@ function bnSummary(b){ const t=b.trigger||{}, nx=nextCheck(b);
 // dated next check inside 120 days.
 let NOTYET=null;
 function notYetOf(n){ if(!NOTYET){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t0=Date.parse(String(D.as_of||''));
-    NOTYET=new Set(); (F.bottlenecks||[]).forEach(b=>{ if((b.trigger||{}).status!=='not_yet') return;
+    NOTYET=new Set(); (F.bottlenecks||[]).forEach(b=>{ if((b.trigger||{}).status!=='not_yet'||!bnPublic(b)) return;
       const nx=nextCheck(b), d=nx&&nx.date?(Date.parse(nx.date)-t0)/864e5:NaN;
-      if(d>=0&&d<=120) (b.owners||[]).forEach(i=>NOTYET.add(i)); }); }
+      // an owner already up 100% or more over 52 weeks is near or priced: no dot
+      if(d>=0&&d<=120) (b.owners||[]).forEach(i=>{ const px=byId[i]&&byId[i].px;
+        if(!(px&&px.r52w!=null&&px.r52w>=1.0)) NOTYET.add(i); }); }); }
   return NOTYET.has(n.id); }
 function bnCard(b, nid){
   const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
   const nm=i=>escHtml(byId[i]?byId[i].name:i);
-  const src=o=>o&&o.source_url?` <a href="${escHtml(o.source_url)}" target="_blank" rel="noopener">${BN.src}</a>`:` <span class="nosrc">${BN.nosrc}</span>`;
+  const src=o=>srcRefs(o&&o.source_url).filter(srcIsUrl).map(u=>` <a href="${escHtml(u)}" target="_blank" rel="noopener">${escHtml(srcHost(u))}</a>`).join('')
+    + (o&&o.source_type?` <small>(${escHtml(o.source_type)})</small>`:'');
+  const row=(l,f)=>f?`<div class="bnrow"><b>${l}</b>${escHtml(f.text||'')}${f.via?` <small>(${BN.via} ${escHtml(f.via)})</small>`:''}${src(f)}</div>`:'';
   const list=(l,ids)=>(ids||[]).length?`<div class="bnrow"><b>${l}</b>${ids.map(nm).join(', ')}</div>`:'';
   const nx=nextCheck(b);
   return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`
     + bnSummary(b)
-    + `<div class="bnrow"><b>${BN.trigger}</b><span class="trs t-${t.status}">${BN.trig[t.status]||t.status}</span>${t.date?' · '+t.date:''} — ${escHtml(t.what||'')}${src(t)}${t.source_type?` <small>(${t.source_type})</small>`:''}</div>`
-    + `<div class="bnrow"><b>${BN.pressure}</b>${escHtml((b.pressure||{}).text)}${src(b.pressure)}</div>`
-    + `<div class="bnrow"><b>${BN.rigidity}</b>${escHtml((b.rigidity||{}).text)}${src(b.rigidity)}</div>`
+    + (t.source_url?`<div class="bnrow" data-trigger-source><b>${BN.tsrc}</b>${t.date?escHtml(t.date)+' — ':''}${escHtml(t.what||'')}${src(t)}</div>`:'')
+    + row(BN.pressure, bnField(b,'pressure')) + row(BN.rigidity, bnField(b,'rigidity'))
     + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)
     + ((b.kill||[]).length?`<div class="bnrow"><b>${BN.kill}</b>${b.kill.map(k=>escHtml(k.criterion)+(k.date?' ('+k.date+')':'')).join('; ')}</div>`:'')
     + (nx?`<div class="nextcp" data-next-check>${BN.next}: <b>${escHtml(nx.date_text||nx.date)}</b> — ${escHtml(nx.what)}</div>`:'')
     + `</div>`; }
 function bnCards(n){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
-  return (F.bottlenecks||[]).filter(b=>[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
+  return (F.bottlenecks||[]).filter(b=>bnPublic(b)&&[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
 
 // A source is a list of references (a single string in an older snapshot), and
 // every URL in it is its own link: joined into one href they opened nothing.

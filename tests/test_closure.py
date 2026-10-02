@@ -28,10 +28,16 @@ SIGNALS = ("hike_decel_or_no_more_hikes", "all_suppliers_hiking", "capacity_x2_o
 FAILED = {"https://www.digitimes.com/news/a20260309PD233/pcb-topoint-2026-high-end-sales.html"}
 
 
+def refs(v):
+    """A source is one URL or a list of them (2026-10-02)."""
+    return v if isinstance(v, list) else [v]
+
+
 def urls(b):
-    yield b["pressure"]["source_url"]
-    yield b["rigidity"]["source_url"]
-    yield b["trigger"]["source_url"]
+    # A field may link to another bottleneck's field ({"see": id}) instead of
+    # repeating it; that field's own source is counted on its own record.
+    for k in ("pressure", "rigidity", "trigger"):
+        yield from refs(b[k].get("source_url"))
     for s in b["top_signals"].values():
         yield s["source_url"]
 
@@ -77,7 +83,7 @@ def test_no_record_types_its_own_stage():
 
 def test_nothing_fired_rests_on_a_page_that_failed_to_load():
     for b in BN:
-        if b["trigger"]["source_url"] in FAILED:
+        if set(refs(b["trigger"]["source_url"])) & FAILED:
             assert b["trigger"]["status"] == "unclear", b["id"]
 
 
@@ -94,7 +100,9 @@ def test_every_source_is_one_of_the_closure_pages():
     the two analyst pages amendment 2 supplied for commodity DRAM (2026-10-02)."""
     allowed = {s for b in BN for s in urls(b) if s}
     # + 2 more (TrendForce 2026-07-03, Tom's Hardware 2026-07-04), stage rules.
-    assert len(allowed) <= 24 + 2 + 2
+    # + 2 more (2026-10-02, exchina_magnets trigger): the MOFCOM pause as reported
+    # by Global Times, and the DFARS 252.225-7052 text.
+    assert len(allowed) <= 24 + 2 + 2 + 2
     for e in DOC["edges"]:
         if e.get("source_type"):
             assert e["source"] in allowed | FAILED or e["source"].startswith("https://"), e

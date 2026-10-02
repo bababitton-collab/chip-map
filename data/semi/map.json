@@ -14456,19 +14456,20 @@
    "name": "Ex-China magnets",
    "layer": "L1",
    "pressure": {
-    "text": "No source: The source document for this block (sections E1/E2/E5/E6) was not available; not verified.",
-    "source_url": null
+    "see": "heavy_rare_earths"
    },
    "rigidity": {
-    "text": "No source: The source document for this block (sections E1/E2/E5/E6) was not available; not verified.",
-    "source_url": null
+    "see": "heavy_rare_earths"
    },
    "trigger": {
     "status": "not_yet",
     "date": null,
-    "what": "Not yet: China's rare-earth export-control pause runs to 2026-11-10; the DFARS ban on Chinese-origin magnets applies from 2027-01-01. Linked to heavy_rare_earths (same owners MP, Lynas).",
-    "source_url": null,
-    "source_type": null
+    "what": "China's rare-earth export-control pause runs to 2026-11-10; the DFARS ban on covered magnets mined, refined or produced in China applies from 2027-01-01.",
+    "source_url": [
+     "https://www.globaltimes.cn/page/202511/1347646.shtml",
+     "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
+    ],
+    "source_type": "media quoting MOFCOM; primary (regulation text)"
    },
    "owners": [
     "mp",

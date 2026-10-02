@@ -356,7 +356,7 @@ def test_the_threshold_on_the_page_is_the_threshold_in_the_code():
 
 def test_the_bar_is_the_same_bar_on_every_kind_of_page():
     from chains import sitenav
-    want = [sitenav.MAPS_LABEL, sitenav.TRACK_RECORD]
+    want = [sitenav.MAPS_LABEL, sitenav.DOMAINS_LABEL, sitenav.TRACK_RECORD]
     for kwargs in ({"several": True, "site_wide": True},   # landing, pooled
                    {"several": True}):                      # a map, its record
         got = [l for _k, l, _u in sitenav.links("semi", **kwargs)]

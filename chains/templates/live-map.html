@@ -225,7 +225,8 @@ html.rec .focusui{display:none!important}
 .bnstage.s-tightening{color:var(--amber)}
 .bnrow{font-size:.82rem;color:var(--ink2);line-height:1.45;margin:4px 0}
 .bnrow b{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-inline-end:6px;font-weight:500}
-.bnrow a{color:var(--ink3)}.nosrc{color:var(--ink3);font-style:italic;font-size:.74rem}
+.bnrow a{color:var(--ink3)}
+.bndom{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.04em;margin:4px 0 6px}.bndom a{color:var(--ink3);text-decoration:none}.bndom a:hover{color:var(--amber)}.nosrc{color:var(--ink3);font-style:italic;font-size:.74rem}
 .bnlag{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--ink3);margin:8px 0;padding:6px 8px;border:1px dashed #ffffff22;border-radius:6px;line-height:1.5}
 .bnlag.on{color:var(--amber);border-color:var(--amber)}
 .cyc{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#9aa3b2;border:1px solid #5b6474;border-radius:4px;padding:2px 7px;margin:6px 6px 0 0}
@@ -825,6 +826,10 @@ function notYetOf(n){ if(!NOTYET){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||
       if(d>=0&&d<=120) (b.owners||[]).forEach(i=>{ const px=byId[i]&&byId[i].px;
         if(!(px&&px.r52w!=null&&px.r52w>=1.0)) NOTYET.add(i); }); }); }
   return NOTYET.has(n.id); }
+// The card's place in the domain tree (/domains/), one mono line.
+function bnDomain(b){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, ds=(F.domain_of||{})[b.id]||[];
+  const lv=v=>String(v||'').charAt(0).toUpperCase()+String(v||'').slice(1);
+  return ds.length?`<div class="bndom" data-domain>${ds.map(d=>`<a href="/domains/#${escHtml(d.id)}">Domain: ${escHtml(d.name)} · ${escHtml(lv(d.level))}</a>`).join(' · ')}</div>`:''; }
 function bnCard(b, nid){
   const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
   const nm=i=>escHtml(byId[i]?byId[i].name:i);
@@ -834,6 +839,7 @@ function bnCard(b, nid){
   const list=(l,ids)=>(ids||[]).length?`<div class="bnrow"><b>${l}</b>${ids.map(nm).join(', ')}</div>`:'';
   return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`
     + bnSummary(b)
+    + bnDomain(b)
     + (t.source_url?`<div class="bnrow" data-trigger-source><b>${BN.tsrc}</b>${t.date?escHtml(t.date)+' — ':''}${escHtml(t.what||'')}${src(t)}</div>`:'')
     + row(BN.pressure, bnField(b,'pressure')) + row(BN.rigidity, bnField(b,'rigidity'))
     + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)

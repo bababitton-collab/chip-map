@@ -807,11 +807,28 @@ def focus_for(m: dict, lang: str) -> dict:
             # The map's bottleneck records and their dated catalysts, for the
             # bottleneck card. Only a map that declares them ships the keys.
             # The card picks "next check" against the snapshot's own date.
-            **({"bottlenecks": _stages.annotate(m["bottlenecks"]), "catalysts": _catalysts()}
+            **({"bottlenecks": _stages.annotate(m["bottlenecks"]), "catalysts": _catalysts(),
+                # each bottleneck's domain(s) on the /domains/ page, for the card's Domain line
+                "domain_of": _domain_of(m["bottlenecks"])}
                if m.get("bottlenecks") else {})}
 
 
 from chains import stages as _stages  # noqa: E402  -- stage is computed, never stored
+
+
+def _domain_of(bottlenecks: list) -> dict:
+    """{bottleneck id: [{id, name, level}]} from the public domain export."""
+    from chains.paths import data_root
+    p = data_root() / "domains" / "public.json"
+    if not p.exists():
+        return {}
+    ids = {b["id"] for b in bottlenecks}
+    out: dict = {}
+    for d in json.loads(p.read_text(encoding="utf-8")).get("domains", []):
+        for b in d.get("bottleneck_ids") or []:
+            if b in ids:
+                out.setdefault(b, []).append({"id": d["id"], "name": d["name"], "level": d["level"]})
+    return out
 
 
 def _catalysts() -> list:

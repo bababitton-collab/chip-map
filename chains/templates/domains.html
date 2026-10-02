@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{brand}} — Domains</title>
+<meta name="description" content="Where the physical constraints behind AI, power, defense, space and robots sit: edge markets, manufacturing, development and materials. Descriptive, not a forecast.">
+{{analytics}}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#0b0e14; --bg2:#131a22; --ink:#e8ecf2; --ink2:#b3bccb; --ink3:#98a3b2; --rule:#2b3440;
+  --amber:#f2b632; --ease:cubic-bezier(0.16,1,0.3,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.55}
+.wrap{width:min(100%,1600px);margin-inline:auto;padding:14px clamp(16px,4vw,64px) 64px}
+a{color:var(--amber)}
+{{nav_css}}
+header.head{padding:18px 0 22px;border-bottom:1px solid var(--rule)}
+header.head h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:2.4rem;line-height:1.1;margin:0 0 8px}
+header.head p{color:var(--ink2);margin:0;max-width:62ch}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin:0 0 12px}
+.band{padding:24px 0 6px;border-bottom:1px solid var(--rule)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:0 0 18px}
+.dcard{border:1px solid var(--rule);border-radius:4px;padding:14px 16px;min-width:0;
+  transition:opacity .4s var(--ease),border-color .4s var(--ease)}
+.dcard h3{margin:0 0 8px;font-family:"IBM Plex Sans",sans-serif;font-weight:500;font-size:1.02rem;line-height:1.3}
+.dcard.edge{cursor:pointer}
+.dcard.edge:hover,.dcard.edge:focus-visible{border-color:var(--ink3);outline:none}
+.dcard.edge[aria-pressed=true]{border-color:var(--amber)}
+.chip{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--rule);border-radius:3px;padding:2px 7px;margin:0 0 8px}
+.chip.st-open{color:var(--amber);border-color:#5a4720}
+.chip.st-priced{color:var(--ink)}
+.chip.st-dim{color:var(--ink3)}
+.row{margin:4px 0;font-size:.88rem;color:var(--ink2);overflow-wrap:anywhere}
+.row b{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-inline-end:4px}
+.row.next b{font-size:.82rem;letter-spacing:0;text-transform:none;color:var(--amber)}
+.owners{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.tk{font-family:"IBM Plex Mono",monospace;font-size:.74rem;border:1px solid var(--rule);border-radius:3px;padding:2px 6px;color:var(--ink);white-space:nowrap}
+.tk i{font-style:normal;color:var(--ink3)}
+/* An edge selected: the domains that limit it stay lit, the rest dim. Opacity only. */
+body.sel .dcard{opacity:.22}
+body.sel .dcard.lit{opacity:1}
+footer{padding:22px 0 0;font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.06em;color:var(--ink3)}
+@media (max-width:700px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  header.head h1{font-size:1.9rem}
+}
+@media (prefers-reduced-motion:reduce){.dcard{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+{{nav}}
+<header class="head">
+<p class="eyebrow">Domains · data through {{as_of}}</p>
+<h1>Where the constraints sit.</h1>
+<p>Edge markets at the top, then the manufacturing, development and materials domains that limit them. Select an edge market to see what limits it.</p>
+</header>
+<main>{{bands}}</main>
+<footer>{{footer}}</footer>
+</div>
+<script>
+(function(){
+  var cards=[].slice.call(document.querySelectorAll('.dcard')), cur=null;
+  function clear(){ document.body.classList.remove('sel'); cards.forEach(function(c){ c.classList.remove('lit'); if(c.classList.contains('edge')) c.setAttribute('aria-pressed','false'); }); cur=null; }
+  function pick(edge){
+    if(cur===edge){ clear(); return; }
+    clear(); cur=edge; document.body.classList.add('sel');
+    cards.forEach(function(c){
+      var lim=(c.getAttribute('data-limits')||'').split(' ');
+      if(c===edge || lim.indexOf(edge.getAttribute('data-id'))>=0) c.classList.add('lit');
+    });
+    edge.setAttribute('aria-pressed','true');
+  }
+  cards.forEach(function(c){
+    if(!c.classList.contains('edge')) return;
+    c.addEventListener('click',function(){ pick(c); });
+    c.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(c); } });
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') clear(); });
+})();
+</script>
+</body>
+</html>

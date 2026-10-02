@@ -1,0 +1,697 @@
+{
+ "as_of": "2026-10-02",
+ "domains": [
+  {
+   "id": "E1",
+   "level": "edge",
+   "name": "AI data centers",
+   "limits_edge": [],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": null,
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "E2",
+   "level": "edge",
+   "name": "Power for data centers + grid",
+   "limits_edge": [],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": null,
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "E3",
+   "level": "edge",
+   "name": "On-device AI (phones, glasses, foldables)",
+   "limits_edge": [],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": null,
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "E4",
+   "level": "edge",
+   "name": "Defense: missiles, drones, munitions",
+   "limits_edge": [],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": null,
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "E5",
+   "level": "edge",
+   "name": "Space: LEO constellations, launch",
+   "limits_edge": [],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": null,
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "E6",
+   "level": "edge",
+   "name": "Humanoid robots",
+   "limits_edge": [],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": null,
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "memory_wafers",
+   "level": "manufacturing",
+   "name": "Memory wafers DRAM/HBM/NAND",
+   "limits_edge": [
+    "E1",
+    "E3"
+   ],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": [
+    "dram_commodity",
+    "hbm_2027",
+    "nand_hbf"
+   ]
+  },
+  {
+   "id": "board_materials",
+   "level": "manufacturing",
+   "name": "PCB, glass cloth, HVLP foil, CCL, ABF",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": [
+    "abf_bt_substrates",
+    "abf_film",
+    "high_end_ccl",
+    "hvlp_copper_foil",
+    "low_dk_resin",
+    "pcb_microdrills",
+    "t_glass"
+   ]
+  },
+  {
+   "id": "passives_mlcc",
+   "level": "manufacturing",
+   "name": "MLCC",
+   "limits_edge": [
+    "E1",
+    "E3"
+   ],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": [
+    "mlcc",
+    "mlcc_raw_materials"
+   ]
+  },
+  {
+   "id": "optical_components",
+   "level": "manufacturing",
+   "name": "InP lasers, transceivers, CPO",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [
+    "LITE",
+    "FORM",
+    "6834.T"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": [
+    "cw_lasers_eml",
+    "hbm_probe_cards",
+    "inp_substrates",
+    "transceivers"
+   ]
+  },
+  {
+   "id": "heavy_electrical",
+   "level": "manufacturing",
+   "name": "Transformers, switchgear, HV cable",
+   "limits_edge": [
+    "E2"
+   ],
+   "links_to": [],
+   "owners": [
+    "298040.KS",
+    "POWL",
+    "6508.T"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "hv_accessories_insulators",
+   "level": "manufacturing",
+   "name": "HV cable accessories + hollow composite insulators",
+   "limits_edge": [
+    "E2"
+   ],
+   "links_to": [],
+   "owners": [
+    "PFSE.DE",
+    "603530.SS"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": {
+    "date": "2026-11-18",
+    "event": "PFISTERER Q3 key figures"
+   },
+   "bottleneck_ids": [
+    "hv_cable_accessories"
+   ]
+  },
+  {
+   "id": "heavy_forging_casting",
+   "level": "manufacturing",
+   "name": "Turbine rotor + reactor vessel forgings, SX blade casting, ceramic cores",
+   "limits_edge": [
+    "E2",
+    "E4"
+   ],
+   "links_to": [],
+   "owners": [
+    "5631.T",
+    "034020.KS",
+    "HWM",
+    "MGAM.L"
+   ],
+   "hurt": [
+    "GEV",
+    "ENR.DE"
+   ],
+   "status_public": "Constrained · not yet priced",
+   "next_check": {
+    "date": "2026-11-10",
+    "event": "JSW first-half FY2026 results"
+   },
+   "bottleneck_ids": [
+    "rotor_vessel_forgings"
+   ]
+  },
+  {
+   "id": "onsite_generation",
+   "level": "manufacturing",
+   "name": "Gas engines, gensets, HRSG, aeroderivatives, turbochargers",
+   "limits_edge": [
+    "E2"
+   ],
+   "links_to": [],
+   "owners": [
+    "WRT1V.HE",
+    "INIO",
+    "083650.KQ",
+    "FTAI",
+    "ACLN.SW",
+    "CMI"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": {
+    "date": "2026-10-27",
+    "event": "Wärtsilä interim report January-September 2026"
+   },
+   "bottleneck_ids": [
+    "hrsg",
+    "medium_speed_gas_engines"
+   ]
+  },
+  {
+   "id": "power_electronics",
+   "level": "manufacturing",
+   "name": "HV IGBT press-pack, SiC 3.3kV, DC-link film caps",
+   "limits_edge": [
+    "E1",
+    "E2"
+   ],
+   "links_to": [],
+   "owners": [
+    "6503.T",
+    "3898.HK",
+    "MCHP",
+    "WOLF",
+    "IFX.DE"
+   ],
+   "hurt": [],
+   "status_public": "Gated by development",
+   "next_check": null,
+   "bottleneck_ids": [
+    "power_discretes"
+   ]
+  },
+  {
+   "id": "liquid_cooling",
+   "level": "manufacturing",
+   "name": "Cold plates, quick disconnects",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [
+    "PH",
+    "DOV"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": [
+    "cold_plates_qd"
+   ]
+  },
+  {
+   "id": "ar_optics",
+   "level": "manufacturing",
+   "name": "Glasses waveguides",
+   "limits_edge": [
+    "E3"
+   ],
+   "links_to": [],
+   "owners": [
+    "002273.SZ"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "precision_mechanics_devices",
+   "level": "manufacturing",
+   "name": "Foldable hinges",
+   "limits_edge": [
+    "E3"
+   ],
+   "links_to": [],
+   "owners": [
+    "300328.SZ"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "precision_mechanics_robots",
+   "level": "manufacturing",
+   "name": "Roller screws, grinders, bearings, micro-motors",
+   "limits_edge": [
+    "E6"
+   ],
+   "links_to": [],
+   "owners": [
+    "000837.SZ",
+    "603662.SS",
+    "603728.SS",
+    "6481.T"
+   ],
+   "hurt": [],
+   "status_public": "Gated by development",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "propellant_energetics",
+   "level": "manufacturing",
+   "name": "Nitrocellulose, RDX/HMX, TNT, SRM sub-tier (nozzles, igniters, HTPB)",
+   "limits_edge": [
+    "E4",
+    "E5"
+   ],
+   "links_to": [],
+   "owners": [
+    "CHG.L",
+    "RHM.DE",
+    "LHX"
+   ],
+   "hurt": [
+    "GD"
+   ],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "cooled_ir_detectors",
+   "level": "manufacturing",
+   "name": "Cooled IR focal plane arrays for seekers",
+   "limits_edge": [
+    "E4"
+   ],
+   "links_to": [],
+   "owners": [
+    "DRS",
+    "TDY"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "launch_capacity",
+   "level": "manufacturing",
+   "name": "Non-SpaceX launch",
+   "limits_edge": [
+    "E5"
+   ],
+   "links_to": [],
+   "owners": [
+    "RKLB"
+   ],
+   "hurt": [
+    "AMZN",
+    "ASTS"
+   ],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "oisl_terminals",
+   "level": "manufacturing",
+   "name": "Optical inter-satellite link terminals",
+   "limits_edge": [
+    "E5",
+    "E4"
+   ],
+   "links_to": [],
+   "owners": [
+    "RKLB",
+    "CACI",
+    "AIR.PA"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "space_solar_cells",
+   "level": "manufacturing",
+   "name": "III-V space solar cells",
+   "limits_edge": [
+    "E5"
+   ],
+   "links_to": [],
+   "owners": [
+    "VNP.TO",
+    "RKLB"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": [
+    "ga_ge_in"
+   ]
+  },
+  {
+   "id": "space_cross_owner",
+   "level": "manufacturing",
+   "name": "Space cross-owner (RKLB across launch, OISL, solar)",
+   "limits_edge": [
+    "E5",
+    "E4"
+   ],
+   "links_to": [
+    "launch_capacity",
+    "oisl_terminals",
+    "space_solar_cells"
+   ],
+   "owners": [
+    "RKLB"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "hybrid_bonding",
+   "level": "development",
+   "name": "Hybrid bonding (logic/SoIC, CPO; HBM later)",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [
+    "BESI.AS"
+   ],
+   "hurt": [
+    "042700.KS"
+   ],
+   "status_public": "Constrained · not yet priced",
+   "next_check": {
+    "date": "2026-10-22",
+    "event": "Besi Q3 2026 results"
+   },
+   "bottleneck_ids": [
+    "hybrid_bonding"
+   ]
+  },
+  {
+   "id": "glass_core",
+   "level": "development",
+   "name": "Glass-core substrates",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [
+    "LPK.DE"
+   ],
+   "hurt": [],
+   "status_public": "Gated by development",
+   "next_check": null,
+   "bottleneck_ids": [
+    "glass_core_substrate"
+   ]
+  },
+  {
+   "id": "cpo_scaleup",
+   "level": "development",
+   "name": "CPO scale-up",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "hvdc_800v_sst",
+   "level": "development",
+   "name": "800V racks + SST (incl. MFT magnetics)",
+   "limits_edge": [
+    "E1",
+    "E2"
+   ],
+   "links_to": [],
+   "owners": [
+    "688190.SS"
+   ],
+   "hurt": [],
+   "status_public": "Gated by development",
+   "next_check": null,
+   "bottleneck_ids": [
+    "hvdc_800v"
+   ]
+  },
+  {
+   "id": "bspdn_gaa",
+   "level": "development",
+   "name": "Backside power / GAA A16",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "high_na_euv",
+   "level": "development",
+   "name": "High-NA EUV inputs (pellicles, blanks, actinic)",
+   "limits_edge": [
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [
+    "6920.T",
+    "7741.T"
+   ],
+   "hurt": [],
+   "status_public": "Gated by development",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "sf6_free_switchgear",
+   "level": "development",
+   "name": "SF6-free HV switchgear",
+   "limits_edge": [
+    "E2"
+   ],
+   "links_to": [],
+   "owners": [],
+   "hurt": [],
+   "status_public": "Gated by development",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "heavy_rare_earths",
+   "level": "materials",
+   "name": "Dy/Tb/Y/Sm, magnets",
+   "limits_edge": [
+    "E4",
+    "E6",
+    "E2",
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [
+    "MP",
+    "LYC.AX",
+    "NEO.TO"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": {
+    "date": "2026-11-10",
+    "event": "China's rare-earth export-control pause expires"
+   },
+   "bottleneck_ids": [
+    "exchina_magnets",
+    "heavy_rare_earths"
+   ]
+  },
+  {
+   "id": "ge_ga",
+   "level": "materials",
+   "name": "Germanium, gallium",
+   "limits_edge": [
+    "E5",
+    "E4",
+    "E1"
+   ],
+   "links_to": [],
+   "owners": [
+    "UMI.BR",
+    "VNP.TO"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": [
+    "ga_ge_in"
+   ]
+  },
+  {
+   "id": "hf_zr",
+   "level": "materials",
+   "name": "Hafnium, zirconium",
+   "limits_edge": [
+    "E1",
+    "E2"
+   ],
+   "links_to": [],
+   "owners": [
+    "ATI"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "tungsten",
+   "level": "materials",
+   "name": "Tungsten",
+   "limits_edge": [
+    "E4"
+   ],
+   "links_to": [],
+   "owners": [
+    "ALM"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "antimony",
+   "level": "materials",
+   "name": "Antimony",
+   "limits_edge": [
+    "E4"
+   ],
+   "links_to": [],
+   "owners": [
+    "UAMY",
+    "PPTA"
+   ],
+   "hurt": [],
+   "status_public": "Easing",
+   "next_check": null,
+   "bottleneck_ids": []
+  },
+  {
+   "id": "ammonium_perchlorate",
+   "level": "materials",
+   "name": "Ammonium perchlorate",
+   "limits_edge": [
+    "E4",
+    "E5"
+   ],
+   "links_to": [],
+   "owners": [
+    "NEU"
+   ],
+   "hurt": [],
+   "status_public": "Constrained · not yet priced",
+   "next_check": null,
+   "bottleneck_ids": []
+  }
+ ]
+}

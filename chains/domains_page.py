@@ -4,7 +4,8 @@ The file is the public export written in the private research repo
 (watchlist/export_public.py); only its whitelisted fields exist here. Owner
 returns are the maps' own: the 52-week return each published map carries for
 the node (live_en.json, px.r52w), so a chip here and the map card agree. An
-owner on no map shows its ticker without a return.
+owner on no map takes the same return from the nightly price-only feed
+(chains/owner_prices.py) when it passes the liquidity gate; otherwise "—".
 
 Descriptive only: a status says where a domain stands, never what will happen.
 """
@@ -17,7 +18,7 @@ from pathlib import Path
 LEVELS = (("edge", "Edge"), ("manufacturing", "Manufacturing"), ("development", "Development"),
           ("materials", "Materials"))
 STATUS_CLASS = {"Constrained · not yet priced": "open", "Constrained · priced": "priced",
-                "Gated by development": "dim", "Easing": "dim"}
+                "Constrained · no listed owner": "dim", "Gated by development": "dim", "Easing": "dim"}
 FOOTER = "Status is descriptive, not a forecast. Forecasts are on the track record page."
 TEMPLATE = "domains.html"
 
@@ -56,6 +57,12 @@ def owner_returns(site: Path, domains: list[str]) -> tuple[dict, dict]:
                     continue
                 st = (b.get("owners") or b.get("hurt") or b.get("propagation") or [None])[0]
                 where.setdefault(b["id"], (dom, st, b.get("name")))
+    # owners on no map: the nightly price-only feed (chains/owner_prices.py), gated
+    from chains.owner_prices import out_path
+    if out_path().exists():
+        for t, r in json.loads(out_path().read_text(encoding="utf-8")).get("owners", {}).items():
+            if r.get("r52w") is not None:
+                rets.setdefault(t, r["r52w"])
     return rets, where
 
 
@@ -76,7 +83,8 @@ def pct(v) -> str:
 def card(d: dict, names: dict, rets: dict, where: dict) -> str:
     edge = d["level"] == "edge"
     parts = [f'<article class="dcard{" edge" if edge else ""}" id="{esc(d["id"])}" data-id="{esc(d["id"])}" '
-             f'data-limits="{esc(" ".join(d["limits_edge"]))}"'
+             f'data-limits="{esc(" ".join(d["limits_edge"]))}" '
+             f'data-limited-by="{esc(" ".join(d.get("limited_by_edge") or []))}"'
              + (' tabindex="0" role="button" aria-pressed="false"' if edge else "") + ">",
              f'<h3>{esc(d["name"])}</h3>']
     if d.get("status_public"):

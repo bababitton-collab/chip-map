@@ -78,6 +78,9 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
         # a record for a later forward test, never a score. A map with no
         # bottlenecks writes nothing. CI carries the file on the live branch.
         ("lagging", ["-m", "chains.lagging", "--snapshot"]),
+        # Prices for /domains/ owners that are on no map (price-only, not map
+        # nodes, no EW universe). Built once, during the root domain.
+        ("owners", ["-m", "chains.owner_prices"]),
         ("pages", ["-m", "chains.build_pages"]),
         # The forward test reads live_en.json, so it follows the snapshot.
         ("track", ["-m", "chains.track"]),

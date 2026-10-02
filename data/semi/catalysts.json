@@ -7,9 +7,10 @@
  },
  {
   "date": "2026-11-27",
-  "what": "China's suspension of its Ga/Ge/Sb US export ban expires",
+  "what": "China's suspension of its Ga/Ge/Sb US export ban expires (MOFCOM Announcement No. 72 of 2025)",
   "bottleneck": "ga_ge_in",
-  "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/"
+  "source_url": "https://www.mofcom.gov.cn/zwgk/zcfb/art/2025/art_5c68985a6b1a46778e2e8dbff1bb1601.html",
+  "status": "confirmed"
  },
  {
   "date": "2027-01",

@@ -70,9 +70,11 @@ footer{padding:22px 0 0;font-family:"IBM Plex Mono",monospace;font-size:.76rem;l
   function pick(edge){
     if(cur===edge){ clear(); return; }
     clear(); cur=edge; document.body.classList.add('sel');
+    // the domains that limit this edge, and any edge market that limits it (limited_by_edge)
+    var by=(edge.getAttribute('data-limited-by')||'').split(' ');
     cards.forEach(function(c){
       var lim=(c.getAttribute('data-limits')||'').split(' ');
-      if(c===edge || lim.indexOf(edge.getAttribute('data-id'))>=0) c.classList.add('lit');
+      if(c===edge || lim.indexOf(edge.getAttribute('data-id'))>=0 || by.indexOf(c.getAttribute('data-id'))>=0) c.classList.add('lit');
     });
     edge.setAttribute('aria-pressed','true');
   }

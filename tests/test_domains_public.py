@@ -14,9 +14,12 @@ from chains.paths import data_root
 
 PUBLIC = data_root() / "domains" / "public.json"
 NEVER = ("candidate_tier", "tier_a_owners", "note", "risks", "context", "price_flag", "kill")
-FIELDS = {"id", "level", "name", "limits_edge", "links_to", "owners", "hurt", "status_public", "next_check",
-          "bottleneck_ids"}
-STATUSES = {None, "Constrained · not yet priced", "Constrained · priced", "Gated by development", "Easing"}
+FIELDS = {"id", "level", "name", "limits_edge", "limited_by_edge", "links_to", "owners", "hurt", "status_public",
+          "next_check", "bottleneck_ids"}
+STATUSES = {None, "Constrained · not yet priced", "Constrained · no listed owner", "Constrained · priced",
+            "Gated by development", "Easing"}
+# Never exported, not even as a reference: the cross-owner grouping is an internal device.
+NEVER_TEXT = ("space_cross_owner", "cross-owner")
 
 
 def keys(o):
@@ -36,6 +39,8 @@ def test_no_internal_field_name_appears_anywhere_in_public_json():
     assert not leaked, leaked
     for name in NEVER:
         assert f'"{name}"' not in text, name
+    for bad in NEVER_TEXT:
+        assert bad not in text.lower(), bad
 
 
 def test_every_domain_carries_exactly_the_public_fields_and_a_public_status():
@@ -47,6 +52,12 @@ def test_every_domain_carries_exactly_the_public_fields_and_a_public_status():
         assert d["level"] in {k for k, _ in domains_page.LEVELS}
         nc = d["next_check"]
         assert nc is None or (len(nc["date"]) == 10 and nc["event"]), d["id"]
+
+
+def test_only_ai_data_centers_is_limited_by_another_edge_market():
+    doc = json.loads(PUBLIC.read_text(encoding="utf-8"))
+    got = {d["id"]: d["limited_by_edge"] for d in doc["domains"] if d["limited_by_edge"]}
+    assert got == {"E1": ["E2"]}
 
 
 def test_the_excluded_statuses_are_not_exported():

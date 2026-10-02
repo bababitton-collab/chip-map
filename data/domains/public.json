@@ -6,6 +6,9 @@
    "level": "edge",
    "name": "AI data centers",
    "limits_edge": [],
+   "limited_by_edge": [
+    "E2"
+   ],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -18,6 +21,7 @@
    "level": "edge",
    "name": "Power for data centers + grid",
    "limits_edge": [],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -30,6 +34,7 @@
    "level": "edge",
    "name": "On-device AI (phones, glasses, foldables)",
    "limits_edge": [],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -42,6 +47,7 @@
    "level": "edge",
    "name": "Defense: missiles, drones, munitions",
    "limits_edge": [],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -54,6 +60,7 @@
    "level": "edge",
    "name": "Space: LEO constellations, launch",
    "limits_edge": [],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -66,6 +73,7 @@
    "level": "edge",
    "name": "Humanoid robots",
    "limits_edge": [],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -81,6 +89,7 @@
     "E1",
     "E3"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -99,6 +108,7 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -122,6 +132,7 @@
     "E1",
     "E3"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -139,6 +150,7 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "LITE",
@@ -150,7 +162,6 @@
    "next_check": null,
    "bottleneck_ids": [
     "cw_lasers_eml",
-    "hbm_probe_cards",
     "inp_substrates",
     "transceivers"
    ]
@@ -162,6 +173,7 @@
    "limits_edge": [
     "E2"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "298040.KS",
@@ -180,6 +192,7 @@
    "limits_edge": [
     "E2"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "PFSE.DE",
@@ -203,6 +216,7 @@
     "E2",
     "E4"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "5631.T",
@@ -230,6 +244,7 @@
    "limits_edge": [
     "E2"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "WRT1V.HE",
@@ -258,6 +273,7 @@
     "E1",
     "E2"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "6503.T",
@@ -280,6 +296,7 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "PH",
@@ -299,6 +316,7 @@
    "limits_edge": [
     "E3"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "002273.SZ"
@@ -315,6 +333,7 @@
    "limits_edge": [
     "E3"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "300328.SZ"
@@ -331,6 +350,7 @@
    "limits_edge": [
     "E6"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "000837.SZ",
@@ -351,6 +371,7 @@
     "E4",
     "E5"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "CHG.L",
@@ -371,6 +392,7 @@
    "limits_edge": [
     "E4"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "DRS",
@@ -388,6 +410,7 @@
    "limits_edge": [
     "E5"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "RKLB"
@@ -408,6 +431,7 @@
     "E5",
     "E4"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "RKLB",
@@ -426,6 +450,7 @@
    "limits_edge": [
     "E5"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "VNP.TO",
@@ -433,31 +458,13 @@
    ],
    "hurt": [],
    "status_public": "Constrained · not yet priced",
-   "next_check": null,
+   "next_check": {
+    "date": "2026-11-27",
+    "event": "China's suspension of its Ga/Ge/Sb US export ban expires (MOFCOM Announcement No. 72 of 2025)"
+   },
    "bottleneck_ids": [
     "ga_ge_in"
    ]
-  },
-  {
-   "id": "space_cross_owner",
-   "level": "manufacturing",
-   "name": "Space cross-owner (RKLB across launch, OISL, solar)",
-   "limits_edge": [
-    "E5",
-    "E4"
-   ],
-   "links_to": [
-    "launch_capacity",
-    "oisl_terminals",
-    "space_solar_cells"
-   ],
-   "owners": [
-    "RKLB"
-   ],
-   "hurt": [],
-   "status_public": "Constrained · not yet priced",
-   "next_check": null,
-   "bottleneck_ids": []
   },
   {
    "id": "hybrid_bonding",
@@ -466,6 +473,7 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "BESI.AS"
@@ -489,6 +497,7 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "LPK.DE"
@@ -507,10 +516,11 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
-   "status_public": "Constrained · priced",
+   "status_public": "Gated by development",
    "next_check": null,
    "bottleneck_ids": []
   },
@@ -522,6 +532,7 @@
     "E1",
     "E2"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "688190.SS"
@@ -540,10 +551,11 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
-   "status_public": "Constrained · not yet priced",
+   "status_public": "Constrained · no listed owner",
    "next_check": null,
    "bottleneck_ids": []
   },
@@ -554,6 +566,7 @@
    "limits_edge": [
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "6920.T",
@@ -571,6 +584,7 @@
    "limits_edge": [
     "E2"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [],
    "hurt": [],
@@ -588,6 +602,7 @@
     "E2",
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "MP",
@@ -614,6 +629,7 @@
     "E4",
     "E1"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "UMI.BR",
@@ -621,7 +637,10 @@
    ],
    "hurt": [],
    "status_public": "Constrained · not yet priced",
-   "next_check": null,
+   "next_check": {
+    "date": "2026-11-27",
+    "event": "China's suspension of its Ga/Ge/Sb US export ban expires (MOFCOM Announcement No. 72 of 2025)"
+   },
    "bottleneck_ids": [
     "ga_ge_in"
    ]
@@ -634,6 +653,7 @@
     "E1",
     "E2"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "ATI"
@@ -650,6 +670,7 @@
    "limits_edge": [
     "E4"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "ALM"
@@ -666,6 +687,7 @@
    "limits_edge": [
     "E4"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "UAMY",
@@ -684,6 +706,7 @@
     "E4",
     "E5"
    ],
+   "limited_by_edge": [],
    "links_to": [],
    "owners": [
     "NEU"

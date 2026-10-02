@@ -119,12 +119,12 @@ def test_the_repository_carries_at_least_the_default_domain():
 # Then the semi-sources block: node besi (promoted), sourced pressure/rigidity
 # for 14 bottlenecks and the magnets rigidity (IEA); Besi Q3 2026 results (2026-10-22) as
 # hybrid_bonding's next check. Then domain_of (the /domains/ export) for the card's
-# Domain line.
+# Domain line; the Ga/Ge catalyst confirmed on MOFCOM's page.
 # New nodes are in no
 # committed question's frozen EW universe.
 GOLD = {
-    "he": "ada1cdf5a323ca0de59780f12a16008e81f6e24c1ad414526124c0e0b66293d3",
-    "en": "e7cf129c3b674d4a2eefdabc8c399417ce3245b20d59af07f944c848418eb9ec",
+    "he": "9145a2692f280110ea3cde33d1c81e0837e44d151a6c195db164b65c36833442",
+    "en": "40abfda0ff0c9af9ca2f08cb2383efa998a1b63d8f11044b8f053d703f287e9b",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "

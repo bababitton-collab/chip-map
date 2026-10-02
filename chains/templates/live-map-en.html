@@ -225,8 +225,7 @@ html.rec .focusui{display:none!important}
 .bnstage.s-tightening{color:var(--amber)}
 .bnrow{font-size:.82rem;color:var(--ink2);line-height:1.45;margin:4px 0}
 .bnrow b{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-inline-end:6px;font-weight:500}
-.bnrow a{color:var(--ink3)}
-.bndom{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.04em;margin:4px 0 6px}.bndom a{color:var(--ink3);text-decoration:none}.bndom a:hover{color:var(--amber)}.nosrc{color:var(--ink3);font-style:italic;font-size:.74rem}
+.bnrow a{color:var(--ink3)}.nosrc{color:var(--ink3);font-style:italic;font-size:.74rem}
 .bnlag{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--ink3);margin:8px 0;padding:6px 8px;border:1px dashed #ffffff22;border-radius:6px;line-height:1.5}
 .bnlag.on{color:var(--amber);border-color:var(--amber)}
 .cyc{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#9aa3b2;border:1px solid #5b6474;border-radius:4px;padding:2px 7px;margin:6px 6px 0 0}
@@ -779,7 +778,7 @@ const cls=v=>v==null?'':(v<0?'neg':'pos');
 // Text from the data, made safe to put inside HTML. This script has no esc() of
 // its own -- the card scripts further down do, in their own scope.
 const escHtml=v=>String(v==null?'':v).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const BN = {lagLegend:'Trigger fired, price has not followed. Descriptive, not a forecast.', nyLegend:'Trigger not yet fired. Next dated check shown. Descriptive, not a forecast.', tsrc:'Trigger source', via:'via', fired:'Trigger fired', node:'this node', leader:'leader', exp:'exposure', expW:{low:'low',medium:'medium',high:'high'}, cyc:{peaking:'cycle peaking',resolving:'cycle easing'}, risk:'top risk', next:'Next check', title:'Bottleneck', stage:{tightening:'tightening',peaking:'peaking',resolving:'resolving',unclear:'stage unclear'}, trig:{fired:'fired',not_yet:'not yet',unclear:'unclear'}, pressure:'Pressure', rigidity:'Rigidity', trigger:'Trigger', owners:'Owners', hurt:'Hurt (down if YES)', prop:'Propagation', kill:'Kill', src:'source', nosrc:'no source'};
+const BN = {lagLegend:'Trigger fired, price has not followed. Descriptive, not a forecast.', nyLegend:'Trigger not yet fired. Next dated check shown. Descriptive, not a forecast.', tsrc:'Trigger source', via:'via', domain:'Domain', fired:'Trigger fired', node:'this node', leader:'leader', exp:'exposure', expW:{low:'low',medium:'medium',high:'high'}, cyc:{peaking:'cycle peaking',resolving:'cycle easing'}, risk:'top risk', next:'Next check', title:'Bottleneck', stage:{tightening:'tightening',peaking:'peaking',resolving:'resolving',unclear:'stage unclear'}, trig:{fired:'fired',not_yet:'not yet',unclear:'unclear'}, pressure:'Pressure', rigidity:'Rigidity', trigger:'Trigger', owners:'Owners', hurt:'Hurt (down if YES)', prop:'Propagation', kill:'Kill', src:'source', nosrc:'no source'};
 // Bottlenecks (map.json "bottlenecks"). The lagging line and ring are a
 // DESCRIPTION -- a fired trigger whose ring has not followed -- and never a
 // forecast: nothing here is scored. See chains/lagging.py.
@@ -829,7 +828,7 @@ function notYetOf(n){ if(!NOTYET){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||
 // The card's place in the domain tree (/domains/), one mono line.
 function bnDomain(b){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, ds=(F.domain_of||{})[b.id]||[];
   const lv=v=>String(v||'').charAt(0).toUpperCase()+String(v||'').slice(1);
-  return ds.length?`<div class="bndom" data-domain>${ds.map(d=>`<a href="/domains/#${escHtml(d.id)}">Domain: ${escHtml(d.name)} · ${escHtml(lv(d.level))}</a>`).join(' · ')}</div>`:''; }
+  return ds.length?`<div class="bnrow" data-domain><b>${BN.domain}</b>${ds.map(d=>`<a href="/domains/#${escHtml(d.id)}">${escHtml(d.name)} · ${escHtml(lv(d.level))}</a>`).join('; ')}</div>`:''; }
 function bnCard(b, nid){
   const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
   const nm=i=>escHtml(byId[i]?byId[i].name:i);

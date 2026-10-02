@@ -1698,12 +1698,14 @@
       "pressure": {
         "text": "EPRI experts: rotor forgings and hot-section blades have emerged as the primary bottlenecks in gas-turbine supply (POWER, 2026-01-15).",
         "source_url": "https://www.powermag.com/gas-turbine-supply-chain-bottlenecks-could-reshape-the-generation-mix-in-2030-and-beyond/",
-        "source_type": "media"
+        "source_type": "media",
+        "source_date": "2026-01-15"
       },
       "rigidity": {
         "text": "JSW is raising rotor-shaft equipment capacity 1.5x and doubling nuclear production capacity through the fiscal year ending March 2029 (JSW plan update, translated from Japanese).",
         "source_url": "https://www.jsw.co.jp/pdf/ir/library/presentation/2027/JGP2028_202607.pdf",
-        "source_type": "primary"
+        "source_type": "primary",
+        "source_date": "2026-07-13"
       },
       "trigger": {
         "status": "fired",
@@ -1711,7 +1713,8 @@
         "what": "JSW: demand for rotor shafts for high-efficiency thermal power, including gas-turbine combined cycle, surged on data-center power demand and continues well above the mid-term plan's assumption (translated from Japanese).",
         "quote": "データセンター向け電力需要の拡大を背景にガスタービン・コンバインドサイクル（GTCC）向けを含む、高効率火力発電用ロータシャフトの需要が急増。中計想定を大幅に上回る需要が継続",
         "source_url": "https://www.jsw.co.jp/pdf/ir/library/presentation/2027/JGP2028_202607.pdf",
-        "source_type": "primary"
+        "source_type": "primary",
+        "source_date": "2026-07-13"
       },
       "owners": [
         "jsw",
@@ -1782,11 +1785,15 @@
       "pressure": {
         "text": "Combined-cycle plant costs are rising on turbine scarcity and HRSG/transformer backlogs (primary.vc, 2026-02-10).",
         "source_url": "https://www.primary.vc/articles/the-gas-turbine-bottleneck-reshaping-energy-infrastructure-ex8qe",
-        "source_type": "media"
+        "source_type": "media",
+        "source_date": "2026-07-20"
       },
       "rigidity": {
-        "text": "",
-        "source_url": null
+        "text": "BHI half-year report (2026-08-14): capacity is being raised by rationalising and refurbishing existing facilities; 'no confirmed additional plans within the next year' (translated from Korean).",
+        "quote": "생산능력 증대를 위해 기존시설 합리화, 개보수 등을 진행하고 있으며, 향후 1년 이내의 확정된 추가 계획은 없습니다.",
+        "source_url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260814000764",
+        "source_type": "primary",
+        "source_date": "2026-08-14"
       },
       "trigger": {
         "status": "fired",
@@ -1796,7 +1803,8 @@
           "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260814000764",
           "https://finance.biggo.com/news/47be26b1-c785-41bc-8265-69f3f23dfd54"
         ],
-        "source_type": "primary (DART half-year report) + media"
+        "source_type": "primary (DART half-year report) + media",
+        "source_date": "2026-08-14"
       },
       "owners": [
         "bhi"
@@ -1858,19 +1866,22 @@
       "pressure": {
         "text": "Wärtsilä will supply a 790 MW off-grid power plant with 42 gas engines for a data center under construction in Texas (2026-04-23).",
         "source_url": "https://www.wartsila.com/media/news/23-04-2026-wartsila-continues-to-expand-its-data-center-footprint-with-new-790-mw-order-in-texas-the-next-data-center-alley-3744599",
-        "source_type": "primary"
+        "source_type": "primary",
+        "source_date": "2026-04-23"
       },
       "rigidity": {
         "text": "Capacity expansion at the Sustainable Technology Hub: once fully commissioned in Q1 2029, output rises to about 2.2x the 2025 level.",
         "source_url": "https://www.wartsila.com/media/news/21-07-2026-wartsila-s-half-year-financial-report-january-june-2026-3773763",
-        "source_type": "primary"
+        "source_type": "primary",
+        "source_date": "2026-07-21"
       },
       "trigger": {
         "status": "fired",
         "date": "2026-07-21",
         "what": "Energy order intake beat the previous all-time high by more than 70%, largely on 1.2 GW of firm data-centre orders; Wärtsilä expanded capacity again in Q2.",
         "source_url": "https://www.wartsila.com/media/news/21-07-2026-wartsila-s-half-year-financial-report-january-june-2026-3773763",
-        "source_type": "primary"
+        "source_type": "primary",
+        "source_date": "2026-07-21"
       },
       "owners": [
         "wartsila"
@@ -1932,11 +1943,14 @@
       "pressure": {
         "text": "Book-to-bill stayed above 1 in H1 2026 and the order backlog grew to EUR 340.3M, with visibility into 2027 (ad-hoc-news, 2026-08-22).",
         "source_url": "https://www.ad-hoc-news.de/boerse/news/unternehmensnachrichten/pfisterer-s-backlog-cushion-why-record-h1-profits-haven-t-translated-into/69983744",
-        "source_type": "media"
+        "source_type": "media",
+        "source_date": "2026-08-22"
       },
       "rigidity": {
-        "text": "",
-        "source_url": null
+        "text": "PFISTERER H1 2026 report: the new HVDC Qualification Center in Winterbach finished shell construction in March 2026; commissioning is planned for the first half of 2027.",
+        "source_url": "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
+        "source_type": "primary",
+        "source_date": "2026-08-18"
       },
       "trigger": {
         "status": "fired",
@@ -1946,7 +1960,8 @@
           "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
           "https://www.pfisterer.com/en/news/pfisterer-holding-se-continues-successful-growth-trajectory-significant-increase-revenue-and"
         ],
-        "source_type": "primary"
+        "source_type": "primary",
+        "source_date": "2026-08-18"
       },
       "owners": [
         "pfisterer"

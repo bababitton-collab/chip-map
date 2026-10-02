@@ -11982,7 +11982,9 @@
    "layer": "L4",
    "pressure": {
     "text": "SanDisk plans first HBF (16-layer NAND stack) samples in 2H26, AI-integrated samples early 2027.",
-    "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/"
+    "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/",
+    "source_date": "2026-06-05",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "No rigidity source among the closure pages.",
@@ -11993,7 +11995,8 @@
     "date": "2026-08-06",
     "what": "Kokusai Electric NAND revenue +84% QoQ (equipment pull for NAND).",
     "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-08-06"
    },
    "owners": [
     "sndk",
@@ -12061,18 +12064,23 @@
    "layer": "L4",
    "pressure": {
     "text": "TDK projects nearline HDD output +7% in FY to March 2027 while total HDD output falls ~2%.",
-    "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/"
+    "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/",
+    "source_date": "2026-07-23",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "HOYA's ~JPY 50B Vietnam glass-substrate plant contributes fully only around FY2028.",
-    "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/"
+    "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/",
+    "source_date": "2026-07-23",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2025-09-30",
     "what": "Nearline HDD lead times stretched past 52 weeks (as of Sept 2025).",
     "source_url": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-07-23"
    },
    "owners": [
     "wdc",
@@ -12134,7 +12142,9 @@
    "layer": "L4",
    "pressure": {
     "text": "Memory prices projected to rise sharply again in 1Q26 (TrendForce, 2025-12-11).",
-    "source_url": "https://www.trendforce.com/presscenter/news/20251211-12831.html"
+    "source_url": "https://www.trendforce.com/presscenter/news/20251211-12831.html",
+    "source_date": "2025-12-11",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "No rigidity source among the closure pages.",
@@ -12145,7 +12155,8 @@
     "date": "2025-11-18",
     "what": "Memory (DRAM and NAND) prices up 50-300% in six months; Morgan Stanley downgrades Dell, HP and HPE on memory costs.",
     "source_url": "https://finance.yahoo.com/news/morgan-stanley-slashes-ratings-dell-071417428.html",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2025-11-18"
    },
    "owners": [
     "nanya",
@@ -12175,7 +12186,8 @@
      "value": true,
      "date": "2026-07-03",
      "source_url": "https://www.trendforce.com/presscenter/news/20260703-13134.html",
-     "note": "TrendForce: conventional DRAM contract prices +13-18% QoQ in 3Q26; gains moderate."
+     "note": "TrendForce: conventional DRAM contract prices +13-18% QoQ in 3Q26; gains moderate.",
+     "source_date": "2026-07-03"
     },
     "all_suppliers_hiking": {
      "value": null,
@@ -12201,7 +12213,8 @@
      "value": true,
      "date": "2026-07-04",
      "source_url": "https://www.tomshardware.com/pc-components/ram/memory-price-surge-begins-to-cool-as-consumers-hit-affordability-limit-ai-demand-still-keeps-dram-and-nand-prices-climbing-through-q3-2026",
-     "note": "Tom's Hardware (media, citing TrendForce): consumers reach the ceiling of what they can afford."
+     "note": "Tom's Hardware (media, citing TrendForce): consumers reach the ceiling of what they can afford.",
+     "source_date": "2026-07-04"
     },
     "supplier_inventory_rebuild_or_reservations_in_backlog": {
      "value": null,
@@ -12227,18 +12240,23 @@
    "layer": "L4",
    "pressure": {
     "text": "HBM share of global DRAM wafer capacity to rise from ~20% to ~30% next year.",
-    "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage"
+    "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage",
+    "source_date": "2026-10-01",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "Micron has contracted the bulk of its 2027 HBM bit supply.",
-    "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage"
+    "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage",
+    "source_date": "2026-10-01",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-10-01",
     "what": "TrendForce projects 2027 average HBM selling price +121%; HBM4 ~$600 to ~$1,300.",
     "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-10-01"
    },
    "owners": [
     "skhynix",
@@ -12268,7 +12286,8 @@
     "ltas_prepay_noncancellable": {
      "value": true,
      "date": "2026-10-01",
-     "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage"
+     "source_url": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage",
+     "source_date": "2026-10-01"
     },
     "low_pe_peak_eps_or_not_a_bubble": {
      "value": null,
@@ -12294,18 +12313,23 @@
    "layer": "L2",
    "pressure": {
     "text": "Kokusai DRAM revenue +158% YoY; full-year guidance raised 21.4%.",
-    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168"
+    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168",
+    "source_date": "2026-08-06",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "Kokusai operating rate 70-80% in H1, above 80% in H2.",
-    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168"
+    "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168",
+    "source_date": "2026-08-06",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-08-06",
     "what": "Kokusai Electric NAND revenue +84% QoQ; order intake ~JPY 140B.",
     "source_url": "https://www.investing.com/news/company-news/kokusai-electric-q1-fy273-slides-record-revenue-guidance-raised-21-93CH-4840168",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-08-06"
    },
    "owners": [
     "kokusai",
@@ -12363,7 +12387,9 @@
    "layer": "L2",
    "pressure": {
     "text": "Stronger-than-expected demand for DRAM-related probe cards.",
-    "source_url": "https://www.tipranks.com/news/company-announcements/micronics-japan-lifts-2q-forecast-and-unveils-3q-outlook-on-strong-memory-probe-card-demand"
+    "source_url": "https://www.tipranks.com/news/company-announcements/micronics-japan-lifts-2q-forecast-and-unveils-3q-outlook-on-strong-memory-probe-card-demand",
+    "source_date": "2026-05-13",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "No rigidity source among the closure pages.",
@@ -12374,7 +12400,8 @@
     "date": "2026-05-13",
     "what": "Micronics Japan raised its 2Q forecast on DRAM probe-card demand.",
     "source_url": "https://www.tipranks.com/news/company-announcements/micronics-japan-lifts-2q-forecast-and-unveils-3q-outlook-on-strong-memory-probe-card-demand",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-05-13"
    },
    "owners": [
     "formfactor",
@@ -12434,7 +12461,9 @@
    "layer": "L2",
    "pressure": {
     "text": "Hanmi, Hanwha Semitech, ASMPT and Kulicke & Soffa are developing HBF TC bonders.",
-    "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/"
+    "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/",
+    "source_date": "2026-06-05",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "No rigidity source among the closure pages.",
@@ -12445,7 +12474,8 @@
     "date": "2026-12-31",
     "what": "First HBF TC-bonder deliveries (Hanmi) planned for 2H26.",
     "source_url": "https://www.trendforce.com/news/2026/06/05/news-hbf-opens-new-equipment-race-hanmi-semiconductor-reportedly-eyes-first-tc-bonder-deliveries-in-2h26/",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-06-05"
    },
    "owners": [
     "hanmi",
@@ -12503,12 +12533,14 @@
    "pressure": {
     "text": "Hybrid bonding is in high-volume production on logic chips: Intel began shipping Foveros Direct in H1 2026 and AMD has used it in volume; TSMC SoIC leads in volume (Tom's Hardware, 2026-09-02).",
     "source_url": "https://www.tomshardware.com/tech-industry/semiconductors/hybrid-bonding-roadmap-examined",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-09-02"
    },
    "rigidity": {
     "text": "Dies are placed one at a time, so bonder speed sets the limit on how many chips can be produced; Besi's Chameo bonders are rated near 2,000 chips per hour (Tom's Hardware, 2026-09-02).",
     "source_url": "https://www.tomshardware.com/tech-industry/semiconductors/hybrid-bonding-roadmap-examined",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-09-02"
    },
    "trigger": {
     "status": "fired",
@@ -12518,7 +12550,8 @@
      "https://www.besi.com/fileadmin/user_upload/PR_Q2-2026.pdf",
      "https://www.tomshardware.com/tech-industry/semiconductors/sk-hynix-says-hybrid-bonding-wont-be-ready-for-hbm4e-as-ai-memory-runs-into-a-775-micron-ceiling"
     ],
-    "source_type": "primary"
+    "source_type": "primary",
+    "source_date": "2026-07-23"
    },
    "owners": [
     "besi"
@@ -12639,18 +12672,23 @@
    "layer": "L1",
    "pressure": {
     "text": "CPO demand; Coherent warned of InP shortages on its May earnings call.",
-    "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/"
+    "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
+    "source_date": "2026-06-16",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "AXT and Sumitomo hold nearly 80% of InP substrate output; China export curbs since Feb 2025.",
-    "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/"
+    "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
+    "source_date": "2026-06-16",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-06-16",
     "what": "Average 6-inch InP wafer price +250% to ~US$5,000.",
     "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-06-16"
    },
    "owners": [
     "axti",
@@ -12678,7 +12716,8 @@
     "capacity_x2_or_equity_raise": {
      "value": true,
      "date": "2026-06-16",
-     "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/"
+     "source_url": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
+     "source_date": "2026-06-16"
     },
     "ltas_prepay_noncancellable": {
      "value": null,
@@ -12710,12 +12749,14 @@
    "pressure": {
     "text": "Lumentum (Q4 FY26 call, 2026-08-11): 'still a significant supply/demand imbalance on CW or EMLs', and expects to be 'significantly behind demand' even at year-end.",
     "source_url": "https://www.fool.com/earnings/call-transcripts/2026/08/18/lumentum-lite-q4-2026-earnings-call-transcript/",
-    "source_type": "primary"
+    "source_type": "primary",
+    "source_date": "2026-08-18"
    },
    "rigidity": {
     "text": "Lumentum: first revenue from its Greensboro fab conversion to InP in early 2028, ramping through 2028 into 2029 (Q4 FY26 call).",
     "source_url": "https://www.fool.com/earnings/call-transcripts/2026/08/18/lumentum-lite-q4-2026-earnings-call-transcript/",
-    "source_type": "primary"
+    "source_type": "primary",
+    "source_date": "2026-08-18"
    },
    "trigger": {
     "status": "unclear",
@@ -12780,18 +12821,23 @@
    "layer": "L1",
    "pressure": {
     "text": "Soitec photonics-SOI revenue to exceed $200M this fiscal year (from slightly above $100M).",
-    "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/"
+    "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/",
+    "source_date": "2026-08-31",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "Soitec ~95% of silicon-photonics substrates (UBS est.); new fab not before ~2029.",
-    "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/"
+    "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/",
+    "source_date": "2026-08-31",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-08-31",
     "what": "Soitec capacity-reservation agreements with deposits and fixed pricing; Tower $290M SiPh prepayments (2026-05-13).",
     "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-08-31"
    },
    "owners": [
     "soitec",
@@ -12820,7 +12866,8 @@
     "ltas_prepay_noncancellable": {
      "value": true,
      "date": "2026-08-31",
-     "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/"
+     "source_url": "https://kelo.com/2026/08/31/soitec-locks-customers-into-multi-year-deals-as-ai-wafer-demand-surges/",
+     "source_date": "2026-08-31"
     },
     "low_pe_peak_eps_or_not_a_bubble": {
      "value": null,
@@ -12846,18 +12893,23 @@
    "layer": "L6",
    "pressure": {
     "text": "Corning Optical Communications sales +32% YoY; NVIDIA fiber partnership (+50% US fiber capacity).",
-    "source_url": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx"
+    "source_url": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx",
+    "source_date": "2026-07-28",
+    "source_type": "primary"
    },
    "rigidity": {
     "text": "Glass preform is the critical bottleneck; many Chinese suppliers near capacity limits.",
-    "source_url": "https://www.crugroup.com/en/communities/thought-leadership/2026/optical-fibre-prices-rise-as-preform-availability-tightens/"
+    "source_url": "https://www.crugroup.com/en/communities/thought-leadership/2026/optical-fibre-prices-rise-as-preform-availability-tightens/",
+    "source_date": "2026-02-26",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-02-26",
     "what": "Chinese G.652.D bare fibre prices +80% between Nov 2025 and Jan 2026.",
     "source_url": "https://www.crugroup.com/en/communities/thought-leadership/2026/optical-fibre-prices-rise-as-preform-availability-tightens/",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-02-26"
    },
    "owners": [
     "corning_fiber",
@@ -12889,7 +12941,8 @@
     "capacity_x2_or_equity_raise": {
      "value": true,
      "date": "2026-07-28",
-     "source_url": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx"
+     "source_url": "https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx",
+     "source_date": "2026-07-28"
     },
     "ltas_prepay_noncancellable": {
      "value": null,
@@ -12921,12 +12974,14 @@
    "pressure": {
     "text": "TrendForce (2026-04-20): demand is rising sharply for 800G-and-above optical transceivers for AI server clusters, while supply-side pressures are becoming increasingly evident.",
     "source_url": "https://www.trendforce.com/presscenter/news/20260420-13017.html",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-04-20"
    },
    "rigidity": {
     "text": "TrendForce (2026-04-20): supply of critical optoelectronic chips such as EMLs and CW lasers remains tight due to capacity allocation constraints.",
     "source_url": "https://www.trendforce.com/presscenter/news/20260420-13017.html",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-04-20"
    },
    "trigger": {
     "status": "unclear",
@@ -12991,18 +13046,23 @@
    "layer": "L1",
    "pressure": {
     "text": "NVIDIA, Microsoft, Google and Amazon have booked most of Nittobo's premium glass cloth.",
-    "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+    "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+    "source_date": "2026-08-06",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "Nittobo targets 3x capacity by FY ending March 2029 (JPY 80B).",
-    "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+    "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+    "source_date": "2026-08-06",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-08-06",
     "what": "Previously planned T-glass price hikes largely completed; no further hikes planned.",
     "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-08-06"
    },
    "owners": [
     "nittobo"
@@ -13022,7 +13082,8 @@
     "hike_decel_or_no_more_hikes": {
      "value": true,
      "date": "2026-08-06",
-     "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+     "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+     "source_date": "2026-08-06"
     },
     "all_suppliers_hiking": {
      "value": null,
@@ -13032,7 +13093,8 @@
     "capacity_x2_or_equity_raise": {
      "value": true,
      "date": "2026-08-06",
-     "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/"
+     "source_url": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+     "source_date": "2026-08-06"
     },
     "ltas_prepay_noncancellable": {
      "value": null,
@@ -13065,18 +13127,23 @@
    "layer": "L1",
    "pressure": {
     "text": "HVLP3-4 demand 24,000 t (2026) to ~50,000 t (2027).",
-    "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027"
+    "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027",
+    "source_date": "2026-09-30",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "Mitsui Kinzoku and Co-Tech control 80-90% of effective high-end supply.",
-    "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027"
+    "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027",
+    "source_date": "2026-09-30",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-09-30",
     "what": "HVLP4 shortage ~1,500 t in 2026; laminate makers moved to quota-based allocation.",
     "source_url": "https://news.metal.com/newscontent/104142677-ai-server-boom-strains-copper-foil-supply-projected-gap-widens-to-2500-tonnes-by-2027",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-09-30"
    },
    "owners": [
     "mitsui_kinzoku",
@@ -13103,7 +13170,8 @@
     "capacity_x2_or_equity_raise": {
      "value": true,
      "date": "2026-08-17",
-     "source_url": "https://www.mitsui-kinzoku.com/LinkClick.aspx?fileticket=XzNABg5L0L4%3D&tabid=204&mid=824"
+     "source_url": "https://www.mitsui-kinzoku.com/LinkClick.aspx?fileticket=XzNABg5L0L4%3D&tabid=204&mid=824",
+     "source_date": "2026-08-17"
     },
     "ltas_prepay_noncancellable": {
      "value": null,
@@ -13135,19 +13203,22 @@
    "pressure": {
     "text": "CCL prices are surging amid a supply-demand imbalance: Korean CCL import prices reached $20,728 per ton in March 2026, up 74.5% y/y (TrendForce news citing Hankyung, 2026-05-06).",
     "source_url": "https://www.trendforce.com/news/2026/05/06/news-ai-demand-tightens-ccl-supply-drives-advance-orders-price-hikes-and-expansion/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-05-06"
    },
    "rigidity": {
     "text": "Demand for CCL-making equipment has exceeded supply as EMC and TUC ramp output, with equipment order visibility extending to 2028 (TrendForce news citing Liberty Times, 2026-05-06).",
     "source_url": "https://www.trendforce.com/news/2026/05/06/news-ai-demand-tightens-ccl-supply-drives-advance-orders-price-hikes-and-expansion/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-05-06"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-04-01",
     "what": "Resonac and Mitsubishi Gas Chemical raised CCL materials 30% from 2026-04-01.",
     "source_url": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-05-14"
    },
    "owners": [
     "emc",
@@ -13207,14 +13278,17 @@
    },
    "rigidity": {
     "text": "Ajinomoto holds over 95% of global ABF; third plant production only 2032.",
-    "source_url": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE"
+    "source_url": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+    "source_date": "2026-05-14",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-05-14",
     "what": "Ajinomoto raising ABF prices 30%, effective Q3 2026.",
     "source_url": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-05-14"
    },
    "owners": [
     "ajinomoto"
@@ -13277,12 +13351,14 @@
    "pressure": {
     "text": "Several supply-chain analyses converge on an ABF supply shortfall of about 10% in 2H26, widening to about 21% in 2027 and potentially over 40% by 2028 (Tom's Hardware, 2026-09-10).",
     "source_url": "https://www.tomshardware.com/tech-industry/semiconductors/the-state-of-abf-substrates-in-data-center-silicon-in-2026-solving-the-supply-crunch-and-material-wall-beneath-every-ai-accelerator",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-09-10"
    },
    "rigidity": {
     "text": "Ibiden: new high-performance IC substrate capacity enters mass production from fiscal year 2027 (capital investment plan, 2026-02-03).",
     "source_url": "https://www.ibiden.com/company/2026/02/notice-regarding-capital-investment-plan-for-high-performance-ic-package-substrates.html",
-    "source_type": "primary"
+    "source_type": "primary",
+    "source_date": "2026-02-03"
    },
    "trigger": {
     "status": "unclear",
@@ -13346,7 +13422,9 @@
    "layer": "L6",
    "pressure": {
     "text": "Topoint: high-end coated drill-bit supply tight on strong PCB demand.",
-    "source_url": "https://www.digitimes.com/news/a20260309PD233/pcb-topoint-2026-high-end-sales.html"
+    "source_url": "https://www.digitimes.com/news/a20260309PD233/pcb-topoint-2026-high-end-sales.html",
+    "source_date": "2026-03-10",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "No closure source.",
@@ -13357,7 +13435,8 @@
     "date": "2026-03-09",
     "what": "Topoint utilization >90% (Digitimes; page paywalled, not verified).",
     "source_url": "https://www.digitimes.com/news/a20260309PD233/pcb-topoint-2026-high-end-sales.html",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-03-10"
    },
    "owners": [
     "union_tool",
@@ -13413,12 +13492,14 @@
    "pressure": {
     "text": "Global supply of high-end electronic-grade PPO remains tight, with capacity constraints overseas and AI server high-speed CCL demand (ChemNet, 2026-07-07).",
     "source_url": "https://news.chemnet.com/news-7185.html",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-07-07"
    },
    "rigidity": {
     "text": "Only five industrial producers worldwide have continuous 10,000-tonne-per-year synthesis capability (HDIN Research, 2026-09-09).",
     "source_url": "https://www.hdinresearch.com/news/1888",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-09-09"
    },
    "trigger": {
     "status": "unclear",
@@ -13482,12 +13563,14 @@
    "pressure": {
     "text": "NVIDIA reportedly asked substrate makers in Korea, Japan and Taiwan to complete glass-substrate development within two years, possibly enabling adoption before 2028 (TrendForce news, 2026-09-30).",
     "source_url": "https://www.trendforce.com/news/2026/09/30/news-nvidia-reportedly-explores-glass-substrates-2028-adoption-possible-as-taiwan-suppliers-step-up/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-09-30"
    },
    "rigidity": {
     "text": "TrendForce (2026-06-17): commercial-scale glass-core substrate production at TSMC is likely only after 2030.",
     "source_url": "https://www.trendforce.com/presscenter/news/20260617-13107.html",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-06-17"
    },
    "trigger": {
     "status": "unclear",
@@ -13546,18 +13629,23 @@
    "layer": "L6",
    "pressure": {
     "text": "An AI server cabinet needs up to 440,000 MLCCs.",
-    "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+    "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
+    "source_date": "2026-08-04",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "Channel inventory below the 30-day threshold.",
-    "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+    "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
+    "source_date": "2026-08-04",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-08-01",
     "what": "Samsung Electro-Mechanics +30% on all MLCC shipments; Taiyo Yuden, Yageo, Murata, Walsin also raising.",
     "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-08-04"
    },
    "owners": [
     "murata",
@@ -13583,7 +13671,8 @@
     "all_suppliers_hiking": {
      "value": true,
      "date": "2026-08-04",
-     "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+     "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
+     "source_date": "2026-08-04"
     },
     "capacity_x2_or_equity_raise": {
      "value": null,
@@ -13593,7 +13682,8 @@
     "ltas_prepay_noncancellable": {
      "value": true,
      "date": "2026-08-04",
-     "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/"
+     "source_url": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
+     "source_date": "2026-08-04"
     },
     "low_pe_peak_eps_or_not_a_bubble": {
      "value": null,
@@ -13619,18 +13709,23 @@
    "layer": "L1",
    "pressure": {
     "text": "High-end AI MLCC dielectric material volume 2x YoY.",
-    "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07"
+    "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07",
+    "source_date": "2026-08-12",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "Sakai's director: capacity 'quite full', considering capex.",
-    "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07"
+    "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07",
+    "source_date": "2026-08-12",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-08-12",
     "what": "AI MLCC dielectric volume doubled; capacity quite full.",
     "source_url": "https://finance.biggo.com/news/JP_4078.T_2026-08-07",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-08-12"
    },
    "owners": [
     "sakai_chem"
@@ -13686,18 +13781,23 @@
    "layer": "L6",
    "pressure": {
     "text": "AI server tantalum demand at 62% CAGR.",
-    "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/"
+    "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/",
+    "source_date": "2026-08-25",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "DRC is 51% of mine output; Rubaya halted Jan 2026.",
-    "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/"
+    "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/",
+    "source_date": "2026-08-25",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-08-25",
     "what": "Tantalum ingot ~2.56x since end-2025; EV capacitor lead times over one year.",
     "source_url": "https://www.trendforce.com/news/2026/08/25/insights-tantalum-prices-nearly-triple-on-ai-demand-supply-disruptions-ev-capacitor-lead-times-reportedly-top-1-year/",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-08-25"
    },
    "owners": [
     "orient_tantalum"
@@ -13756,12 +13856,14 @@
    "pressure": {
     "text": "AI servers, data centers and EVs are increasing demand for advanced magnetics that cannot easily be substituted by lower-grade parts (Passive Components Blog, 2026-03-05).",
     "source_url": "https://passive-components.eu/inductors-and-ferrite-beads-price-hikes/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-03-05"
    },
    "rigidity": {
     "text": "A small group of Japanese and European companies accounts for the bulk of high-frequency power and TLVR inductors (Passive Components Blog, 2026-06-30).",
     "source_url": "https://passive-components.eu/mlccs-in-the-age-of-ai-q2-2026-market-tightness/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-06-30"
    },
    "trigger": {
     "status": "unclear",
@@ -13825,12 +13927,14 @@
    "pressure": {
     "text": "TXC raised prices 10-30% from 2026-07-01, citing raw-material costs; peers TAI-SAW, Siward and Harmony cite tight supply from AI, HPC, automotive and satellite demand (BusinessNext, 2026-07-03; translated from Chinese).",
     "source_url": "https://www.bnext.com.tw/article/91410/quartz-component-price-hike",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-07-03"
    },
    "rigidity": {
     "text": "Daishinku: the crystal device industry is limited in production efficiency by conventional '1-by-1 manufacturing' (FY3/2026 results, 2026-05-14).",
     "source_url": "https://www.kds.info/wp-content/uploads/2026/05/2026.3-financial-result-en-260514.pdf",
-    "source_type": "primary"
+    "source_type": "primary",
+    "source_date": "2026-05-14"
    },
    "trigger": {
     "status": "unclear",
@@ -13892,18 +13996,23 @@
    "layer": "L6",
    "pressure": {
     "text": "Hyperscalers pre-committed to more than 80% of Panasonic Energy's planned output through FY2029.",
-    "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html"
+    "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html",
+    "source_date": "2026-03-26",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "Panasonic ~80% share of rack BBU power supply; auto lines converted only from FY2027.",
-    "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html"
+    "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html",
+    "source_date": "2026-03-26",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-03-26",
     "what": "Panasonic: data-center batteries selling out.",
     "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-03-26"
    },
    "owners": [
     "panasonic"
@@ -13931,7 +14040,8 @@
     "ltas_prepay_noncancellable": {
      "value": true,
      "date": "2026-03-26",
-     "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html"
+     "source_url": "https://www.networkworld.com/article/4150459/panasonic-says-datacenter-batteries-are-selling-out-and-ai-is-to-blame.html",
+     "source_date": "2026-03-26"
     },
     "low_pe_peak_eps_or_not_a_bubble": {
      "value": null,
@@ -13958,12 +14068,14 @@
    "pressure": {
     "text": "Infineon's second 2026 price increase, effective 2026-07-01: demand across its portfolio is rising rapidly, exceeding expectations from a few months earlier (TrendForce news, 2026-05-27).",
     "source_url": "https://www.trendforce.com/news/2026/05/27/news-infineon-announces-second-2026-price-hike-effective-july-1-amid-rising-supply-chain-costs-strong-demand/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-05-27"
    },
    "rigidity": {
     "text": "Power discretes remain highly dependent on 8-inch platforms while major foundries reduce or repurpose 8-inch capacity (TrendForce, 2026-06-30; applies to foundry-made parts, the owners also run their own fabs).",
     "source_url": "https://www.trendforce.com/presscenter/news/20260630-13127.html",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-06-30"
    },
    "trigger": {
     "status": "unclear",
@@ -14031,12 +14143,14 @@
    "pressure": {
     "text": "Vicor (Q2 2026 call, 2026-07-21): lead times have stretched, reflecting demand exceeding capacity in key areas; 'We're not sold out, but we're approaching capacity utilization.'",
     "source_url": "https://www.fool.com/earnings/call-transcripts/2026/07/21/vicor-vicr-q2-2026-earnings-call-transcript/",
-    "source_type": "primary"
+    "source_type": "primary",
+    "source_date": "2026-07-22"
    },
    "rigidity": {
     "text": "Vicor: expanded capacity arrives with its second fab in late 2027-2028 (Q2 2026 call).",
     "source_url": "https://www.fool.com/earnings/call-transcripts/2026/07/21/vicor-vicr-q2-2026-earnings-call-transcript/",
-    "source_type": "primary"
+    "source_type": "primary",
+    "source_date": "2026-07-22"
    },
    "trigger": {
     "status": "unclear",
@@ -14098,7 +14212,8 @@
    "pressure": {
     "text": "AVC faces overwhelming demand for liquid-cooling systems, with plants at full capacity and orders well above supply (DigiTimes, 2025-08-16).",
     "source_url": "https://www.digitimes.com/news/a20250814PD240/avc-capacity-revenue-demand-chassis.html",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2025-08-16"
    },
    "rigidity": {
     "text": "",
@@ -14169,7 +14284,8 @@
    "rigidity": {
     "text": "SemiAnalysis (2026-05-26): no vendor had completed UL certification for data-center solid-state transformer deployment as of May 2026.",
     "source_url": "https://newsletter.semianalysis.com/p/inside-the-800vdc-revolution-part",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-05-26"
    },
    "trigger": {
     "status": "not_yet",
@@ -14228,18 +14344,23 @@
    "layer": "L1",
    "pressure": {
     "text": "Foundry utilization back above 95%.",
-    "source_url": "https://www.techtimes.com/articles/325322/20260824/silicon-wafer-prices-break-three-year-freeze-ai-fills-every-fab-foundries-are-next.htm"
+    "source_url": "https://www.techtimes.com/articles/325322/20260824/silicon-wafer-prices-break-three-year-freeze-ai-fills-every-fab-foundries-are-next.htm",
+    "source_date": "2026-08-24",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "GlobalWafers lines at full utilization; LTA lengths extending from 3 to 5-8 years.",
-    "source_url": "https://www.thelec.net/news/articleView.html?idxno=12856"
+    "source_url": "https://www.thelec.net/news/articleView.html?idxno=12856",
+    "source_date": "2026-08-06",
+    "source_type": "media"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-08-24",
     "what": "GlobalWafers, Formosa Sumco, Wafer Works: hikes of at least 10% on all wafer sizes.",
     "source_url": "https://www.techtimes.com/articles/325322/20260824/silicon-wafer-prices-break-three-year-freeze-ai-fills-every-fab-foundries-are-next.htm",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-08-24"
    },
    "owners": [
     "sumco",
@@ -14273,7 +14394,8 @@
     "ltas_prepay_noncancellable": {
      "value": true,
      "date": "2026-08-06",
-     "source_url": "https://www.thelec.net/news/articleView.html?idxno=12856"
+     "source_url": "https://www.thelec.net/news/articleView.html?idxno=12856",
+     "source_date": "2026-08-06"
     },
     "low_pe_peak_eps_or_not_a_bubble": {
      "value": null,
@@ -14304,14 +14426,16 @@
    "rigidity": {
     "text": "Only JSR, TOK and Shin-Etsu Chemical currently have EUV photoresist mass-production capability (TrendForce news, 2026-03-17).",
     "source_url": "https://www.trendforce.com/news/2026/03/17/news-china-pushes-advanced-photoresist-as-xuzhou-b-mass-production-in-5-years/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-03-17"
    },
    "trigger": {
     "status": "unclear",
     "date": "2026-10-01",
     "what": "Reported by unnamed sources: base price +15% from 2026-10-01 at JSR, TOK and Shin-Etsu; not confirmed by a company or analyst source.",
     "source_url": "https://finance.biggo.com/news/cad4ed4c-464b-4ee4-8233-9110fab547d6",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2026-09-24"
    },
    "owners": [
     "tok",
@@ -14366,18 +14490,23 @@
    "layer": "L1",
    "pressure": {
     "text": "Ex-China heavy rare earth prices surging (Q3 2026 review).",
-    "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review"
+    "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review",
+    "source_date": "2026-09-25",
+    "source_type": "analyst"
    },
    "rigidity": {
     "text": "Yttrium oxide CIF North America ~196x the DDP China price.",
-    "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review"
+    "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review",
+    "source_date": "2026-09-25",
+    "source_type": "analyst"
    },
    "trigger": {
     "status": "fired",
     "date": "2026-09-25",
     "what": "Dysprosium oxide CIF Europe +56% in September.",
     "source_url": "https://source.benchmarkminerals.com/article/ex-china-heavy-rare-earths-continue-to-surge-q3-2026-rare-earths-price-review",
-    "source_type": "analyst"
+    "source_type": "analyst",
+    "source_date": "2026-09-25"
    },
    "owners": [
     "lynas",
@@ -14435,18 +14564,23 @@
    "layer": "L1",
    "pressure": {
     "text": "China ~99% of refined Ga, ~60% of refined Ge.",
-    "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/"
+    "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/",
+    "source_date": "2025-11-09",
+    "source_type": "media"
    },
    "rigidity": {
     "text": "China's export ban to the US was suspended, not lifted.",
-    "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/"
+    "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/",
+    "source_date": "2025-11-09",
+    "source_type": "media"
    },
    "trigger": {
     "status": "not_yet",
     "date": "2026-11-27",
     "what": "China's suspension of its Ga/Ge/Sb US export ban expires.",
     "source_url": "https://www.mining.com/china-lifts-export-ban-on-gallium-germanium-and-antimony-to-us/",
-    "source_type": "media"
+    "source_type": "media",
+    "source_date": "2025-11-09"
    },
    "owners": [
     "fivenplus",
@@ -14520,7 +14654,8 @@
      "https://www.globaltimes.cn/page/202511/1347646.shtml",
      "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
     ],
-    "source_type": "media quoting MOFCOM; primary (regulation text)"
+    "source_type": "media quoting MOFCOM; primary (regulation text)",
+    "source_date": "2025-11-08"
    },
    "owners": [
     "mp",

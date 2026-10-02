@@ -1,0 +1,12 @@
+{
+ "note": "Fixed mapping from source host to source_type (2026-10-02). A host matches a listed domain or any subdomain of it. A host in none of the lists is left untyped and reported; nothing is decided case by case.",
+ "primary": ["sec.gov", "dart.fss.or.kr", "release.tdnet.info", "law.cornell.edu", "ecfr.gov", "federalregister.gov",
+             "mofcom.gov.cn", "investor.corning.com", "investor.tsmc.com", "mitsui-kinzoku.com", "jsw.co.jp", "besi.com",
+             "wartsila.com", "pfisterer.com", "kds.info", "ibiden.com"],
+ "analyst": ["trendforce.com", "yolegroup.com", "yole.fr", "semianalysis.com", "crugroup.com", "benchmarkminerals.com",
+             "iea.org", "lightcounting.com", "woodmac.com"],
+ "media": ["finance.biggo.com", "xenospectrum.com", "en.sedaily.com", "investing.com", "kelo.com", "news.metal.com",
+           "networkworld.com", "mining.com", "tipranks.com", "digitimes.com", "techtimes.com", "thelec.net",
+           "tomshardware.com", "powermag.com", "primary.vc", "news.chemnet.com", "hdinresearch.com", "bnext.com.tw",
+           "passive-components.eu", "globaltimes.cn", "fool.com", "ad-hoc-news.de", "finance.yahoo.com"]
+}

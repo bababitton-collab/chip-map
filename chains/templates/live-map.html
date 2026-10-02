@@ -784,7 +784,7 @@ const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחרי�
 function lagOf(n){ const l=(n.bn||[]).filter(e=>e.kind==='lag'&&e.lagging);
   return l.length ? {half:l.every(e=>e.exposure==='high')} : null; }
 function bnLines(n){ return (n.bn||[]).map(e=> e.kind==='lag'
-  ? `<div class="bnlag${e.lagging?' on':''}" data-bn="${e.b}" data-lagging="${e.lagging}">${BN.fired} ${e.fired||''} · ${BN.node} ${pct(e.ret)} · ${BN.leader} ${escHtml(e.leader)} ${pct(e.leader_ret)} · ${BN.exp}: ${e.exposure?BN.expW[e.exposure]:'—'}</div>`
+  ? `<div class="bnlag${e.lagging?' on':''}" data-bn="${e.b}" data-lagging="${e.lagging}">${BN.fired} ${e.fired||''} · ${BN.node} ${pct(e.ret)} · ${BN.leader} ${escHtml((byId[e.leader_id]||{}).name||e.leader_id)} ${pct(e.leader_ret)} · ${BN.exp}: ${e.exposure?BN.expW[e.exposure]:'—'}</div>`
   : `<span class="cyc" data-bn="${e.b}">${BN.cyc[e.stage]||e.stage} · ${BN.risk} ${e.top_risk}/7</span>`).join(''); }
 function bnCard(b, nid){
   const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
@@ -3093,6 +3093,18 @@ function lockedHTML(){
   const nodeById = {}; (D.nodes||[]).forEach(n=>nodeById[n.id]=n);
   const byTicker = {};
   (D.nodes||[]).forEach(n=>{ if(n.ticker) byTicker[String(n.ticker).toUpperCase()]=n; });
+  // A question names its reporter by its home code ("005930", "8035"), and the
+  // station carries it with its exchange ("005930.KS") or under its US line
+  // (SHECY). Without these the card found no station and printed the raw code.
+  // An exact ticker always wins over a match on the base or the price line.
+  (D.nodes||[]).forEach(n=>{ [n.ticker, n.sym].forEach(t=>{ if(!t) return;
+    const k=String(t).toUpperCase().split(/[.\s]/)[0]; if(k && !byTicker[k]) byTicker[k]=n; }); });
+  // The centre of a card: the station's short name, the ticker on hover only.
+  function centreLabel(w, centre){
+    const name = centre ? (centre.short||centre.name) : (w.tk||'');
+    const fs = Math.max(8, Math.min(12, 66/Math.max(1, String(name).length)));
+    return `<text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="${fs.toFixed(1)}" font-weight="600" fill="#e8ecf2" data-centre="${esc(name)}">${esc(name)}${w.tk?`<title>${esc(w.tk)}</title>`:''}</text>`;
+  }
   const layerName = n => ((D.labels||{}).layers||{})[n&&n.layer] || '';
   function labelOf(id){
     const n=nodeById[id]; if(!n) return String(id).toUpperCase().slice(0,6);
@@ -3316,13 +3328,12 @@ function lockedHTML(){
         gv+=`<text x="${R2X+V2_R+5}" y="${(y+3).toFixed(1)}" font-family="Inter,system-ui,sans-serif" font-size="9.5" font-weight="600" fill="#c7d0dc">${esc(lab)}${tip?`<title>${esc(tip)}</title>`:''}</text>`;
       });
       if(reg.hidden>0) gv+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#7d8797">+${reg.hidden}</text>`;
-      const ctr2=esc(w.tk||(centre?centre.short:'')||'');
       return `<div class="cons v2"><svg viewBox="0 0 ${VBW} ${VBH}">
       <circle cx="${CX}" cy="${CY}" r="30" fill="none" stroke="#e8ecf2" opacity=".25"/>
       ${g}${gv}
       <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"/>
       <circle cx="${CX}" cy="${CY}" r="20" fill="url(#hilite)" pointer-events="none"/>
-      <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr2}</text>
+      ${centreLabel(w, centre)}
     </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span><span><i style="border-color:#7d8797"></i>${T.diag}</span>${confTag(w)}<span class="mixnote">${T.scored}</span></div></div>`;
     }
 
@@ -3345,7 +3356,6 @@ function lockedHTML(){
     });
     if(r2.hidden>0) g2+=`<text x="${R2X}" y="222" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#7d8797">+${r2.hidden}</text>`;
 
-    const ctr=esc(w.tk||(centre?centre.short:'')||'');
     const leg2 = r2.show.length
       ? `<span><i class="ln" style="border-color:#7d8797"></i>${T.ring2}</span>` : '';
     // Suppliers the map shows on both sides of the question have no
@@ -3359,7 +3369,7 @@ function lockedHTML(){
       ${g2}${g}
       <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"/>
       <circle cx="${CX}" cy="${CY}" r="20" fill="url(#hilite)" pointer-events="none"/>
-      <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr}</text>
+      ${centreLabel(w, centre)}
     </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span>${leg2}${mixed}</div></div>`;
   }
 

@@ -135,3 +135,15 @@ def test_the_card_tags_the_confidence_and_a_locked_card_has_none_to_tag(name):
 def test_the_english_tag_reads_confidence_strong_medium_weak():
     s = tpl("live-map-en.html")
     assert "const CONF = {lbl:'Confidence', lv:{S:'strong', M:'medium', W:'weak'}};" in s
+
+
+# -- the centre of a card ----------------------------------------------------------
+@pytest.mark.parametrize("name", ["live-map.html", "live-map-en.html"])
+def test_a_card_centre_shows_the_short_name_and_the_ticker_on_hover(name):
+    s = tpl(name)
+    assert "function centreLabel(w, centre)" in s
+    assert "centre ? (centre.short||centre.name) : (w.tk||'')" in s
+    assert "<title>${esc(w.tk)}</title>" in s
+    # a home code ("005930") finds its station ("005930.KS") by its base
+    assert "split(/[.\\s]/)[0]" in s
+    assert "const ctr=esc(w.tk" not in s and "const ctr2=esc(w.tk" not in s

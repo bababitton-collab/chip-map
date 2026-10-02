@@ -807,8 +807,11 @@ def focus_for(m: dict, lang: str) -> dict:
             # The map's bottleneck records and their dated catalysts, for the
             # bottleneck card. Only a map that declares them ships the keys.
             # The card picks "next check" against the snapshot's own date.
-            **({"bottlenecks": m["bottlenecks"], "catalysts": _catalysts()}
+            **({"bottlenecks": _stages.annotate(m["bottlenecks"]), "catalysts": _catalysts()}
                if m.get("bottlenecks") else {})}
+
+
+from chains import stages as _stages  # noqa: E402  -- stage is computed, never stored
 
 
 def _catalysts() -> list:

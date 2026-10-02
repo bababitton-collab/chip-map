@@ -12,11 +12,12 @@ import json
 
 import pytest
 
-from chains import lagging, mapfile, prices, rings
+from chains import lagging, mapfile, prices, rings, stages
 from chains.paths import data_dir, map_path
 
 DOC = mapfile.load(map_path("semi"))
-BN = DOC["bottlenecks"]
+RAW = DOC["bottlenecks"]
+BN = stages.annotate(RAW)          # stage and top_risk are computed, never stored
 IDS = {n["id"] for n in DOC["nodes"]}
 SIGNALS = ("hike_decel_or_no_more_hikes", "all_suppliers_hiking", "capacity_x2_or_equity_raise",
            "ltas_prepay_noncancellable", "low_pe_peak_eps_or_not_a_bubble",
@@ -31,7 +32,6 @@ def urls(b):
     yield b["pressure"]["source_url"]
     yield b["rigidity"]["source_url"]
     yield b["trigger"]["source_url"]
-    yield b.get("stage_source")
     for s in b["top_signals"].values():
         yield s["source_url"]
 
@@ -65,9 +65,14 @@ def test_signals_are_sourced_or_unknown_and_top_risk_counts_them(b):
 
 
 @pytest.mark.parametrize("b", BN, ids=[b["id"] for b in BN])
-def test_a_stage_other_than_unclear_has_a_source(b):
+def test_a_stage_other_than_unclear_rests_on_sourced_fields(b):
     if b["stage"] != "unclear":
-        assert b["stage_source"]
+        assert b["stage_basis"] and all(x["source_url"] for x in b["stage_basis"])
+
+
+def test_no_record_types_its_own_stage():
+    for b in RAW:
+        assert not {"stage", "stage_source", "stage_note", "top_risk"} & set(b), b["id"]
 
 
 def test_nothing_fired_rests_on_a_page_that_failed_to_load():
@@ -88,7 +93,8 @@ def test_every_source_is_one_of_the_closure_pages():
     """No source outside what was read: the 24 pages in semi-closure.md, and
     the two analyst pages amendment 2 supplied for commodity DRAM (2026-10-02)."""
     allowed = {s for b in BN for s in urls(b) if s}
-    assert len(allowed) <= 24 + 2
+    # + 2 more (TrendForce 2026-07-03, Tom's Hardware 2026-07-04), stage rules.
+    assert len(allowed) <= 24 + 2 + 2
     for e in DOC["edges"]:
         if e.get("source_type"):
             assert e["source"] in allowed | FAILED or e["source"].startswith("https://"), e
@@ -123,14 +129,29 @@ def test_a_media_only_edge_never_appears_in_a_derived_ring():
 
 
 # -- lagging -------------------------------------------------------------------
+SRC = "https://example.com/source"
+
+
+def evidence(stage):
+    """The fields that make a record compute to ``stage`` under the rule."""
+    sig = {k: {"value": None, "date": None, "source_url": None} for k in stages.SIGNALS}
+    out = {"top_signals": sig}
+    if stage == "peaking":
+        for k in ("hike_decel_or_no_more_hikes", "all_suppliers_hiking"):
+            sig[k] = {"value": True, "date": "2026-09-01", "source_url": SRC}
+    if stage == "resolving":
+        out["resolving"] = {"kind": "price_decline", "date": "2026-09-01", "source_url": SRC}
+    return out
+
+
 def fake_doc(stage="tightening", status="fired"):
     return {"nodes": [{"id": i, "name": i.upper(), "price_symbol": f"{i}.US",
                        "price_symbol_kind": "primary"} for i in ("lead", "own2", "prop", "x")],
-            "bottlenecks": [{"id": "b1", "name": "B1", "stage": stage, "top_risk": 2,
+            "bottlenecks": [{"id": "b1", "name": "B1", **evidence(stage),
                              "trigger": {"status": status, "date": "2026-09-01"},
                              "owners": ["lead", "own2"], "propagation": ["prop"],
                              "exposure": {"prop": "high"}},
-                            {"id": "b2", "name": "B2", "stage": "tightening",
+                            {"id": "b2", "name": "B2", **evidence("tightening"),
                              "trigger": {"status": "fired", "date": "2026-09-02"},
                              "owners": ["x"], "propagation": []}]}
 
@@ -156,12 +177,12 @@ def test_no_lagging_flag_unless_the_trigger_fired(status):
 @pytest.mark.parametrize("stage", ["peaking", "resolving"])
 def test_a_turning_cycle_gets_the_grey_tag_never_the_ring(stage):
     got = lagging.compute(fake_doc(stage=stage), ret=RETS.get)
-    assert got["prop"] == [{"b": "b1", "bname": "B1", "kind": "cycle", "stage": stage,
-                            "top_risk": 2}]
+    assert got["prop"] == [{"b": "b1", "kind": "cycle", "stage": stage,
+                            "top_risk": 2 if stage == "peaking" else 0}]
 
 
 def test_an_unclear_stage_gets_nothing():
-    assert "prop" not in lagging.compute(fake_doc(stage="unclear"), ret=RETS.get)
+    assert "prop" not in lagging.compute(fake_doc(stage="unclear", status="unclear"), ret=RETS.get)
 
 
 def test_the_rule_at_its_edges():
@@ -224,8 +245,13 @@ def test_a_hurt_buyer_never_reaches_a_derived_supplier_ring():
         assert "hpq" not in set(got["win2"] + got["lose2"])
 
 
-def test_commodity_dram_stage_rests_on_a_fetched_source():
+def test_commodity_dram_is_peaking_on_two_sourced_turn_signals():
     b = next(b for b in BN if b["id"] == "dram_commodity")
-    assert b["stage"] == "peaking" and b["stage_source"]
-    assert b["top_signals"]["customer_affordability_or_spec_downgrade"]["value"] is True
-    assert b["top_risk"] == 1
+    assert b["stage"] == "peaking" and b["top_risk"] == 2
+    on = {x["field"] for x in b["stage_basis"]}
+    assert on == {"hike_decel_or_no_more_hikes", "customer_affordability_or_spec_downgrade"}
+
+
+def test_mlcc_is_tightening_because_neither_turn_signal_is_sourced():
+    b = next(b for b in BN if b["id"] == "mlcc")
+    assert b["top_risk"] == 2 and b["stage"] == "tightening"

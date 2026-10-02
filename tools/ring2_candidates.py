@@ -33,7 +33,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-from chains import domains, lagging, mapfile, preregister, rings  # noqa: E402
+from chains import domains, lagging, mapfile, preregister, rings, stages  # noqa: E402
 from chains.paths import commitments_path, map_path, watch_path  # noqa: E402
 
 DRAFT_REF = "ring2-recommit"
@@ -160,6 +160,8 @@ def main(argv=None) -> int:
     out = []
     for dom in domains.discover():
         doc = mapfile.load(map_path(dom))
+        if doc.get("bottlenecks"):
+            doc["bottlenecks"] = stages.annotate(doc["bottlenecks"])   # computed, never stored
         lag = lagging.compute(doc) if doc.get("bottlenecks") else {}
         drafts = draft_rows(dom)
         committed_v2 = {e["qid"] for e in json.loads(commitments_path(dom).read_text(encoding="utf-8"))

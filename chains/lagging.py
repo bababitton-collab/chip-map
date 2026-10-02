@@ -54,9 +54,9 @@ def compute(doc: dict, ret=ret_252) -> dict[str, list[dict]]:
     """{node_id: [one entry per bottleneck it is a member of]}."""
     sym = {n["id"]: n.get("price_symbol") for n in doc.get("nodes", [])
            if n.get("price_symbol_kind") != "none"}
-    name = {n["id"]: n["name"] for n in doc.get("nodes", [])}
+    from chains import stages
     out: dict[str, list[dict]] = {}
-    for b in doc.get("bottlenecks", []):
+    for b in stages.annotate(doc.get("bottlenecks", [])):
         trig = b.get("trigger") or {}
         if trig.get("status") != "fired":
             continue
@@ -66,7 +66,7 @@ def compute(doc: dict, ret=ret_252) -> dict[str, list[dict]]:
         if stage in TURNING:
             for i in members:
                 out.setdefault(i, []).append({
-                    "b": b["id"], "bname": b["name"], "kind": "cycle",
+                    "b": b["id"], "kind": "cycle",
                     "stage": stage, "top_risk": b.get("top_risk", 0)})
             continue
         if stage != TIGHT:
@@ -81,9 +81,11 @@ def compute(doc: dict, ret=ret_252) -> dict[str, list[dict]]:
             if r is None:
                 continue
             out.setdefault(i, []).append({
-                "b": b["id"], "bname": b["name"], "kind": "lag",
+                "b": b["id"], "kind": "lag",
                 "fired": trig.get("date"), "ret": round(r, 4),
-                "leader": name.get(lead, lead), "leader_id": lead,
+                # The leader by id only: the page names it from its own node
+                # list, and live.json has no room to repeat a name per member.
+                "leader_id": lead,
                 "leader_ret": round(rets[lead], 4),
                 "exposure": (b.get("exposure") or {}).get(i),
                 "lagging": is_lagging(r, rets[lead])})

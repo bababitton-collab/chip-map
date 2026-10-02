@@ -11981,9 +11981,6 @@
     }
    ],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
-   "stage_note": "The amendment proposes 'resolving'. The only NAND source (Kokusai, 2026-08-06) shows NAND equipment demand still rising. Not sourced as resolving.",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12021,7 +12018,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12058,8 +12054,6 @@
     "hoya": "high",
     "tdk": "high"
    },
-   "stage": "tightening",
-   "stage_source": "https://xenospectrum.com/en/ai-nearline-hdd-japan-components/",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12097,7 +12091,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12142,14 +12135,12 @@
     }
    ],
    "exposure": {},
-   "stage": "peaking",
-   "stage_source": "https://www.trendforce.com/presscenter/news/20251211-12831.html",
-   "stage_note": "Lifecycle rule R4: customer spec downgrades mark the demand-side turn (TrendForce 2025-12-11: smartphone and notebook brands raise prices and cut DRAM specs). Prices were still rising in both sources, and only 1 of 7 top signals is sourced.",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
-     "value": null,
-     "date": null,
-     "source_url": null
+     "value": true,
+     "date": "2026-07-03",
+     "source_url": "https://www.trendforce.com/presscenter/news/20260703-13134.html",
+     "note": "TrendForce: conventional DRAM contract prices +13-18% QoQ in 3Q26; gains moderate."
     },
     "all_suppliers_hiking": {
      "value": null,
@@ -12173,8 +12164,9 @@
     },
     "customer_affordability_or_spec_downgrade": {
      "value": true,
-     "date": "2025-12-11",
-     "source_url": "https://www.trendforce.com/presscenter/news/20251211-12831.html"
+     "date": "2026-07-04",
+     "source_url": "https://www.tomshardware.com/pc-components/ram/memory-price-surge-begins-to-cool-as-consumers-hit-affordability-limit-ai-demand-still-keeps-dram-and-nand-prices-climbing-through-q3-2026",
+     "note": "Tom's Hardware (media, citing TrendForce): consumers reach the ceiling of what they can afford."
     },
     "supplier_inventory_rebuild_or_reservations_in_backlog": {
      "value": null,
@@ -12182,7 +12174,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": [],
    "hurt_links": [
     {
@@ -12223,8 +12214,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "tightening",
-   "stage_source": "https://en.sedaily.com/finance/2026/10/01/hbm-prices-to-more-than-double-next-year-as-shortage",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12262,7 +12251,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": []
   },
   {
@@ -12295,8 +12283,6 @@
    "exposure": {
     "tel": "low"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12334,7 +12320,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12369,8 +12354,6 @@
    "exposure": {
     "mjc": "low"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12408,7 +12391,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12440,8 +12422,6 @@
    "exposure": {
     "asmpt": "medium"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12479,7 +12459,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12506,8 +12485,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12545,7 +12522,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12572,8 +12548,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12611,7 +12585,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12645,8 +12618,6 @@
     "jx_metals": "medium",
     "sumitomo_electric": "high"
    },
-   "stage": "tightening",
-   "stage_source": "https://www.trendforce.com/news/2026/06/16/news-jx-advanced-metals-to-invest-jpy-120b-through-fy2030-expand-inp-capacity-up-to-10x-as-cpo-demand-accelerates/",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12684,7 +12655,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": []
   },
   {
@@ -12717,9 +12687,6 @@
    "exposure": {
     "sumitomo_electric": "high"
    },
-   "stage": "unclear",
-   "stage_source": null,
-   "stage_note": "The amendment proposes 'tightening'. No closure source covers lasers/EML.",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12757,7 +12724,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -12787,8 +12753,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12826,7 +12790,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": []
   },
   {
@@ -12864,8 +12827,6 @@
     "fujikura": "medium",
     "umicore": "high"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12903,7 +12864,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": []
   },
   {
@@ -12936,8 +12896,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -12975,7 +12933,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13011,8 +12968,6 @@
     }
    ],
    "exposure": {},
-   "stage": "peaking",
-   "stage_source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": true,
@@ -13050,7 +13005,6 @@
      "source_url": null
     }
    },
-   "top_risk": 2,
    "next_node": [
     "grace_fabric"
    ]
@@ -13085,8 +13039,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13124,7 +13076,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": []
   },
   {
@@ -13155,8 +13106,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13194,7 +13143,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13231,8 +13179,6 @@
    "exposure": {
     "ajinomoto": "high"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13270,7 +13216,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13302,8 +13247,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13341,7 +13284,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13371,8 +13313,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13410,7 +13350,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13441,8 +13380,6 @@
    "exposure": {
     "shengquan": "medium"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13480,7 +13417,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13507,8 +13443,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13546,7 +13480,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13583,8 +13516,6 @@
    "exposure": {
     "kyocera": "high"
    },
-   "stage": "peaking",
-   "stage_source": "https://www.trendforce.com/news/2026/08/04/news-across-the-board-30-price-hike-mlcc-price-surge-intensifies/",
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13622,7 +13553,6 @@
      "source_url": null
     }
    },
-   "top_risk": 2,
    "next_node": []
   },
   {
@@ -13653,8 +13583,6 @@
    "exposure": {
     "sakai_chem": "medium"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13692,7 +13620,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13723,8 +13650,6 @@
    ],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13762,7 +13687,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": [
     "nichicon"
    ]
@@ -13795,8 +13719,6 @@
    "exposure": {
     "tdk": "high"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13834,7 +13756,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13864,8 +13785,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13903,7 +13822,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -13932,8 +13850,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -13971,7 +13887,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": []
   },
   {
@@ -14006,8 +13921,6 @@
     "onsemi": "high",
     "vishay": "high"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14045,7 +13958,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -14074,8 +13986,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14113,7 +14023,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -14143,8 +14052,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14182,7 +14089,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -14209,8 +14115,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14248,7 +14152,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -14283,8 +14186,6 @@
     "sumco": "low",
     "siltronic": "low"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14322,7 +14223,6 @@
      "source_url": null
     }
    },
-   "top_risk": 1,
    "next_node": []
   },
   {
@@ -14352,8 +14252,6 @@
    "propagation": [],
    "kill": [],
    "exposure": {},
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14391,7 +14289,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -14424,8 +14321,6 @@
     "lynas": "medium",
     "mp": "medium"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14463,7 +14358,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   },
   {
@@ -14498,8 +14392,6 @@
     "dowa": "medium",
     "umicore": "high"
    },
-   "stage": "unclear",
-   "stage_source": null,
    "top_signals": {
     "hike_decel_or_no_more_hikes": {
      "value": null,
@@ -14537,7 +14429,6 @@
      "source_url": null
     }
    },
-   "top_risk": 0,
    "next_node": []
   }
  ]

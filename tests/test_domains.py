@@ -113,9 +113,14 @@ def test_the_repository_carries_at_least_the_default_domain():
 # focus mode now carries for the bottleneck card. The committed questions'
 # EW_MAP is frozen per commitment (chains/ew_universe.py), so this did not
 # move any benchmark.
+# Moved again on purpose 2026-10-02 (watchlist tier A): node neo and the
+# exchina_magnets bottleneck with its two catalysts, then its sourced trigger and
+# its pressure/rigidity linked to heavy_rare_earths, and shorter catalyst labels.
+# New nodes are in no
+# committed question's frozen EW universe.
 GOLD = {
-    "he": "544b075ce0a02eb45c469c58cca6930d24ed4070a6782f2b6d47c64f0694a26d",
-    "en": "22477e69836a9c29e299d831c908b9a895eab198ccaba7b3910ae32be6ca407d",
+    "he": "13f1f9898ef76b765c68ca58d40bcc384947fce02d2facf2f9ebcf71c44fb8fe",
+    "en": "0f2d6ef4a311ac79eebe5a29ef9bc7cbb5a997bee3b6da78d34e74eb1e1d2704",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "

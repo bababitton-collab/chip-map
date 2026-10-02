@@ -28,9 +28,9 @@
       "desc": {
         "en": "A living map of the power behind AI compute: {nodes} stations, {cps} chokepoints pulsing with the market, a forecast board and questions with a date."
       },
-   "line": {
-    "en": "Fuel, generation and grid equipment through transmission and data-center power."
-   },
+      "line": {
+        "en": "Fuel, generation and grid equipment through transmission and data-center power."
+      },
       "story": {
         "he": "לינצ'פין הוא הפין הקטן שמחזיק את הגלגל על הציר. מוציאים אותו — והכל נעצר. אנחנו מוצאים את הפינים האלה בשרשרת האספקה, ומודדים מה קורה להם, כל יום.",
         "en": "Trace suppliers, customers and concentrated dependencies across the chain. Select any company to inspect its role, evidence and relationships."
@@ -873,6 +873,86 @@
       "line": "reactor",
       "role": "Microreactor developer",
       "price_symbol": "NNE.US"
+    },
+    {
+      "id": "jsw",
+      "name": "The Japan Steel Works",
+      "short": "JSW",
+      "ticker": "5631.T",
+      "exchange": "TSE",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E3",
+      "line": "reactor",
+      "role": "Large forgings: reactor pressure vessels and gas-turbine rotor shafts",
+      "price_symbol": "5631.T",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "added": "2026-10-02 watchlist tier A"
+    },
+    {
+      "id": "bhi",
+      "name": "BHI Co.",
+      "short": "BHI",
+      "ticker": "083650.KQ",
+      "exchange": "KOSDAQ",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E4",
+      "line": "turbine",
+      "role": "Heat-recovery steam generators (HRSG) for combined-cycle plants",
+      "price_symbol": "083650.KQ",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "added": "2026-10-02 watchlist tier A"
+    },
+    {
+      "id": "wartsila",
+      "name": "Wärtsilä",
+      "short": "WRT1V",
+      "ticker": "WRT1V.HE",
+      "exchange": "Nasdaq Helsinki",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E4",
+      "line": "turbine",
+      "role": "Medium-speed gas engines for power plants",
+      "price_symbol": "WRT1V.HE",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "added": "2026-10-02 watchlist tier A"
+    },
+    {
+      "id": "pfisterer",
+      "name": "PFISTERER Holding",
+      "short": "PFSE",
+      "ticker": "PFSE.DE",
+      "exchange": "XETRA",
+      "us_listed": false,
+      "adr": false,
+      "layer": "E6",
+      "line": "conductor",
+      "role": "High-voltage cable accessories (terminations and joints)",
+      "price_symbol": "PFSE.XETRA",
+      "price_symbol_kind": "primary",
+      "competitors": [],
+      "key_suppliers": [],
+      "customer_concentration": "",
+      "notes": "",
+      "segment_share": "",
+      "added": "2026-10-02 watchlist tier A"
     }
   ],
   "edges": [
@@ -1609,5 +1689,317 @@
       }
     ]
   },
-  "display_rules": {}
+  "display_rules": {},
+  "bottlenecks": [
+    {
+      "id": "rotor_vessel_forgings",
+      "name": "Rotor & vessel forgings",
+      "layer": "E3",
+      "pressure": {
+        "text": "EPRI experts: rotor forgings and hot-section blades have emerged as the primary bottlenecks in gas-turbine supply (POWER, 2026-01-15).",
+        "source_url": "https://www.powermag.com/gas-turbine-supply-chain-bottlenecks-could-reshape-the-generation-mix-in-2030-and-beyond/",
+        "source_type": "media"
+      },
+      "rigidity": {
+        "text": "JSW is raising rotor-shaft equipment capacity 1.5x and doubling nuclear production capacity through the fiscal year ending March 2029 (JSW plan update, translated from Japanese).",
+        "source_url": "https://www.jsw.co.jp/pdf/ir/library/presentation/2027/JGP2028_202607.pdf",
+        "source_type": "primary"
+      },
+      "trigger": {
+        "status": "fired",
+        "date": "2026-07-13",
+        "what": "JSW: demand for rotor shafts for high-efficiency thermal power, including gas-turbine combined cycle, surged on data-center power demand and continues well above the mid-term plan's assumption (translated from Japanese).",
+        "quote": "データセンター向け電力需要の拡大を背景にガスタービン・コンバインドサイクル（GTCC）向けを含む、高効率火力発電用ロータシャフトの需要が急増。中計想定を大幅に上回る需要が継続",
+        "source_url": "https://www.jsw.co.jp/pdf/ir/library/presentation/2027/JGP2028_202607.pdf",
+        "source_type": "primary"
+      },
+      "owners": [
+        "jsw",
+        "doosan"
+      ],
+      "hurt": [
+        "gev",
+        "siemens_energy"
+      ],
+      "propagation": [],
+      "kill": [
+        {
+          "criterion": "JSW materials orders flat",
+          "date": null
+        },
+        {
+          "criterion": "DOE AP1000 loan with no financial close",
+          "date": "2027-06-30"
+        }
+      ],
+      "exposure": {
+        "jsw": "medium",
+        "doosan": "medium"
+      },
+      "top_signals": {
+        "hike_decel_or_no_more_hikes": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "all_suppliers_hiking": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "capacity_x2_or_equity_raise": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "ltas_prepay_noncancellable": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "low_pe_peak_eps_or_not_a_bubble": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "customer_affordability_or_spec_downgrade": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "supplier_inventory_rebuild_or_reservations_in_backlog": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        }
+      },
+      "next_node": []
+    },
+    {
+      "id": "hrsg",
+      "name": "HRSG",
+      "layer": "E4",
+      "pressure": {
+        "text": "Combined-cycle plant costs are rising on turbine scarcity and HRSG/transformer backlogs (primary.vc, 2026-02-10).",
+        "source_url": "https://www.primary.vc/articles/the-gas-turbine-bottleneck-reshaping-energy-infrastructure-ex8qe",
+        "source_type": "media"
+      },
+      "rigidity": {
+        "text": "",
+        "source_url": null
+      },
+      "trigger": {
+        "status": "fired",
+        "date": "2026-08-14",
+        "what": "Q2 2026 HRSG revenue up 80.7% y/y to KRW 186.7bn (Shinhan Securities, via BigGo); BHI's half-year report shows H1 2026 HRSG sales of KRW 377.4bn and an order backlog of KRW 2.46tn.",
+        "source_url": [
+          "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260814000764",
+          "https://finance.biggo.com/news/47be26b1-c785-41bc-8265-69f3f23dfd54"
+        ],
+        "source_type": "primary (DART half-year report) + media"
+      },
+      "owners": [
+        "bhi"
+      ],
+      "hurt": [],
+      "propagation": [],
+      "kill": [
+        {
+          "criterion": "book-to-bill < 1 for two quarters",
+          "date": null
+        }
+      ],
+      "exposure": {
+        "bhi": "high"
+      },
+      "top_signals": {
+        "hike_decel_or_no_more_hikes": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "all_suppliers_hiking": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "capacity_x2_or_equity_raise": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "ltas_prepay_noncancellable": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "low_pe_peak_eps_or_not_a_bubble": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "customer_affordability_or_spec_downgrade": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "supplier_inventory_rebuild_or_reservations_in_backlog": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        }
+      },
+      "next_node": []
+    },
+    {
+      "id": "medium_speed_gas_engines",
+      "name": "Medium-speed gas engines",
+      "layer": "E4",
+      "pressure": {
+        "text": "Wärtsilä will supply a 790 MW off-grid power plant with 42 gas engines for a data center under construction in Texas (2026-04-23).",
+        "source_url": "https://www.wartsila.com/media/news/23-04-2026-wartsila-continues-to-expand-its-data-center-footprint-with-new-790-mw-order-in-texas-the-next-data-center-alley-3744599",
+        "source_type": "primary"
+      },
+      "rigidity": {
+        "text": "Capacity expansion at the Sustainable Technology Hub: once fully commissioned in Q1 2029, output rises to about 2.2x the 2025 level.",
+        "source_url": "https://www.wartsila.com/media/news/21-07-2026-wartsila-s-half-year-financial-report-january-june-2026-3773763",
+        "source_type": "primary"
+      },
+      "trigger": {
+        "status": "fired",
+        "date": "2026-07-21",
+        "what": "Energy order intake beat the previous all-time high by more than 70%, largely on 1.2 GW of firm data-centre orders; Wärtsilä expanded capacity again in Q2.",
+        "source_url": "https://www.wartsila.com/media/news/21-07-2026-wartsila-s-half-year-financial-report-january-june-2026-3773763",
+        "source_type": "primary"
+      },
+      "owners": [
+        "wartsila"
+      ],
+      "hurt": [],
+      "propagation": [],
+      "kill": [
+        {
+          "criterion": "energy book-to-bill < 1",
+          "date": null
+        }
+      ],
+      "exposure": {
+        "wartsila": "medium"
+      },
+      "top_signals": {
+        "hike_decel_or_no_more_hikes": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "all_suppliers_hiking": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "capacity_x2_or_equity_raise": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "ltas_prepay_noncancellable": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "low_pe_peak_eps_or_not_a_bubble": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "customer_affordability_or_spec_downgrade": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "supplier_inventory_rebuild_or_reservations_in_backlog": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        }
+      },
+      "next_node": []
+    },
+    {
+      "id": "hv_cable_accessories",
+      "name": "HV cable accessories",
+      "layer": "E6",
+      "pressure": {
+        "text": "Book-to-bill stayed above 1 in H1 2026 and the order backlog grew to EUR 340.3M, with visibility into 2027 (ad-hoc-news, 2026-08-22).",
+        "source_url": "https://www.ad-hoc-news.de/boerse/news/unternehmensnachrichten/pfisterer-s-backlog-cushion-why-record-h1-profits-haven-t-translated-into/69983744",
+        "source_type": "media"
+      },
+      "rigidity": {
+        "text": "",
+        "source_url": null
+      },
+      "trigger": {
+        "status": "fired",
+        "date": "2026-08-19",
+        "what": "H1 2026: revenue +20.2% to EUR 256.7M; order book EUR 340.3M (+EUR 27.8M y/y); order intake EUR 263.0M exceeded revenue (book-to-bill above 1).",
+        "source_url": [
+          "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
+          "https://www.pfisterer.com/en/news/pfisterer-holding-se-continues-successful-growth-trajectory-significant-increase-revenue-and"
+        ],
+        "source_type": "primary"
+      },
+      "owners": [
+        "pfisterer"
+      ],
+      "hurt": [],
+      "propagation": [],
+      "kill": [
+        {
+          "criterion": "book-to-bill < 1",
+          "date": null
+        }
+      ],
+      "exposure": {
+        "pfisterer": "high"
+      },
+      "top_signals": {
+        "hike_decel_or_no_more_hikes": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "all_suppliers_hiking": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "capacity_x2_or_equity_raise": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "ltas_prepay_noncancellable": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "low_pe_peak_eps_or_not_a_bubble": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "customer_affordability_or_spec_downgrade": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        },
+        "supplier_inventory_rebuild_or_reservations_in_backlog": {
+          "value": null,
+          "date": null,
+          "source_url": null
+        }
+      },
+      "next_node": []
+    }
+  ]
 }

@@ -3197,6 +3197,26 @@
    "line": "logic",
    "short": "HP",
    "added": "2026-10-02 amendment 2: hurt by commodity DRAM"
+  },
+  {
+   "id": "neo",
+   "name": "Neo Performance Materials",
+   "short": "NEO",
+   "ticker": "NEO.TO",
+   "exchange": "TSX",
+   "us_listed": false,
+   "adr": false,
+   "layer": "L1",
+   "line": "power",
+   "role": "Rare-earth magnets and magnetic powders outside China",
+   "price_symbol": "NEO.TO",
+   "price_symbol_kind": "primary",
+   "competitors": [],
+   "key_suppliers": [],
+   "customer_concentration": "",
+   "notes": "",
+   "segment_share": "",
+   "added": "2026-10-02 watchlist tier A"
   }
  ],
  "edges": [
@@ -14391,6 +14411,87 @@
     "fivenplus": "medium",
     "dowa": "medium",
     "umicore": "high"
+   },
+   "top_signals": {
+    "hike_decel_or_no_more_hikes": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "all_suppliers_hiking": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "capacity_x2_or_equity_raise": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "ltas_prepay_noncancellable": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "low_pe_peak_eps_or_not_a_bubble": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "customer_affordability_or_spec_downgrade": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    },
+    "supplier_inventory_rebuild_or_reservations_in_backlog": {
+     "value": null,
+     "date": null,
+     "source_url": null
+    }
+   },
+   "next_node": []
+  },
+  {
+   "id": "exchina_magnets",
+   "name": "Ex-China magnets",
+   "layer": "L1",
+   "pressure": {
+    "see": "heavy_rare_earths"
+   },
+   "rigidity": {
+    "see": "heavy_rare_earths"
+   },
+   "trigger": {
+    "status": "not_yet",
+    "date": null,
+    "what": "China's rare-earth export-control pause runs to 2026-11-10; the DFARS ban on covered magnets mined, refined or produced in China applies from 2027-01-01.",
+    "source_url": [
+     "https://www.globaltimes.cn/page/202511/1347646.shtml",
+     "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
+    ],
+    "source_type": "media quoting MOFCOM; primary (regulation text)"
+   },
+   "owners": [
+    "mp",
+    "lynas",
+    "neo"
+   ],
+   "hurt": [],
+   "propagation": [],
+   "kill": [
+    {
+     "criterion": "China renews the export-control pause",
+     "date": null
+    },
+    {
+     "criterion": "DFARS waivers granted",
+     "date": null
+    }
+   ],
+   "exposure": {
+    "mp": "high",
+    "lynas": "high",
+    "neo": "medium"
    },
    "top_signals": {
     "hike_decel_or_no_more_hikes": {

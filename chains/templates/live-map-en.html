@@ -830,14 +830,12 @@ function bnCard(b, nid){
     + (o&&o.source_type?` <small>(${escHtml(o.source_type)})</small>`:'');
   const row=(l,f)=>f?`<div class="bnrow"><b>${l}</b>${escHtml(f.text||'')}${f.via?` <small>(${BN.via} ${escHtml(f.via)})</small>`:''}${src(f)}</div>`:'';
   const list=(l,ids)=>(ids||[]).length?`<div class="bnrow"><b>${l}</b>${ids.map(nm).join(', ')}</div>`:'';
-  const nx=nextCheck(b);
   return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`
     + bnSummary(b)
     + (t.source_url?`<div class="bnrow" data-trigger-source><b>${BN.tsrc}</b>${t.date?escHtml(t.date)+' — ':''}${escHtml(t.what||'')}${src(t)}</div>`:'')
     + row(BN.pressure, bnField(b,'pressure')) + row(BN.rigidity, bnField(b,'rigidity'))
     + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)
     + ((b.kill||[]).length?`<div class="bnrow"><b>${BN.kill}</b>${b.kill.map(k=>escHtml(k.criterion)+(k.date?' ('+k.date+')':'')).join('; ')}</div>`:'')
-    + (nx?`<div class="nextcp" data-next-check>${BN.next}: <b>${escHtml(nx.date_text||nx.date)}</b> — ${escHtml(nx.what)}</div>`:'')
     + `</div>`; }
 function bnCards(n){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
   return (F.bottlenecks||[]).filter(b=>bnPublic(b)&&[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }

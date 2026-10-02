@@ -45,5 +45,19 @@
   "what": "CXMT Shanghai volume ramp: kill marker for commodity DRAM",
   "bottleneck": "dram_commodity",
   "source_url": null
+ },
+ {
+  "date": "2026-11-10",
+  "what": "China's rare-earth export-control pause (MOFCOM/GAC Announcement No. 70 of 2025) expires",
+  "bottleneck": "exchina_magnets",
+  "status": "confirmed",
+  "source_url": "https://www.globaltimes.cn/page/202511/1347646.shtml"
+ },
+ {
+  "date": "2027-01-01",
+  "what": "DFARS 252.225-7052: no covered magnets mined, refined, separated, melted or produced in China",
+  "bottleneck": "exchina_magnets",
+  "status": "confirmed",
+  "source_url": "https://www.law.cornell.edu/cfr/text/48/252.225-7052"
  }
 ]

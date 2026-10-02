@@ -77,6 +77,7 @@ BY_EXCHANGE: dict[str, str] = {
     "Hong Kong Exchange": "HK",
     "TSX": "TO",
     "LSE": "LSE",
+    "Nasdaq Helsinki": "HE",
 }
 
 # the ticker's own suffix, in the Yahoo style the map was written in
@@ -99,6 +100,7 @@ BY_SUFFIX: dict[str, str] = {
     "AX": "AU",
     "TO": "TO",
     "L": "LSE",
+    "HE": "HE",
 }
 
 # exchanges the subscription does not carry at all, with the reason spelled out

@@ -98,6 +98,7 @@ SUFFIX = {
     "TO": "TO",        # Toronto
     "MI": "MI",        # Milan -- absent from the EODHD plan entirely
     "T": "T",          # Tokyo -- absent from the EODHD plan entirely
+    "HE": "HE",        # Nasdaq Helsinki (Wartsila WRT1V.HE), confirmed live 2026-10-02
     "TSE": "T",
     "NS": "NS",        # India, NSE
     "AU": "AX",        # Australia. This repository writes AU; Yahoo writes AX

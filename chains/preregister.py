@@ -117,6 +117,12 @@ OFFICIAL_RING2 = "ring2"
 OFFICIAL_FIRST = "first"
 RING2_WIN, RING2_LOSE = "ring2_win", "ring2_lose"
 RING2_RATIONALE = "ring2_rationale"
+# The author's confidence in the scored basket: S(trong), M(edium), W(eak).
+# Part of the claim -- a weak call that hits is not a strong call that hits --
+# so it is inside the hash. OPTIONAL and hashed only when present: mu_fq4 was
+# committed v2 without it, and its bytes may not move.
+RING2_CONFIDENCE = "ring2_confidence"
+CONFIDENCE_LEVELS = ("S", "M", "W")
 # Appended in this order; sort_keys puts them where they belong in the bytes.
 CONTRACT_FIELDS_V2 = CONTRACT_FIELDS + (
     "contract_version", "official_basket", RING2_WIN, RING2_LOSE,
@@ -222,6 +228,10 @@ def _ring2_shape_problems(row: dict) -> list[str]:
     if both:
         out.append(f"{qid}: {', '.join(both)} on both second-ring sides -- a "
                    f"leg cannot be up and down on the same answer")
+    conf = row.get(RING2_CONFIDENCE)
+    if conf is not None and conf not in CONFIDENCE_LEVELS:
+        out.append(f"{qid}: {RING2_CONFIDENCE} is {conf!r}, not one of "
+                   f"{', '.join(CONFIDENCE_LEVELS)}")
     overlap = sorted((set(w) | set(l)) & first)
     if overlap:
         out.append(f"{qid}: {', '.join(overlap)} is in the first ring and in "
@@ -287,6 +297,10 @@ def contract(row: dict, text: dict | None = None) -> dict:
         "observe_only": bool(row.get("observe_only")),
     }
     if not is_v2(row):
+        if row.get(RING2_CONFIDENCE) is not None:
+            raise PreregisterError(
+                f"{qid}: {RING2_CONFIDENCE} with no second-ring basket. A "
+                f"confidence in nothing would sit outside the hash.")
         return out
     bad = _ring2_shape_problems(row)
     if bad:
@@ -299,6 +313,8 @@ def contract(row: dict, text: dict | None = None) -> dict:
         RING2_LOSE: l,
         RING2_RATIONALE: _ring2_rationale(row),
     })
+    if row.get(RING2_CONFIDENCE) is not None:
+        out[RING2_CONFIDENCE] = row[RING2_CONFIDENCE]
     return out
 
 

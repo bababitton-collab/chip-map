@@ -385,6 +385,8 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
     from chains import preregister as _prereg
     if _prereg.is_v2(w):
         out["contract_version"] = 2
+        if w.get(_prereg.RING2_CONFIDENCE):
+            out[_prereg.RING2_CONFIDENCE] = w[_prereg.RING2_CONFIDENCE]
     if commitment:
         out["commitment"] = {k: v for k, v in commitment.items() if k != "qid"}
 
@@ -782,6 +784,26 @@ VERSION_KEYS = ("n", "hits", "hit_rate", "hit_rate_interval", "mean_excess",
                 "capital_rule", "note")
 
 
+CONFIDENCE_LABEL = {"S": "Strong", "M": "Medium", "W": "Weak"}
+
+
+def by_confidence(records: list[dict]) -> dict:
+    """The v2 record split by the author's confidence, S, M and W.
+
+    A tier with nothing scored is left out, not shown as 0/0: an empty tile
+    reads as a result. A v2 question committed without a confidence
+    (mu_fq4) counts in the v2 total and in no tier.
+    """
+    out = {}
+    for c, label in CONFIDENCE_LABEL.items():
+        stats = record_stats([r for r in records if r.get("ring2_confidence") == c])
+        if stats["n"]:
+            keep = {k: stats[k] for k in VERSION_KEYS if k in stats}
+            keep["label"] = f"Confidence {label.lower()}"
+            out[c] = keep
+    return out
+
+
 def record_by_contract(records: list[dict]) -> dict:
     """One record per contract version, and never a record across them.
 
@@ -796,6 +818,10 @@ def record_by_contract(records: list[dict]) -> dict:
         keep = {k: stats[k] for k in VERSION_KEYS if k in stats}
         keep["contract_version"] = v
         keep["label"] = CONTRACT_LABEL[v]
+        if v == 2:
+            tiers = by_confidence(by[v])
+            if tiers:
+                keep["by_confidence"] = tiers
         versions[str(v)] = keep
     live = [v for v, s in versions.items() if s["n"] > 0]
     return {"versions": versions, "scored_versions": sorted(live),

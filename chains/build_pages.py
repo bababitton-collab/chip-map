@@ -192,6 +192,9 @@ TRANSLATIONS = [
  # left, so the column order and the panel's opening direction both reverse.
  ("const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);", "const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);"),
  ("const padR=70, padL=110,", "const padR=110, padL=70,"),
+ # The confidence tag on a contract-v2 card.
+ ("  const CONF = {lbl:'ודאות', lv:{S:'גבוהה', M:'בינונית', W:'נמוכה'}};",
+  "  const CONF = {lbl:'Confidence', lv:{S:'strong', M:'medium', W:'weak'}};"),
  # The bottleneck card, the lagging line and the legend row.
  ("const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};",
   "const BN = {lagLegend:'Trigger fired, price has not followed. Descriptive, not a forecast.', fired:'Trigger fired', node:'this node', leader:'leader', exp:'exposure', expW:{low:'low',medium:'medium',high:'high'}, cyc:{peaking:'cycle peaking',resolving:'cycle easing'}, risk:'top risk', next:'Next check', title:'Bottleneck', stage:{tightening:'tightening',peaking:'peaking',resolving:'resolving',unclear:'stage unclear'}, trig:{fired:'fired',not_yet:'not yet',unclear:'unclear'}, pressure:'Pressure', rigidity:'Rigidity', trigger:'Trigger', owners:'Owners', hurt:'Hurt (down if YES)', prop:'Propagation', kill:'Kill', src:'source', nosrc:'no source'};"),

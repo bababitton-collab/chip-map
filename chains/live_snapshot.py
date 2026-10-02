@@ -106,7 +106,8 @@ SPARK_STEP = 2
 # are inside the hashed contract, whose bytes stay paid until the answer is
 # in, so shipping them would open half the contract while the hash stays shut.
 LOCKED_STRIP = ("win", "lose", "win2", "lose2", "ring2_edges", "mixed",
-                "ring2_win", "ring2_lose", "ring2_rationale")
+                "ring2_win", "ring2_lose", "ring2_rationale",
+                "ring2_confidence")
 
 # What differs between the two snapshots is which language is read out of the
 # map, and which watch list. Every price, return and pressure number is

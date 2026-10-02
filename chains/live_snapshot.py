@@ -809,11 +809,31 @@ def focus_for(m: dict, lang: str) -> dict:
             # The card picks "next check" against the snapshot's own date.
             **({"bottlenecks": _stages.annotate(m["bottlenecks"]), "catalysts": _catalysts(),
                 # each bottleneck's domain(s) on the /domains/ page, for the card's Domain line
-                "domain_of": _domain_of(m["bottlenecks"])}
-               if m.get("bottlenecks") else {})}
+                "domain_of": _domain_of(m["bottlenecks"]),
+                # the standing event rule per bottleneck (contract v3), its latest entry
+                "event_rules": _event_rules()}
+               if m.get("bottlenecks") else {}),
+            # Contract v3: logged events, minted forecasts, open alarms. Read
+            # from the log and the price store, so shipped only when there is
+            # a log -- the rest of this stays a pure function of the map.
+            **({"events": ev} if m.get("bottlenecks") and (ev := _events.display()) else {})}
 
 
 from chains import stages as _stages  # noqa: E402  -- stage is computed, never stored
+from chains import events as _events  # noqa: E402
+
+
+def _event_rules() -> dict:
+    """{bottleneck id: the latest committed v3 rule, slimmed for the card}."""
+    doc = _events.load_rules()
+    out = {}
+    for bid, r in _events.latest_rules(doc).items():
+        dm = r["direction_map"]
+        out[bid] = {"sha256": r["sha256"], "supersedes": r.get("supersedes"),
+                    "t": {"up": list(dm["tightening"]["up"]), "down": list(dm["tightening"]["down"])},
+                    "r": {"up": list(dm["resolving"]["up"]), "down": list(dm["resolving"]["down"])},
+                    "confirming": (r.get("confirming") or {}).get("what"), "kill": r.get("kill")}
+    return out
 
 
 def _domain_of(bottlenecks: list) -> dict:

@@ -73,6 +73,10 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
         # Before anything is published: a question with no commitment, or
         # whose contract no longer hashes to the committed value, stops here.
         ("preregister", ["-m", "chains.preregister", "--check"]),
+        # price_jump alarms (contract v3, chains/events.py) appended to
+        # data/<domain>/alarms.jsonl before the snapshot ships them. CI carries
+        # the file on the live branch, as it does the lagging history.
+        ("alarm", ["scripts/scan_events.py", "alarm"]),
         ("live", ["-m", "chains.live_snapshot"]),
         # Today's lagging set appended to data/<domain>/lagging_history.json:
         # a record for a later forward test, never a score. A map with no

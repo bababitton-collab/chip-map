@@ -82,18 +82,21 @@ jobs:
       # source. It was already the one that won every conflict; leaving the
       # link attached would have let a stale export in the Drive file add rows
       # nobody committed.
-      # The lagging history (chains/lagging.py) grows by one day per build.
+      # The lagging history (chains/lagging.py) grows by one day per build,
+      # and the price_jump alarms (chains/events.py) by whatever tripped.
       # This workflow never commits to main, so the file lives on the live
       # branch and is restored from there before the build appends to it.
-      - name: restore the lagging history from the live branch
+      - name: restore the lagging history and price alarms from the live branch
         run: |
           set -uo pipefail
           git fetch -q --depth 1 origin live || { echo "no live branch yet"; exit 0; }
           for dom in $(python -c "from chains import domains; print(' '.join(domains.discover()))"); do
-            if git cat-file -e "origin/live:$dom/lagging_history.json" 2>/dev/null; then
-              git show "origin/live:$dom/lagging_history.json" > "data/$dom/lagging_history.json"
-              echo "$dom: lagging history restored"
-            fi
+            for f in lagging_history.json alarms.jsonl; do
+              if git cat-file -e "origin/live:$dom/$f" 2>/dev/null; then
+                git show "origin/live:$dom/$f" > "data/$dom/$f"
+                echo "$dom: $f restored"
+              fi
+            done
           done
 
       - name: build
@@ -186,9 +189,9 @@ jobs:
             mkdir -p "$tmp/payload/$dom"
             cp "$d/live.json" "$d/live_en.json" "$tmp/payload/$dom/"
             cp "$d/track.enc.json" "$tmp/payload/$dom/"
-            if [ -f "data/$dom/lagging_history.json" ]; then
-              cp "data/$dom/lagging_history.json" "$tmp/payload/$dom/"
-            fi
+            for f in lagging_history.json alarms.jsonl; do
+              if [ -f "data/$dom/$f" ]; then cp "data/$dom/$f" "$tmp/payload/$dom/"; fi
+            done
             if [ "$dom" = "$first" ]; then
               cp "$d/live.json" "$d/live_en.json" "$d/track.enc.json" "$tmp/payload/"
             fi

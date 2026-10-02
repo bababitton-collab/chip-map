@@ -778,7 +778,7 @@ const cls=v=>v==null?'':(v<0?'neg':'pos');
 // Text from the data, made safe to put inside HTML. This script has no esc() of
 // its own -- the card scripts further down do, in their own scope.
 const escHtml=v=>String(v==null?'':v).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', nyLegend:'הטריגר עוד לא הופעל. מוצג מועד הבדיקה הבא. תיאור, לא תחזית.', tsrc:'מקור הטריגר', via:'דרך', domain:'דומיין', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};
+const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', nyLegend:'הטריגר עוד לא הופעל. מוצג מועד הבדיקה הבא. תיאור, לא תחזית.', tsrc:'מקור הטריגר', via:'דרך', domain:'דומיין', erule:'כלל אירוע', etight:'מהדק (עולה / יורד)', eres:'מרגיע (עולה / יורד)', conf:'מאשר', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};
 // Bottlenecks (map.json "bottlenecks"). The lagging line and ring are a
 // DESCRIPTION -- a fired trigger whose ring has not followed -- and never a
 // forecast: nothing here is scored. See chains/lagging.py.
@@ -787,6 +787,17 @@ function lagOf(n){ const l=(n.bn||[]).filter(e=>e.kind==='lag'&&e.lagging&&bnPub
 function bnLines(n){ return (n.bn||[]).filter(e=>bnPublicId(e.b)).map(e=> e.kind==='lag'
   ? `<div class="bnlag${e.lagging?' on':''}" data-bn="${e.b}" data-lagging="${e.lagging}">${BN.fired} ${e.fired||''} · ${BN.node} ${pct(e.ret)} · ${BN.leader} ${escHtml((byId[e.leader_id]||{}).name||e.leader_id)} ${pct(e.leader_ret)} · ${BN.exp}: ${e.exposure?BN.expW[e.exposure]:'—'}</div>`
   : `<span class="cyc" data-bn="${e.b}">${BN.cyc[e.stage]||e.stage} · ${BN.risk} ${e.top_risk}/7</span>`).join(''); }
+const EV = {title:'אירוע', alarm:'קפיצת מחיר', due:'לבדוק עד', cl:{tightening:'מהדק',resolving:'מרגיע'}, inel:'לא נספר', att:'מצורף ל', entry:'כניסה', up:'עולה', down:'יורד', pend:'ממתין'};
+// Contract v3 (chains/events.py): each logged event on this bottleneck, the
+// forecast it minted and its signed excess (up basket minus down basket).
+function evPct(v){ return v==null?EV.pend:(v>0?'+':'')+v.toFixed(1)+'%'; }
+function evRow(e){ const nm=i=>escHtml(byId[i]?byId[i].name:i);
+  const src=e.src?` <a href="${escHtml(e.src)}" target="_blank" rel="noopener">${BN.src}</a>`:'';
+  const tail=!e.ok?` · <i>${EV.inel}: ${escHtml(e.why||'')}</i>`:e.att?` · ${EV.att} ${escHtml(e.att)}`
+    :e.entry?` · ${EV.entry} ${e.entry} · ${EV.up}: ${(e.up||[]).map(nm).join(', ')||'EW'} / ${EV.down}: ${(e.down||[]).map(nm).join(', ')||'EW'} · <b>20: ${evPct(e.h&&e.h['20'])}</b> <small>(5: ${evPct(e.h&&e.h['5'])}, 10: ${evPct(e.h&&e.h['10'])}, 40: ${evPct(e.h&&e.h['40'])})</small>`:'';
+  return `<div class="bnrow" data-event="${escHtml(e.id)}"><b>${EV.title}</b>${e.date} · ${escHtml(e.type)} (${EV.cl[e.cl]||e.cl}) — ${escHtml(e.what||'')}${src} <small>(${escHtml(e.st||'')})</small>${tail}</div>`; }
+function evAlarms(nid){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
+  return (F.events||[]).filter(e=>e.kind==='alarm'&&e.node===nid).map(e=>`<div class="bnrow" data-alarm="${escHtml(e.id)}"><b>${EV.alarm}</b>${e.date} · z ${e.move.z} · 5d ${(e.move.r5*100).toFixed(1)}% · ${EV.due} ${escHtml(e.by)}${e.cls?' · '+escHtml(e.cls):''}</div>`).join(''); }
 // A card shows only sourced rows. A field may point at another bottleneck's
 // field ({see: id}) instead of repeating its text; it then shows that one's
 // sourced text, marked "via". A bottleneck with neither a sourced pressure nor
@@ -829,6 +840,16 @@ function notYetOf(n){ if(!NOTYET){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||
 function bnDomain(b){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, ds=(F.domain_of||{})[b.id]||[];
   const lv=v=>String(v||'').charAt(0).toUpperCase()+String(v||'').slice(1);
   return ds.length?`<div class="bnrow" data-domain><b>${BN.domain}</b>${ds.map(d=>`<a href="/domains/#${escHtml(d.id)}">${escHtml(d.name)} · ${escHtml(lv(d.level))}</a>`).join('; ')}</div>`:''; }
+// The standing event rule (contract v3) this bottleneck is scored under: its
+// baskets by event class, what confirms it and what kills it, and its hash.
+function bnRule(b){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, r=(F.event_rules||{})[b.id];
+  if(!r) return '';
+  const nm=i=>escHtml(byId[i]?(byId[i].ticker||byId[i].name):i), side=x=>(x||[]).map(nm).join(', ')||'EW';
+  return `<div class="bnrow" data-event-rule="${escHtml(r.sha256)}"><b>${BN.erule}</b>`
+    + `${BN.etight}: ${side(r.t.up)} / ${side(r.t.down)} · ${BN.eres}: ${side(r.r.up)} / ${side(r.r.down)}`
+    + (r.confirming?` · ${BN.conf}: ${escHtml(r.confirming)}`:'')
+    + ((r.kill||[]).length?` · ${BN.kill}: ${r.kill.map(escHtml).join('; ')}`:'')
+    + ` <small dir="ltr">v3 ${escHtml(r.sha256.slice(0,12))}</small></div>`; }
 // A source dated more than 12 months before the snapshot shows its year: ", 2025".
 function oldYear(o){ const d=String((o&&(o.source_date||o.date))||''); if(!/^\d{4}-\d{2}/.test(d)) return '';
   const age=(Date.parse(String(D.as_of||''))-Date.parse(d.length>7?d:d+'-01'))/864e5;
@@ -843,13 +864,15 @@ function bnCard(b, nid){
   return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`
     + bnSummary(b)
     + bnDomain(b)
+    + bnRule(b)
     + (t.source_url?`<div class="bnrow" data-trigger-source><b>${BN.tsrc}</b>${t.date?escHtml(t.date)+' — ':''}${escHtml(t.what||'')}${src(t)}</div>`:'')
     + row(BN.pressure, bnField(b,'pressure')) + row(BN.rigidity, bnField(b,'rigidity'))
     + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)
     + ((b.kill||[]).length?`<div class="bnrow"><b>${BN.kill}</b>${b.kill.map(k=>escHtml(k.criterion)+(k.date?' ('+k.date+')':'')).join('; ')}</div>`:'')
+    + (F.events||[]).filter(e=>e.kind==='event'&&e.b===b.id).map(evRow).join('')
     + `</div>`; }
 function bnCards(n){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
-  return (F.bottlenecks||[]).filter(b=>bnPublic(b)&&[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
+  return evAlarms(n.id)+(F.bottlenecks||[]).filter(b=>bnPublic(b)&&[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
 
 // A source is a list of references (a single string in an older snapshot), and
 // every URL in it is its own link: joined into one href they opened nothing.

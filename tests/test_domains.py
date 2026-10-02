@@ -121,12 +121,13 @@ def test_the_repository_carries_at_least_the_default_domain():
 # hybrid_bonding's next check. Then domain_of (the /domains/ export) for the card's
 # Domain line; the Ga/Ge catalyst confirmed on MOFCOM's page; source_date on every sourced row
 # (read from each page, 2026-10-02); source_type for the untyped rows from
-# tools/publisher_types.json.
+# tools/publisher_types.json. Then event_rules (contract v3, merged from event-catalysts)
+# for the card's Event rule row.
 # New nodes are in no
 # committed question's frozen EW universe.
 GOLD = {
-    "he": "1d5ef5be02289e186cfa44de2477f04d6f3f9cddfba40a4e75c8ce362dc81843",
-    "en": "36bda0aa71a5478d45767b70bfe8bd15a19cc16d4aee9a539ec9b8e41bc52daa",
+    "he": "e64044118f8c1456fac3df60994710bd2acd26944a6d6c7457cbd7649c51b2b5",
+    "en": "4fbe88cded38d630b49e93e9cefb48ac2358e4a4a4ea210cdcfdea043e3b2c4a",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "
@@ -135,8 +136,10 @@ MOVED = ("the first domain's output moved. If the map changed on purpose, "
 
 @pytest.mark.parametrize("lang", ["he", "en"])
 def test_the_first_domains_derived_output_is_byte_for_byte_what_it_was(lang):
-    blob = json.dumps(live_snapshot.focus_for(mapfile.load(), lang),
-                      ensure_ascii=False, sort_keys=True).encode("utf-8")
+    # "events" (contract v3) is read from the event log and the price store,
+    # not the map, so it is outside what this pins.
+    got = {k: v for k, v in live_snapshot.focus_for(mapfile.load(), lang).items() if k != "events"}
+    blob = json.dumps(got, ensure_ascii=False, sort_keys=True).encode("utf-8")
     assert hashlib.sha256(blob).hexdigest() == GOLD[lang], MOVED
 
 

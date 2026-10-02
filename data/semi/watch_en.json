@@ -110,7 +110,22 @@
   "leaks": [],
   "lane": "litho",
   "lbl": "ASML",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "tel",
+   "tok",
+   "agc",
+   "klac"
+  ],
+  "ring2_lose": [
+   "lrcx",
+   "amat"
+  ],
+  "ring2_confidence": "W",
+  "ring2_rationale": {
+   "win": "Accelerating EUV pulls the EUV track (TEL), EUV resist (TOK), EUV mask blanks (AGC; HOYA is ring 1) and EUV-layer process control (KLA).",
+   "lose": "More EUV layers replace multi-patterning steps, cutting deposition and etch intensity per critical layer (Lam, Applied)."
+  }
  },
  {
   "id": "tsm_q3",
@@ -138,7 +153,22 @@
   ],
   "lane": "fab",
   "lbl": "TSMC",
-  "kind": "share"
+  "kind": "share",
+  "ring2_win": [
+   "ibiden",
+   "unimicron",
+   "ajinomoto",
+   "advantest",
+   "lasertec"
+  ],
+  "ring2_lose": [
+   "skc"
+  ],
+  "ring2_confidence": "M",
+  "ring2_rationale": {
+   "win": "A CoWoS number and higher 2027 capex mean more large FC-BGA substrates (Ibiden, Unimicron) and ABF film (Ajinomoto, ~95% share), more AI test (Advantest), and High-NA for A14 needs actinic mask inspection (Lasertec).",
+   "lose": "A committed CoWoS/ABF roadmap delays the case for glass-core substrates (SKC/Absolics)."
+  }
  },
  {
   "id": "clf_q3",

@@ -41,7 +41,7 @@ def test_all_fifteen_stored_fingerprints_were_verified_from_git():
     map it was made against: smsg_pre, 2026-10-02."""
     idx = {d: U.load_index(d) for d in domains.discover()}
     stored = {(d, e["qid"]) for d in idx for e in committed(d) if e.get("ew_map")}
-    since = {("semi", "smsg_pre")}
+    since = {("semi", "smsg_pre"), ("semi", "asml_q3"), ("semi", "tsm_q3")}
     assert len(stored - since) == 15 and since <= stored
     for d, q in stored:
         assert idx[d][q]["verified"] is True, (d, q)

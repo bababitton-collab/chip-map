@@ -37,6 +37,9 @@ from chains import domains, lagging, mapfile, preregister, rings, stages  # noqa
 from chains.paths import commitments_path, map_path, watch_path  # noqa: E402
 
 DRAFT_REF = "ring2-recommit"
+# A person's decision on a question (e.g. "stays v1", and why), carried onto
+# every regeneration of the file instead of living only in a chat.
+NOTES = REPO / "data" / "ring2-notes.json"
 
 
 def draft_rows(dom: str) -> dict[str, dict]:
@@ -158,6 +161,7 @@ def main(argv=None) -> int:
     ap.add_argument("--out")
     a = ap.parse_args(argv)
     out = []
+    notes = json.loads(NOTES.read_text(encoding="utf-8")) if NOTES.exists() else {}
     for dom in domains.discover():
         doc = mapfile.load(map_path(dom))
         if doc.get("bottlenecks"):
@@ -173,7 +177,8 @@ def main(argv=None) -> int:
             if a.only and a.only != f"{dom}/{row['id']}":
                 continue
             q = for_question(doc, row, drafts.get(row["id"]), lag)
-            out.append({"domain": dom, **q})
+            note = notes.get(f"{dom}/{row['id']}")
+            out.append({"domain": dom, **q, **({"note": note} if note else {})})
     out.sort(key=lambda q: (q["answer_date"], q["domain"], q["qid"]))
     path = Path(a.out or REPO / "data" / f"ring2-candidates-{a.day}.json")
     path.write_text(json.dumps({"generated": a.day, "note": __doc__.strip().splitlines()[0],

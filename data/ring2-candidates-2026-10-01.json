@@ -3,506 +3,6 @@
  "note": "Second-ring candidates for every open, uncommitted question, for a person to",
  "questions": [
   {
-   "domain": "semi",
-   "qid": "asml_q3",
-   "answer_date": "2026-10-14",
-   "kind": "tide",
-   "first_ring": {
-    "win": [
-     "asml",
-     "tsmc",
-     "samsung",
-     "intc",
-     "skhynix",
-     "lasertec",
-     "hoya"
-    ],
-    "lose": []
-   },
-   "draft_ring2": {
-    "win": [
-     "tok",
-     "tel",
-     "klac"
-    ],
-    "lose": [
-     "lrcx",
-     "amat"
-    ],
-    "confidence": "W"
-   },
-   "candidates": {
-    "win": [
-     {
-      "id": "lrcx",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "samsung",
-        "what": "Etch/deposition equipment; Lam FY2026 10-K names Samsung Electronics among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
-        "source": [
-         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
-         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "tsmc",
-        "what": "Etch/deposition equipment; Lam FY2026 10-K names TSMC among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
-        "source": [
-         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
-         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "skhynix",
-        "what": "Etch/deposition equipment; Lam FY2026 10-K names SK hynix among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
-        "source": [
-         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
-         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "intc",
-        "what": "Intel supplier: 2026 EPIC award for Excellence in Sustainability Support. The category establishes the relationship and not a product line",
-        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_dram_equipment",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "amat",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "samsung",
-        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K",
-        "source": [
-         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
-         "https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/R82.htm"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "tsmc",
-        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K; also TSMC 2025 supplier award",
-        "source": [
-         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
-         "https://pr.tsmc.com/english/news/3274"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "intc",
-        "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development. The category establishes the relationship and not a product line",
-        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": []
-     },
-     {
-      "id": "advantest",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
-        "source": [
-         "https://pr.tsmc.com/english/news/3274",
-         "https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum"
-        ],
-        "source_type": "media (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "skhynix",
-        "what": "Memory/HBM test systems; DIGITIMES: Advantest 'long an established supplier' to SK hynix memory test, now losing some HBM4 tester orders to Korean vendors",
-        "source": "https://www.digitimes.com/news/a20260730VL224/sk-hynix-hbm-tester-wafer-advantest.html",
-        "source_type": "media (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": []
-     },
-     {
-      "id": "siltronic",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
-        "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "samsung",
-        "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
-        "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "wafers_300mm",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": "low",
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "tel",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "Coater/developer, etch, deposition equipment; TSMC names Tokyo Electron as an outstanding supplier (Supply Chain Management Forum awards 2023, 2024)",
-        "source": [
-         "https://pr.tsmc.com/english/news/3192",
-         "https://pr.tsmc.com/english/news/3086"
-        ],
-        "source_type": "media (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "intc",
-        "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development and Sustainability. The category establishes the relationship and not a product line",
-        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_dram_equipment",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": "low",
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "klac",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "Process control / inspection & metrology; only named >10% customer in KLA 10-K FY2024-2026",
-        "source": [
-         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/klac-20260630.htm",
-         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/R108.htm"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       },
-       {
-        "to": "intc",
-        "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development. The category establishes the relationship and not a product line",
-        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": []
-     },
-     {
-      "id": "shinetsu",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "300mm silicon wafers and photoresist",
-        "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market",
-        "source_type": "media (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "wafers_300mm",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": true
-       },
-       {
-        "bottleneck": "photoresist",
-        "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "ibiden",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "intc",
-        "what": "IC package substrates; CEO (Bloomberg interview): Intel historically 70-80% of substrate revenue, ~30% in FY ended Mar-2024",
-        "source": "https://www.business-standard.com/technology/tech-news/nvidia-supplier-ibiden-weighs-faster-expansion-to-meet-ai-demand-says-ceo-124123000069_1.html",
-        "source_type": "media (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "abf_film",
-        "role": "hurt",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "abf_bt_substrates",
-        "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "simo",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "phison",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "kokusai",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "nand_dram_equipment",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "tomen_devices",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "dram_commodity",
-        "role": "propagation",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     }
-    ],
-    "lose": [
-     {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "nanya",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "mu",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "hbm_2027",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     }
-    ]
-   },
-   "dropped_as_mixed": [],
-   "vs_draft": {
-    "win_kept": [
-     "tel",
-     "klac"
-    ],
-    "win_dropped": [
-     "tok"
-    ],
-    "win_added": [
-     "lrcx",
-     "amat",
-     "advantest",
-     "siltronic",
-     "shinetsu",
-     "ibiden",
-     "simo",
-     "phison",
-     "kokusai",
-     "tomen_devices"
-    ],
-    "lose_kept": [],
-    "lose_dropped": [
-     "lrcx",
-     "amat"
-    ],
-    "lose_added": [
-     "winbond",
-     "nanya",
-     "mu"
-    ]
-   },
-   "empty": {
-    "win": false,
-    "lose": false
-   }
-  },
-  {
    "domain": "energy",
    "qid": "abb_q3",
    "answer_date": "2026-10-15",
@@ -591,374 +91,12 @@
    "empty": {
     "win": false,
     "lose": true
-   }
-  },
-  {
-   "domain": "semi",
-   "qid": "tsm_q3",
-   "answer_date": "2026-10-15",
-   "kind": "share",
-   "first_ring": {
-    "win": [
-     "tsmc",
-     "asml",
-     "nvda",
-     "avgo",
-     "amd"
-    ],
-    "lose": [
-     "intc",
-     "samsung"
-    ]
    },
-   "draft_ring2": {
-    "win": [
-     "ibiden",
-     "unimicron",
-     "advantest",
-     "lasertec"
-    ],
-    "lose": [
-     "skc"
-    ],
-    "confidence": "M"
-   },
-   "candidates": {
-    "win": [
-     {
-      "id": "hoya",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "EUV mask blanks (with AGC, ~93% of world supply)",
-        "source": "https://siliconanalysts.com/tools/supply-chain",
-        "source_type": "media (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "hdd_nearline",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": "high",
-        "lagging": true
-       }
-      ]
-     },
-     {
-      "id": "sumco",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "300mm silicon wafers; SUMCO listed in TSMC annual report 'Major Suppliers' (raw wafers) and awarded at TSMC supplier forums 2023-2025",
-        "source": [
-         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
-         "https://pr.tsmc.com/english/news/3274"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "wafers_300mm",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": "low",
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "entegris",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "Filtration, specialty chemicals/gases, wafer handling; TSMC is Entegris' only named >10% customer",
-        "source": [
-         "https://companiesmarketcap.com/entegris/sec-reports-10k/0001101302-26-000012/",
-         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": []
-     },
-     {
-      "id": "tok",
-      "via": [
-       "edge"
-      ],
-      "edges": [
-       {
-        "to": "tsmc",
-        "what": "Photoresists (incl. EUV); TOK listed in TSMC annual report 'Major Suppliers' (lithographic materials) and awarded at TSMC 2024 supplier forum",
-        "source": [
-         "https://pr.tsmc.com/english/news/3192",
-         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
-        ],
-        "source_type": "primary (guessed from the URL; edge predates the closure)"
-       }
-      ],
-      "bottlenecks": [
-       {
-        "bottleneck": "photoresist",
-        "role": "owners",
-        "stage": "unclear",
-        "top_risk": 0,
-        "trigger": "unclear",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     }
-    ],
-    "lose": [
-     {
-      "id": "simo",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "phison",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "kokusai",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "nand_dram_equipment",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "tomen_devices",
-      "via": [
-       "bottleneck:nand_hbf (propagation)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "propagation",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "dram_commodity",
-        "role": "propagation",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "nanya",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "skhynix",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "hbm_2027",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "mu",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "hbm_2027",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     }
-    ]
-   },
-   "dropped_as_mixed": [],
-   "vs_draft": {
-    "win_kept": [],
-    "win_dropped": [
-     "ibiden",
-     "unimicron",
-     "advantest",
-     "lasertec"
-    ],
-    "win_added": [
-     "hoya",
-     "sumco",
-     "entegris",
-     "tok"
-    ],
-    "lose_kept": [],
-    "lose_dropped": [
-     "skc"
-    ],
-    "lose_added": [
-     "simo",
-     "phison",
-     "kokusai",
-     "tomen_devices",
-     "winbond",
-     "nanya",
-     "skhynix",
-     "mu"
-    ]
-   },
-   "empty": {
-    "win": false,
-    "lose": false
+   "note": {
+    "decision": "stays v1",
+    "date": "2026-10-02",
+    "by": "Michael",
+    "reason": "ABB sold its transformer business to Hitachi in 2020, so the GOES link is invalid."
    }
   },
   {
@@ -1020,6 +158,12 @@
    "empty": {
     "win": false,
     "lose": true
+   },
+   "note": {
+    "decision": "stays v1",
+    "date": "2026-10-02",
+    "by": "Michael",
+    "reason": "GOES tightness is a US tariff effect, and the Butler upgrade adds no volume; no credible second ring."
    }
   },
   {
@@ -1666,17 +810,35 @@
       ]
      },
      {
-      "id": "winbond",
+      "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
        {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
         "bottleneck": "dram_commodity",
         "role": "owners",
         "stage": "peaking",
         "top_risk": 2,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
         "lagging": false
@@ -1738,35 +900,17 @@
       ]
      },
      {
-      "id": "mu",
+      "id": "winbond",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
       "edges": [],
       "bottlenecks": [
        {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
         "bottleneck": "dram_commodity",
         "role": "owners",
         "stage": "peaking",
         "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "hbm_2027",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
         "trigger": "fired",
         "exposure": null,
         "lagging": false
@@ -1800,10 +944,10 @@
      "phison",
      "kokusai",
      "tomen_devices",
-     "winbond",
+     "mu",
      "nanya",
      "skhynix",
-     "mu"
+     "winbond"
     ]
    },
    "empty": {
@@ -2033,7 +1177,7 @@
     "win": [],
     "lose": [
      {
-      "id": "winbond",
+      "id": "nanya",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
@@ -2051,7 +1195,7 @@
       ]
      },
      {
-      "id": "nanya",
+      "id": "winbond",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
@@ -2089,8 +1233,8 @@
      "shinetsu"
     ],
     "lose_added": [
-     "winbond",
-     "nanya"
+     "nanya",
+     "winbond"
     ]
    },
    "empty": {
@@ -3337,42 +2481,6 @@
       ]
      },
      {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "nanya",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
       "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
@@ -3407,6 +2515,42 @@
         "lagging": false
        }
       ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 2,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 2,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
      }
     ]
    },
@@ -3433,9 +2577,9 @@
      "hoya",
      "sumco",
      "tok",
-     "winbond",
+     "mu",
      "nanya",
-     "mu"
+     "winbond"
     ]
    },
    "empty": {
@@ -3797,78 +2941,6 @@
     "win": [],
     "lose": [
      {
-      "id": "winbond",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "nanya",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
-      "id": "skhynix",
-      "via": [
-       "bottleneck:dram_commodity (peaking: owner)"
-      ],
-      "edges": [],
-      "bottlenecks": [
-       {
-        "bottleneck": "nand_hbf",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 0,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "dram_commodity",
-        "role": "owners",
-        "stage": "peaking",
-        "top_risk": 2,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       },
-       {
-        "bottleneck": "hbm_2027",
-        "role": "owners",
-        "stage": "tightening",
-        "top_risk": 1,
-        "trigger": "fired",
-        "exposure": null,
-        "lagging": false
-       }
-      ]
-     },
-     {
       "id": "mu",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
@@ -3939,6 +3011,78 @@
         "lagging": false
        }
       ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 2,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 2,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 2,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
      }
     ]
    },
@@ -3957,11 +3101,11 @@
      "foxconn"
     ],
     "lose_added": [
-     "winbond",
+     "mu",
+     "samsung",
      "nanya",
      "skhynix",
-     "mu",
-     "samsung"
+     "winbond"
     ]
    },
    "empty": {
@@ -7513,7 +6657,7 @@
     ],
     "lose": [
      {
-      "id": "winbond",
+      "id": "nanya",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
@@ -7531,7 +6675,7 @@
       ]
      },
      {
-      "id": "nanya",
+      "id": "winbond",
       "via": [
        "bottleneck:dram_commodity (peaking: owner)"
       ],
@@ -7579,8 +6723,8 @@
      "avgo"
     ],
     "lose_added": [
-     "winbond",
-     "nanya"
+     "nanya",
+     "winbond"
     ]
    },
    "empty": {

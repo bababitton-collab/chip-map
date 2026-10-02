@@ -322,7 +322,7 @@ def test_mu_fq4_is_the_question_all_of_this_is_about():
     """The first v2 question. The second, smsg_pre, came in wave 1 on
     2026-10-02 (confidence M); this test is where a new one is noticed."""
     rows = json.loads(watch_path("semi").read_text(encoding="utf-8"))
-    assert sorted(r["id"] for r in rows if P.is_v2(r)) == ["mu_fq4", "smsg_pre"]
+    assert sorted(r["id"] for r in rows if P.is_v2(r)) == ["asml_q3", "mu_fq4", "smsg_pre", "tsm_q3"]
     w = row()
     assert w["d"] == "2026-09-30"
     assert P.ring2_of(w) == (["globalwafers", "shinetsu", "tel"],

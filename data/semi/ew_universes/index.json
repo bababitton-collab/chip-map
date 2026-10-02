@@ -36,10 +36,10 @@
   "verified": false
  },
  "asml_q3": {
-  "fingerprint": "edb8968b0433098732139f8bb943d9e91bac09e5817c56ef43910f3757e597f1",
-  "source": "git",
-  "commit": "ecec8eb4fce39fc5613dfc1bfb4bae6d6b7e6fa3",
-  "verified": false
+  "fingerprint": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+  "source": "commit",
+  "commit": null,
+  "verified": true
  },
  "asx_q3": {
   "fingerprint": "edb8968b0433098732139f8bb943d9e91bac09e5817c56ef43910f3757e597f1",
@@ -228,9 +228,9 @@
   "verified": false
  },
  "tsm_q3": {
-  "fingerprint": "edb8968b0433098732139f8bb943d9e91bac09e5817c56ef43910f3757e597f1",
-  "source": "git",
-  "commit": "ecec8eb4fce39fc5613dfc1bfb4bae6d6b7e6fa3",
-  "verified": false
+  "fingerprint": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+  "source": "commit",
+  "commit": null,
+  "verified": true
  }
 }

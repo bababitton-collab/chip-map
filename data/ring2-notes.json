@@ -1,0 +1,14 @@
+{
+ "energy/abb_q3": {
+  "decision": "stays v1",
+  "date": "2026-10-02",
+  "by": "Michael",
+  "reason": "ABB sold its transformer business to Hitachi in 2020, so the GOES link is invalid."
+ },
+ "semi/clf_q3": {
+  "decision": "stays v1",
+  "date": "2026-10-02",
+  "by": "Michael",
+  "reason": "GOES tightness is a US tariff effect, and the Butler upgrade adds no volume; no credible second ring."
+ }
+}

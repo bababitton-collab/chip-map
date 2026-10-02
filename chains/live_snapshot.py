@@ -808,10 +808,15 @@ def focus_for(m: dict, lang: str) -> dict:
             # bottleneck card. Only a map that declares them ships the keys.
             # The card picks "next check" against the snapshot's own date.
             **({"bottlenecks": _stages.annotate(m["bottlenecks"]), "catalysts": _catalysts()}
-               if m.get("bottlenecks") else {})}
+               if m.get("bottlenecks") else {}),
+            # Contract v3: logged events, minted forecasts, open alarms. Read
+            # from the log and the price store, so shipped only when there is
+            # a log -- the rest of this stays a pure function of the map.
+            **({"events": ev} if m.get("bottlenecks") and (ev := _events.display()) else {})}
 
 
 from chains import stages as _stages  # noqa: E402  -- stage is computed, never stored
+from chains import events as _events  # noqa: E402
 
 
 def _catalysts() -> list:

@@ -1,0 +1,3068 @@
+{
+ "contract": "v3",
+ "written": "2026-10-02",
+ "ew_universe": {
+  "sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+  "n": 130,
+  "symbols": [
+   "000660.KO",
+   "000962.SHE",
+   "005930.KO",
+   "009150.KO",
+   "011790.KO",
+   "042700.KO",
+   "095340.KQ",
+   "1815.TWO",
+   "2317.TW",
+   "2327.TW",
+   "2344.TW",
+   "2368.TW",
+   "2383.TW",
+   "2408.TW",
+   "2737.T",
+   "285A.T",
+   "300308.SHE",
+   "300394.SHE",
+   "300502.SHE",
+   "3017.TW",
+   "3037.TW",
+   "3042.TW",
+   "3081.TWO",
+   "3110.T",
+   "3189.TW",
+   "3653.TW",
+   "4004.T",
+   "4078.T",
+   "4186.T",
+   "5016.T",
+   "5201.T",
+   "5706.T",
+   "5714.T",
+   "5801.T",
+   "5802.T",
+   "5803.T",
+   "605589.SHG",
+   "6274.TWO",
+   "6278.T",
+   "6488.TWO",
+   "6525.T",
+   "6752.T",
+   "6762.T",
+   "6871.T",
+   "688008.SHG",
+   "688126.SHG",
+   "6962.T",
+   "6971.T",
+   "6976.T",
+   "6981.T",
+   "6996.T",
+   "8021.TW",
+   "8035.T",
+   "8046.TW",
+   "8299.TWO",
+   "8358.TWO",
+   "AAOI.US",
+   "AJNMY.US",
+   "ALAB.US",
+   "AMAT.US",
+   "AMD.US",
+   "AMKR.US",
+   "AMZN.US",
+   "ANET.US",
+   "ARM.US",
+   "ASML.US",
+   "ASMVY.US",
+   "ASX.US",
+   "ATEYY.US",
+   "AVGO.US",
+   "AXTI.US",
+   "CDNS.US",
+   "CEG.US",
+   "CLF.US",
+   "COHR.US",
+   "CRDO.US",
+   "CRWV.US",
+   "ENR.XETRA",
+   "ENTG.US",
+   "ETN.US",
+   "FN.US",
+   "FORM.US",
+   "GEV.US",
+   "GLW.US",
+   "GOOGL.US",
+   "HOCPY.US",
+   "HPQ.US",
+   "HWM.US",
+   "IBIDY.US",
+   "IFX.XETRA",
+   "INTC.US",
+   "IQE.LSE",
+   "KLAC.US",
+   "LITE.US",
+   "LRCX.US",
+   "LSRCY.US",
+   "LYC.AU",
+   "META.US",
+   "MP.US",
+   "MPWR.US",
+   "MRVL.US",
+   "MSFT.US",
+   "MU.US",
+   "MXL.US",
+   "NVDA.US",
+   "ON.US",
+   "ORCL.US",
+   "RMBS.US",
+   "SHECY.US",
+   "SIMO.US",
+   "SMCI.US",
+   "SMTC.US",
+   "SNDK.US",
+   "SNPS.US",
+   "SOI.PA",
+   "STX.US",
+   "SUOPY.US",
+   "TECK.US",
+   "TER.US",
+   "TPRO.MI",
+   "TSEM.US",
+   "TSM.US",
+   "UMI.BR",
+   "VICR.US",
+   "VNP.TO",
+   "VRT.US",
+   "VSH.US",
+   "WAF.XETRA",
+   "WCH.XETRA",
+   "WDC.US"
+  ]
+ },
+ "rules": [
+  {
+   "contract": "v3",
+   "bottleneck_id": "nand_hbf",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "sndk": "SNDK.US",
+      "kioxia": "285A.T",
+      "samsung": "005930.KO",
+      "skhynix": "000660.KO",
+      "mu": "MU.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "sndk": "SNDK.US",
+      "kioxia": "285A.T",
+      "samsung": "005930.KO",
+      "skhynix": "000660.KO",
+      "mu": "MU.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "309e76c77111136c901d6b36114453440dad3c21896ef3bd3450bb4e31d48cd5"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hdd_nearline",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "wdc": "WDC.US",
+      "stx": "STX.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "wdc": "WDC.US",
+      "stx": "STX.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "8fb9d5963a0fb3689a3fce16fdeaab2058dcb1604ff1e093adb87947da3aacdf"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "dram_commodity",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "nanya": "2408.TW",
+      "winbond": "2344.TW",
+      "samsung": "005930.KO",
+      "skhynix": "000660.KO",
+      "mu": "MU.US"
+     },
+     "down": {
+      "rambus": "RMBS.US",
+      "montage": "688008.SHG",
+      "alab": "ALAB.US",
+      "hpq": "HPQ.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {
+      "rambus": "RMBS.US",
+      "montage": "688008.SHG",
+      "alab": "ALAB.US",
+      "hpq": "HPQ.US"
+     },
+     "down": {
+      "nanya": "2408.TW",
+      "winbond": "2344.TW",
+      "samsung": "005930.KO",
+      "skhynix": "000660.KO",
+      "mu": "MU.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "2803c0c02408e83b31c2b879768c178cd6686503ef306a038b70df131eb9ebd7"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hbm_2027",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "skhynix": "000660.KO",
+      "samsung": "005930.KO",
+      "mu": "MU.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "skhynix": "000660.KO",
+      "samsung": "005930.KO",
+      "mu": "MU.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "4f19cb2b8e953072b0da4056d1725bb25122b2e94b394f5efd11050046e111c3"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "nand_dram_equipment",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "kokusai": "6525.T",
+      "tel": "8035.T",
+      "lrcx": "LRCX.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "kokusai": "6525.T",
+      "tel": "8035.T",
+      "lrcx": "LRCX.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "6dde8f02b37f5cb2e4e0094b88f2198e0e8cf60caf17fed83f23a3fda7cc1657"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hbm_probe_cards",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "formfactor": "FORM.US",
+      "mjc": "6871.T",
+      "technoprobe": "TPRO.MI"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "formfactor": "FORM.US",
+      "mjc": "6871.T",
+      "technoprobe": "TPRO.MI"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "9ccb79697b803d70a7b0d0d280a26b488bd80f8d55df0002b13777d630fdb1ac"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "tc_bonders_hbf",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "hanmi": "042700.KO",
+      "asmpt": "ASMVY.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "hanmi": "042700.KO",
+      "asmpt": "ASMVY.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "d98b401ec6e35a631dc35c933111ce202ac7821c59531ebba12657b808f0db57"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hybrid_bonding",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "540a052aa768ca5e7f0ec5d7f84a5c05114cc82bcbe42e9568fab53ae81e772e"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "memory_burnin",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "1c26c406e9c74d24a4f9591635a3c4fe93b319082721d01d866c8d2e8cc5dc84"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "inp_substrates",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "axti": "AXTI.US",
+      "jx_metals": "5016.T",
+      "sumitomo_electric": "5802.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "axti": "AXTI.US",
+      "jx_metals": "5016.T",
+      "sumitomo_electric": "5802.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "3e007ea063fd9b0afb501d86c6483add74745944565d1db7d2e32a168bf14fd2"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "cw_lasers_eml",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "lite": "LITE.US",
+      "cohr": "COHR.US",
+      "sumitomo_electric": "5802.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "lite": "LITE.US",
+      "cohr": "COHR.US",
+      "sumitomo_electric": "5802.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "2f78adad11638961bd18eef4786251dc25931618ecf6bf3a6ee9609d6bf349b7"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "photonics_soi",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "soitec": "SOI.PA",
+      "tower": "TSEM.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "soitec": "SOI.PA",
+      "tower": "TSEM.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "29c049b91fa9b74b484b9d6967e4922151821361a46d7f4eb9c976698fbe1f91"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "optical_fiber",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "corning_fiber": "GLW.US",
+      "fujikura": "5803.T",
+      "furukawa": "5801.T",
+      "sumitomo_electric": "5802.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "corning_fiber": "GLW.US",
+      "fujikura": "5803.T",
+      "furukawa": "5801.T",
+      "sumitomo_electric": "5802.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "7a54fae54d2226888a44527e2a4f2e0976403395956fcc84030d5c9a537ab795"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "transceivers",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "innolight": "300308.SHE",
+      "eoptolink": "300502.SHE",
+      "tfc": "300394.SHE",
+      "aaoi": "AAOI.US",
+      "fn": "FN.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "innolight": "300308.SHE",
+      "eoptolink": "300502.SHE",
+      "tfc": "300394.SHE",
+      "aaoi": "AAOI.US",
+      "fn": "FN.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "dccc557975968bdc9122b3ddec108656da5cfe088cd3e400fa04c07e5f9914f1"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "t_glass",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "nittobo": "3110.T",
+      "grace_fabric": "1815.TWO"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {
+      "grace_fabric": "1815.TWO"
+     },
+     "down": {
+      "nittobo": "3110.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "4a2c6e7b719438b3d9f381d4936a28a505dd44e0ad437a9692cb4317199d5f88"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hvlp_copper_foil",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "mitsui_kinzoku": "5706.T",
+      "cotech": "8358.TWO"
+     },
+     "down": {
+      "emc": "2383.TW",
+      "tuc": "6274.TWO"
+     },
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {
+      "emc": "2383.TW",
+      "tuc": "6274.TWO"
+     },
+     "down": {
+      "mitsui_kinzoku": "5706.T",
+      "cotech": "8358.TWO"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "e69ceff74a52d8d88c2a769950827293f6c324ea6777592d5c4ad2dfa838e166"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "high_end_ccl",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "emc": "2383.TW",
+      "tuc": "6274.TWO",
+      "resonac": "4004.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "emc": "2383.TW",
+      "tuc": "6274.TWO",
+      "resonac": "4004.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "19ef23030a31fbcddcad81b654a44499c3e73a833dd20af5e58e3e3f98aecad3"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "abf_film",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "ajinomoto": "AJNMY.US"
+     },
+     "down": {
+      "ibiden": "IBIDY.US",
+      "unimicron": "3037.TW",
+      "kinsus": "3189.TW",
+      "nanya_pcb": "8046.TW",
+      "semco": "009150.KO"
+     },
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {
+      "ibiden": "IBIDY.US",
+      "unimicron": "3037.TW",
+      "kinsus": "3189.TW",
+      "nanya_pcb": "8046.TW",
+      "semco": "009150.KO"
+     },
+     "down": {
+      "ajinomoto": "AJNMY.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "ff008c9ca452241846450cc187156f1107278189184a29cea988a89aefedaac9"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "abf_bt_substrates",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "ibiden": "IBIDY.US",
+      "unimicron": "3037.TW",
+      "kinsus": "3189.TW",
+      "nanya_pcb": "8046.TW"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "ibiden": "IBIDY.US",
+      "unimicron": "3037.TW",
+      "kinsus": "3189.TW",
+      "nanya_pcb": "8046.TW"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "ad8a6a833c9b19d5a22f53f6f5b8f0dcfe0d67d9f6c4250401750440d0a503d4"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "pcb_microdrills",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "union_tool": "6278.T",
+      "topoint": "8021.TW"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "union_tool": "6278.T",
+      "topoint": "8021.TW"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "3dea03f9e2d9a55b3822f67f32b1f53a8a23f3084d4eb05c909f589b5a167975"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "low_dk_resin",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "shengquan": "605589.SHG"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "shengquan": "605589.SHG"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "16c1a6ff799391086cd1615ce888e9daedf4eb0c9b9bf5aae008626cd3083b55"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "glass_core_substrate",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "81c487efdca5d3dca65de26e3385987e9774cb32be38fe0c8a5c2e65638df283"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "mlcc",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "murata": "6981.T",
+      "taiyo_yuden": "6976.T",
+      "semco": "009150.KO",
+      "yageo": "2327.TW",
+      "kyocera": "6971.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "murata": "6981.T",
+      "taiyo_yuden": "6976.T",
+      "semco": "009150.KO",
+      "yageo": "2327.TW",
+      "kyocera": "6971.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "4ba48ee75ba2d3d9fd24cfadab5a6c0d81282cb1da23bb85fc5a36094d44fbd2"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "mlcc_raw_materials",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "sakai_chem": "4078.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "sakai_chem": "4078.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "0068c3b5b7c24ee83c6535712dfc3617e2a19c6dd7be3431d4b2f73f8ba97c68"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "tantalum_caps",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "orient_tantalum": "000962.SHE",
+      "nichicon": "6996.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {
+      "nichicon": "6996.T"
+     },
+     "down": {
+      "orient_tantalum": "000962.SHE"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "d5c95d4f4dfcfc61d359eac6bbf7fa460527d7ce0396557f24a656b30e7e7a0f"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "power_inductors",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "tdk": "6762.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "tdk": "6762.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "947b8a928f59cacdfae2fd297673bec5491c655d51de3d2582ac020da16add76"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "crystals",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "txc": "3042.TW",
+      "daishinku": "6962.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "txc": "3042.TW",
+      "daishinku": "6962.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "3fe32dd3184754c970d70e3f0607751513b0d4e5458874536081684ad9ccab53"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "bbu_cells",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "panasonic": "6752.T"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "panasonic": "6752.T"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "cc032ba893741c3e5727b26c794ddffe53ee2deb7dab0a6d981f98b9b96f41e8"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "power_discretes",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "infineon": "IFX.XETRA",
+      "onsemi": "ON.US",
+      "vishay": "VSH.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "infineon": "IFX.XETRA",
+      "onsemi": "ON.US",
+      "vishay": "VSH.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "0065ece74771fb2e99375f152b96d117a43d2682b4e9397effee29a28454f6ee"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "vertical_power_modules",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "vicor": "VICR.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "vicor": "VICR.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "6709ca5ae23d4af926b0296c21e46b578340abc3f5a1a83d990f9edd06c26660"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "cold_plates_qd",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "avc": "3017.TW",
+      "jentech": "3653.TW"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "avc": "3017.TW",
+      "jentech": "3653.TW"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "29c4d0fefcca73dabc63523713b4067058d87b9ca3614b5b80de18f8c8ff1a7e"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "hvdc_800v",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {},
+     "sign": 1,
+     "scoreable": false
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "afcd86d09cca8b690c08a3a45236c4af43ab79bb6915697814954d7eeda5e559"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "wafers_300mm",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "sumco": "SUOPY.US",
+      "siltronic": "WAF.XETRA",
+      "globalwafers": "6488.TWO",
+      "shinetsu": "SHECY.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "sumco": "SUOPY.US",
+      "siltronic": "WAF.XETRA",
+      "globalwafers": "6488.TWO",
+      "shinetsu": "SHECY.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "b4243fd97f7cf9d23e28fd5c6622c2d908a6ba41c8d31a8ac38861ee88484467"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "photoresist",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "tok": "4186.T",
+      "shinetsu": "SHECY.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "tok": "4186.T",
+      "shinetsu": "SHECY.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "9592b4fd39c78e3cb0fbd36e7588c29e312d60943f79594a425becefe74c408c"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "heavy_rare_earths",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "lynas": "LYC.AU",
+      "mp": "MP.US"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "lynas": "LYC.AU",
+      "mp": "MP.US"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "4b3100634314a3fdd9733841fb0314e1b9ab45e9938ae5f2852919eff96cdb09"
+  },
+  {
+   "contract": "v3",
+   "bottleneck_id": "ga_ge_in",
+   "event_types": [
+    "price_letter_up",
+    "allocation",
+    "lta_signed",
+    "prepayment",
+    "large_po",
+    "strategic_investment",
+    "design_win",
+    "capacity_cut",
+    "outage",
+    "export_restriction",
+    "demand_raise",
+    "no_more_hikes",
+    "price_cut",
+    "capacity_x2",
+    "new_entrant_qualified",
+    "export_relief",
+    "double_order_evidence",
+    "reservation_conversion_drop"
+   ],
+   "direction_map": {
+    "tightening": {
+     "event_types": [
+      "price_letter_up",
+      "allocation",
+      "lta_signed",
+      "prepayment",
+      "large_po",
+      "strategic_investment",
+      "design_win",
+      "capacity_cut",
+      "outage",
+      "export_restriction",
+      "demand_raise"
+     ],
+     "up": {
+      "fivenplus": "VNP.TO",
+      "dowa": "5714.T",
+      "umicore": "UMI.BR"
+     },
+     "down": {},
+     "sign": 1,
+     "scoreable": true
+    },
+    "resolving": {
+     "event_types": [
+      "no_more_hikes",
+      "price_cut",
+      "capacity_x2",
+      "new_entrant_qualified",
+      "export_relief",
+      "double_order_evidence",
+      "reservation_conversion_drop"
+     ],
+     "up": {},
+     "down": {
+      "fivenplus": "VNP.TO",
+      "dowa": "5714.T",
+      "umicore": "UMI.BR"
+     },
+     "sign": 1,
+     "scoreable": true
+    }
+   },
+   "entry": "first close after captured_at, in each member's own market",
+   "horizons": {
+    "primary": 20,
+    "diagnostic": [
+     5,
+     10,
+     40
+    ]
+   },
+   "benchmark": "equal-weight of the rule's frozen universe, basket members excluded",
+   "ew_universe_sha256": "f8b196211c5404c7d8a3ade1e2971cc17c02ac9390dc8a3113ab378eb1382df4",
+   "eligibility": "dated; source_type primary or analyst with a source_url; captured within 1 day of the event date. Media-only: logged, not scored.",
+   "cluster_sessions": 10,
+   "sha256": "579f31fd27e7ed14917bcdde74c950f9dbc07c9c4265299bb233b16dbd633943"
+  }
+ ]
+}

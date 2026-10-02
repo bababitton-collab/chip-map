@@ -786,6 +786,17 @@ function lagOf(n){ const l=(n.bn||[]).filter(e=>e.kind==='lag'&&e.lagging);
 function bnLines(n){ return (n.bn||[]).map(e=> e.kind==='lag'
   ? `<div class="bnlag${e.lagging?' on':''}" data-bn="${e.b}" data-lagging="${e.lagging}">${BN.fired} ${e.fired||''} · ${BN.node} ${pct(e.ret)} · ${BN.leader} ${escHtml((byId[e.leader_id]||{}).name||e.leader_id)} ${pct(e.leader_ret)} · ${BN.exp}: ${e.exposure?BN.expW[e.exposure]:'—'}</div>`
   : `<span class="cyc" data-bn="${e.b}">${BN.cyc[e.stage]||e.stage} · ${BN.risk} ${e.top_risk}/7</span>`).join(''); }
+const EV = {title:'אירוע', alarm:'קפיצת מחיר', due:'לבדוק עד', cl:{tightening:'מהדק',resolving:'מרגיע'}, inel:'לא נספר', att:'מצורף ל', entry:'כניסה', up:'עולה', down:'יורד', pend:'ממתין'};
+// Contract v3 (chains/events.py): each logged event on this bottleneck, the
+// forecast it minted and its signed excess (up basket minus down basket).
+function evPct(v){ return v==null?EV.pend:(v>0?'+':'')+v.toFixed(1)+'%'; }
+function evRow(e){ const nm=i=>escHtml(byId[i]?byId[i].name:i);
+  const src=e.src?` <a href="${escHtml(e.src)}" target="_blank" rel="noopener">${BN.src}</a>`:'';
+  const tail=!e.ok?` · <i>${EV.inel}: ${escHtml(e.why||'')}</i>`:e.att?` · ${EV.att} ${escHtml(e.att)}`
+    :e.entry?` · ${EV.entry} ${e.entry} · ${EV.up}: ${(e.up||[]).map(nm).join(', ')||'EW'} / ${EV.down}: ${(e.down||[]).map(nm).join(', ')||'EW'} · <b>20: ${evPct(e.h&&e.h['20'])}</b> <small>(5: ${evPct(e.h&&e.h['5'])}, 10: ${evPct(e.h&&e.h['10'])}, 40: ${evPct(e.h&&e.h['40'])})</small>`:'';
+  return `<div class="bnrow" data-event="${escHtml(e.id)}"><b>${EV.title}</b>${e.date} · ${escHtml(e.type)} (${EV.cl[e.cl]||e.cl}) — ${escHtml(e.what||'')}${src} <small>(${escHtml(e.st||'')})</small>${tail}</div>`; }
+function evAlarms(nid){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
+  return (F.events||[]).filter(e=>e.kind==='alarm'&&e.node===nid).map(e=>`<div class="bnrow" data-alarm="${escHtml(e.id)}"><b>${EV.alarm}</b>${e.date} · z ${e.move.z} · 5d ${(e.move.r5*100).toFixed(1)}% · ${EV.due} ${escHtml(e.by)}${e.cls?' · '+escHtml(e.cls):''}</div>`).join(''); }
 function bnCard(b, nid){
   const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
   const nm=i=>escHtml(byId[i]?byId[i].name:i);
@@ -799,10 +810,11 @@ function bnCard(b, nid){
     + `<div class="bnrow"><b>${BN.rigidity}</b>${escHtml((b.rigidity||{}).text)}${src(b.rigidity)}</div>`
     + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)
     + ((b.kill||[]).length?`<div class="bnrow"><b>${BN.kill}</b>${b.kill.map(k=>escHtml(k.criterion)+(k.date?' ('+k.date+')':'')).join('; ')}</div>`:'')
+    + (F.events||[]).filter(e=>e.kind==='event'&&e.b===b.id).map(evRow).join('')
     + (nx?`<div class="nextcp" data-next-check>${BN.next}: <b>${escHtml(nx.date_text||nx.date)}</b> — ${escHtml(nx.what)}</div>`:'')
     + `</div>`; }
 function bnCards(n){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
-  return (F.bottlenecks||[]).filter(b=>[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
+  return evAlarms(n.id)+(F.bottlenecks||[]).filter(b=>[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
 
 // A source is a list of references (a single string in an older snapshot), and
 // every URL in it is its own link: joined into one href they opened nothing.

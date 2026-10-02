@@ -124,8 +124,10 @@ MOVED = ("the first domain's output moved. If the map changed on purpose, "
 
 @pytest.mark.parametrize("lang", ["he", "en"])
 def test_the_first_domains_derived_output_is_byte_for_byte_what_it_was(lang):
-    blob = json.dumps(live_snapshot.focus_for(mapfile.load(), lang),
-                      ensure_ascii=False, sort_keys=True).encode("utf-8")
+    # "events" (contract v3) is read from the event log and the price store,
+    # not the map, so it is outside what this pins.
+    got = {k: v for k, v in live_snapshot.focus_for(mapfile.load(), lang).items() if k != "events"}
+    blob = json.dumps(got, ensure_ascii=False, sort_keys=True).encode("utf-8")
     assert hashlib.sha256(blob).hexdigest() == GOLD[lang], MOVED
 
 

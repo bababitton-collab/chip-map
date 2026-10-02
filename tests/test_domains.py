@@ -107,11 +107,15 @@ def test_the_repository_carries_at_least_the_default_domain():
 # is a pure function of the tracked map -- no clock, no price store, no out/ --
 # so its bytes are a fact about the input and nothing else, which is what makes
 # it the one artifact that can be pinned exactly.
-# Last moved on purpose: 2026-09-29, eighteen sourced supplier edges added to
-# the semi map. No node changed, so the priced universe did not move.
+# Last moved on purpose: 2026-10-01, the semi map closure -- 67 nodes, eight
+# sourced edges, three subnodes renamed on promotion (formfactor, mjc,
+# corning_fiber -> *_cp13 / *_cp10), and the bottlenecks and catalysts that
+# focus mode now carries for the bottleneck card. The committed questions'
+# EW_MAP is frozen per commitment (chains/ew_universe.py), so this did not
+# move any benchmark.
 GOLD = {
-    "he": "50b6708faf252369947f0ea6551c995586a73379489cacd17fc91d6f49e50d69",
-    "en": "266f30ff190f52986ead9489326ede4682828aaaea7d5a353afb8838eb13a04e",
+    "he": "c9013e1a391880c8422e0d5f88365e69c8103657cd60db5617b6e68e6c43c38a",
+    "en": "8f974c791622ac21eca4b9924825b1dda2f7f2fba7b6e6aaf6c78271e997da8a",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "

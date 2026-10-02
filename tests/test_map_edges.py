@@ -29,7 +29,17 @@ def test_every_node_appears_in_at_least_one_edge(nid):
     map says supplies nobody and is supplied by nobody. That is a claim, and it
     is almost always a false one."""
     touched = any(e.get("from") == nid or e.get("to") == nid for e in EDGES)
-    assert touched, f"{nid} appears in no edge"
+    # Since the 2026-10-01 closure a node can also be placed by a bottleneck
+    # record -- owner, hurt or propagation -- which says where it sits in the
+    # chain and why, with its own sources. Most of those nodes have no
+    # sourced supplier->customer edge, and inventing one to satisfy this test
+    # would be exactly the false claim it guards against.
+    placed = any(nid in (b.get(k) or []) for b in DOC.get("bottlenecks", [])
+                 for k in ("owners", "hurt", "propagation"))
+    # A node can also be marked coverage_only, with the reason in the field:
+    # drawn so the map is complete, placed by nothing yet, and saying so.
+    context = bool(next(n for n in DOC["nodes"] if n["id"] == nid).get("coverage_only"))
+    assert touched or placed or context, f"{nid} appears in no edge and no bottleneck"
 
 
 def test_no_edge_points_at_something_that_is_not_a_node():

@@ -44,6 +44,11 @@ def main() -> int:
     node_syms = prices.symbols_in_map(doc)
     chal_syms = prices.challenger_symbols(doc, resolve_challenger)
     symbols = node_syms + [s for s in chal_syms if s not in node_syms]
+    # A symbol that left the map can still be in a committed question's frozen
+    # EW_MAP universe (chains/ew_universe.py). It keeps being fetched, or that
+    # benchmark would go stale under the question.
+    from chains import ew_universe
+    symbols += [s for s in ew_universe.all_frozen() if s not in symbols]
     # The second benchmark is not a station on the map, so it is named here --
     # and it is this domain's benchmark, not the first domain's. Appending the
     # wrong one downloads a line nothing reads and leaves the line every page

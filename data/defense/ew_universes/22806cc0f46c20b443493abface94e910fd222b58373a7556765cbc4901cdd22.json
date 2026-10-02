@@ -1,0 +1,23 @@
+{
+ "sha256": "22806cc0f46c20b443493abface94e910fd222b58373a7556765cbc4901cdd22",
+ "n": 17,
+ "symbols": [
+  "ATI.US",
+  "BA.LSE",
+  "BA.US",
+  "CRS.US",
+  "GD.US",
+  "GE.US",
+  "HII.US",
+  "HO.PA",
+  "HWM.US",
+  "LHX.US",
+  "LMT.US",
+  "MP.US",
+  "NOC.US",
+  "RHM.XETRA",
+  "RR.LSE",
+  "RTX.US",
+  "SAF.PA"
+ ]
+}

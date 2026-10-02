@@ -117,6 +117,12 @@ OFFICIAL_RING2 = "ring2"
 OFFICIAL_FIRST = "first"
 RING2_WIN, RING2_LOSE = "ring2_win", "ring2_lose"
 RING2_RATIONALE = "ring2_rationale"
+# The author's confidence in the scored basket: S(trong), M(edium), W(eak).
+# Part of the claim -- a weak call that hits is not a strong call that hits --
+# so it is inside the hash. OPTIONAL and hashed only when present: mu_fq4 was
+# committed v2 without it, and its bytes may not move.
+RING2_CONFIDENCE = "ring2_confidence"
+CONFIDENCE_LEVELS = ("S", "M", "W")
 # Appended in this order; sort_keys puts them where they belong in the bytes.
 CONTRACT_FIELDS_V2 = CONTRACT_FIELDS + (
     "contract_version", "official_basket", RING2_WIN, RING2_LOSE,
@@ -222,6 +228,10 @@ def _ring2_shape_problems(row: dict) -> list[str]:
     if both:
         out.append(f"{qid}: {', '.join(both)} on both second-ring sides -- a "
                    f"leg cannot be up and down on the same answer")
+    conf = row.get(RING2_CONFIDENCE)
+    if conf is not None and conf not in CONFIDENCE_LEVELS:
+        out.append(f"{qid}: {RING2_CONFIDENCE} is {conf!r}, not one of "
+                   f"{', '.join(CONFIDENCE_LEVELS)}")
     overlap = sorted((set(w) | set(l)) & first)
     if overlap:
         out.append(f"{qid}: {', '.join(overlap)} is in the first ring and in "
@@ -287,6 +297,10 @@ def contract(row: dict, text: dict | None = None) -> dict:
         "observe_only": bool(row.get("observe_only")),
     }
     if not is_v2(row):
+        if row.get(RING2_CONFIDENCE) is not None:
+            raise PreregisterError(
+                f"{qid}: {RING2_CONFIDENCE} with no second-ring basket. A "
+                f"confidence in nothing would sit outside the hash.")
         return out
     bad = _ring2_shape_problems(row)
     if bad:
@@ -299,6 +313,8 @@ def contract(row: dict, text: dict | None = None) -> dict:
         RING2_LOSE: l,
         RING2_RATIONALE: _ring2_rationale(row),
     })
+    if row.get(RING2_CONFIDENCE) is not None:
+        out[RING2_CONFIDENCE] = row[RING2_CONFIDENCE]
     return out
 
 
@@ -577,6 +593,12 @@ def check(rows: list[dict], texts: dict | None,
         doc = mapfile.load()
     today = today or dt.date.today().isoformat()
     by = {e["qid"]: e for e in committed}
+    # A question with a frozen EW_MAP universe is guarded against THAT, not
+    # against the live map: adding a node no longer moves its benchmark, so
+    # it no longer trips. A frozen list that is not the one the entry
+    # fingerprinted still does. See chains/ew_universe.py.
+    from chains import ew_universe
+    frozen = ew_universe.load_index()
     problems = []
     for r in rows:
         qid = _qid(r)
@@ -598,8 +620,10 @@ def check(rows: list[dict], texts: dict | None,
                 problems += [f"{qid}: {p}" for p in liquidity.record_problems(
                     e["liquidity"], e["committed_at"])]
         contract_ = contract(r, (texts or {}).get(qid))
+        ew_doc = (ew_universe.as_doc(ew_universe.frozen_for(qid, index=frozen))
+                  if qid in frozen else doc)
         problems += [f"{qid}: {p}" for p in
-                     ew_map_problems(qid, e, contract_, doc, today)]
+                     ew_map_problems(qid, e, contract_, ew_doc, today)]
         sha = commitment(r, (texts or {}).get(qid))["sha256"]
         if e["sha256"] != sha:
             problems.append(f"{qid}: contract changed since it was committed "
@@ -700,6 +724,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"preregister: {e}")
             return 1
         dump(got, path)
+        from chains import ew_universe
+        before = {e["qid"]: e.get("ew_map", {}).get("sha256") for e in prior}
+        for e in got:
+            ew = e.get("ew_map")
+            if ew and ew["sha256"] != before.get(e["qid"]):
+                ew_universe.write(e["qid"], ew["symbols"], "commit", None, True)
         known = {e["qid"] for e in prior}
         was = {e["qid"]: e["sha256"] for e in prior}
         new = [e["qid"] for e in got if e["qid"] not in known]
@@ -713,7 +743,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     from chains import mapfile as _mf
-    problems = check(rows, texts, prior, doc=_mf.load())
+    from chains import ew_universe
+    problems = (check(rows, texts, prior, doc=_mf.load())
+                + ew_universe.problems(None, prior))
     if problems:
         print(f"preregister: {len(problems)} problem(s) in {path}")
         for p in problems:

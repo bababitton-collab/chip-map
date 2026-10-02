@@ -1,0 +1,86 @@
+{
+ "abb_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "ccj_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "ceg_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "etn_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "gev_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "goes_share": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "hvdc_cable": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "leu_haleu": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "powl_q4": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "pwr_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "reactor_smr": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "9a68b19bde802d75837cfb4ada4037ac8a9ed987",
+  "verified": false
+ },
+ "siemens_grid": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "vrt_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ },
+ "vst_q3": {
+  "fingerprint": "3b232bece04b4bf3f524f91168f0b21419f860139445f37f0227144035258974",
+  "source": "git",
+  "commit": "a8ebc6e2760bd472132c50220a80a447b67f7e58",
+  "verified": false
+ }
+}

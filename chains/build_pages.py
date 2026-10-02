@@ -192,6 +192,12 @@ TRANSLATIONS = [
  # left, so the column order and the panel's opening direction both reverse.
  ("const xOf={}; cols.forEach((l,i)=>xOf[l]=W-padR-i*colW);", "const xOf={}; cols.forEach((l,i)=>xOf[l]=padL+i*colW);"),
  ("const padR=70, padL=110,", "const padR=110, padL=70,"),
+ # The confidence tag on a contract-v2 card.
+ ("  const CONF = {lbl:'ודאות', lv:{S:'גבוהה', M:'בינונית', W:'נמוכה'}};",
+  "  const CONF = {lbl:'Confidence', lv:{S:'strong', M:'medium', W:'weak'}};"),
+ # The bottleneck card, the lagging line and the legend row.
+ ("const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};",
+  "const BN = {lagLegend:'Trigger fired, price has not followed. Descriptive, not a forecast.', fired:'Trigger fired', node:'this node', leader:'leader', exp:'exposure', expW:{low:'low',medium:'medium',high:'high'}, cyc:{peaking:'cycle peaking',resolving:'cycle easing'}, risk:'top risk', next:'Next check', title:'Bottleneck', stage:{tightening:'tightening',peaking:'peaking',resolving:'resolving',unclear:'stage unclear'}, trig:{fired:'fired',not_yet:'not yet',unclear:'unclear'}, pressure:'Pressure', rigidity:'Rigidity', trigger:'Trigger', owners:'Owners', hurt:'Hurt (down if YES)', prop:'Propagation', kill:'Kill', src:'source', nosrc:'no source'};"),
  # The relationship diagram's phone view.
  ("  const REL = {view:'הצג קשרים', close:'סגור', title:'קשרים',\n    up:'עולה אם כן', down:'יורד אם כן', none:'אין סל רשום לשאלה הזו.',\n    scored:'טבעת שנייה · הסל הנמדד', diag:'תגובה ישירה · אבחון'};",
   "  const REL = {view:'View relationships', close:'Close', title:'Relationships',\n    up:'up if yes', down:'down if yes', none:'No basket is registered for this question.',\n    scored:'second ring · the scored basket', diag:'direct reaction · diagnostic'};"),
@@ -563,8 +569,14 @@ def en_top(dom: str) -> str:
             '</div>')
 
 
+def _fund() -> str:
+    """out/<domain>/fund.json, written by chains/live_snapshot.py, or null."""
+    p = out_dir() / "fund.json"
+    return p.read_text(encoding="utf-8") if p.exists() else "null"
+
+
 def public_page(template: str, live: str, cfg: dict,
-                focus: str = "null") -> str:
+                focus: str = "null", fund: str = "null") -> str:
     """A template plus a snapshot, wired for a page with no database.
 
     There used to be a five-row teaser spliced in here, because the private
@@ -624,10 +636,12 @@ def public_page(template: str, live: str, cfg: dict,
     doc = (head + h[:k] + "\n" + extra_head + "</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
     return _fill_subscribe(_fill_min_n(
-        doc.replace("__FOCUS__", focus).replace("__LIVE__", live)))
+        doc.replace("__FOCUS__", focus).replace("__FUND__", fund)
+        .replace("__LIVE__", live)))
 
 
-def private_page(template: str, live: str, focus: str = "null") -> str:
+def private_page(template: str, live: str, focus: str = "null",
+                 fund: str = "null") -> str:
     """The Hebrew page for the artifact, with its database reads intact.
 
     The mirror of public_page(): everything that function takes OUT is what
@@ -650,7 +664,8 @@ def private_page(template: str, live: str, focus: str = "null") -> str:
     doc = (head + h[:k] + "\n</head>\n<body>\n" + h[k:]
            + "\n</body>\n</html>\n")
     return _fill_subscribe(_fill_min_n(
-        doc.replace("__FOCUS__", focus).replace("__LIVE__", live)),
+        doc.replace("__FOCUS__", focus).replace("__FUND__", fund)
+        .replace("__LIVE__", live)),
                            public=False)
 
 
@@ -664,7 +679,7 @@ def build_private(template=None, live=None, out=None):
     doc = private_page(template.read_text(encoding="utf-8"),
                        live.read_text(encoding="utf-8"),
                        focus.read_text(encoding="utf-8") if focus.exists()
-                       else "null")
+                       else "null", _fund())
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8", newline="\n")
     return out, len(doc.encode("utf-8"))
@@ -682,7 +697,7 @@ def _build_public(lang: str, template=None, live=None, out=None,
     doc = public_page(template.read_text(encoding="utf-8"),
                       live.read_text(encoding="utf-8"), cfg,
                       focus.read_text(encoding="utf-8") if focus.exists()
-                      else "null")
+                      else "null", _fund())
     return _inline_cards(doc), out
 
 

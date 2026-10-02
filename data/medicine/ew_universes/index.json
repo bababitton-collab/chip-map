@@ -1,0 +1,86 @@
+{
+ "avtr_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "baxter_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "bd_q4": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "bwxt_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "cardinal_q1": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "cencora_q4": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "crl_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "divis_q2": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "fresenius_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "fujifilm_h1": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "mckesson_q2": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "merck_kgaa_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "novartis_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ },
+ "teva_q3": {
+  "fingerprint": "f6850f0c4534e63b0fc02fd1de2c2399be1ae535172f4f6cd3e80797b440adf2",
+  "source": "git",
+  "commit": "e03d6ade4fe99628ed3928d221a2a151fa6546a9",
+  "verified": true
+ }
+}

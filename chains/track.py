@@ -331,10 +331,15 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
            commitment: dict | None = None) -> dict:
     """One dated question, in whatever state it is in.
 
+    EW_MAP for this question is its frozen universe (chains/ew_universe.py)
+    where it has one, so the chart and the ledger read the same benchmark.
+
     ``commitment`` is the question's entry in commitments.json -- a hash and
     its dates, and the revision when there is one. Public in git already, so
     every card carries it, answered or not.
     """
+    from chains import ew_universe
+    node_symbols = ew_universe.symbols_for(w["id"], node_symbols)
     status = (mark or {}).get("status")
     direction = f["direction"] if f else 1
     entry = forecast.entry_session(f["marked_at"], cal) if f else None
@@ -380,6 +385,8 @@ def record(w: dict, f: dict | None, twin: dict | None, row: dict | None,
     from chains import preregister as _prereg
     if _prereg.is_v2(w):
         out["contract_version"] = 2
+        if w.get(_prereg.RING2_CONFIDENCE):
+            out[_prereg.RING2_CONFIDENCE] = w[_prereg.RING2_CONFIDENCE]
     if commitment:
         out["commitment"] = {k: v for k, v in commitment.items() if k != "qid"}
 
@@ -777,6 +784,26 @@ VERSION_KEYS = ("n", "hits", "hit_rate", "hit_rate_interval", "mean_excess",
                 "capital_rule", "note")
 
 
+CONFIDENCE_LABEL = {"S": "Strong", "M": "Medium", "W": "Weak"}
+
+
+def by_confidence(records: list[dict]) -> dict:
+    """The v2 record split by the author's confidence, S, M and W.
+
+    A tier with nothing scored is left out, not shown as 0/0: an empty tile
+    reads as a result. A v2 question committed without a confidence
+    (mu_fq4) counts in the v2 total and in no tier.
+    """
+    out = {}
+    for c, label in CONFIDENCE_LABEL.items():
+        stats = record_stats([r for r in records if r.get("ring2_confidence") == c])
+        if stats["n"]:
+            keep = {k: stats[k] for k in VERSION_KEYS if k in stats}
+            keep["label"] = f"Confidence {label.lower()}"
+            out[c] = keep
+    return out
+
+
 def record_by_contract(records: list[dict]) -> dict:
     """One record per contract version, and never a record across them.
 
@@ -791,6 +818,10 @@ def record_by_contract(records: list[dict]) -> dict:
         keep = {k: stats[k] for k in VERSION_KEYS if k in stats}
         keep["contract_version"] = v
         keep["label"] = CONTRACT_LABEL[v]
+        if v == 2:
+            tiers = by_confidence(by[v])
+            if tiers:
+                keep["by_confidence"] = tiers
         versions[str(v)] = keep
     live = [v for v, s in versions.items() if s["n"] > 0]
     return {"versions": versions, "scored_versions": sorted(live),
@@ -903,7 +934,9 @@ def build(forecasts: list[dict] | None = None, ledger: dict | None = None,
                  for n in doc.get("nodes", []) if n.get("ticker")}
 
     if book is None or cal is None:
-        wanted = set(node_symbols) | {forecast.benchmark_in(doc)["symbol"]}
+        from chains import ew_universe
+        wanted = (set(node_symbols) | {forecast.benchmark_in(doc)["symbol"]}
+                  | set(ew_universe.all_frozen()))
         for w in watch:
             for i in list(w.get("win") or []) + list(w.get("lose") or []):
                 if i in symbol_of:

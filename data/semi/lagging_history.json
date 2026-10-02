@@ -1,0 +1,34 @@
+[
+ {
+  "date": "2026-10-01",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.0846,
+  "leader": "stx",
+  "leader_ret": 3.0617
+ },
+ {
+  "date": "2026-10-01",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2084,
+  "leader": "axti",
+  "leader_ret": 14.8303
+ },
+ {
+  "date": "2026-10-01",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2887,
+  "leader": "axti",
+  "leader_ret": 14.8303
+ },
+ {
+  "date": "2026-10-01",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.5419,
+  "leader": "stx",
+  "leader_ret": 3.0617
+ }
+]

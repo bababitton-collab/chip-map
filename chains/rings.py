@@ -80,6 +80,8 @@ The result is a pure function of two committed files and nothing else.
 """
 from __future__ import annotations
 
+import re
+
 from chains import mapfile
 
 # Eight a side. The drawing shows eight across both sides and counts the rest,
@@ -205,9 +207,18 @@ def _side(doc: dict, parents: list[str], blocked: set[str],
 
 
 def layer_of(doc: dict) -> dict[str, str]:
-    """``{node id: layer}``, the map's own field and nothing derived."""
-    return {n["id"]: n.get("layer") for n in doc.get("nodes", [])
-            if n.get("layer")}
+    """``{node id: layer}``, the map's own field, at its PARENT layer.
+
+    A sub-column (L1b, L4b, L6b, L6c, added 2026-10-01) is a display split
+    of its parent. The mixed-exposure rule asks whether a supplier sells into
+    the other side's layer, and a finer layer would answer that differently
+    -- the split would quietly move every derived ring. So the rule reads
+    L4b as L4, exactly as the map read it before the split.
+    """
+    # A node the split moved to a different parent column carries its old one
+    # as ring_layer, so the rule reads it where it always did.
+    return {n["id"]: n.get("ring_layer") or re.sub(r"[a-z]+$", "", n["layer"])
+            for n in doc.get("nodes", []) if n.get("layer")}
 
 
 def serves_layers(doc: dict, node_id: str, layers: dict[str, str]) -> set[str]:

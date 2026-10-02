@@ -74,6 +74,10 @@ def steps(today: date, skip_prices: bool = False) -> list[tuple[str, list[str]]]
         # whose contract no longer hashes to the committed value, stops here.
         ("preregister", ["-m", "chains.preregister", "--check"]),
         ("live", ["-m", "chains.live_snapshot"]),
+        # Today's lagging set appended to data/<domain>/lagging_history.json:
+        # a record for a later forward test, never a score. A map with no
+        # bottlenecks writes nothing. CI carries the file on the live branch.
+        ("lagging", ["-m", "chains.lagging", "--snapshot"]),
         ("pages", ["-m", "chains.build_pages"]),
         # The forward test reads live_en.json, so it follows the snapshot.
         ("track", ["-m", "chains.track"]),

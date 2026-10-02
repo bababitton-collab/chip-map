@@ -97,6 +97,7 @@ TRIM_AT = 244_000               # start shortening here
 HARD_LIMIT = 256_000            # what the artifact database refuses
 
 SPARK_WEEKS = 52
+SPARK_STEP = 2
 
 # Everything a locked row does NOT publish. Both rings, and the count derived
 # from them: a constellation is one of the things the paywall holds, and a
@@ -105,7 +106,8 @@ SPARK_WEEKS = 52
 # are inside the hashed contract, whose bytes stay paid until the answer is
 # in, so shipping them would open half the contract while the hash stays shut.
 LOCKED_STRIP = ("win", "lose", "win2", "lose2", "ring2_edges", "mixed",
-                "ring2_win", "ring2_lose", "ring2_rationale")
+                "ring2_win", "ring2_lose", "ring2_rationale",
+                "ring2_confidence")
 
 # What differs between the two snapshots is which language is read out of the
 # map, and which watch list. Every price, return and pressure number is
@@ -259,15 +261,60 @@ def price_block(symbol: str, today: dt.date, cache: dict):
     if not rows:
         cache[symbol] = None
         return None
-    wk = weekly(rows)[-SPARK_WEEKS:]
+    # Every second week, ending on the latest: 26 points over the year. The
+    # weekly line was a quarter of a price block, and 129 stations of it no
+    # longer fit under MAX_BYTES (2026-10-01, semi map closure).
+    wk = weekly(rows)[-SPARK_WEEKS:][::-SPARK_STEP][::-1]
+    # Rounded where it is made. A return to 0.01% and a price to six
+    # significant figures is finer than anything the page prints; the
+    # eighteen-digit floats they replace were a fifth of every price block.
+    r4 = lambda v: None if v is None else round(v, 4)          # noqa: E731
     cache[symbol] = {
-        "cur": cur, "last": rows[-1][0].isoformat(), "px": rows[-1][1],
+        "cur": cur, "last": rows[-1][0].isoformat(),
+        "px": float(f"{rows[-1][1]:.6g}"),
         "spark": [round(v / wk[0][1] * 100) for _, v in wk] if wk and wk[0][1] else [],
-        "r1w": ret(rows, 7), "r4w": ret(rows, 28),
-        "r13w": ret(rows, 91), "r52w": ret(rows, 365),
+        "r1w": r4(ret(rows, 7)), "r4w": r4(ret(rows, 28)),
+        "r13w": r4(ret(rows, 91)), "r52w": r4(ret(rows, 365)),
         "stale_days": (today - rows[-1][0]).days,
     }
     return cache[symbol]
+
+
+def fund_for(fnd: dict) -> dict:
+    """The fundamentals table, per station, from chain_fundamentals.json.
+
+    Not part of the snapshot: main() writes it to fund.json and the page
+    build inlines it, because it changes once a quarter and live.json sits
+    at its size ceiling."""
+    fund = {}
+    for nid, rec in fnd.items():
+        fu = rec.get("fundamentals")
+        if not fu:
+            continue
+        seen, rows = set(), []
+        for a in sorted(fu["annual"], key=lambda r: r["period_end"]):
+            if a["period_end"] in seen or not a.get("revenue"):
+                continue
+            seen.add(a["period_end"])
+            rows.append(a)
+        q = sorted(fu.get("quarterly", []), key=lambda r: r["period_end"])[-4:]
+        fund[nid] = {
+            "annual": [{
+                "fy": r["period_end"][:4],
+                "rev": round(r["revenue"] / 1e9, 1),
+                "yoy": None if r["revenue_yoy"] is None
+                       else round(r["revenue_yoy"] * 100),
+                "om": None if r["operating_margin"] is None
+                      else round(r["operating_margin"] * 100),
+            } for r in rows[-4:]],
+            "q": [{
+                "pe": r["period_end"],
+                "rev": round(r["revenue"] / 1e9, 1) if r.get("revenue") else None,
+                "yoy": None if r.get("revenue_yoy") is None
+                       else round(r["revenue_yoy"] * 100),
+            } for r in q],
+        }
+    return fund
 
 
 # ---------------------------------------------------------------- the snapshot
@@ -295,6 +342,10 @@ def build(today: dt.date | None = None, lang: str = "he",
     def get(sym):
         return price_block(sym, today, cache)
 
+    # Which bottleneck rings have not followed their trigger. Descriptive,
+    # never scored: see chains/lagging.py. Computed once per build.
+    from chains import lagging
+    bn = lagging.compute(m)
     nodes = []
     for n in m["nodes"]:
         px = get(n.get("price_symbol"))
@@ -315,11 +366,16 @@ def build(today: dt.date | None = None, lang: str = "he",
             # A price line the map marks thin: the panel badges it. Only
             # where it is true, so fifty rows do not each carry a false.
             **({"thin": True} if n.get("price_quality") == "thin" else {}),
+            # Only on a node that is a member of a fired bottleneck.
+            **({"bn": bn[n["id"]]} if n["id"] in bn else {}),
         })
     node_by = {n["id"]: n for n in nodes}
 
+    # A "reported" edge rests on a media source only. It is drawn dashed and
+    # never feeds a derived ring (chains/rings.py reads "supplies" alone).
     edges = [{"from": e["from"], "to": e["to"], "what": e.get("what", ""),
-              "crit": e.get("criticality", "medium")}
+              "crit": e.get("criticality", "medium"),
+              **({"rep": True} if e.get("type") == "reported" else {})}
              for e in m.get("edges", [])
              if e["from"] in node_by and e["to"] in node_by]
     flows = [{"from": f["from_layer"], "to": f["to_layer"],
@@ -410,34 +466,6 @@ def build(today: dt.date | None = None, lang: str = "he",
             **({"exposed": [i for i in c["exposed"] if i in node_by]} if c.get("exposed") else {}),
         })
 
-    fund = {}
-    for nid, rec in fnd.items():
-        fu = rec.get("fundamentals")
-        if not fu:
-            continue
-        seen, rows = set(), []
-        for a in sorted(fu["annual"], key=lambda r: r["period_end"]):
-            if a["period_end"] in seen or not a.get("revenue"):
-                continue
-            seen.add(a["period_end"])
-            rows.append(a)
-        q = sorted(fu.get("quarterly", []), key=lambda r: r["period_end"])[-4:]
-        fund[nid] = {
-            "annual": [{
-                "fy": r["period_end"][:4],
-                "rev": round(r["revenue"] / 1e9, 1),
-                "yoy": None if r["revenue_yoy"] is None
-                       else round(r["revenue_yoy"] * 100),
-                "om": None if r["operating_margin"] is None
-                      else round(r["operating_margin"] * 100),
-            } for r in rows[-4:]],
-            "q": [{
-                "pe": r["period_end"],
-                "rev": round(r["revenue"] / 1e9, 1) if r.get("revenue") else None,
-                "yoy": None if r.get("revenue_yoy") is None
-                       else round(r["revenue_yoy"] * 100),
-            } for r in q],
-        }
 
     # Two views of the same list. ``watch`` is the whole thing, in this
     # language, because the page now reads its rows from here rather than from
@@ -513,7 +541,7 @@ def build(today: dt.date | None = None, lang: str = "he",
     return {
         "as_of": today.isoformat(), "map_version": m.get("version"),
         "nodes": nodes, "edges": edges, "flows": flows, "cps": cps,
-        "fund": fund, "cal": cal, "watch": watch,
+        "cal": cal, "watch": watch,
         "answers": answers, "ledger": ledger, "labels": labels,
         # The same forecasts, day by day. The horizons inside it are the
         # ledger's own objects, so the board and the tracking page cannot
@@ -656,6 +684,7 @@ def write(live: dict, path: Path | None = None) -> tuple[Path, int, list[str]]:
 
 
 FOCUS_FILE = {"he": "focus.json", "en": "focus_en.json"}
+FUND_FILE = "fund.json"
 CRIT_WEIGHT = {"high": 3, "medium": 2, "low": 1}
 
 
@@ -774,7 +803,18 @@ def focus_for(m: dict, lang: str) -> dict:
                      for i in used},
             # The curator's notes, for the panel rows that name these subnodes.
             # Here rather than in live.json, which sits at its size ceiling.
-            "notes": {i: s["note"] for i, s in subs.items() if s.get("note")}}
+            "notes": {i: s["note"] for i, s in subs.items() if s.get("note")},
+            # The map's bottleneck records and their dated catalysts, for the
+            # bottleneck card. Only a map that declares them ships the keys.
+            # The card picks "next check" against the snapshot's own date.
+            **({"bottlenecks": m["bottlenecks"], "catalysts": _catalysts()}
+               if m.get("bottlenecks") else {})}
+
+
+def _catalysts() -> list:
+    from chains.paths import data_dir
+    p = data_dir() / "catalysts.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
 
 
 def main() -> int:
@@ -810,6 +850,9 @@ def main() -> int:
     for lang in LANG:
         live = build(lang=lang, answers=good, ledger=ledger, text=text,
                      forecasts=forecasts)
+        # The fundamentals table travels beside the snapshot, not in it: it is
+        # 28 KB that changes once a quarter, and the page build inlines it
+        # the way it inlines focus.json. See chains/build_pages.py.
         p, size, applied = write(live, out_dir() / LANG[lang]["file"])
         # Belt and braces. write() already refuses to produce an oversized
         # file; this says out loud, at the call site, what the invariant is.
@@ -833,6 +876,11 @@ def main() -> int:
                                  separators=(",", ":")), encoding="utf-8")
         print(f"wrote {fp}  ({fp.stat().st_size:,} bytes)")
 
+    fpath = out_dir() / FUND_FILE
+    fnd = json.loads((out_dir() / "chain_fundamentals.json").read_text(encoding="utf-8"))
+    fpath.write_text(json.dumps(fund_for(fnd), ensure_ascii=False, separators=(",", ":")),
+                     encoding="utf-8")
+    print(f"wrote {fpath}  ({fpath.stat().st_size:,} bytes)")
     live = first
     print()
     print(f"  as_of            : {live['as_of']}")

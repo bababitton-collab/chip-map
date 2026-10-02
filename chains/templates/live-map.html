@@ -167,6 +167,14 @@ html.rec .focusui{display:none!important}
 .lchip .n{color:#9ba6b4;font-weight:400}
 .lchip .s{color:#7d8797;margin:0 6px}
 .lchip .t{color:#f3e2b4;font-weight:500;text-shadow:0 0 6px rgba(242,182,50,.55),0 0 14px rgba(242,182,50,.25)}
+/* A sub-column (L1b, L4b, L6b, L6c) is its parent's colour, lighter: the chain
+   still reads L1 -> L7, and the split reads as a split, not a new stage. */
+.lchip[data-l$="b"],.lchip[data-l$="c"]{border-color:#3a332080;background:#171c26}
+/* More than eight columns (the semi map since the 2026-10-01 split): a
+   12-letter word like ACCELERATORS has to fit a ~96px column whole, so the
+   type steps down and the tracking tightens. Fewer columns: untouched. */
+.layerbar.dense .lchip{font-size:.62rem;letter-spacing:.05em;padding:4px 6px}
+.lchip[data-l$="b"] .t,.lchip[data-l$="c"] .t{color:#f8eed3;text-shadow:0 0 6px rgba(242,182,50,.28)}
 .layerbar .rule{position:absolute;top:46px;inset-inline:0;height:1px;background:var(--rule)}
 /* At 390 the seven columns are 35px apart, and no chip fits in 35px. The map
    strip scrolls sideways instead, at a width where the columns are wide enough
@@ -209,6 +217,17 @@ html.rec .focusui{display:none!important}
 .legend{display:block;gap:6px 18px;font-size:.92rem;color:var(--ink2);padding:8px 22px;border-top:1px solid var(--rule);background:var(--bg2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend .lg{width:10px;height:10px;border-radius:50%;border:1.5px dashed var(--amber);background:none}
+.bnbox{border:1px solid #ffffff1f;border-radius:8px;padding:10px 12px;margin:12px 0}
+.bnhead{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;margin-bottom:6px}
+.bnstage{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);border:1px solid currentColor;border-radius:4px;padding:1px 6px}
+.bnstage.s-tightening{color:var(--amber)}
+.bnrow{font-size:.82rem;color:var(--ink2);line-height:1.45;margin:4px 0}
+.bnrow b{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-inline-end:6px;font-weight:500}
+.bnrow a{color:var(--ink3)}.nosrc{color:var(--ink3);font-style:italic;font-size:.74rem}
+.bnlag{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--ink3);margin:8px 0;padding:6px 8px;border:1px dashed #ffffff22;border-radius:6px;line-height:1.5}
+.bnlag.on{color:var(--amber);border-color:var(--amber)}
+.cyc{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#9aa3b2;border:1px solid #5b6474;border-radius:4px;padding:2px 7px;margin:6px 6px 0 0}
 .legend .pl{width:10px;height:10px;border-radius:50%;border:2px solid var(--tight)}
 .legend .pe{width:10px;height:10px;border-radius:50%;border:2px solid var(--erode)}
 .legend .pa{width:10px;height:10px;border-radius:50%;border:2px solid var(--amber)}
@@ -701,6 +720,9 @@ __CARDS_JS__
 <script>
 const LIVE = __LIVE__;
 const FOCUS = __FOCUS__;
+// The fundamentals table, inlined at build time like FOCUS (out/<domain>/fund.json).
+// A snapshot that still carries its own is read first.
+const FUND = __FUND__;
 </script>
 <script>
 (function(){
@@ -755,6 +777,33 @@ const cls=v=>v==null?'':(v<0?'neg':'pos');
 // Text from the data, made safe to put inside HTML. This script has no esc() of
 // its own -- the card scripts further down do, in their own scope.
 const escHtml=v=>String(v==null?'':v).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const BN = {lagLegend:'הטריגר הופעל, המחיר לא הלך אחריו. תיאור, לא תחזית.', fired:'הטריגר הופעל', node:'התחנה הזו', leader:'המובילה', exp:'חשיפה', expW:{low:'נמוכה',medium:'בינונית',high:'גבוהה'}, cyc:{peaking:'המחזור בשיא',resolving:'המחזור נרגע'}, risk:'סיכון שיא', next:'הבדיקה הבאה', title:'צוואר בקבוק', stage:{tightening:'מתהדק',peaking:'בשיא',resolving:'נרגע',unclear:'שלב לא ברור'}, trig:{fired:'הופעל',not_yet:'עוד לא',unclear:'לא ברור'}, pressure:'לחץ', rigidity:'קשיחות', trigger:'טריגר', owners:'בעלים', hurt:'נפגעים (יורד אם כן)', prop:'התפשטות', kill:'תנאי ביטול', src:'מקור', nosrc:'אין מקור'};
+// Bottlenecks (map.json "bottlenecks"). The lagging line and ring are a
+// DESCRIPTION -- a fired trigger whose ring has not followed -- and never a
+// forecast: nothing here is scored. See chains/lagging.py.
+function lagOf(n){ const l=(n.bn||[]).filter(e=>e.kind==='lag'&&e.lagging);
+  return l.length ? {half:l.every(e=>e.exposure==='high')} : null; }
+function bnLines(n){ return (n.bn||[]).map(e=> e.kind==='lag'
+  ? `<div class="bnlag${e.lagging?' on':''}" data-bn="${e.b}" data-lagging="${e.lagging}">${BN.fired} ${e.fired||''} · ${BN.node} ${pct(e.ret)} · ${BN.leader} ${escHtml(e.leader)} ${pct(e.leader_ret)} · ${BN.exp}: ${e.exposure?BN.expW[e.exposure]:'—'}</div>`
+  : `<span class="cyc" data-bn="${e.b}">${BN.cyc[e.stage]||e.stage} · ${BN.risk} ${e.top_risk}/7</span>`).join(''); }
+function bnCard(b, nid){
+  const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
+  const nm=i=>escHtml(byId[i]?byId[i].name:i);
+  const src=o=>o&&o.source_url?` <a href="${escHtml(o.source_url)}" target="_blank" rel="noopener">${BN.src}</a>`:` <span class="nosrc">${BN.nosrc}</span>`;
+  const list=(l,ids)=>(ids||[]).length?`<div class="bnrow"><b>${l}</b>${ids.map(nm).join(', ')}</div>`:'';
+  const nx=(F.catalysts||[]).filter(c=>c.bottleneck===b.id&&String(c.date)>=today.slice(0,String(c.date).length))
+    .sort((a,c)=>String(a.date).localeCompare(String(c.date)))[0];
+  return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`
+    + `<div class="bnrow"><b>${BN.trigger}</b><span class="trs t-${t.status}">${BN.trig[t.status]||t.status}</span>${t.date?' · '+t.date:''} — ${escHtml(t.what||'')}${src(t)}${t.source_type?` <small>(${t.source_type})</small>`:''}</div>`
+    + `<div class="bnrow"><b>${BN.pressure}</b>${escHtml((b.pressure||{}).text)}${src(b.pressure)}</div>`
+    + `<div class="bnrow"><b>${BN.rigidity}</b>${escHtml((b.rigidity||{}).text)}${src(b.rigidity)}</div>`
+    + list(BN.owners,b.owners)+list(BN.hurt,b.hurt)+list(BN.prop,b.propagation)
+    + ((b.kill||[]).length?`<div class="bnrow"><b>${BN.kill}</b>${b.kill.map(k=>escHtml(k.criterion)+(k.date?' ('+k.date+')':'')).join('; ')}</div>`:'')
+    + (nx?`<div class="nextcp" data-next-check>${BN.next}: <b>${escHtml(nx.date_text||nx.date)}</b> — ${escHtml(nx.what)}</div>`:'')
+    + `</div>`; }
+function bnCards(n){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{};
+  return (F.bottlenecks||[]).filter(b=>[...b.owners,...b.hurt,...b.propagation].includes(n.id)).map(b=>bnCard(b,n.id)).join(''); }
+
 // A source is a list of references (a single string in an older snapshot), and
 // every URL in it is its own link: joined into one href they opened nothing.
 // The first URL carries the text it sources, as a lone source always has; each
@@ -1238,6 +1287,17 @@ const PORTRAIT_AT = 1.15;
 // does not grow. Between them nothing is stretched to fill: the columns are
 // laid out exactly as before and the canvas is cut to them.
 const MAP_H_MIN = 480, MAP_H_MAX = 720, MAP_PAD_BOTTOM = 48;
+// The cap grows with the tallest column, and only past 720px when a column
+// needs it: 42px a station -- room for a name under its dot, so it never
+// runs sideways into the next column -- plus the header and the band row. The semi map's
+// L1, L4 and L6 columns passed 30 stations on 2026-10-01 and, held to 720,
+// ran into the energy row. A map whose columns fit is drawn exactly as before.
+function mapHMax(){
+  const per={}; nodes.forEach(n=>{ if(n.layer!==bandId()) per[n.layer]=(per[n.layer]||0)+1; });
+  const most=Math.max(0, ...Object.values(per));
+  // HEADER_H, not a constant: eleven columns wrap their names onto four or
+  // five lines, and that strip comes out of the same height.
+  return Math.max(MAP_H_MAX, Math.round(most*44 + HEADER_H + 140)); }
 // The band row is pinned to the bottom (y = H - 34), so its own label cannot
 // be measured against a height it defines. It gets a reservation instead.
 const MAP_BAND_RESERVE = 62;
@@ -1263,17 +1323,22 @@ function contentBottom(){
 // clipping a station is worse than an empty strip.
 function fitHeight(){
   if(REC || !nodes.length) return null;
-  const probeH = cv.clientHeight || MAP_H_MAX;
+  // Orientation is judged against the landscape baseline whenever the height
+  // on the canvas is one this function set: a map taller than 720px (a long
+  // column, see mapHMax) would otherwise read as portrait on the next resize,
+  // clear its own height and snap back to 720.
+  const probeH = (cv.style.height ? MAP_H_MAX : cv.clientHeight) || MAP_H_MAX;
   if((W / Math.max(probeH, 1)) < PORTRAIT_AT) return null;   // portrait owns its height
   const hasBand = nodes.some(n=>n.layer === bandId());
   const saveH = H;
-  let h = MAP_H_MAX, want = h;
+  const cap = mapHMax();
+  let h = cap, want = h;
   for(let pass = 0; pass < 4; pass++){
     H = h;
     layoutLandscape();
     want = Math.round(contentBottom() + MAP_PAD_BOTTOM
                       + (hasBand ? MAP_BAND_RESERVE : 0));
-    want = Math.max(MAP_H_MIN, Math.min(MAP_H_MAX, want));
+    want = Math.max(MAP_H_MIN, Math.min(cap, want));
     if(want === h) break;
     h = want;
   }
@@ -1292,7 +1357,10 @@ let MODE='landscape', pitch=0, rowY={};
 const bandId = () => ((((D.labels||{}).band)||['L9'])[0]);
 
 function layout(){
-  MODE = (W / Math.max(H,1)) < PORTRAIT_AT ? 'portrait' : 'landscape';
+  // A height fitHeight() set (cv.style.height) is a landscape map grown for a
+  // long column, not a portrait screen: judge it against the 720px baseline.
+  const oh = cv.style.height ? Math.min(H, MAP_H_MAX) : H;
+  MODE = (W / Math.max(oh,1)) < PORTRAIT_AT ? 'portrait' : 'landscape';
   if(stage) stage.classList.toggle('portrait', MODE==='portrait');
   if(MODE==='portrait') layoutPortrait(); else layoutLandscape();
   // The finale shot leans on one station. Recording only, one named id, and
@@ -1483,6 +1551,9 @@ function layoutLandscape(){
   // 10px over the top of ETN's ring. layerBar() measures the chip and lifts it
   // straight up if a station, a ring or a label would touch it there. Without
   // ETN it takes the middle station of the row.
+  // Every station's label box, for the layout tests: names that touch another
+  // name or another ring are the failure this page keeps having.
+  window.__labelBoxes = nodes.map(n=>Object.assign({id:n.id, layer:n.layer, cx:n.x, cy:n.y, rr:ringR(n)}, labelBox(n)));
   const tagOn = byId.etn || g9[Math.floor(g9.length/2)];
   if(tagOn){ l9x = tagOn.x; l9y = tagOn.y - ringR(tagOn) - 10; }
   else { l9x = W/2; l9y = H-34; }
@@ -1558,7 +1629,10 @@ function resize(){
 // at 1200 and 1440, EQUIPMENT and GENERATION at 1024. The hyphen is still
 // applied by measurement, so none of them shows one at a width where the word
 // fits whole.
-const HYPHENATE = {TRANSMISSION: 5, EQUIPMENT: 5, GENERATION: 6};
+// The semi column split (2026-10-01) brought eleven narrow columns and five
+// more long words; each breaks where a reader would.
+const HYPHENATE = {TRANSMISSION: 5, EQUIPMENT: 5, GENERATION: 6,
+                   ACCELERATORS: 5, SUBSTRATES: 3, PACKAGING: 4, NETWORKING: 3, MATERIALS: 4};
 function softened(name){
   return String(name==null?'':name).replace(/[A-Za-z]{8,}/g, w => {
     const at = HYPHENATE[w.toUpperCase()];
@@ -1779,6 +1853,7 @@ function layerBar(){
     l9.innerHTML='';
     return;
   }
+  bar.classList.toggle('dense', bands.length > 8);
   bar.innerHTML = bands.map(b=>
     `<span class="lchip" data-l="${b.L}" data-cx="${b.cx.toFixed(1)}" style="left:${b.cx.toFixed(1)}px;`
     + `top:6px;transform:translateX(-50%)">${chip(b.L, LAYER_HE[b.L]||'')}</span>`
@@ -1962,7 +2037,7 @@ function draw(now){
   const KEEP = NARROW ? matchSet() : null;
   const paintEdge = (e,i)=>{ const p=edgePath(e); const rel=focus&&(e.from===focus.id||e.to===focus.id); const on=(e===hoverEdge);
     ctx.beginPath(); ctx.moveTo(p.a.x,p.a.y); ctx.bezierCurveTo(p.c1.x,p.c1.y,p.c2.x,p.c2.y,p.b.x,p.b.y);
-    ctx.strokeStyle=(rel||on)?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=on?2.6:(rel?1.8:1); ctx.stroke(); e._p=p;
+    ctx.strokeStyle=(rel||on)?LCOL[p.a.line]:'#ffffff14'; ctx.lineWidth=on?2.6:(rel?1.8:1); ctx.setLineDash(e.rep?[5,4]:[]); ctx.stroke(); ctx.setLineDash([]); e._p=p;
     // An arrowhead at the CUSTOMER end. The line already showed that two
     // stations are connected; it never showed which way the goods travel, and
     // on a supply chain that is the whole point of the picture.
@@ -2035,6 +2110,9 @@ function draw(now){
     const pu=pulseOf(n);
     if(pu&&!REDUCED){ const ph=(T%pu.period)/pu.period; const rr=n.r+4+ph*16; ctx.beginPath(); ctx.arc(n.x,n.y,rr,0,7); ctx.strokeStyle=pu.col; ctx.globalAlpha=(1-ph)*.7; ctx.lineWidth=2; ctx.stroke(); ctx.globalAlpha=1; }
     if(pu){ ctx.beginPath(); ctx.arc(n.x,n.y,n.r+5,0,7); ctx.strokeStyle=pu.col; ctx.lineWidth=2.5; ctx.stroke(); }
+    // Lagging ring: thin, dashed, amber. Half strength where the bottleneck is a
+    // small part of the company (exposure high), which may be why it has not moved.
+    const lg=lagOf(n); if(lg){ ctx.save(); ctx.setLineDash([4,3]); ctx.globalAlpha=lg.half?.5:1; ctx.beginPath(); ctx.arc(n.x,n.y,n.r+9,0,7); ctx.strokeStyle=tok('--amber'); ctx.lineWidth=1.3; ctx.stroke(); ctx.restore(); }
     ctx.save(); ctx.shadowColor=LCOL[n.line]; ctx.shadowBlur=n.r*0.9;
     ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,7); ctx.fillStyle=tok('--bg'); ctx.fill();
     ctx.globalAlpha=.55; ctx.lineWidth=1; ctx.strokeStyle=LCOL[n.line]; ctx.stroke(); ctx.restore();
@@ -2184,7 +2262,7 @@ cv.addEventListener('click',ev=>{
 function priceBadge(n){ const d=n.px?n.px.stale_days:null; if(!n.thin && !(d>5)) return ''; return `<span class="badge thin" title="${n.thin?'קו מחיר דליל: מעט מסחר':'אין סגירה עדכנית'}">${n.thin?'קו מחיר דליל':'מחיר ישן'}${d>1?' · '+d+' ימים':''}</span>`; }
 function spark(px){ if(!px||!px.spark||px.spark.length<2) return '<p class="role">אין קו מחיר.</p>'; const s=px.spark, W=340,H=52; const lo=Math.min(...s),hi=Math.max(...s); const y=v=>4+(1-(v-lo)/((hi-lo)||1))*(H-8); const d=s.map((v,i)=>(i?'L':'M')+(i/(s.length-1)*W).toFixed(1)+' '+y(v).toFixed(1)).join(''); const col=s[s.length-1]>=100?tok('--erode'):tok('--tight'); return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr"><path d="${d}" fill="none" stroke="${col}" stroke-width="1.8"/><line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="#ffffff22" stroke-dasharray="3 3"/></svg><div class="r"><span>1w <b class="${cls(px.r1w)}">${pct(px.r1w)}</b></span><span>4w <b class="${cls(px.r4w)}">${pct(px.r4w)}</b></span><span>13w <b class="${cls(px.r13w)}">${pct(px.r13w)}</b></span><span>52w <b class="${cls(px.r52w)}">${pct(px.r52w)}</b></span><span style="color:var(--ink3)">${px.cur} · ${px.last}</span></div></div>`; }
 function stageBar(st){ const lv={research:1,pilot:2,qualified:3,volume:4}[st]||0; const he={research:'מחקר',pilot:'פיילוט',qualified:'הסמכה',volume:'ייצור'}[st]||''; return `<div class="st">${[0,1,2,3].map(i=>`<i class="${i<lv?'on':''}"></i>`).join('')}<em>${he}</em></div>`; }
-function fundTable(nid){ const f=D.fund[nid]; if(!f) return ''; return `<h3>מהדוחות (EDGAR)</h3><table class="ftab"><tr><th>FY</th><th>revenue $B</th><th>YoY</th><th>op margin</th></tr>${f.annual.map(r=>`<tr><td>${r.fy}</td><td>${r.rev}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td class="${r.om<0?'neg':''}">${r.om==null?'—':r.om+'%'}</td></tr>`).join('')}${f.q.length?`<tr><th>quarter</th><th>revenue $B</th><th>YoY</th><th></th></tr>${f.q.map(r=>`<tr><td>${r.pe}</td><td>${r.rev??'—'}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td></td></tr>`).join('')}`:''}</table>`; }
+function fundTable(nid){ const f=((D&&D.fund)||FUND||{})[nid]; if(!f) return ''; return `<h3>מהדוחות (EDGAR)</h3><table class="ftab"><tr><th>FY</th><th>revenue $B</th><th>YoY</th><th>op margin</th></tr>${f.annual.map(r=>`<tr><td>${r.fy}</td><td>${r.rev}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td class="${r.om<0?'neg':''}">${r.om==null?'—':r.om+'%'}</td></tr>`).join('')}${f.q.length?`<tr><th>quarter</th><th>revenue $B</th><th>YoY</th><th></th></tr>${f.q.map(r=>`<tr><td>${r.pe}</td><td>${r.rev??'—'}</td><td class="${r.yoy<0?'neg':''}">${r.yoy==null?'—':r.yoy+'%'}</td><td></td></tr>`).join('')}`:''}</table>`; }
 
 // The curator's note on a subnode -- the member list, the product, the cross-
 // reference -- under its row. Its name is kept to a name; this is where the rest is.
@@ -2198,6 +2276,7 @@ const noteOf=id=>{ const t=(((typeof FOCUS!=='undefined'&&FOCUS)||{}).notes||{})
 function detailHTML(n){
   const cps=n.cp||[];
   let h=`<div class="pin"><button class="close" id="pclose">סגור</button><h2>${n.name}</h2><span class="tk">${n.ticker||''}${n.sym&&n.sym!==n.ticker?' · priced as '+n.sym+(n.kind==='adr'?' (ADR)':''):''}${n.cap?' · $'+n.cap+'B':''}</span>${priceBadge(n)}<p class="role" dir="ltr" style="text-align:start">${window.GL?GL.mark(n.role||''):escHtml(n.role||'')}</p>${spark(n.px)}`;
+  h+=bnLines(n)+bnCards(n);
   // One supplier row, for a chokepoint the station holds or one it is exposed to.
   const subRow=s=>`<div class="sub ${s.tier===2?'t2':''}"><div><b>${s.name}</b>${s.sole?'<span class="badge sole">ספק יחיד</span>':''}${(!s.ticker||/^private/i.test(s.ticker))?'<span class="badge priv">פרטית</span>':''}${s.px&&s.px.r13w!=null?`<span class="badge r13">13w ${pct(s.px.r13w)}</span>`:''}</div><div class="sh">${s.share?srcCited(s.share,s.src):'<span style="color:var(--ink3)">אומדן</span>'}</div><div class="w">${s.what}${s.country?' · '+s.country:''}${srcLinks(s.refs,' · ')}</div>${noteOf(s.id)}</div>`;
   cps.forEach(c=>{
@@ -2646,6 +2725,8 @@ function header(){
     `<div class="row"><b>${WORDS.legendZone}</b>`
     + ZORDER.map(k=>`<span><i class="zn" style="border-color:${ZCOL[k]}"></i>${ZNAME[k]}</span>`).join('')
     + `</div>`;
+  if(nodes.some(lagOf)) document.getElementById('legend').innerHTML +=
+    `<div class="row" data-legend-lagging><span><i class="lg"></i>${BN.lagLegend}</span></div>`;
   const BR = (D.labels||{}).brand||{};
   document.getElementById('foot').innerHTML=`<span class="eyebrow">שיטת מדידת הלחץ</span><b>הלחץ</b> משווה את תשואת המחזיק ב-13 השבועות האחרונים לתשואת המתחרים הנסחרים. ערך חיובי מציין התהדקות; ערך שלילי מציין התרופפות. כשאין מתחרה נסחר לא מוצג ערך. תחנה שרשום לה שווי שוק מצוירת לפיו; לכל השאר גודל אחיד. כל חברה במטבע המסחר שלה; מניות יפניות דרך תעודות פיקדון בארה"ב. נתחי ספקים מוצגים עם המקור שלהם, ונשארים ריקים כשאין מקור רשום; אומדנים מסומנים. נתוני שוק עשויים לפגר עד שבוע. זו מפה להבנת חשיפות, לא אות מסחר ולא ייעוץ השקעות.`+`<span class="brandline">${BR.footer||''}</span>`;
 }
@@ -3150,6 +3231,14 @@ function lockedHTML(){
   // because the author did not claim any; the legs came out of the contract.
   const V2_R = 12;         // the scored ring's circle: bigger than a derived one
   function isV2(w){ return w.contract_version === 2; }
+  // The author's confidence in the scored basket, from the hashed contract.
+  // A small mono tag, never a colour: it qualifies the claim. A locked row
+  // ships no ring2_confidence (LOCKED_STRIP), so it draws nothing.
+  const CONF = {lbl:'ודאות', lv:{S:'גבוהה', M:'בינונית', W:'נמוכה'}};
+  function confTag(w){
+    const c = w.ring2_confidence;
+    return CONF.lv[c] ? `<span class="conftag" data-confidence="${c}">${CONF.lbl} · ${CONF.lv[c]}</span>` : '';
+  }
 
   function ring2Registered(w){
     const side = [...(w.win2||[]).map(i=>({id:i, win:true})),
@@ -3234,7 +3323,7 @@ function lockedHTML(){
       <circle cx="${CX}" cy="${CY}" r="22" fill="#0b0e14" stroke="#e8ecf2" stroke-width="2.2" filter="url(#inset)"/>
       <circle cx="${CX}" cy="${CY}" r="20" fill="url(#hilite)" pointer-events="none"/>
       <text x="${CX}" y="${CY+4}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#e8ecf2">${ctr2}</text>
-    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span><span><i style="border-color:#7d8797"></i>${T.diag}</span><span class="mixnote">${T.scored}</span></div></div>`;
+    </svg><div class="cap"><span><i style="border-color:#3fd18b"></i>${T.up}</span><span><i style="border-color:#ff5a3c"></i>${T.down}</span><span><i style="border-color:#7d8797"></i>${T.diag}</span>${confTag(w)}<span class="mixnote">${T.scored}</span></div></div>`;
     }
 
     // --- ring 2, derived from the map's edges (contract v1) ---------------
@@ -3374,7 +3463,8 @@ function lockedHTML(){
       const first = (w.win||[]).concat(w.lose||[]).map(plain);
       const note = [why.win, why.lose].filter(Boolean)
         .map(s=>`<p class="rlwhy">${esc(s)}</p>`).join('');
-      return `<p class="rlhead">${REL.scored}</p>`
+      const tag = confTag(w);
+      return `<p class="rlhead">${REL.scored}${tag ? ' · ' + tag : ''}</p>`
         + (scored.length ? `<ul class="rlist">${scored.join('')}</ul>`
                          : `<p class="rlnone">${REL.none}</p>`)
         + note

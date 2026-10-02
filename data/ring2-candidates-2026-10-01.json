@@ -1,0 +1,8370 @@
+{
+ "generated": "2026-10-01",
+ "note": "Second-ring candidates for every open, uncommitted question, for a person to",
+ "questions": [
+  {
+   "domain": "semi",
+   "qid": "smsg_pre",
+   "answer_date": "2026-10-08",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "samsung",
+     "skhynix",
+     "mu"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lrcx",
+     "hanmi",
+     "advantest"
+    ],
+    "lose": [
+     "smci",
+     "foxconn"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "asml",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "EUV scanners",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "skhynix",
+        "what": "EUV for 1a/1b DRAM used in HBM",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "EUV lithography for 1-gamma DRAM. Micron's 2023 release says it is introducing EUV for the 1-gamma node and ramping it in Taiwan and Japan from 2025; it does not name a scanner vendor, and ASML is the sole EUV source. ASML won Micron's Front End Capital award in 2024",
+        "source": [
+         "https://investors.micron.com/news-releases/news-release-details/micron-bring-euv-technology-japan-advancing-next-generation",
+         "https://www.micron.com/about/company/suppliers/supplier-day"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "lrcx",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names Samsung Electronics among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "skhynix",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names SK hynix among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names Micron among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_dram_equipment",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "amat",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+         "https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/R82.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Micron supplier: winner of Micron's Sustainability award in 2025. The award category establishes the relationship and not a product line",
+        "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "siltronic",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+        "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Front-end materials. Winner of Micron's Front End Materials award in 2025; the award does not name the materials",
+        "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "hanmi",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "skhynix",
+        "what": "TC bonders for HBM stacking",
+        "source": "https://www.trendforce.com/news/2026/06/09/news-sk-hynix-reportedly-places-44-2bn-won-tc-bonder-order-with-hanmi-accelerating-hbm4-ramp-up/",
+        "source_type": "analyst (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Thermal-compression bonders for HBM: about 50 units reported shipped to Micron. Winner of Micron's Assembly & Test Capital Equipment award in 2025",
+        "source": [
+         "https://www.thelec.net/news/articleView.html?idxno=5235",
+         "https://www.micron.com/about/company/suppliers/supplier-day"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "tc_bonders_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "not_yet",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "shinetsu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "mu",
+        "what": "Front-end materials. Winner of Micron's Front End Materials award in 2023 and 2024; neither source names the specific materials",
+        "source": [
+         "https://www.shinetsu.co.jp/en/news/news-release/shin-etsu-honored-as-a-2023-outstanding-supplier-by-micron/",
+         "https://www.micron.com/about/company/suppliers/supplier-day"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "advantest",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "skhynix",
+        "what": "Memory/HBM test systems; DIGITIMES: Advantest 'long an established supplier' to SK hynix memory test, now losing some HBM4 tester orders to Korean vendors",
+        "source": "https://www.digitimes.com/news/a20260730VL224/sk-hynix-hbm-tester-wafer-advantest.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "globalwafers",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "mu",
+        "what": "300mm raw silicon wafers from Sherman, Texas: Micron is to provide $500M of strategic financing and enter a 10-year supply agreement. Micron states the transaction remains subject to definitive agreements and closing conditions",
+        "source": [
+         "https://www.globenewswire.com/news-release/2026/07/09/3324795/14450/en/Micron-Announces-Up-to-3-Billion-Strategic-Investment-to-Strengthen-U-S-Semiconductor-Ecosystem.html"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ],
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "lrcx",
+     "hanmi",
+     "advantest"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "asml",
+     "amat",
+     "siltronic",
+     "shinetsu",
+     "globalwafers"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "smci",
+     "foxconn"
+    ],
+    "lose_added": [
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": false,
+    "lose": false
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "asml_q3",
+   "answer_date": "2026-10-14",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "asml",
+     "tsmc",
+     "samsung",
+     "intc",
+     "skhynix",
+     "lasertec",
+     "hoya"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "tok",
+     "tel",
+     "klac"
+    ],
+    "lose": [
+     "lrcx",
+     "amat"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "lrcx",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names Samsung Electronics among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "tsmc",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names TSMC among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "skhynix",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names SK hynix among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "intc",
+        "what": "Intel supplier: 2026 EPIC award for Excellence in Sustainability Support. The category establishes the relationship and not a product line",
+        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_dram_equipment",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "amat",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+         "https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/R82.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "tsmc",
+        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K; also TSMC 2025 supplier award",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "intc",
+        "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development. The category establishes the relationship and not a product line",
+        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "advantest",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
+        "source": [
+         "https://pr.tsmc.com/english/news/3274",
+         "https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "skhynix",
+        "what": "Memory/HBM test systems; DIGITIMES: Advantest 'long an established supplier' to SK hynix memory test, now losing some HBM4 tester orders to Korean vendors",
+        "source": "https://www.digitimes.com/news/a20260730VL224/sk-hynix-hbm-tester-wafer-advantest.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "siltronic",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+        "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "samsung",
+        "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+        "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "tel",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Coater/developer, etch, deposition equipment; TSMC names Tokyo Electron as an outstanding supplier (Supply Chain Management Forum awards 2023, 2024)",
+        "source": [
+         "https://pr.tsmc.com/english/news/3192",
+         "https://pr.tsmc.com/english/news/3086"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "intc",
+        "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development and Sustainability. The category establishes the relationship and not a product line",
+        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_dram_equipment",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "klac",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Process control / inspection & metrology; only named >10% customer in KLA 10-K FY2024-2026",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/klac-20260630.htm",
+         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/R108.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "intc",
+        "what": "Intel supplier: 2026 EPIC award for Excellence in Technology Development. The category establishes the relationship and not a product line",
+        "source": "https://www.intel.com/content/www/us/en/newsroom/news/corporate/intel-announces-2026-epic-supplier-award-recipients.html",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "shinetsu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers and photoresist",
+        "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "ibiden",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "intc",
+        "what": "IC package substrates; CEO (Bloomberg interview): Intel historically 70-80% of substrate revenue, ~30% in FY ended Mar-2024",
+        "source": "https://www.business-standard.com/technology/tech-news/nvidia-supplier-ibiden-weighs-faster-expansion-to-meet-ai-demand-says-ceo-124123000069_1.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "abf_film",
+        "role": "hurt",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "abf_bt_substrates",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ],
+    "lose": [
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "tel",
+     "klac"
+    ],
+    "win_dropped": [
+     "tok"
+    ],
+    "win_added": [
+     "lrcx",
+     "amat",
+     "advantest",
+     "siltronic",
+     "shinetsu",
+     "ibiden"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "lrcx",
+     "amat"
+    ],
+    "lose_added": [
+     "mu",
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": false,
+    "lose": false
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "abb_q3",
+   "answer_date": "2026-10-15",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "abb",
+     "eaton"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "clf",
+     "posco",
+     "powell"
+    ],
+    "lose": [
+     "vertiv"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "clf",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "eaton",
+        "what": "Grain-oriented electrical steel for transformer cores",
+        "source": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "abb",
+        "what": "Grain-oriented electrical steel for transformer cores",
+        "source": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "posco",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "eaton",
+        "what": "Grain-oriented electrical steel",
+        "source": "https://www.manufacturingmag.com/article/grid-transformer-shortage-three-year-backlog-coil-winding-labor",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "abb",
+        "what": "Grain-oriented electrical steel",
+        "source": "https://www.manufacturingmag.com/article/grid-transformer-shortage-three-year-backlog-coil-winding-labor",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "clf",
+     "posco"
+    ],
+    "win_dropped": [
+     "powell"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "vertiv"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "tsm_q3",
+   "answer_date": "2026-10-15",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "tsmc",
+     "asml",
+     "nvda",
+     "avgo",
+     "amd"
+    ],
+    "lose": [
+     "intc",
+     "samsung"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "ibiden",
+     "unimicron",
+     "advantest",
+     "lasertec"
+    ],
+    "lose": [
+     "skc"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "hoya",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV mask blanks (with AGC, ~93% of world supply)",
+        "source": "https://siliconanalysts.com/tools/supply-chain",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "hdd_nearline",
+        "role": "propagation",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "high",
+        "lagging": true
+       }
+      ]
+     },
+     {
+      "id": "sumco",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers; SUMCO listed in TSMC annual report 'Major Suppliers' (raw wafers) and awarded at TSMC supplier forums 2023-2025",
+        "source": [
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "entegris",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Filtration, specialty chemicals/gases, wafer handling; TSMC is Entegris' only named >10% customer",
+        "source": [
+         "https://companiesmarketcap.com/entegris/sec-reports-10k/0001101302-26-000012/",
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "tok",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Photoresists (incl. EUV); TOK listed in TSMC annual report 'Major Suppliers' (lithographic materials) and awarded at TSMC 2024 supplier forum",
+        "source": [
+         "https://pr.tsmc.com/english/news/3192",
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ],
+    "lose": [
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "ibiden",
+     "unimicron",
+     "advantest",
+     "lasertec"
+    ],
+    "win_added": [
+     "hoya",
+     "sumco",
+     "entegris",
+     "tok"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "skc"
+    ],
+    "lose_added": [
+     "mu",
+     "skhynix",
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": false,
+    "lose": false
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "clf_q3",
+   "answer_date": "2026-10-19",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "clf",
+     "siemensenergy",
+     "gev",
+     "etn"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "msft",
+     "amzn"
+    ],
+    "lose": [],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "hwm",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "gev",
+        "what": "cast superalloy blades for industrial gas turbines",
+        "source": "https://finance.yahoo.com/markets/stocks/articles/howmet-aerospace-hwm-facing-competition-141108207.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "msft",
+     "amzn"
+    ],
+    "win_added": [
+     "hwm"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "ge_aero_q3",
+   "answer_date": "2026-10-20",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "ge_aero",
+     "howmet"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "ati",
+     "carpenter",
+     "safran"
+    ],
+    "lose": [
+     "rtx"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "ati",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "ge_aero",
+        "what": "Titanium and nickel for hot sections",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "howmet",
+        "what": "Titanium and nickel feedstock",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "carpenter",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "ge_aero",
+        "what": "Specialty alloy and powder",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "howmet",
+        "what": "Specialty alloy and powder",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "ati",
+     "carpenter"
+    ],
+    "win_dropped": [
+     "safran"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "rtx"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "noc_q3",
+   "answer_date": "2026-10-20",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "noc",
+     "l3harris"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lmt",
+     "rtx"
+    ],
+    "lose": [
+     "boeing"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lmt",
+     "rtx"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "boeing"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "bioprocess_q3",
+   "answer_date": "2026-10-21",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "danaher",
+     "sartorius",
+     "thermo"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lonza",
+     "samsung_bio"
+    ],
+    "lose": [
+     "wuxi_bio"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lonza",
+     "samsung_bio"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "wuxi_bio"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "srm_bottleneck",
+   "answer_date": "2026-10-22",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "l3harris",
+     "noc"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lmt",
+     "rtx"
+    ],
+    "lose": [
+     "boeing"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lmt",
+     "rtx"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "boeing"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "gev_q3",
+   "answer_date": "2026-10-22",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "gev",
+     "siemens_energy"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "baker_hughes",
+     "vistra",
+     "talen"
+    ],
+    "lose": [
+     "nextera"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "bwxt",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "gev",
+        "what": "BWRX-300 reactor pressure vessel (Darlington)",
+        "source": "https://www.gevernova.com/news/press-releases/ge-hitachi-awards-contract-bwrx-300-reactor-pressure-vessel-bwxt",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "baker_hughes",
+     "vistra",
+     "talen"
+    ],
+    "win_added": [
+     "bwxt"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nextera"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "vrt_q3",
+   "answer_date": "2026-10-22",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "vertiv"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "eaton",
+     "nvent"
+    ],
+    "lose": [
+     "schneider"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "eaton",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "vertiv",
+        "what": "Power distribution for the data hall",
+        "source": "https://www.eaton.com/us/en-us/company/news-insights/news-releases/2026/eaton-reports-record-second-quarter-2026-results.html",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "eaton"
+    ],
+    "win_dropped": [
+     "nvent"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "schneider"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "wst_q3",
+   "answer_date": "2026-10-22",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "west"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lly",
+     "stevanato"
+    ],
+    "lose": [
+     "gerresheimer"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lly",
+     "stevanato"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "gerresheimer"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "intc_q3",
+   "answer_date": "2026-10-22",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "intc",
+     "asml",
+     "ibiden"
+    ],
+    "lose": [
+     "tsmc",
+     "samsung"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "lasertec",
+     "asmpt",
+     "agc"
+    ],
+    "lose": [
+     "entegris",
+     "klac"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "ajinomoto",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "ibiden",
+        "what": "ABF build-up film",
+        "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "abf_film",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "high",
+        "lagging": false
+       }
+      ]
+     }
+    ],
+    "lose": [
+     {
+      "id": "hoya",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV mask blanks (with AGC, ~93% of world supply)",
+        "source": "https://siliconanalysts.com/tools/supply-chain",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "hdd_nearline",
+        "role": "propagation",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "high",
+        "lagging": true
+       }
+      ]
+     },
+     {
+      "id": "sumco",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers; SUMCO listed in TSMC annual report 'Major Suppliers' (raw wafers) and awarded at TSMC supplier forums 2023-2025",
+        "source": [
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "entegris",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Filtration, specialty chemicals/gases, wafer handling; TSMC is Entegris' only named >10% customer",
+        "source": [
+         "https://companiesmarketcap.com/entegris/sec-reports-10k/0001101302-26-000012/",
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "tok",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Photoresists (incl. EUV); TOK listed in TSMC annual report 'Major Suppliers' (lithographic materials) and awarded at TSMC 2024 supplier forum",
+        "source": [
+         "https://pr.tsmc.com/english/news/3192",
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lasertec",
+     "asmpt",
+     "agc"
+    ],
+    "win_added": [
+     "ajinomoto"
+    ],
+    "lose_kept": [
+     "entegris"
+    ],
+    "lose_dropped": [
+     "klac"
+    ],
+    "lose_added": [
+     "hoya",
+     "sumco",
+     "tok",
+     "mu",
+     "skhynix",
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": false,
+    "lose": false
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "safran_q3",
+   "answer_date": "2026-10-23",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "safran",
+     "ge_aero"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "ati",
+     "carpenter",
+     "howmet"
+    ],
+    "lose": [
+     "rolls"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "howmet",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "ge_aero",
+        "what": "Investment castings and forgings",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "safran",
+        "what": "Castings and fasteners",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "ati",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "ge_aero",
+        "what": "Titanium and nickel for hot sections",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "carpenter",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "ge_aero",
+        "what": "Specialty alloy and powder",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "ati",
+     "carpenter",
+     "howmet"
+    ],
+    "win_dropped": [],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "rolls"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "avtr_q3",
+   "answer_date": "2026-10-23",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "avantor"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "sartorius",
+     "repligen",
+     "danaher"
+    ],
+    "lose": [
+     "wuxi_bio"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "sartorius",
+     "repligen",
+     "danaher"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "wuxi_bio"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "shecy_h1",
+   "answer_date": "2026-10-23",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "shinetsu",
+     "sumco",
+     "globalwafers",
+     "wacker"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "siltronic",
+     "entegris"
+    ],
+    "lose": [
+     "nsig"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "siltronic",
+     "entegris"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nsig"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "skh_q3",
+   "answer_date": "2026-10-23",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "skhynix",
+     "hanmi"
+    ],
+    "lose": [
+     "mu",
+     "samsung"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "advantest",
+     "asmpt"
+    ],
+    "lose": [
+     "globalwafers",
+     "shinetsu"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "advantest",
+     "asmpt"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "globalwafers",
+     "shinetsu"
+    ],
+    "lose_added": [
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": true,
+    "lose": false
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "amkr_q3",
+   "answer_date": "2026-10-26",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "amkr"
+    ],
+    "lose": [
+     "ase",
+     "tsmc"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "ter",
+     "advantest"
+    ],
+    "lose": [
+     "asmpt"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "ter",
+     "advantest"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "asmpt"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "cdns_q3",
+   "answer_date": "2026-10-26",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "cdns",
+     "snps"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "arm"
+    ],
+    "lose": [
+     "intc"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "arm"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "intc"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "lmt_q3",
+   "answer_date": "2026-10-27",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "lmt"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "l3harris",
+     "noc",
+     "mp"
+    ],
+    "lose": [
+     "boeing"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "l3harris",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lmt",
+        "what": "Solid rocket motors for missiles",
+        "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "noc",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lmt",
+        "what": "Solid rocket motors for missiles",
+        "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "mp",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lmt",
+        "what": "Rare-earth magnets for actuators and seekers",
+        "source": "https://investors.mpmaterials.com/investor-news/news-details/2026/MP-Materials-Reports-Second-Quarter-2026-Results/default.aspx",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "gd",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lmt",
+        "what": "Ordnance and munitions components",
+        "source": "https://breakingdefense.com/2026/02/army-official-not-happy-with-gds-handling-of-155mm-contract-as-production-lags/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "l3harris",
+     "noc",
+     "mp"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "gd"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "boeing"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "rtx_q3",
+   "answer_date": "2026-10-27",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "rtx"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "noc",
+     "mp",
+     "howmet"
+    ],
+    "lose": [
+     "boeing"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "howmet",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "rtx",
+        "what": "Investment castings for Pratt",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "l3harris",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "rtx",
+        "what": "Solid rocket motors for missiles",
+        "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "noc",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "rtx",
+        "what": "Solid rocket motors for missiles",
+        "source": "https://breakingdefense.com/2026/01/with-the-boom-for-solid-rocket-motors-for-missiles-a-perilous-crunch-in-the-supply-chain/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "mp",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "rtx",
+        "what": "Rare-earth magnets for actuators and seekers",
+        "source": "https://investors.mpmaterials.com/investor-news/news-details/2026/MP-Materials-Reports-Second-Quarter-2026-Results/default.aspx",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "noc",
+     "mp",
+     "howmet"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "l3harris"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "boeing"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "corning_q3",
+   "answer_date": "2026-10-27",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "corning"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "stevanato",
+     "gerresheimer"
+    ],
+    "lose": [],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "stevanato",
+     "gerresheimer"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "ter_q3",
+   "answer_date": "2026-10-27",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "ter"
+    ],
+    "lose": [
+     "advantest"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "nvda"
+    ],
+    "lose": [
+     "skhynix"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "nvda"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "skhynix"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "ati_q3",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "ati",
+     "carpenter"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "ge_aero",
+     "howmet"
+    ],
+    "lose": [
+     "boeing"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "ge_aero",
+     "howmet"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "boeing"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "gd_q3",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "gd"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "rheinmetall",
+     "noc"
+    ],
+    "lose": [
+     "boeing"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "rheinmetall",
+     "noc"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "boeing"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "novartis_q3",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "novartis"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "bwxt",
+     "cardinal"
+    ],
+    "lose": [
+     "lantheus",
+     "telix"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "agc",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "novartis",
+        "what": "Biologics capacity",
+        "source": "https://samsungbiologics.com/media/company-news/samsung-biologics-reports-second-quarter-2026-financial-results",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "stevanato",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "novartis",
+        "what": "Glass containment",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "bwxt",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "novartis",
+        "what": "Medical isotopes",
+        "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "cardinal",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "novartis",
+        "what": "Nuclear pharmacy distribution",
+        "source": "https://www.telixpharma.com/news-views/telix-to-acquire-itm-isotope-technologies-munich/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "bwxt",
+     "cardinal"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "agc",
+     "stevanato"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "lantheus",
+     "telix"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "samsung_bio_q3",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "samsung_bio",
+     "lonza"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "sartorius",
+     "danaher",
+     "repligen"
+    ],
+    "lose": [
+     "wuxi_bio"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "sartorius",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lonza",
+        "what": "Single-use bioprocess consumables and filtration",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "samsung_bio",
+        "what": "Single-use bioprocess consumables and filtration",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "danaher",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lonza",
+        "what": "Cytiva and Pall filtration and chromatography",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "samsung_bio",
+        "what": "Cytiva and Pall filtration and chromatography",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "repligen",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lonza",
+        "what": "Filtration and chromatography hardware",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "sartorius",
+     "danaher",
+     "repligen"
+    ],
+    "win_dropped": [],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "wuxi_bio"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "adv_h1",
+   "answer_date": "2026-10-28",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "advantest"
+    ],
+    "lose": [
+     "ter"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "tsmc"
+    ],
+    "lose": [
+     "skhynix"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "tsmc"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "skhynix"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "gev_q3",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "gev",
+     "siemensenergy",
+     "hwm",
+     "etn"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "clf",
+     "ceg"
+    ],
+    "lose": [
+     "msft",
+     "amzn"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "clf",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "siemensenergy",
+        "what": "grain-oriented electrical steel for power transformers",
+        "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "gev",
+        "what": "grain-oriented electrical steel for power transformers",
+        "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "etn",
+        "what": "grain-oriented electrical steel for power transformers",
+        "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "clf"
+    ],
+    "win_dropped": [
+     "ceg"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "msft",
+     "amzn"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "googl_q3",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "nvda",
+     "avgo",
+     "tsmc"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "anet",
+     "cohr",
+     "lite"
+    ],
+    "lose": [
+     "mrvl"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "amkr",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "Advanced packaging for NVIDIA platforms -- data center processors, networking chipsets and accelerated computing systems -- with US capacity in Arizona expanding under a multi-year partnership NVIDIA is prepaying for",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/0001047127/000104712726000036/ex-991amkorinvestorprese.htm",
+         "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-announces-strategic-partnership-nvidia-expand"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "tsmc",
+        "what": "Turnkey advanced packaging and test in Peoria, Arizona: TSMC contracts the service from Amkor and uses it for InFO and CoWoS, serving customers of its Phoenix fabs",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/1046179/000104617924000112/amkorandtsmctoexpandpartne.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "advantest",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
+        "source": [
+         "https://pr.tsmc.com/english/news/3274",
+         "https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "nvda",
+        "what": "SoC testers for AI GPUs; trade press consistently labels Advantest an 'Nvidia supplier' (no % disclosed by Advantest)",
+        "source": "https://www.investing.com/news/earnings/nvidia-supplier-advantest-jumps-12-after-ai-demand-lifts-earnings-outlook-4822271",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "unimicron",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "FC-BGA package substrate for GPU modules",
+        "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "abf_film",
+        "role": "hurt",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "abf_bt_substrates",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "asml",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV and High-NA EUV scanners; sole source",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "snps",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "EDA tools and IP for chip design",
+        "source": "https://www.shashi.co/2026/07/synopsys-cadence-and-siemens-eda-design.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "shinetsu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers and photoresist",
+        "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "arm",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "CPU architecture licence for Grace/Vera CPUs",
+        "source": "https://www.datacenterdynamics.com/en/news/arm-posts-recording-breaking-revenue-for-full-year-and-q4-26-with-its-share-of-hyperscaler-cpu-compute-hitting-50/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "hoya",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV mask blanks (with AGC, ~93% of world supply)",
+        "source": "https://siliconanalysts.com/tools/supply-chain",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "hdd_nearline",
+        "role": "propagation",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "high",
+        "lagging": true
+       }
+      ]
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "anet",
+     "cohr",
+     "lite"
+    ],
+    "win_added": [
+     "amkr",
+     "advantest",
+     "unimicron",
+     "asml",
+     "snps",
+     "shinetsu",
+     "arm",
+     "hoya"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "mrvl"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "lrcx_q1",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "lrcx",
+     "amat",
+     "klac",
+     "tel"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "skhynix",
+     "entegris"
+    ],
+    "lose": [
+     "samsung"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "skhynix",
+     "entegris"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "samsung"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "smsg_q3",
+   "answer_date": "2026-10-28",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "samsung"
+    ],
+    "lose": [
+     "skhynix",
+     "tsmc"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "amat",
+     "siltronic"
+    ],
+    "lose": [
+     "hanmi",
+     "entegris"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": [
+     {
+      "id": "hoya",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV mask blanks (with AGC, ~93% of world supply)",
+        "source": "https://siliconanalysts.com/tools/supply-chain",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "hdd_nearline",
+        "role": "propagation",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "high",
+        "lagging": true
+       }
+      ]
+     },
+     {
+      "id": "sumco",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers; SUMCO listed in TSMC annual report 'Major Suppliers' (raw wafers) and awarded at TSMC supplier forums 2023-2025",
+        "source": [
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "entegris",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Filtration, specialty chemicals/gases, wafer handling; TSMC is Entegris' only named >10% customer",
+        "source": [
+         "https://companiesmarketcap.com/entegris/sec-reports-10k/0001101302-26-000012/",
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "tok",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Photoresists (incl. EUV); TOK listed in TSMC annual report 'Major Suppliers' (lithographic materials) and awarded at TSMC 2024 supplier forum",
+        "source": [
+         "https://pr.tsmc.com/english/news/3192",
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "amat",
+     "siltronic"
+    ],
+    "win_added": [],
+    "lose_kept": [
+     "entegris"
+    ],
+    "lose_dropped": [
+     "hanmi"
+    ],
+    "lose_added": [
+     "hoya",
+     "sumco",
+     "tok",
+     "mu",
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": true,
+    "lose": false
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "teck_q3",
+   "answer_date": "2026-10-28",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "teck",
+     "cohr",
+     "lite"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "fn"
+    ],
+    "lose": [
+     "axti"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "axti",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lite",
+        "what": "InP substrates for lasers/transceivers",
+        "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "cohr",
+        "what": "InP substrates for lasers/transceivers",
+        "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "inp_substrates",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "fn"
+    ],
+    "win_added": [
+     "axti"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "axti"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "hwm_q3",
+   "answer_date": "2026-10-29",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "howmet"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "ati",
+     "carpenter",
+     "safran"
+    ],
+    "lose": [],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "ati",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "howmet",
+        "what": "Titanium and nickel feedstock",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "carpenter",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "howmet",
+        "what": "Specialty alloy and powder",
+        "source": "https://www.geaerospace.com/news/press-releases/ge-aerospace-acquire-consolidated-precision-products-cpp-expanding-mission-critical",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "ati",
+     "carpenter"
+    ],
+    "win_dropped": [
+     "safran"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "baxter_q3",
+   "answer_date": "2026-10-29",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "baxter",
+     "fresenius"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "hepalink",
+     "west"
+    ],
+    "lose": [
+     "hikma",
+     "amneal"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "hepalink",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "baxter",
+        "what": "Crude heparin",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "fresenius",
+        "what": "Crude heparin",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "gerresheimer",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "fresenius",
+        "what": "Vials and ampoules",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "west",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "baxter",
+        "what": "Elastomer components",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "schott_pharma",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "baxter",
+        "what": "Pharmaceutical containment",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "hepalink",
+     "west"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "gerresheimer",
+     "schott_pharma"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "hikma",
+     "amneal"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "lly_q3",
+   "answer_date": "2026-10-29",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "lly"
+    ],
+    "lose": [
+     "novo"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "lonza",
+     "siegfried",
+     "thermo",
+     "fujifilm"
+    ],
+    "lose": [
+     "polypeptide",
+     "ypsomed",
+     "gerresheimer"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lonza",
+     "siegfried",
+     "thermo",
+     "fujifilm"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "polypeptide",
+     "ypsomed",
+     "gerresheimer"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "amzn_q3",
+   "answer_date": "2026-10-29",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "alab",
+     "crdo",
+     "mrvl"
+    ],
+    "lose": [
+     "nvda"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "cohr",
+     "lite",
+     "tsmc"
+    ],
+    "lose": [
+     "smci",
+     "foxconn"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": [
+     {
+      "id": "mu",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "samsung",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "cohr",
+     "lite",
+     "tsmc"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "smci",
+     "foxconn"
+    ],
+    "lose_added": [
+     "mu",
+     "samsung",
+     "skhynix",
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": true,
+    "lose": false
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "asx_q3",
+   "answer_date": "2026-10-29",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "ase",
+     "nvda",
+     "amd"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "asmpt",
+     "ibiden",
+     "unimicron"
+    ],
+    "lose": [
+     "amkr"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "tsmc",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "N4/N3 wafers plus CoWoS-L packaging; ~23% of B100 cost is logic die, ~17% CoWoS (estimate)",
+        "source": "https://siliconanalysts.com/analysis/b100-cost-economics",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "amd",
+        "what": "AMD 10-K: relies on TSMC for all CPU/GPU wafers at 7nm and below",
+        "source": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "asmpt",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "ase",
+        "what": "TCB bonders for advanced packaging",
+        "source": "https://www.trendforce.com/news/2025/12/12/news-sk-hynix-reportedly-places-hbm4-tc-bonder-order-with-asmpt-as-hanmi-hanwha-patent-clash-heats-up/",
+        "source_type": "analyst (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "tc_bonders_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "not_yet",
+        "exposure": "medium",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "unimicron",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "FC-BGA package substrate for GPU modules",
+        "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "abf_film",
+        "role": "hurt",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "abf_bt_substrates",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "snps",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "EDA tools and IP for chip design",
+        "source": "https://www.shashi.co/2026/07/synopsys-cadence-and-siemens-eda-design.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "arm",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "CPU architecture licence for Grace/Vera CPUs",
+        "source": "https://www.datacenterdynamics.com/en/news/arm-posts-recording-breaking-revenue-for-full-year-and-q4-26-with-its-share-of-hyperscaler-cpu-compute-hitting-50/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "HBM3E/HBM4 stacks; HBM is ~47% of a Blackwell-class BOM (estimate)",
+        "source": "https://siliconanalysts.com/analysis/b100-cost-economics",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "HBM3E/HBM4 and LPDDR",
+        "source": "https://ca.investing.com/news/company-news/micron-q3-fy2026-slides-record-415b-revenue-new-customer-deals-93CH-4706541",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "amkr",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "Advanced packaging for NVIDIA platforms -- data center processors, networking chipsets and accelerated computing systems -- with US capacity in Arizona expanding under a multi-year partnership NVIDIA is prepaying for",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/0001047127/000104712726000036/ex-991amkorinvestorprese.htm",
+         "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-announces-strategic-partnership-nvidia-expand"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "asmpt",
+     "unimicron"
+    ],
+    "win_dropped": [
+     "ibiden"
+    ],
+    "win_added": [
+     "tsmc",
+     "snps",
+     "arm",
+     "skhynix",
+     "mu",
+     "amkr"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "amkr"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "axti_q3",
+   "answer_date": "2026-10-29",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "axti",
+     "lite",
+     "cohr"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "fn"
+    ],
+    "lose": [
+     "teck"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "teck",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "cohr",
+        "what": "germanium for optical components",
+        "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "lite",
+        "what": "germanium for optical components",
+        "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "fn"
+    ],
+    "win_added": [
+     "teck"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "teck"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "entg_q3",
+   "answer_date": "2026-10-29",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "entegris",
+     "tsmc"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "tok",
+     "klac"
+    ],
+    "lose": [
+     "intc",
+     "samsung"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "asml",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV and High-NA EUV scanners; sole source",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "shinetsu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers and photoresist",
+        "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "hoya",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV mask blanks (with AGC, ~93% of world supply)",
+        "source": "https://siliconanalysts.com/tools/supply-chain",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "hdd_nearline",
+        "role": "propagation",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "high",
+        "lagging": true
+       }
+      ]
+     },
+     {
+      "id": "lrcx",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names TSMC among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_dram_equipment",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "amat",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K; also TSMC 2025 supplier award",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "klac",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Process control / inspection & metrology; only named >10% customer in KLA 10-K FY2024-2026",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/klac-20260630.htm",
+         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/R108.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "tel",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Coater/developer, etch, deposition equipment; TSMC names Tokyo Electron as an outstanding supplier (Supply Chain Management Forum awards 2023, 2024)",
+        "source": [
+         "https://pr.tsmc.com/english/news/3192",
+         "https://pr.tsmc.com/english/news/3086"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_dram_equipment",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "advantest",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
+        "source": [
+         "https://pr.tsmc.com/english/news/3274",
+         "https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "klac"
+    ],
+    "win_dropped": [
+     "tok"
+    ],
+    "win_added": [
+     "asml",
+     "shinetsu",
+     "hoya",
+     "lrcx",
+     "amat",
+     "tel",
+     "advantest"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "intc",
+     "samsung"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "hanmi_q3",
+   "answer_date": "2026-10-29",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "hanmi"
+    ],
+    "lose": [
+     "asmpt"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "skhynix"
+    ],
+    "lose": [
+     "ase"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "skhynix"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "ase"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "hwm_q3",
+   "answer_date": "2026-10-29",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "hwm",
+     "gev"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "siemensenergy",
+     "ceg"
+    ],
+    "lose": [
+     "clf"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "clf",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "gev",
+        "what": "grain-oriented electrical steel for power transformers",
+        "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "siemensenergy",
+     "ceg"
+    ],
+    "win_added": [
+     "clf"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "clf"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "mpwr_q3",
+   "answer_date": "2026-10-29",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "mpwr",
+     "nvda"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "smci",
+     "foxconn",
+     "vrt"
+    ],
+    "lose": [
+     "amd"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "unimicron",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "FC-BGA package substrate for GPU modules",
+        "source": "https://finance.biggo.com/news/ZU2KJZ4BpwxG186NIOsE",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "abf_film",
+        "role": "hurt",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "abf_bt_substrates",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "snps",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "EDA tools and IP for chip design",
+        "source": "https://www.shashi.co/2026/07/synopsys-cadence-and-siemens-eda-design.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "arm",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "CPU architecture licence for Grace/Vera CPUs",
+        "source": "https://www.datacenterdynamics.com/en/news/arm-posts-recording-breaking-revenue-for-full-year-and-q4-26-with-its-share-of-hyperscaler-cpu-compute-hitting-50/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "tsmc",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "N4/N3 wafers plus CoWoS-L packaging; ~23% of B100 cost is logic die, ~17% CoWoS (estimate)",
+        "source": "https://siliconanalysts.com/analysis/b100-cost-economics",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "skhynix",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "HBM3E/HBM4 stacks; HBM is ~47% of a Blackwell-class BOM (estimate)",
+        "source": "https://siliconanalysts.com/analysis/b100-cost-economics",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "mu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "HBM3E/HBM4 and LPDDR",
+        "source": "https://ca.investing.com/news/company-news/micron-q3-fy2026-slides-record-415b-revenue-new-customer-deals-93CH-4706541",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "hbm_2027",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "amkr",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "Advanced packaging for NVIDIA platforms -- data center processors, networking chipsets and accelerated computing systems -- with US capacity in Arizona expanding under a multi-year partnership NVIDIA is prepaying for",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/0001047127/000104712726000036/ex-991amkorinvestorprese.htm",
+         "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-announces-strategic-partnership-nvidia-expand"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "foxconn",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nvda",
+        "what": "GB200/GB300 rack-scale integration; ~2,400 racks/month Feb 2026",
+        "source": "https://www.technetbooks.com/2026/03/ai-server-market-shipment-growth-2026.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "foxconn"
+    ],
+    "win_dropped": [
+     "smci",
+     "vrt"
+    ],
+    "win_added": [
+     "unimicron",
+     "snps",
+     "arm",
+     "tsmc",
+     "skhynix",
+     "mu",
+     "amkr"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "amd"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "pwr_q3",
+   "answer_date": "2026-10-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "quanta"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "prysmian",
+     "nexans",
+     "nkt",
+     "hubbell"
+    ],
+    "lose": [
+     "nextera"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "prysmian",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "quanta",
+        "what": "HVDC and subsea cable for transmission projects",
+        "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "nexans",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "quanta",
+        "what": "HVDC and subsea cable",
+        "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "nkt",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "quanta",
+        "what": "HVDC cable systems",
+        "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "prysmian",
+     "nexans",
+     "nkt"
+    ],
+    "win_dropped": [
+     "hubbell"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nextera"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "cardinal_q1",
+   "answer_date": "2026-10-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "cardinal"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "novartis",
+     "lantheus"
+    ],
+    "lose": [
+     "cencora"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "novartis",
+     "lantheus"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "cencora"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "hoya_h1",
+   "answer_date": "2026-10-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "hoya",
+     "lasertec"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "asml",
+     "tok"
+    ],
+    "lose": [
+     "agc"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "asml",
+     "tok"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "agc"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "hii_q3",
+   "answer_date": "2026-11-03",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "hii",
+     "gd"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [],
+    "lose": [
+     "bae"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "bae"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "bwxt_q3",
+   "answer_date": "2026-11-03",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "bwxt"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "novartis",
+     "lantheus",
+     "telix"
+    ],
+    "lose": [],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "novartis",
+     "lantheus",
+     "telix"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "teva_q3",
+   "answer_date": "2026-11-03",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "teva",
+     "viatris"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "zhejiang_huahai",
+     "north_china_pharma"
+    ],
+    "lose": [
+     "hikma"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "zhejiang_huahai",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "teva",
+        "what": "API and key starting materials",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "viatris",
+        "what": "API and key starting materials",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "north_china_pharma",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "teva",
+        "what": "Penicillin intermediates",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "cardinal",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "teva",
+        "what": "Wholesale distribution",
+        "source": "https://www.usp.org/supply-chain/drug-shortages",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "aurobindo",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "viatris",
+        "what": "Generic API",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "zhejiang_huahai",
+     "north_china_pharma"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "cardinal",
+     "aurobindo"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "hikma"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "etn_q3",
+   "answer_date": "2026-11-04",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "eaton",
+     "vertiv",
+     "quanta"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "abb",
+     "schneider",
+     "clf"
+    ],
+    "lose": [
+     "nvent"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "clf",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "eaton",
+        "what": "Grain-oriented electrical steel for transformer cores",
+        "source": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "prysmian",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "quanta",
+        "what": "HVDC and subsea cable for transmission projects",
+        "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "posco",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "eaton",
+        "what": "Grain-oriented electrical steel",
+        "source": "https://www.manufacturingmag.com/article/grid-transformer-shortage-three-year-backlog-coil-winding-labor",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "nexans",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "quanta",
+        "what": "HVDC and subsea cable",
+        "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "nkt",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "quanta",
+        "what": "HVDC cable systems",
+        "source": "https://www.offshore-mag.com/renewable-energy/article/55240474/shortage-of-submarine-power-cables-poses-threat-to-offshore-wind-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "clf"
+    ],
+    "win_dropped": [
+     "abb",
+     "schneider"
+    ],
+    "win_added": [
+     "prysmian",
+     "posco",
+     "nexans",
+     "nkt"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nvent"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "cencora_q4",
+   "answer_date": "2026-11-04",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "cencora",
+     "mckesson"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "novo",
+     "lly"
+    ],
+    "lose": [
+     "cardinal"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "novo",
+     "lly"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "cardinal"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "crl_q3",
+   "answer_date": "2026-11-04",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "charles_river"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "thermo"
+    ],
+    "lose": [],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "thermo"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "fresenius_q3",
+   "answer_date": "2026-11-04",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "fresenius",
+     "hikma"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "hepalink",
+     "gerresheimer"
+    ],
+    "lose": [
+     "baxter"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "hepalink",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "fresenius",
+        "what": "Crude heparin",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "bd",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "hikma",
+        "what": "Injection devices",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "gerresheimer",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "fresenius",
+        "what": "Vials and ampoules",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "hepalink",
+     "gerresheimer"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "bd"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "baxter"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "novo_q3",
+   "answer_date": "2026-11-04",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "lly"
+    ],
+    "lose": [
+     "novo"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "lonza",
+     "siegfried",
+     "thermo",
+     "fujifilm"
+    ],
+    "lose": [
+     "polypeptide",
+     "ypsomed",
+     "gerresheimer"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lonza",
+     "siegfried",
+     "thermo",
+     "fujifilm"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "polypeptide",
+     "ypsomed",
+     "gerresheimer"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "stvn_q3",
+   "answer_date": "2026-11-04",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "stevanato"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "corning",
+     "lly"
+    ],
+    "lose": [
+     "gerresheimer"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "corning",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "stevanato",
+        "what": "Pharmaceutical glass tubing",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "corning"
+    ],
+    "win_dropped": [
+     "lly"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "gerresheimer"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "mp_ndpr_q3",
+   "answer_date": "2026-11-05",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "mp"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lmt",
+     "rtx"
+    ],
+    "lose": [],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lmt",
+     "rtx"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "rheinmetall_q3",
+   "answer_date": "2026-11-05",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "rheinmetall",
+     "bae",
+     "thales"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [],
+    "lose": [
+     "lmt"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "lmt"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "ccj_q3",
+   "answer_date": "2026-11-05",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "cameco",
+     "centrus"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "bwxt",
+     "doosan"
+    ],
+    "lose": [
+     "constellation",
+     "talen"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "bwxt",
+     "doosan"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "constellation",
+     "talen"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "bd_q4",
+   "answer_date": "2026-11-05",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "bd",
+     "west"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lly",
+     "novo"
+    ],
+    "lose": [
+     "ypsomed",
+     "stevanato"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lly",
+     "novo"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "ypsomed",
+     "stevanato"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "mckesson_q2",
+   "answer_date": "2026-11-05",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "mckesson"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lly",
+     "novo"
+    ],
+    "lose": [
+     "cardinal"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lly",
+     "novo"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "cardinal"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "ajin_h1",
+   "answer_date": "2026-11-05",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "ajinomoto",
+     "unimicron",
+     "ibiden"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "ase",
+     "amkr"
+    ],
+    "lose": [
+     "skc"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "skc",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "unimicron",
+        "what": "glass substrate (ABF alternative)",
+        "source": "https://www.trendforce.com/news/2025/07/07/news-absolics-reportedly-ramps-up-glass-substrate-production-mass-production-expected-by-year-end/",
+        "source_type": "analyst (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "ase",
+     "amkr"
+    ],
+    "win_added": [
+     "skc"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "skc"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "cohr_q1",
+   "answer_date": "2026-11-05",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "cohr",
+     "fn",
+     "lite"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "axti",
+     "anet"
+    ],
+    "lose": [
+     "crdo"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "axti",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lite",
+        "what": "InP substrates for lasers/transceivers",
+        "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "cohr",
+        "what": "InP substrates for lasers/transceivers",
+        "source": "https://www.semiconductor-today.com/news_items/2025/nov/axt-101125.shtml",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "inp_substrates",
+        "role": "owners",
+        "stage": "tightening",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "teck",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "cohr",
+        "what": "germanium for optical components",
+        "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "lite",
+        "what": "germanium for optical components",
+        "source": "https://discoveryalert.com.au/teck-trail-critical-minerals-germanium-antimony-gallium-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "axti"
+    ],
+    "win_dropped": [
+     "anet"
+    ],
+    "win_added": [
+     "teck"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "crdo"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "ceg_q3",
+   "answer_date": "2026-11-06",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "constellation",
+     "vistra",
+     "talen"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "centrus",
+     "cameco",
+     "gev"
+    ],
+    "lose": [
+     "nextera"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "centrus",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "constellation",
+        "what": "Enriched uranium fuel",
+        "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "vistra",
+        "what": "Enriched uranium fuel",
+        "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "talen",
+        "what": "Enriched uranium fuel",
+        "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "gev",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "constellation",
+        "what": "Generation equipment",
+        "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "vistra",
+        "what": "Generation equipment",
+        "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "centrus",
+     "gev"
+    ],
+    "win_dropped": [
+     "cameco"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nextera"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "vst_q3",
+   "answer_date": "2026-11-06",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "vistra"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "centrus",
+     "gev"
+    ],
+    "lose": [
+     "nextera"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "centrus",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "vistra",
+        "what": "Enriched uranium fuel",
+        "source": "https://www.ans.org/news/2026-07-06/article-8180/doe-contract-boosts-centruss-haleu-goals-as-urenco-continues-leu-expansion/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "gev",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "vistra",
+        "what": "Generation equipment",
+        "source": "https://energynewsbeat.co/ai/ge-vernovas-gas-turbine-backlog-hits-116-gw-what-does-this-mean-for-the-ai-market/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "centrus",
+     "gev"
+    ],
+    "win_dropped": [],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nextera"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "divis_q2",
+   "answer_date": "2026-11-06",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "divis",
+     "sun_pharma",
+     "aurobindo"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lly",
+     "novo"
+    ],
+    "lose": [
+     "zhejiang_huahai"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "north_china_pharma",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "aurobindo",
+        "what": "6-APA and penicillin intermediates",
+        "source": "https://www.cfr.org/reports/the-pharma-choke-point",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lly",
+     "novo"
+    ],
+    "win_added": [
+     "north_china_pharma"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "zhejiang_huahai"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "fujifilm_h1",
+   "answer_date": "2026-11-06",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "fujifilm",
+     "agc"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lly",
+     "novartis"
+    ],
+    "lose": [
+     "wuxi_bio"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lly",
+     "novartis"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "wuxi_bio"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "sumco_q3",
+   "answer_date": "2026-11-06",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "sumco",
+     "shinetsu",
+     "globalwafers",
+     "wacker"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "siltronic",
+     "entegris"
+    ],
+    "lose": [
+     "nsig"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "siltronic",
+     "entegris"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nsig"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "tel_q2",
+   "answer_date": "2026-11-10",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "tel",
+     "tsmc"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "asml",
+     "lrcx"
+    ],
+    "lose": [
+     "nsig"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "asml",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV and High-NA EUV scanners; sole source",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "shinetsu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers and photoresist",
+        "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "hoya",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV mask blanks (with AGC, ~93% of world supply)",
+        "source": "https://siliconanalysts.com/tools/supply-chain",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "hdd_nearline",
+        "role": "propagation",
+        "stage": "tightening",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": "high",
+        "lagging": true
+       }
+      ]
+     },
+     {
+      "id": "lrcx",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names TSMC among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_dram_equipment",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "amat",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K; also TSMC 2025 supplier award",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "klac",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Process control / inspection & metrology; only named >10% customer in KLA 10-K FY2024-2026",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/klac-20260630.htm",
+         "https://www.sec.gov/Archives/edgar/data/319201/000031920126000027/R108.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "advantest",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
+        "source": [
+         "https://pr.tsmc.com/english/news/3274",
+         "https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "sumco",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers; SUMCO listed in TSMC annual report 'Major Suppliers' (raw wafers) and awarded at TSMC supplier forums 2023-2025",
+        "source": [
+         "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "asml",
+     "lrcx"
+    ],
+    "win_dropped": [],
+    "win_added": [
+     "shinetsu",
+     "hoya",
+     "amat",
+     "klac",
+     "advantest",
+     "sumco"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nsig"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "medicine",
+   "qid": "merck_kgaa_q3",
+   "answer_date": "2026-11-12",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "merck_kgaa",
+     "sartorius"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "samsung_bio",
+     "lonza"
+    ],
+    "lose": [
+     "wuxi_bio"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "samsung_bio",
+     "lonza"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "wuxi_bio"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "amat_q4",
+   "answer_date": "2026-11-12",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "amat",
+     "lrcx",
+     "klac",
+     "tel",
+     "asml"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "entegris",
+     "tok",
+     "advantest"
+    ],
+    "lose": [
+     "nsig"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "entegris",
+     "tok",
+     "advantest"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nsig"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "sie_fy",
+   "answer_date": "2026-11-12",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "siemensenergy",
+     "msft",
+     "amzn",
+     "googl"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "vrt",
+     "etn"
+    ],
+    "lose": [
+     "clf",
+     "gev"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "nvda",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "msft",
+        "what": "GPUs and full racks",
+        "source": "NVIDIA FY2026 10-K customer concentration (Customer A 22%, B 14%; identities not disclosed)",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "amzn",
+        "what": "GPUs (hyperscaler capex flow): AWS named as first-wave Blackwell cloud provider; P6e-GB200 UltraServers launched",
+        "source": [
+         "https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing",
+         "https://aws.amazon.com/blogs/aws/new-amazon-ec2-p6e-gb200-ultraservers-powered-by-nvidia-grace-blackwell-gpus-for-the-highest-ai-performance"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "googl",
+        "what": "GPUs (hyperscaler capex flow): Google Cloud deploying GB200 NVL72 / A4 VMs",
+        "source": [
+         "https://nvidianews.nvidia.com/news/google-cloud-ai-development",
+         "https://cloud.google.com/blog/products/compute/introducing-a4-vms-powered-by-nvidia-b200-gpu-aka-blackwell"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "nittobo",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "msft",
+        "what": "Premium glass cloth capacity booked",
+        "source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+        "source_type": "analyst"
+       },
+       {
+        "to": "googl",
+        "what": "Premium glass cloth capacity booked",
+        "source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+        "source_type": "analyst"
+       },
+       {
+        "to": "amzn",
+        "what": "Premium glass cloth capacity booked",
+        "source": "https://www.trendforce.com/news/2026/08/06/news-nittobo-raises-fy2027-net-profit-forecast-by-jpy-3b-no-further-t-glass-price-hikes-planned/",
+        "source_type": "analyst"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "t_glass",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 2,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "gev",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "msft",
+        "what": "Gas turbines and grid equipment for data center power; slots effectively gone through 2030",
+        "source": "https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "amzn",
+        "what": "Turnkey substations/electrical equipment for AWS data centers, plus power generation & wind (strategic framework agreement)",
+        "source": "https://www.gevernova.com/news/press-releases/ge-vernova-aws-accelerate-global-energy-demand",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "clf",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "siemensenergy",
+        "what": "grain-oriented electrical steel for power transformers",
+        "source": "https://www.clevelandcliffs.com/operations/steelmaking/butler-works",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "alab",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "amzn",
+        "what": "PCIe/CXL retimers, Scorpio fabric switches, optical engines; Amazon performance warrant vests on up to $6.5B of Amazon purchases (8-K); 10-K: one end customer >70% of 2025 revenue",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/1736297/000110465926012606/tm265461d1_8k.htm",
+         "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000010/alab-20251231.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "hurt",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "avgo",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "googl",
+        "what": "TPU v7 Ironwood in volume, TPU v8I shipments started",
+        "source": "https://convergedigest.com/broadcom-q3-2026-ai-semiconductor-xpu-networking/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "crdo",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "amzn",
+        "what": "AEC copper cables/DSPs; warrant issued to Amazon.com NV Investment Holdings vesting on Amazon purchases; Customer A 49% of FY2026 revenue (67% FY2025)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/1807794/000180779425000021/crdo-20250802.htm",
+         "https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/R45.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "anet",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "msft",
+        "what": "Data-center Ethernet switches; Arista 10-K discloses two >10% customers (Microsoft, Meta)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000013/anet-20251231.htm",
+         "https://www.tradingview.com/news/gurufocus:09df08b61094b:0-microsoft-drives-26-of-arista-revenue/"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "vrt",
+     "etn"
+    ],
+    "win_added": [
+     "nvda",
+     "nittobo",
+     "gev",
+     "clf",
+     "alab",
+     "avgo",
+     "crdo",
+     "anet"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "clf",
+     "gev"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "nvda_q3",
+   "answer_date": "2026-11-19",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "nvda",
+     "tsmc",
+     "skhynix",
+     "mu",
+     "samsung",
+     "mpwr",
+     "fn"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "foxconn",
+     "cohr",
+     "vrt",
+     "anet"
+    ],
+    "lose": [
+     "amd",
+     "avgo"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "asml",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "EUV and High-NA EUV scanners; sole source",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "samsung",
+        "what": "EUV scanners",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "skhynix",
+        "what": "EUV for 1a/1b DRAM used in HBM",
+        "source": "https://semiconductorx.com/spotlight-asml.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "EUV lithography for 1-gamma DRAM. Micron's 2023 release says it is introducing EUV for the 1-gamma node and ramping it in Taiwan and Japan from 2025; it does not name a scanner vendor, and ASML is the sole EUV source. ASML won Micron's Front End Capital award in 2024",
+        "source": [
+         "https://investors.micron.com/news-releases/news-release-details/micron-bring-euv-technology-japan-advancing-next-generation",
+         "https://www.micron.com/about/company/suppliers/supplier-day"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "lrcx",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names Samsung Electronics among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "tsmc",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names TSMC among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "skhynix",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names SK hynix among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Etch/deposition equipment; Lam FY2026 10-K names Micron among its 'most significant customers' (four customers >10% each: 16%/15%/12%/12%, not individually attributed)",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/lrcx-20260628.htm",
+         "https://www.sec.gov/Archives/edgar/data/707549/000070754926000037/R92.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "nand_dram_equipment",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "amat",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "samsung",
+        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+         "https://www.sec.gov/Archives/edgar/data/6951/000162828025056742/R82.htm"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "tsmc",
+        "what": "Deposition/etch/CMP/implant equipment; named >10% customer in Applied 10-K; also TSMC 2025 supplier award",
+        "source": [
+         "https://www.sec.gov/Archives/edgar/data/6951/000000695124000044/amat-20241027.htm",
+         "https://pr.tsmc.com/english/news/3274"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Micron supplier: winner of Micron's Sustainability award in 2025. The award category establishes the relationship and not a product line",
+        "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "advantest",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "SoC test systems/handlers; Advantest received TSMC 2025 Excellent Performance Award (Excellent Production Support)",
+        "source": [
+         "https://pr.tsmc.com/english/news/3274",
+         "https://www.barchart.com/story/news/36774425/advantest-wins-excellent-performance-award-at-tsmcs-2025-supply-chain-management-forum"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "skhynix",
+        "what": "Memory/HBM test systems; DIGITIMES: Advantest 'long an established supplier' to SK hynix memory test, now losing some HBM4 tester orders to Korean vendors",
+        "source": "https://www.digitimes.com/news/a20260730VL224/sk-hynix-hbm-tester-wafer-advantest.html",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "nvda",
+        "what": "SoC testers for AI GPUs; trade press consistently labels Advantest an 'Nvidia supplier' (no % disclosed by Advantest)",
+        "source": "https://www.investing.com/news/earnings/nvidia-supplier-advantest-jumps-12-after-ai-demand-lifts-earnings-outlook-4822271",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "siltronic",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+        "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "samsung",
+        "what": "300mm wafers; Samsung and TSMC named in Siltronic's customer base (Factbook, Mar-2020)",
+        "source": "https://www.siltronic.com/fileadmin/user_upload/20200323_01Siltronic_Factbook.pdf",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Front-end materials. Winner of Micron's Front End Materials award in 2025; the award does not name the materials",
+        "source": "https://www.micron.com/about/company/suppliers/supplier-day",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": "low",
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "shinetsu",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "300mm silicon wafers and photoresist",
+        "source": "https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Front-end materials. Winner of Micron's Front End Materials award in 2023 and 2024; neither source names the specific materials",
+        "source": [
+         "https://www.shinetsu.co.jp/en/news/news-release/shin-etsu-honored-as-a-2023-outstanding-supplier-by-micron/",
+         "https://www.micron.com/about/company/suppliers/supplier-day"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       },
+       {
+        "bottleneck": "photoresist",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "unclear",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "hanmi",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "skhynix",
+        "what": "TC bonders for HBM stacking",
+        "source": "https://www.trendforce.com/news/2026/06/09/news-sk-hynix-reportedly-places-44-2bn-won-tc-bonder-order-with-hanmi-accelerating-hbm4-ramp-up/",
+        "source_type": "analyst (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "Thermal-compression bonders for HBM: about 50 units reported shipped to Micron. Winner of Micron's Assembly & Test Capital Equipment award in 2025",
+        "source": [
+         "https://www.thelec.net/news/articleView.html?idxno=5235",
+         "https://www.micron.com/about/company/suppliers/supplier-day"
+        ],
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "tc_bonders_hbf",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 0,
+        "trigger": "not_yet",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "globalwafers",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "tsmc",
+        "what": "Silicon wafers; GlobalWafers listed in TSMC 2022 annual report 'Raw Materials Supply - Major Suppliers' (raw wafers). Later TSMC reports anonymize suppliers",
+        "source": "https://investor.tsmc.com/static/annualReports/2022/english/ebook/files/basic-html/page106.html",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "mu",
+        "what": "300mm raw silicon wafers from Sherman, Texas: Micron is to provide $500M of strategic financing and enter a 10-year supply agreement. Micron states the transaction remains subject to definitive agreements and closing conditions",
+        "source": [
+         "https://www.globenewswire.com/news-release/2026/07/09/3324795/14450/en/Micron-Announces-Up-to-3-Billion-Strategic-Investment-to-Strengthen-U-S-Semiconductor-Ecosystem.html"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": [
+       {
+        "bottleneck": "wafers_300mm",
+        "role": "owners",
+        "stage": "unclear",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ],
+    "lose": [
+     {
+      "id": "nanya",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     },
+     {
+      "id": "winbond",
+      "via": [
+       "bottleneck:dram_commodity (peaking: owner)"
+      ],
+      "edges": [],
+      "bottlenecks": [
+       {
+        "bottleneck": "dram_commodity",
+        "role": "owners",
+        "stage": "peaking",
+        "top_risk": 1,
+        "trigger": "fired",
+        "exposure": null,
+        "lagging": false
+       }
+      ]
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "foxconn",
+     "cohr",
+     "vrt",
+     "anet"
+    ],
+    "win_added": [
+     "asml",
+     "lrcx",
+     "amat",
+     "advantest",
+     "siltronic",
+     "shinetsu",
+     "hanmi",
+     "globalwafers"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "amd",
+     "avgo"
+    ],
+    "lose_added": [
+     "nanya",
+     "winbond"
+    ]
+   },
+   "empty": {
+    "win": false,
+    "lose": false
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "bachem_cmd",
+   "answer_date": "2026-11-26",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "bachem",
+     "polypeptide"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "lly",
+     "novo"
+    ],
+    "lose": [
+     "lonza"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "lly",
+     "novo"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "lonza"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "goes_share",
+   "answer_date": "2026-11-30",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "clf"
+    ],
+    "lose": [
+     "posco"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "eaton",
+     "abb"
+    ],
+    "lose": [
+     "hubbell"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "eaton",
+     "abb"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "hubbell"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "hvdc_cable",
+   "answer_date": "2026-11-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "prysmian",
+     "nexans"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "nkt",
+     "quanta"
+    ],
+    "lose": [
+     "nextera"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "nkt",
+     "quanta"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nextera"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "leu_haleu",
+   "answer_date": "2026-11-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "centrus",
+     "cameco"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "oklo",
+     "nano_nuclear",
+     "bwxt"
+    ],
+    "lose": [
+     "constellation"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "oklo",
+     "nano_nuclear",
+     "bwxt"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "constellation"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "reactor_smr",
+   "answer_date": "2026-11-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "oklo",
+     "nuscale",
+     "nano_nuclear"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "centrus",
+     "bwxt",
+     "doosan",
+     "fluor"
+    ],
+    "lose": [
+     "gev"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "centrus",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "oklo",
+        "what": "HALEU fuel (2026 LOI, 1.2 GW Ohio)",
+        "source": "https://www.centrusenergy.com/news/oklo-centrus-sign-letter-of-intent-to-purchase-nuclear-fuel-for-aurora-powerhouse-deployment-in-southern-ohio/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "doosan",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nuscale",
+        "what": "reactor module forgings and components",
+        "source": "https://www.world-nuclear-news.org/Articles/Doosan-starts-forging-components-for-NuScale-SMR",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "fluor",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "nuscale",
+        "what": "FEED 2 engineering for RoPower NuScale plant, Romania",
+        "source": "https://www.world-nuclear-news.org/articles/ropower-and-fluor-corporation-sign-feed-2-contract",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "centrus",
+     "doosan",
+     "fluor"
+    ],
+    "win_dropped": [
+     "bwxt"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "gev"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "siemens_grid",
+   "answer_date": "2026-11-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "siemens_energy",
+     "gev"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "clf",
+     "posco",
+     "prysmian"
+    ],
+    "lose": [
+     "nextera"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "bwxt",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "gev",
+        "what": "BWRX-300 reactor pressure vessel (Darlington)",
+        "source": "https://www.gevernova.com/news/press-releases/ge-hitachi-awards-contract-bwrx-300-reactor-pressure-vessel-bwxt",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "clf",
+     "posco",
+     "prysmian"
+    ],
+    "win_added": [
+     "bwxt"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nextera"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "gerresheimer_q4",
+   "answer_date": "2026-11-30",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "gerresheimer",
+     "stevanato"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "corning",
+     "novo"
+    ],
+    "lose": [
+     "west"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "corning",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "stevanato",
+        "what": "Pharmaceutical glass tubing",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "gerresheimer",
+        "what": "Pharmaceutical glass tubing",
+        "source": "https://www.sec.gov/Archives/edgar/data/0000105770/000010577026000097/exh991q22026earningsrelease.htm",
+        "source_type": "primary (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "corning"
+    ],
+    "win_dropped": [
+     "novo"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "west"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "semi_smg",
+   "answer_date": "2026-12-10",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "shinetsu",
+     "sumco",
+     "globalwafers",
+     "wacker",
+     "siltronic"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "entegris"
+    ],
+    "lose": [
+     "nsig"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "entegris"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "nsig"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "energy",
+   "qid": "powl_q4",
+   "answer_date": "2026-12-15",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "powell"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "eaton",
+     "abb",
+     "hubbell"
+    ],
+    "lose": [
+     "schneider"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "eaton",
+     "abb",
+     "hubbell"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "schneider"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "biosecure_list",
+   "answer_date": "2026-12-18",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "samsung_bio",
+     "lonza"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "fujifilm",
+     "sartorius"
+    ],
+    "lose": [],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [
+     {
+      "id": "sartorius",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lonza",
+        "what": "Single-use bioprocess consumables and filtration",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "samsung_bio",
+        "what": "Single-use bioprocess consumables and filtration",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "danaher",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lonza",
+        "what": "Cytiva and Pall filtration and chromatography",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       },
+       {
+        "to": "samsung_bio",
+        "what": "Cytiva and Pall filtration and chromatography",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     },
+     {
+      "id": "repligen",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "lonza",
+        "what": "Filtration and chromatography hardware",
+        "source": "https://www.traxindprod.com/the-glp-1-boom-scaling-sterile-fill-finish-cleanrooms-fast-in-2026/",
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [
+     "sartorius"
+    ],
+    "win_dropped": [
+     "fujifilm"
+    ],
+    "win_added": [
+     "danaher",
+     "repligen"
+    ],
+    "lose_kept": [],
+    "lose_dropped": [],
+    "lose_added": []
+   },
+   "empty": {
+    "win": false,
+    "lose": true
+   }
+  },
+  {
+   "domain": "defense",
+   "qid": "artillery_155",
+   "answer_date": "2026-12-31",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "gd",
+     "noc"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "rheinmetall",
+     "bae"
+    ],
+    "lose": [
+     "boeing"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "rheinmetall",
+     "bae"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "boeing"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "cagrisema_fda",
+   "answer_date": "2026-12-31",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "novo"
+    ],
+    "lose": [
+     "lly"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "polypeptide",
+     "ypsomed",
+     "gerresheimer"
+    ],
+    "lose": [
+     "lonza",
+     "siegfried",
+     "fujifilm"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "polypeptide",
+     "ypsomed",
+     "gerresheimer"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "lonza",
+     "siegfried",
+     "fujifilm"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "pharma",
+   "qid": "viking_oral_p3",
+   "answer_date": "2026-12-31",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "viking"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "polypeptide",
+     "bachem"
+    ],
+    "lose": [
+     "novo"
+    ],
+    "confidence": "W"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "polypeptide",
+     "bachem"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "novo"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "absolics",
+   "answer_date": "2026-12-31",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "skc"
+    ],
+    "lose": [
+     "ajinomoto",
+     "ibiden"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "amd",
+     "intc"
+    ],
+    "lose": [
+     "unimicron"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "amd",
+     "intc"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "unimicron"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "lsrc_q2",
+   "answer_date": "2027-01-27",
+   "kind": "tide",
+   "first_ring": {
+    "win": [
+     "lasertec",
+     "hoya",
+     "asml"
+    ],
+    "lose": []
+   },
+   "draft_ring2": {
+    "win": [
+     "agc",
+     "tok"
+    ],
+    "lose": [
+     "klac"
+    ],
+    "confidence": "M"
+   },
+   "candidates": {
+    "win": [],
+    "lose": []
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "agc",
+     "tok"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "klac"
+    ],
+    "lose_added": []
+   },
+   "empty": {
+    "win": true,
+    "lose": true
+   }
+  },
+  {
+   "domain": "semi",
+   "qid": "spie",
+   "answer_date": "2027-02-22",
+   "kind": "share",
+   "first_ring": {
+    "win": [
+     "lrcx"
+    ],
+    "lose": [
+     "shinetsu"
+    ]
+   },
+   "draft_ring2": {
+    "win": [
+     "asml"
+    ],
+    "lose": [
+     "tok",
+     "tel"
+    ],
+    "confidence": "S"
+   },
+   "candidates": {
+    "win": [],
+    "lose": [
+     {
+      "id": "wacker",
+      "via": [
+       "edge"
+      ],
+      "edges": [
+       {
+        "to": "shinetsu",
+        "what": "semiconductor-grade polysilicon; Wacker supplies \"all major wafer manufacturers\" (2024) and SIA names Shin-Etsu, SUMCO and GlobalWafers among the five majors (2025)",
+        "source": [
+         "https://www.wacker.com/cms/en-us/press-and-media/press/press-releases/2024/detail-228484.html",
+         "https://www.semiconductors.org/wp-content/uploads/2025/08/Semiconductor-Industry-Association-SIA-Comments-Polysilicon-Section-232-Investigation.pdf"
+        ],
+        "source_type": "media (guessed from the URL; edge predates the closure)"
+       }
+      ],
+      "bottlenecks": []
+     }
+    ]
+   },
+   "dropped_as_mixed": [],
+   "vs_draft": {
+    "win_kept": [],
+    "win_dropped": [
+     "asml"
+    ],
+    "win_added": [],
+    "lose_kept": [],
+    "lose_dropped": [
+     "tok",
+     "tel"
+    ],
+    "lose_added": [
+     "wacker"
+    ]
+   },
+   "empty": {
+    "win": true,
+    "lose": false
+   }
+  }
+ ]
+}

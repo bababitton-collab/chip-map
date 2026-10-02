@@ -1785,8 +1785,11 @@
         "source_type": "media"
       },
       "rigidity": {
-        "text": "",
-        "source_url": null
+        "text": "BHI half-year report (2026-08-14): capacity is being raised by rationalising and refurbishing existing facilities; 'no confirmed additional plans within the next year' (translated from Korean).",
+        "quote": "생산능력 증대를 위해 기존시설 합리화, 개보수 등을 진행하고 있으며, 향후 1년 이내의 확정된 추가 계획은 없습니다.",
+        "source_url": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260814000764",
+        "source_type": "primary",
+        "source_date": "2026-08-14"
       },
       "trigger": {
         "status": "fired",
@@ -1935,8 +1938,10 @@
         "source_type": "media"
       },
       "rigidity": {
-        "text": "",
-        "source_url": null
+        "text": "PFISTERER H1 2026 report: the new HVDC Qualification Center in Winterbach finished shell construction in March 2026; commissioning is planned for the first half of 2027.",
+        "source_url": "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
+        "source_type": "primary",
+        "source_date": "2026-08-19"
       },
       "trigger": {
         "status": "fired",

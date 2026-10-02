@@ -319,10 +319,10 @@ def test_the_snapshot_ships_the_registered_ring_for_a_v2_row():
 
 
 def test_mu_fq4_is_the_question_all_of_this_is_about():
-    """One live v2 question today. When there is a second, this test is the
-    place that notices."""
+    """The first v2 question. The second, smsg_pre, came in wave 1 on
+    2026-10-02 (confidence M); this test is where a new one is noticed."""
     rows = json.loads(watch_path("semi").read_text(encoding="utf-8"))
-    assert [r["id"] for r in rows if P.is_v2(r)] == ["mu_fq4"]
+    assert sorted(r["id"] for r in rows if P.is_v2(r)) == ["mu_fq4", "smsg_pre"]
     w = row()
     assert w["d"] == "2026-09-30"
     assert P.ring2_of(w) == (["globalwafers", "shinetsu", "tel"],

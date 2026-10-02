@@ -71,7 +71,21 @@
   ],
   "lane": "hbm",
   "lbl": "Samsung (prelim)",
-  "kind": "tide"
+  "kind": "tide",
+  "ring2_win": [
+   "lrcx",
+   "advantest",
+   "shinetsu",
+   "globalwafers"
+  ],
+  "ring2_lose": [
+   "hpq"
+  ],
+  "ring2_rationale": {
+   "win": "A memory profit jump funds memory capex: etch (Lam), memory and HBM test (Advantest), and 300mm wafers (Shin-Etsu, GlobalWafers).",
+   "lose": "Higher memory prices squeeze PC makers without an AI-server offset; Morgan Stanley (2025-11-18) estimates OEMs pass through only about 70% of memory cost inflation and cut HP's gross-margin outlook."
+  },
+  "ring2_confidence": "M"
  },
  {
   "id": "asml_q3",

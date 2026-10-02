@@ -36,12 +36,16 @@ def test_every_commitment_has_a_frozen_universe_matching_its_fingerprint(dom):
 
 
 def test_all_fifteen_stored_fingerprints_were_verified_from_git():
+    """The fifteen fingerprints the freeze found were each reproduced from git.
+    A commitment made since is recorded at --write ("commit"), from the live
+    map it was made against: smsg_pre, 2026-10-02."""
     idx = {d: U.load_index(d) for d in domains.discover()}
     stored = {(d, e["qid"]) for d in idx for e in committed(d) if e.get("ew_map")}
-    assert len(stored) == 15
+    since = {("semi", "smsg_pre")}
+    assert len(stored - since) == 15 and since <= stored
     for d, q in stored:
         assert idx[d][q]["verified"] is True, (d, q)
-        assert idx[d][q]["source"] == "git"
+        assert idx[d][q]["source"] == ("commit" if (d, q) in since else "git")
 
 
 # -- 1. a new priced node leaves --check green --------------------------------

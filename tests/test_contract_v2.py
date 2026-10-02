@@ -122,7 +122,8 @@ def test_the_published_v1_hashes_have_not_moved():
         if old and old != P.commitment(r, (store or {}).get(qid))["sha256"]:
             moved.append(qid)
     assert moved == [], f"v1 contracts moved: {moved}"
-    assert v2 == ["mu_fq4"], v2
+    # mu_fq4 (2026-09-29), then smsg_pre, the first wave (2026-10-02).
+    assert sorted(v2) == ["mu_fq4", "smsg_pre"], v2
 
 
 def test_the_v1_bytes_of_mu_fq4_are_still_reachable_and_still_hash_the_same():

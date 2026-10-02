@@ -829,11 +829,15 @@ function notYetOf(n){ if(!NOTYET){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||
 function bnDomain(b){ const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, ds=(F.domain_of||{})[b.id]||[];
   const lv=v=>String(v||'').charAt(0).toUpperCase()+String(v||'').slice(1);
   return ds.length?`<div class="bnrow" data-domain><b>${BN.domain}</b>${ds.map(d=>`<a href="/domains/#${escHtml(d.id)}">${escHtml(d.name)} · ${escHtml(lv(d.level))}</a>`).join('; ')}</div>`:''; }
+// A source dated more than 12 months before the snapshot shows its year: ", 2025".
+function oldYear(o){ const d=String((o&&(o.source_date||o.date))||''); if(!/^\d{4}-\d{2}/.test(d)) return '';
+  const age=(Date.parse(String(D.as_of||''))-Date.parse(d.length>7?d:d+'-01'))/864e5;
+  return age>365?', '+d.slice(0,4):''; }
 function bnCard(b, nid){
   const F=(typeof FOCUS!=='undefined'&&FOCUS)||{}, t=b.trigger||{}, today=String(D.as_of||'');
   const nm=i=>escHtml(byId[i]?byId[i].name:i);
   const src=o=>srcRefs(o&&o.source_url).filter(srcIsUrl).map(u=>` <a href="${escHtml(u)}" target="_blank" rel="noopener">${escHtml(srcHost(u))}</a>`).join('')
-    + (o&&o.source_type?` <small>(${escHtml(o.source_type)})</small>`:'');
+    + (o&&o.source_type?` <small>(${escHtml(o.source_type)}${oldYear(o)})</small>`:'');
   const row=(l,f)=>f?`<div class="bnrow"><b>${l}</b>${escHtml(f.text||'')}${f.via?` <small>(${BN.via} ${escHtml(f.via)})</small>`:''}${src(f)}</div>`:'';
   const list=(l,ids)=>(ids||[]).length?`<div class="bnrow"><b>${l}</b>${ids.map(nm).join(', ')}</div>`:'';
   return `<div class="bnbox" data-bottleneck="${b.id}"><div class="bnhead"><span class="cpid">${BN.title}</span><span class="cpn">${escHtml(b.name)}</span><span class="bnstage s-${b.stage}">${BN.stage[b.stage]||b.stage}${b.top_risk?` · ${BN.risk} ${b.top_risk}/7`:''}</span></div>`

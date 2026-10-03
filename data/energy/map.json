@@ -1857,7 +1857,16 @@
           "source_url": null
         }
       },
-      "next_node": []
+      "next_node": [],
+      "context": [
+        {
+          "text": "Xizi Clean Energy (China) offers heat recovery steam generators for gas turbines: other makers exist.",
+          "quote": "Heat Recovery Steam Generator (HRSG) for Gas Turbines-Xizi Clean Energy",
+          "source_url": "https://www.xizice.com/en/industrial2-1/",
+          "source_type": "primary",
+          "source_date": null
+        }
+      ]
     },
     {
       "id": "medium_speed_gas_engines",
@@ -1870,8 +1879,9 @@
         "source_date": "2026-04-23"
       },
       "rigidity": {
-        "text": "Capacity expansion at the Sustainable Technology Hub: once fully commissioned in Q1 2029, output rises to about 2.2x the 2025 level.",
-        "source_url": "https://www.wartsila.com/media/news/21-07-2026-wartsila-s-half-year-financial-report-january-june-2026-3773763",
+        "text": "Wärtsilä H1 2026 key messages (2026-07-21): delivery times for new Energy orders have clearly increased over the last 18 months and are mainly for 2029 and beyond.",
+        "quote": "Current delivery times for new orders in Energy have clearly increased during the last 18 months. Current delivery times are mainly for 2029 and beyond.",
+        "source_url": "https://www.wartsila.com/investors/blog/post/key-messages-and-q-a-on-half-year-financial-report-january-june-2026",
         "source_type": "primary",
         "source_date": "2026-07-21"
       },
@@ -1934,7 +1944,22 @@
           "source_url": null
         }
       },
-      "next_node": []
+      "next_node": [],
+      "context": [
+        {
+          "text": "Capacity expansion at the Sustainable Technology Hub: once fully commissioned in Q1 2029, output rises to about 2.2x the 2025 level.",
+          "source_url": "https://www.wartsila.com/media/news/21-07-2026-wartsila-s-half-year-financial-report-january-june-2026-3773763",
+          "source_type": "primary",
+          "source_date": "2026-07-21"
+        },
+        {
+          "text": "Wärtsilä data-centre theme call (held 2026-02-12, posted 2026-02-17): the expansion raises technical capacity by 35%, operational in early 2028.",
+          "quote": "Combined with the previously announced EUR 50 million investment, the expansion will increase technical capacity by 35% and will be operational in early 2028.",
+          "source_url": "https://www.wartsila.com/investors/blog/post/highlights-from-the-data-centre-theme-call",
+          "source_type": "primary",
+          "source_date": "2026-02-17"
+        }
+      ]
     },
     {
       "id": "hv_cable_accessories",
@@ -2021,8 +2046,21 @@
           "text": "PFISTERER H1 2026 report: the new HVDC Qualification Center in Winterbach finished shell construction in March 2026; commissioning is planned for the first half of 2027.",
           "source_url": "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
           "source_type": "primary",
-          "source_date": "2026-08-18",
-          "note": "Moved out of rigidity 2026-10-03: a new qualification centre adds capacity; it does not show that supply cannot respond."
+          "source_date": "2026-08-18"
+        },
+        {
+          "text": "NKT completed its new test hall and capacity expansion at the Alingsås (Sweden) cable-accessories site; now fully operational.",
+          "quote": "The new facilities are now fully operational, enhancing both the factory's capacity and its technical",
+          "source_url": "https://www.powermag.com/nkt-completes-investment-of-new-test-hall-and-capacity-expansion-at-swedish-cable-accessories-site/",
+          "source_type": "media",
+          "source_date": "2025-12-23"
+        },
+        {
+          "text": "PFISTERER received the building permit for its HVDC high-voltage laboratory; operation scheduled for H1 2027.",
+          "quote": "The facility is scheduled to go into operation in the first half of 2027, with the first series-production HVDC cable accessories expected to be available by the end of 2026.",
+          "source_url": "https://www.pfisterer.com/en/news/pfisterer-receives-building-permit-high-voltage-laboratory-milestone-entry-hvdc-market",
+          "source_type": "primary",
+          "source_date": "2025-08-05"
         }
       ]
     }

@@ -1,8 +1,7 @@
 """Each listing's closes stamped with its own market's close, in UTC.
 
-"The first close after a timestamp" is the entry rule of both the H1 test
-(scripts/h1_backtest.py) and the event contract (chains/events.py), so it
-lives here once.
+"The first close after a timestamp" is the entry rule of the event contract
+(chains/events.py), so it lives here once.
 """
 from __future__ import annotations
 

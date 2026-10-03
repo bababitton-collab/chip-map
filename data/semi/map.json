@@ -12608,18 +12608,14 @@
      "quote": "There may be another round in the second half, we don't know, with a lead time of about six months.",
      "source_url": "https://stockanalysis.com/quote/ams/BESI/transcripts/561557-q2-2026/",
      "source_type": "media",
-     "source_date": "2026-07-23",
-     "note": "third-party transcript; supply responds within months",
-     "contradicts": true
+     "source_date": "2026-07-23"
     },
     {
      "text": "Besi Q1 2026 call: hybrid-bonder capacity can be expanded to 250 per year.",
      "quote": "With the increase in floor space and adjusted to a model required by several customers, we can now expand that to 250 per year.",
      "source_url": "https://www.alphaspread.com/security/aex/besi/investor-relations/earnings-call/q1-2026",
      "source_type": "media",
-     "source_date": "2026-04-23",
-     "note": "third-party transcript (Q1 call, not Q2); its '15 per month' arithmetic suggests a transcription slip",
-     "contradicts": true
+     "source_date": "2026-04-23"
     }
    ]
   },
@@ -14659,9 +14655,7 @@
      "quote": "Construction is expected to begin in third-quarter 2026 and to be completed by second-half 2027.",
      "source_url": "https://www.semiconductor-today.com/news_items/2026/sep/5nplus-220926.shtml",
      "source_type": "media",
-     "source_date": "2026-09-22",
-     "note": "Western capacity within 18 months",
-     "contradicts": true
+     "source_date": "2026-09-22"
     }
    ]
   },
@@ -14754,27 +14748,21 @@
      "quote": "today announced that its European permanent magnet manufacturing facility is in commercial production and shipping volumes of rare earth sintered magnets",
      "source_url": "https://www.neomaterials.com/neo-performance-materials-advances-to-commercial-production-at-its-european-magnet-facility/",
      "source_type": "primary",
-     "source_date": "2026-09-14",
-     "note": "ex-China magnet capacity already producing",
-     "contradicts": true
+     "source_date": "2026-09-14"
     },
     {
      "text": "MP Materials Q2 2026 call (2026-08-06): commercial magnet shipments expected to begin in the fourth quarter.",
      "quote": "we continue to expect to begin commercial shipments in the fourth quarter, followed by a steady production ramp.",
      "source_url": "https://www.fool.com/earnings/call-transcripts/2026/08/13/mp-materials-mp-q2-2026-earnings-call-transcript/",
      "source_type": "media",
-     "source_date": "2026-08-06",
-     "note": "third-party transcript; ex-China capacity within 18 months",
-     "contradicts": true
+     "source_date": "2026-08-06"
     },
     {
      "text": "USA Rare Earth commissioned Phase 1a at its Stillwater magnet plant in March 2026; customer orders from Q2 2026.",
      "quote": "In March 2026, the Company announced the commissioning of Phase 1a at its Stillwater magnet manufacturing facility.",
      "source_url": "https://www.sec.gov/Archives/edgar/data/1970622/000197062226000019/exhibit991-earningsrelease.htm",
      "source_type": "primary",
-     "source_date": "2026-03-30",
-     "note": "ex-China capacity commissioned",
-     "contradicts": true
+     "source_date": "2026-03-30"
     }
    ]
   }

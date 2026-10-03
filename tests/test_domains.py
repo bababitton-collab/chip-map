@@ -123,11 +123,13 @@ def test_the_repository_carries_at_least_the_default_domain():
 # (read from each page, 2026-10-02); source_type for the untyped rows from
 # tools/publisher_types.json. Then event_rules (contract v3, merged from event-catalysts)
 # for the card's Event rule row.
+# Then rigidity-round (branch): verbatim-verified context entries on exchina_magnets, ga_ge_in and
+# hybrid_bonding (sources that contradict rigidity), shown in the radar drawer.
 # New nodes are in no
 # committed question's frozen EW universe.
 GOLD = {
-    "he": "e64044118f8c1456fac3df60994710bd2acd26944a6d6c7457cbd7649c51b2b5",
-    "en": "4fbe88cded38d630b49e93e9cefb48ac2358e4a4a4ea210cdcfdea043e3b2c4a",
+    "he": "d1a6dc9d2e9c6db2c59c321edb3e2899d4e1f7213ab3d2c44808ecf0a829f6e0",
+    "en": "7bef52736d7b40a3ef5dffc08b9eef44a5efa896a019ddba85616957a6463a6f",
 }
 MOVED = ("the first domain's output moved. If the map changed on purpose, "
          "update the hash here in the same commit and say so; if it did not, "

@@ -1947,10 +1947,11 @@
         "source_date": "2026-08-22"
       },
       "rigidity": {
-        "text": "PFISTERER H1 2026 report: the new HVDC Qualification Center in Winterbach finished shell construction in March 2026; commissioning is planned for the first half of 2027.",
-        "source_url": "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
-        "source_type": "primary",
-        "source_date": "2026-08-18"
+        "text": "KEMA Labs (INMR, 2023-11-06): a cable system includes accessories such as joints and terminations, and its pre-qualification test lasts a year.",
+        "quote": "A cable system includes the cable as well as accessories such as joints, open-air termination and SF6 or oil plug-in terminations. ... A Pre-Qualification Test therefore has a duration of a year.",
+        "source_url": "https://www.inmr.com/experience-laboratory-testing-of-power-cables-accessories/",
+        "source_type": "media",
+        "source_date": "2023-11-06"
       },
       "trigger": {
         "status": "fired",
@@ -2014,7 +2015,16 @@
           "source_url": null
         }
       },
-      "next_node": []
+      "next_node": [],
+      "context": [
+        {
+          "text": "PFISTERER H1 2026 report: the new HVDC Qualification Center in Winterbach finished shell construction in March 2026; commissioning is planned for the first half of 2027.",
+          "source_url": "https://www.pfisterer.com/sites/default/files/2026-08/20260819_HJB%202026_EN_final.pdf",
+          "source_type": "primary",
+          "source_date": "2026-08-18",
+          "note": "Moved out of rigidity 2026-10-03: a new qualification centre adds capacity; it does not show that supply cannot respond."
+        }
+      ]
     }
   ]
 }

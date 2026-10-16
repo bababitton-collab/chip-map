@@ -15,6 +15,14 @@
       "updated": "2026-10-01T13:25:38Z",
       "evidence": "Micron FQ4 call 2026-09-30: no 2027 HBM share target given; HBM4 'continue to execute well on our ramp' with no number; capex raised.",
       "note": "manual: partial — share target not reaffirmed, no HBM4 volume number (NO-side), capex raised (YES-side). Sources: Micron PR and call transcript, 2026-09-30."
+    },
+    "smsg_pre": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-10-16T01:31:52Z"
     }
   },
   "forecasts": []

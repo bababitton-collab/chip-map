@@ -20,7 +20,10 @@ CLOSE = {"US": ("America/New_York", (16, 0)), "T": ("Asia/Tokyo", (15, 0)),
          "SHG": ("Asia/Shanghai", (15, 0)), "MI": ("Europe/Rome", (17, 30)),
          "BR": ("Europe/Brussels", (17, 30)), "PA": ("Europe/Paris", (17, 30)),
          "LSE": ("Europe/London", (16, 30)), "AU": ("Australia/Sydney", (16, 0)),
-         "TO": ("America/Toronto", (16, 0)), "HK": ("Asia/Hong_Kong", (16, 0))}
+         "TO": ("America/Toronto", (16, 0)), "HK": ("Asia/Hong_Kong", (16, 0)),
+         "AS": ("Europe/Amsterdam", (17, 30)), "SW": ("Europe/Zurich", (17, 30)),
+         "CO": ("Europe/Copenhagen", (17, 0)), "HE": ("Europe/Helsinki", (18, 30)),
+         "NS": ("Asia/Kolkata", (15, 30))}
 
 
 def close_utc(suffix: str, d: dt.date) -> float:

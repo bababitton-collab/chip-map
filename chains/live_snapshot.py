@@ -596,6 +596,7 @@ TRIM_LADDER = [
     ("subnode share 90->60", lambda L: _cap(L, "subs", "share", 60, whole=True)),
     ("node role 1st clause", lambda L: _roles(L, 60)),
     ("signal text ->70", lambda L: _cap(L, "sigs", "signal", 70)),
+    ("spark 26->13 points", lambda L: _thin_sparks(L)),
 ]
 
 
@@ -654,6 +655,21 @@ def _roles(live: dict, n: int) -> None:
     for node in live["nodes"]:
         if node.get("role"):
             node["role"] = node["role"][:n]
+
+
+def _thin_sparks(live: dict) -> None:
+    """Every second point, keeping the latest, rebased so the first is 100 again
+    (the page draws its baseline at 100). Price blocks are shared through the
+    price_block cache, so each is thinned once."""
+    seen = set()
+    blocks = [n.get("px") for n in live["nodes"]]
+    blocks += [s.get("px") for cp in live.get("cps", []) for s in cp.get("subs", [])]
+    for px in blocks:
+        if not isinstance(px, dict) or id(px) in seen or len(px.get("spark") or []) < 3:
+            continue
+        seen.add(id(px))
+        s = px["spark"][::-2][::-1]
+        px["spark"] = [round(v * 100 / s[0]) for v in s] if s[0] else s
 
 
 def shrink_to_fit(live: dict, limit: int = TRIM_AT) -> list[str]:

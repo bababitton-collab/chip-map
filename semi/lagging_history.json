@@ -1,0 +1,626 @@
+[
+ {
+  "date": "2026-10-01",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.0846,
+  "leader": "stx",
+  "leader_ret": 3.0617
+ },
+ {
+  "date": "2026-10-01",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2084,
+  "leader": "axti",
+  "leader_ret": 14.8303
+ },
+ {
+  "date": "2026-10-01",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2887,
+  "leader": "axti",
+  "leader_ret": 14.8303
+ },
+ {
+  "date": "2026-10-01",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.5419,
+  "leader": "stx",
+  "leader_ret": 3.0617
+ },
+ {
+  "date": "2026-10-02",
+  "node": "corning_fiber",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.9727,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ },
+ {
+  "date": "2026-10-02",
+  "node": "fujikura",
+  "bottleneck": "optical_fiber",
+  "ret_252": 1.3411,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ },
+ {
+  "date": "2026-10-02",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.1101,
+  "leader": "stx",
+  "leader_ret": 3.0292
+ },
+ {
+  "date": "2026-10-02",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2755,
+  "leader": "axti",
+  "leader_ret": 17.2205
+ },
+ {
+  "date": "2026-10-02",
+  "node": "kyocera",
+  "bottleneck": "mlcc",
+  "ret_252": 0.8467,
+  "leader": "semco",
+  "leader_ret": 7.3349
+ },
+ {
+  "date": "2026-10-02",
+  "node": "sakai_chem",
+  "bottleneck": "mlcc",
+  "ret_252": 0.3614,
+  "leader": "semco",
+  "leader_ret": 7.3349
+ },
+ {
+  "date": "2026-10-02",
+  "node": "shinetsu",
+  "bottleneck": "wafers_300mm",
+  "ret_252": 0.1571,
+  "leader": "globalwafers",
+  "leader_ret": 1.4349
+ },
+ {
+  "date": "2026-10-02",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.2897,
+  "leader": "axti",
+  "leader_ret": 17.2205
+ },
+ {
+  "date": "2026-10-02",
+  "node": "sumitomo_electric",
+  "bottleneck": "optical_fiber",
+  "ret_252": 1.2897,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ },
+ {
+  "date": "2026-10-02",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.6212,
+  "leader": "stx",
+  "leader_ret": 3.0292
+ },
+ {
+  "date": "2026-10-02",
+  "node": "umicore",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.4091,
+  "leader": "furukawa",
+  "leader_ret": 3.5796
+ },
+ {
+  "date": "2026-10-18",
+  "node": "corning_fiber",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.5372,
+  "leader": "furukawa",
+  "leader_ret": 2.8337
+ },
+ {
+  "date": "2026-10-18",
+  "node": "fujikura",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.9063,
+  "leader": "furukawa",
+  "leader_ret": 2.8337
+ },
+ {
+  "date": "2026-10-18",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.1196,
+  "leader": "stx",
+  "leader_ret": 1.93
+ },
+ {
+  "date": "2026-10-18",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 0.5792,
+  "leader": "axti",
+  "leader_ret": 10.2135
+ },
+ {
+  "date": "2026-10-18",
+  "node": "kokusai",
+  "bottleneck": "nand_hbf",
+  "ret_252": 0.8844,
+  "leader": "sndk",
+  "leader_ret": 8.0042
+ },
+ {
+  "date": "2026-10-18",
+  "node": "kyocera",
+  "bottleneck": "mlcc",
+  "ret_252": 0.8558,
+  "leader": "semco",
+  "leader_ret": 5.0672
+ },
+ {
+  "date": "2026-10-18",
+  "node": "sakai_chem",
+  "bottleneck": "mlcc",
+  "ret_252": 0.3367,
+  "leader": "semco",
+  "leader_ret": 5.0672
+ },
+ {
+  "date": "2026-10-18",
+  "node": "simo",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.312,
+  "leader": "sndk",
+  "leader_ret": 8.0042
+ },
+ {
+  "date": "2026-10-18",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 1.0956,
+  "leader": "axti",
+  "leader_ret": 10.2135
+ },
+ {
+  "date": "2026-10-18",
+  "node": "sumitomo_electric",
+  "bottleneck": "optical_fiber",
+  "ret_252": 1.0956,
+  "leader": "furukawa",
+  "leader_ret": 2.8337
+ },
+ {
+  "date": "2026-10-18",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.4102,
+  "leader": "stx",
+  "leader_ret": 1.93
+ },
+ {
+  "date": "2026-10-18",
+  "node": "umicore",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.2476,
+  "leader": "furukawa",
+  "leader_ret": 2.8337
+ },
+ {
+  "date": "2026-10-20",
+  "node": "corning_fiber",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.544,
+  "leader": "furukawa",
+  "leader_ret": 2.5551
+ },
+ {
+  "date": "2026-10-20",
+  "node": "fujikura",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.7947,
+  "leader": "furukawa",
+  "leader_ret": 2.5551
+ },
+ {
+  "date": "2026-10-20",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.078,
+  "leader": "stx",
+  "leader_ret": 1.9408
+ },
+ {
+  "date": "2026-10-20",
+  "node": "isc",
+  "bottleneck": "hbm_probe_cards",
+  "ret_252": 0.9759,
+  "leader": "technoprobe",
+  "leader_ret": 1.98
+ },
+ {
+  "date": "2026-10-20",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 0.3971,
+  "leader": "axti",
+  "leader_ret": 10.5193
+ },
+ {
+  "date": "2026-10-20",
+  "node": "kokusai",
+  "bottleneck": "nand_hbf",
+  "ret_252": 0.5935,
+  "leader": "sndk",
+  "leader_ret": 8.5038
+ },
+ {
+  "date": "2026-10-20",
+  "node": "kyocera",
+  "bottleneck": "mlcc",
+  "ret_252": 0.8139,
+  "leader": "semco",
+  "leader_ret": 5.0299
+ },
+ {
+  "date": "2026-10-20",
+  "node": "murata",
+  "bottleneck": "mlcc",
+  "ret_252": 1.3854,
+  "leader": "semco",
+  "leader_ret": 5.0299
+ },
+ {
+  "date": "2026-10-20",
+  "node": "phison",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.3478,
+  "leader": "sndk",
+  "leader_ret": 8.5038
+ },
+ {
+  "date": "2026-10-20",
+  "node": "sakai_chem",
+  "bottleneck": "mlcc",
+  "ret_252": 0.2643,
+  "leader": "semco",
+  "leader_ret": 5.0299
+ },
+ {
+  "date": "2026-10-20",
+  "node": "samsung",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.4791,
+  "leader": "sndk",
+  "leader_ret": 8.5038
+ },
+ {
+  "date": "2026-10-20",
+  "node": "samsung",
+  "bottleneck": "hbm_2027",
+  "ret_252": 1.4791,
+  "leader": "mu",
+  "leader_ret": 3.4724
+ },
+ {
+  "date": "2026-10-20",
+  "node": "simo",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.3845,
+  "leader": "sndk",
+  "leader_ret": 8.5038
+ },
+ {
+  "date": "2026-10-20",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 0.8888,
+  "leader": "axti",
+  "leader_ret": 10.5193
+ },
+ {
+  "date": "2026-10-20",
+  "node": "sumitomo_electric",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.8888,
+  "leader": "furukawa",
+  "leader_ret": 2.5551
+ },
+ {
+  "date": "2026-10-20",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.3034,
+  "leader": "stx",
+  "leader_ret": 1.9408
+ },
+ {
+  "date": "2026-10-20",
+  "node": "umicore",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.1828,
+  "leader": "furukawa",
+  "leader_ret": 2.5551
+ },
+ {
+  "date": "2026-10-21",
+  "node": "corning_fiber",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.579,
+  "leader": "furukawa",
+  "leader_ret": 2.5146
+ },
+ {
+  "date": "2026-10-21",
+  "node": "fujikura",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.8142,
+  "leader": "furukawa",
+  "leader_ret": 2.5146
+ },
+ {
+  "date": "2026-10-21",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.1164,
+  "leader": "stx",
+  "leader_ret": 2.0129
+ },
+ {
+  "date": "2026-10-21",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 0.3923,
+  "leader": "axti",
+  "leader_ret": 11.6585
+ },
+ {
+  "date": "2026-10-21",
+  "node": "kokusai",
+  "bottleneck": "nand_hbf",
+  "ret_252": 0.5225,
+  "leader": "sndk",
+  "leader_ret": 8.7416
+ },
+ {
+  "date": "2026-10-21",
+  "node": "kyocera",
+  "bottleneck": "mlcc",
+  "ret_252": 0.7917,
+  "leader": "semco",
+  "leader_ret": 4.9984
+ },
+ {
+  "date": "2026-10-21",
+  "node": "murata",
+  "bottleneck": "mlcc",
+  "ret_252": 1.3522,
+  "leader": "semco",
+  "leader_ret": 4.9984
+ },
+ {
+  "date": "2026-10-21",
+  "node": "phison",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.3582,
+  "leader": "sndk",
+  "leader_ret": 8.7416
+ },
+ {
+  "date": "2026-10-21",
+  "node": "sakai_chem",
+  "bottleneck": "mlcc",
+  "ret_252": 0.2531,
+  "leader": "semco",
+  "leader_ret": 4.9984
+ },
+ {
+  "date": "2026-10-21",
+  "node": "simo",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.3013,
+  "leader": "sndk",
+  "leader_ret": 8.7416
+ },
+ {
+  "date": "2026-10-21",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 0.8559,
+  "leader": "axti",
+  "leader_ret": 11.6585
+ },
+ {
+  "date": "2026-10-21",
+  "node": "sumitomo_electric",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.8559,
+  "leader": "furukawa",
+  "leader_ret": 2.5146
+ },
+ {
+  "date": "2026-10-21",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.2855,
+  "leader": "stx",
+  "leader_ret": 2.0129
+ },
+ {
+  "date": "2026-10-21",
+  "node": "umicore",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.1167,
+  "leader": "furukawa",
+  "leader_ret": 2.5146
+ },
+ {
+  "date": "2026-10-22",
+  "node": "corning_fiber",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.5959,
+  "leader": "furukawa",
+  "leader_ret": 2.1931
+ },
+ {
+  "date": "2026-10-22",
+  "node": "fujikura",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.614,
+  "leader": "furukawa",
+  "leader_ret": 2.1931
+ },
+ {
+  "date": "2026-10-22",
+  "node": "hoya",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.1137,
+  "leader": "stx",
+  "leader_ret": 2.2696
+ },
+ {
+  "date": "2026-10-22",
+  "node": "isc",
+  "bottleneck": "hbm_probe_cards",
+  "ret_252": 0.9226,
+  "leader": "technoprobe",
+  "leader_ret": 2.0283
+ },
+ {
+  "date": "2026-10-22",
+  "node": "jx_metals",
+  "bottleneck": "inp_substrates",
+  "ret_252": 0.4112,
+  "leader": "axti",
+  "leader_ret": 11.0733
+ },
+ {
+  "date": "2026-10-22",
+  "node": "kokusai",
+  "bottleneck": "nand_hbf",
+  "ret_252": 0.434,
+  "leader": "sndk",
+  "leader_ret": 8.3098
+ },
+ {
+  "date": "2026-10-22",
+  "node": "kyocera",
+  "bottleneck": "mlcc",
+  "ret_252": 0.7619,
+  "leader": "semco",
+  "leader_ret": 4.4892
+ },
+ {
+  "date": "2026-10-22",
+  "node": "mjc",
+  "bottleneck": "hbm_probe_cards",
+  "ret_252": 0.7893,
+  "leader": "technoprobe",
+  "leader_ret": 2.0283
+ },
+ {
+  "date": "2026-10-22",
+  "node": "murata",
+  "bottleneck": "mlcc",
+  "ret_252": 1.2742,
+  "leader": "semco",
+  "leader_ret": 4.4892
+ },
+ {
+  "date": "2026-10-22",
+  "node": "phison",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.1788,
+  "leader": "sndk",
+  "leader_ret": 8.3098
+ },
+ {
+  "date": "2026-10-22",
+  "node": "resonac",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 1.212,
+  "leader": "stx",
+  "leader_ret": 2.2696
+ },
+ {
+  "date": "2026-10-22",
+  "node": "resonac",
+  "bottleneck": "high_end_ccl",
+  "ret_252": 1.212,
+  "leader": "tuc",
+  "leader_ret": 3.2919
+ },
+ {
+  "date": "2026-10-22",
+  "node": "sakai_chem",
+  "bottleneck": "mlcc",
+  "ret_252": 0.2318,
+  "leader": "semco",
+  "leader_ret": 4.4892
+ },
+ {
+  "date": "2026-10-22",
+  "node": "samsung",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.2905,
+  "leader": "sndk",
+  "leader_ret": 8.3098
+ },
+ {
+  "date": "2026-10-22",
+  "node": "samsung",
+  "bottleneck": "hbm_2027",
+  "ret_252": 1.2905,
+  "leader": "mu",
+  "leader_ret": 3.4231
+ },
+ {
+  "date": "2026-10-22",
+  "node": "simo",
+  "bottleneck": "nand_hbf",
+  "ret_252": 1.3443,
+  "leader": "sndk",
+  "leader_ret": 8.3098
+ },
+ {
+  "date": "2026-10-22",
+  "node": "sumitomo_electric",
+  "bottleneck": "inp_substrates",
+  "ret_252": 0.7159,
+  "leader": "axti",
+  "leader_ret": 11.0733
+ },
+ {
+  "date": "2026-10-22",
+  "node": "sumitomo_electric",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.7159,
+  "leader": "furukawa",
+  "leader_ret": 2.1931
+ },
+ {
+  "date": "2026-10-22",
+  "node": "tdk",
+  "bottleneck": "hdd_nearline",
+  "ret_252": 0.2483,
+  "leader": "stx",
+  "leader_ret": 2.2696
+ },
+ {
+  "date": "2026-10-22",
+  "node": "umicore",
+  "bottleneck": "optical_fiber",
+  "ret_252": 0.1328,
+  "leader": "furukawa",
+  "leader_ret": 2.1931
+ }
+]

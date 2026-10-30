@@ -47,6 +47,14 @@
       "note": "auto: no clean answer within 5 sessions",
       "auto": true,
       "updated": "2026-10-27T02:12:34Z"
+    },
+    "intc_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-10-30T02:43:51Z"
     }
   },
   "forecasts": []

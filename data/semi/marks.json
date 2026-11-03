@@ -55,6 +55,38 @@
       "note": "auto: no clean answer within 5 sessions",
       "auto": true,
       "updated": "2026-10-30T02:43:51Z"
+    },
+    "shecy_h1": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-03T03:58:03Z"
+    },
+    "skh_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-03T03:58:03Z"
+    },
+    "amkr_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-03T03:58:03Z"
+    },
+    "cdns_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-03T03:58:03Z"
     }
   },
   "forecasts": []

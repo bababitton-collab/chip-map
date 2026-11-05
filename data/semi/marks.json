@@ -95,6 +95,54 @@
       "note": "auto: no clean answer within 5 sessions",
       "auto": true,
       "updated": "2026-11-04T03:03:59Z"
+    },
+    "gev_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
+    },
+    "lrcx_q1": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
+    },
+    "teck_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
+    },
+    "googl_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
+    },
+    "adv_h1": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
+    },
+    "smsg_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
     }
   },
   "forecasts": []

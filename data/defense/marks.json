@@ -47,6 +47,22 @@
       "note": "auto: no clean answer within 5 sessions",
       "auto": true,
       "updated": "2026-11-04T03:03:59Z"
+    },
+    "ati_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
+    },
+    "gd_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-05T03:34:53Z"
     }
   },
   "forecasts": []

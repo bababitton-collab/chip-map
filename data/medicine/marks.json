@@ -31,6 +31,22 @@
       "note": "auto: no clean answer within 5 sessions",
       "auto": true,
       "updated": "2026-11-10T04:41:47Z"
+    },
+    "bwxt_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-11T02:52:31Z"
+    },
+    "teva_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-11T02:52:31Z"
     }
   },
   "forecasts": []

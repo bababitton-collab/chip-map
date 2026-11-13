@@ -71,6 +71,22 @@
       "note": "auto: no clean answer within 5 sessions",
       "auto": true,
       "updated": "2026-11-12T03:56:59Z"
+    },
+    "bd_q4": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-13T03:28:46Z"
+    },
+    "mckesson_q2": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-13T03:28:46Z"
     }
   },
   "forecasts": []

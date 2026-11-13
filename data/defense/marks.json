@@ -79,6 +79,22 @@
       "note": "auto: no clean answer within 5 sessions",
       "auto": true,
       "updated": "2026-11-11T02:52:30Z"
+    },
+    "mp_ndpr_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-13T03:28:46Z"
+    },
+    "rheinmetall_q3": {
+      "status": "none",
+      "basis": "unclear",
+      "evidence": "",
+      "note": "auto: no clean answer within 5 sessions",
+      "auto": true,
+      "updated": "2026-11-13T03:28:46Z"
     }
   },
   "forecasts": []
